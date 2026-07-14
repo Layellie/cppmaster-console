@@ -4,6 +4,8 @@
 
 #include "ConsoleUI.h"
 #include "LessonManager.h"
+#include "MistakeTracker.h"
+#include "ProgressManager.h"
 #include "QuestionManager.h"
 #include "QuizEngine.h"
 #include "UserProgress.h"
@@ -21,6 +23,7 @@ private:
     void openTopic(int topicId);
     void showLessonContent(const Lesson& lesson);
     void runTopicQuiz(int topicId);
+    AnswerResult askOneQuestion(const Question& question);
     void showNotYetAvailable(const std::string& featureName);
     void ensureDataDirectoryExists();
 
@@ -29,5 +32,7 @@ private:
     QuestionManager questions_;
     QuizEngine quizEngine_;
     UserProgress progress_;
+    ProgressManager progressManager_;
+    MistakeTracker mistakes_;
     bool running_ = true;
 };

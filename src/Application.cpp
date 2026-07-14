@@ -13,6 +13,10 @@ constexpr int kMaxChoice = 10;
 constexpr int kMinTopicId = 0;
 constexpr int kMaxTopicId = 100;
 constexpr double kPassThreshold = 0.7;
+constexpr const char* kProgressFilePath = "data/progress.txt";
+constexpr const char* kProgressBackupPath = "data/progress_corrupted_backup.txt";
+constexpr const char* kMistakesFilePath = "data/mistakes.txt";
+constexpr const char* kMistakesBackupPath = "data/mistakes_corrupted_backup.txt";
 
 char statusMarker(TopicStatus status) {
     switch (status) {
@@ -188,51 +192,11 @@ void Application::runTopicQuiz(int topicId) {
     int sessionXp = 0;
 
     for (const Question& question : quizQuestions) {
-        ui_.printLine(question.prompt);
-
-        if (question.type == QuestionType::MultipleChoice) {
-            for (std::size_t index = 0; index < question.options.size(); ++index) {
-                ui_.printLine(
-                    std::string(1, optionLetter(index)) + ") " + question.options[index]);
-            }
-        } else if (question.type == QuestionType::TrueFalse) {
-            ui_.printLine("1. Doğru");
-            ui_.printLine("2. Yanlış");
-        } else if (question.type == QuestionType::OrderCode) {
-            for (std::size_t index = 0; index < question.options.size(); ++index) {
-                ui_.printLine(
-                    std::to_string(static_cast<int>(index) + 1) + ". " + question.options[index]);
-            }
-        }
-
-        std::string rawAnswer;
-        if (question.type == QuestionType::WriteCode) {
-            ui_.printLine(
-                "Kodunuzu birden fazla satır halinde girebilirsiniz. Bitirmek için BITIR yazıp Enter'a basın.");
-            rawAnswer = ui_.readMultilineCode();
-        } else {
-            rawAnswer = ui_.readLine("Cevabınız: ");
-        }
-        const AnswerResult result = quizEngine_.evaluate(question, rawAnswer);
-
+        const AnswerResult result = askOneQuestion(question);
         if (result.correct) {
-            ui_.printLine("Doğru! (+" + std::to_string(result.xpAwarded) + " XP)");
             ++correctCount;
             sessionXp += result.xpAwarded;
-        } else {
-            ui_.printLine("");
-            ui_.printLine("Yanlış cevap.");
-            ui_.printLine("");
-            ui_.printLine("Senin cevabın:");
-            ui_.printLine(rawAnswer);
-            ui_.printLine("");
-            ui_.printLine("Doğru cevap:");
-            ui_.printLine(result.correctAnswerDisplay);
-            ui_.printLine("");
-            ui_.printLine("Açıklama:");
-            ui_.printLine(question.explanation);
         }
-        ui_.printLine("");
     }
 
     const auto totalQuestions = static_cast<int>(quizQuestions.size());
@@ -256,6 +220,70 @@ void Application::runTopicQuiz(int topicId) {
         ui_.printLine("Bu konuyu öğrenmeye devam ediyorsun; tekrar denemek için tekrar açabilirsin.");
     }
     ui_.printLine("");
+
+    progressManager_.save(
+        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+}
+
+AnswerResult Application::askOneQuestion(const Question& question) {
+    ui_.printLine(question.prompt);
+
+    if (question.type == QuestionType::MultipleChoice) {
+        for (std::size_t index = 0; index < question.options.size(); ++index) {
+            ui_.printLine(
+                std::string(1, optionLetter(index)) + ") " + question.options[index]);
+        }
+    } else if (question.type == QuestionType::TrueFalse) {
+        ui_.printLine("1. Doğru");
+        ui_.printLine("2. Yanlış");
+    } else if (question.type == QuestionType::OrderCode) {
+        for (std::size_t index = 0; index < question.options.size(); ++index) {
+            ui_.printLine(
+                std::to_string(static_cast<int>(index) + 1) + ". " + question.options[index]);
+        }
+    }
+
+    std::string rawAnswer;
+    if (question.type == QuestionType::WriteCode) {
+        ui_.printLine(
+            "Kodunuzu birden fazla satır halinde girebilirsiniz. Bitirmek için BITIR yazıp Enter'a basın.");
+        rawAnswer = ui_.readMultilineCode();
+    } else {
+        rawAnswer = ui_.readLine("Cevabınız: ");
+    }
+    const AnswerResult result = quizEngine_.evaluate(question, rawAnswer);
+
+    if (result.correct) {
+        ui_.printLine("Doğru! (+" + std::to_string(result.xpAwarded) + " XP)");
+    } else {
+        ui_.printLine("");
+        ui_.printLine("Yanlış cevap.");
+        ui_.printLine("");
+        ui_.printLine("Senin cevabın:");
+        ui_.printLine(rawAnswer);
+        ui_.printLine("");
+        ui_.printLine("Doğru cevap:");
+        ui_.printLine(result.correctAnswerDisplay);
+        ui_.printLine("");
+        ui_.printLine("Açıklama:");
+        ui_.printLine(question.explanation);
+    }
+    ui_.printLine("");
+
+    progress_.recordAnswer(result.correct);
+    if (result.correct) {
+        if (mistakes_.hasMistake(question.id)) {
+            mistakes_.recordCorrectRetry(question.id);
+        }
+    } else {
+        mistakes_.recordWrong(question.id);
+    }
+
+    const auto topicCount = static_cast<int>(lessons_.allLessons().size());
+    progressManager_.save(progress_, kProgressFilePath, topicCount);
+    mistakes_.saveToFile(kMistakesFilePath);
+
+    return result;
 }
 
 void Application::showNotYetAvailable(const std::string& featureName) {
