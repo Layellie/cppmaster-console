@@ -52,6 +52,9 @@ int ConsoleUI::readMenuChoice(int minValue, int maxValue) {
     while (true) {
         std::string line;
         if (!std::getline(std::cin, line)) {
+            if (std::cin.eof()) {
+                return minValue;
+            }
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             continue;
