@@ -17,3 +17,11 @@ TopicStatus UserProgress::statusOf(int topicId) const {
 void UserProgress::setStatus(int topicId, TopicStatus status) {
     statusByTopicId_[topicId] = status;
 }
+
+int UserProgress::totalXp() const {
+    return totalXp_;
+}
+
+void UserProgress::addXp(int amount) {
+    totalXp_ += amount;
+}
