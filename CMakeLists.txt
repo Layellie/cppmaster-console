@@ -22,6 +22,8 @@ add_executable(CppMasterConsole
     src/Question.h
     src/QuestionManager.h
     src/QuestionManager.cpp
+    src/QuizEngine.h
+    src/QuizEngine.cpp
     src/Application.h
     src/Application.cpp
 )
