@@ -1,5 +1,7 @@
 #include "QuestionManager.h"
 
+#include <algorithm>
+
 QuestionManager::QuestionManager() {
     questions_.reserve(60);
 
@@ -633,4 +635,13 @@ std::vector<Question> QuestionManager::questionsForTopic(int topicId) const {
         }
     }
     return result;
+}
+
+std::optional<Question> QuestionManager::findById(int questionId) const {
+    const auto it = std::ranges::find_if(
+        questions_, [questionId](const Question& question) { return question.id == questionId; });
+    if (it == questions_.end()) {
+        return std::nullopt;
+    }
+    return *it;
 }

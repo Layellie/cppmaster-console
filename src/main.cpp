@@ -2,51 +2,63 @@
 #include <fstream>
 #include <iostream>
 
-#include "ProgressManager.h"
-#include "UserProgress.h"
+#include "MistakeTracker.h"
+#include "QuestionManager.h"
 
 int main() {
     std::filesystem::create_directories("data");
 
-    ProgressManager manager;
-    const std::string testPath = "data/test_progress.txt";
-    const std::string backupPath = "data/test_progress_corrupted_backup.txt";
+    QuestionManager questions;
+    const auto found = questions.findById(1);
+    std::cout << "Soru 1 bulundu mu: " << (found.has_value() ? "EVET (OK)" : "HATA") << '\n';
+    std::cout << "Soru 1 prompt dolu mu: "
+              << (found.has_value() && !found->prompt.empty() ? "EVET (OK)" : "HATA") << '\n';
+    const auto missingQuestion = questions.findById(9999);
+    std::cout << "Soru 9999 bulundu mu: " << (missingQuestion.has_value() ? "EVET (HATA)" : "HAYIR (OK)") << '\n';
 
-    UserProgress original(10);
-    original.addXp(150);
-    original.setStatus(3, TopicStatus::Completed);
-    original.setStatus(5, TopicStatus::Learning);
-    original.recordAnswer(true);
-    original.recordAnswer(false);
-    original.recordAnswer(true);
+    MistakeTracker tracker;
+    std::cout << "Baslangicta soru 1 yanlis mi: " << (!tracker.hasMistake(1) ? "HAYIR (OK)" : "HATA") << '\n';
 
-    manager.save(original, testPath, 10);
+    tracker.recordWrong(1);
+    std::cout << "Bir kez yanlis sonrasi soru 1 yanlis mi: " << (tracker.hasMistake(1) ? "EVET (OK)" : "HATA") << '\n';
 
-    const auto loaded = manager.load(testPath, backupPath, 10);
-    std::cout << "Yuklenen bozuk mu: " << (loaded.wasCorrupted ? "EVET (HATA)" : "HAYIR (OK)") << '\n';
-    std::cout << "Yuklenen XP: " << loaded.progress.totalXp() << " (beklenen: 150)\n";
-    std::cout << "Konu 3 durumu: "
-              << (loaded.progress.statusOf(3) == TopicStatus::Completed ? "Completed (OK)" : "HATA") << '\n';
-    std::cout << "Konu 5 durumu: "
-              << (loaded.progress.statusOf(5) == TopicStatus::Learning ? "Learning (OK)" : "HATA") << '\n';
-    std::cout << "Konu 1 durumu (hic dokunulmadi): "
-              << (loaded.progress.statusOf(1) == TopicStatus::NotStarted ? "NotStarted (OK)" : "HATA") << '\n';
-    std::cout << "Cevaplanan: " << loaded.progress.totalQuestionsAnswered() << " (beklenen: 3)\n";
-    std::cout << "Dogru: " << loaded.progress.totalCorrectAnswers() << " (beklenen: 2)\n";
+    tracker.recordWrong(1);
+    tracker.recordWrong(2);
 
-    const auto missing = manager.load("data/does_not_exist.txt", backupPath, 10);
-    std::cout << "Eksik dosya bozuk mu: " << (missing.wasCorrupted ? "EVET (HATA)" : "HAYIR (OK)") << '\n';
-    std::cout << "Eksik dosya XP: " << missing.progress.totalXp() << " (beklenen: 0)\n";
+    const auto mistakesBeforeSave = tracker.allMistakesOldestFirst();
+    std::cout << "Kayitli yanlis sayisi: " << mistakesBeforeSave.size() << " (beklenen: 2)\n";
+
+    tracker.recordCorrectRetry(1);
+
+    const std::string testPath = "data/test_mistakes.txt";
+    const std::string backupPath = "data/test_mistakes_corrupted_backup.txt";
+    tracker.saveToFile(testPath);
+
+    MistakeTracker loadedTracker;
+    const bool wasCorrupted = loadedTracker.loadFromFile(testPath, backupPath);
+    std::cout << "Yuklenen bozuk mu: " << (!wasCorrupted ? "HAYIR (OK)" : "HATA") << '\n';
+
+    const auto loadedMistakes = loadedTracker.allMistakesOldestFirst();
+    std::cout << "Yuklenen yanlis sayisi: " << loadedMistakes.size() << " (beklenen: 2)\n";
+
+    bool foundQuestion1 = false;
+    for (const auto& record : loadedMistakes) {
+        if (record.questionId == 1) {
+            foundQuestion1 = true;
+            std::cout << "Soru 1 yanlis sayisi: " << record.wrongCount << " (beklenen: 2)\n";
+            std::cout << "Soru 1 dogru-tekrar sayisi: " << record.correctAfterWrongCount << " (beklenen: 1)\n";
+        }
+    }
+    std::cout << "Soru 1 yuklenenler icinde bulundu mu: " << (foundQuestion1 ? "EVET (OK)" : "HATA") << '\n';
 
     {
         std::ofstream corruptFile(testPath, std::ios::trunc);
-        corruptFile << "xp not_a_number\n";
+        corruptFile << "mistake not_a_number\n";
     }
-    const auto corrupted = manager.load(testPath, backupPath, 10);
-    std::cout << "Bozuk dosya tespit edildi mi: " << (corrupted.wasCorrupted ? "EVET (OK)" : "HATA") << '\n';
-    std::cout << "Bozuk sonrasi XP (taze): " << corrupted.progress.totalXp() << " (beklenen: 0)\n";
-    std::cout << "Yedek dosyasi olusturuldu mu: "
-              << (std::filesystem::exists(backupPath) ? "EVET (OK)" : "HATA") << '\n';
+    MistakeTracker corruptTracker;
+    const bool detectedCorruption = corruptTracker.loadFromFile(testPath, backupPath);
+    std::cout << "Bozuk dosya tespit edildi mi: " << (detectedCorruption ? "EVET (OK)" : "HATA") << '\n';
+    std::cout << "Yedek olusturuldu mu: " << (std::filesystem::exists(backupPath) ? "EVET (OK)" : "HATA") << '\n';
 
     return 0;
 }
