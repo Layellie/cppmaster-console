@@ -5,6 +5,7 @@
 
 #include "ConsoleUI.h"
 #include "LessonManager.h"
+#include "LevelSystem.h"
 #include "MistakeTracker.h"
 #include "ProgressManager.h"
 #include "QuestionManager.h"
@@ -25,6 +26,7 @@ private:
     void showLessonContent(const Lesson& lesson);
     void runTopicQuiz(int topicId);
     AnswerResult askOneQuestion(const Question& question);
+    void awardXpAndCheckLevelUp(int amount);
     void resetProgress();
     void showMistakeReview();
     void runMistakeQuestions(const std::vector<MistakeRecord>& mistakesToAsk);
