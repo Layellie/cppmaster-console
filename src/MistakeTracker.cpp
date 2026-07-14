@@ -77,6 +77,14 @@ bool MistakeTracker::hasMistake(int questionId) const {
     return recordsByQuestionId_.find(questionId) != recordsByQuestionId_.end();
 }
 
+std::optional<MistakeRecord> MistakeTracker::findMistake(int questionId) const {
+    const auto it = recordsByQuestionId_.find(questionId);
+    if (it == recordsByQuestionId_.end()) {
+        return std::nullopt;
+    }
+    return it->second;
+}
+
 std::vector<MistakeRecord> MistakeTracker::allMistakesOldestFirst() const {
     std::vector<MistakeRecord> result;
     result.reserve(recordsByQuestionId_.size());
