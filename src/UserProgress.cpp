@@ -25,3 +25,23 @@ int UserProgress::totalXp() const {
 void UserProgress::addXp(int amount) {
     totalXp_ += amount;
 }
+
+int UserProgress::totalQuestionsAnswered() const {
+    return totalQuestionsAnswered_;
+}
+
+int UserProgress::totalCorrectAnswers() const {
+    return totalCorrectAnswers_;
+}
+
+void UserProgress::recordAnswer(bool correct) {
+    ++totalQuestionsAnswered_;
+    if (correct) {
+        ++totalCorrectAnswers_;
+    }
+}
+
+void UserProgress::setAnsweredCounters(int totalAnswered, int totalCorrect) {
+    totalQuestionsAnswered_ = totalAnswered;
+    totalCorrectAnswers_ = totalCorrect;
+}
