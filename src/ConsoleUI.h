@@ -18,4 +18,9 @@ public:
     // indistinguishable.
     int readMenuChoice(int minValue, int maxValue);
     std::string readLine(const std::string& prompt);
+
+    // Reads multiple lines until the user types exactly "BITIR" (or EOF is
+    // reached), joining the collected lines with '\n'. Used for WriteCode
+    // answers, matching the product spec's multi-line code entry convention.
+    std::string readMultilineCode();
 };
