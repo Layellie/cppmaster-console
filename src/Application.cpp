@@ -198,9 +198,21 @@ void Application::runTopicQuiz(int topicId) {
         } else if (question.type == QuestionType::TrueFalse) {
             ui_.printLine("1. Doğru");
             ui_.printLine("2. Yanlış");
+        } else if (question.type == QuestionType::OrderCode) {
+            for (std::size_t index = 0; index < question.options.size(); ++index) {
+                ui_.printLine(
+                    std::to_string(static_cast<int>(index) + 1) + ". " + question.options[index]);
+            }
         }
 
-        const std::string rawAnswer = ui_.readLine("Cevabınız: ");
+        std::string rawAnswer;
+        if (question.type == QuestionType::WriteCode) {
+            ui_.printLine(
+                "Kodunuzu birden fazla satır halinde girebilirsiniz. Bitirmek için BITIR yazıp Enter'a basın.");
+            rawAnswer = ui_.readMultilineCode();
+        } else {
+            rawAnswer = ui_.readLine("Cevabınız: ");
+        }
         const AnswerResult result = quizEngine_.evaluate(question, rawAnswer);
 
         if (result.correct) {
