@@ -522,6 +522,107 @@ QuestionManager::QuestionManager() {
         .explanation = "const olarak tanımlanmış bir değişkene yeniden değer atamaya çalışmak derleme hatasına yol açar.",
         .baseXp = 20,
     });
+
+    // Phase 3: richer question types (ids 61-72)
+
+    questions_.push_back(Question{
+        .id = 61, .topicId = 6,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Easy,
+        .prompt = "int toplam = 10;\ntoplam = ______;\ncout << toplam;\nYukarıdaki kodun çalışması sonucunda toplam değişkeninin 15 olması isteniyor. Boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"toplam + 5", "toplam+5"},
+        .explanation = "toplam değişkenine 5 eklenirse (toplam + 5), 10 + 5 = 15 elde edilir.",
+        .baseXp = 10,
+    });
+    questions_.push_back(Question{
+        .id = 62, .topicId = 4,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int a;\nint b;\ncin >> a >> ______;\nİki değişkeni tek satırda okumak istiyorsunuz. Boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"b"},
+        .explanation = "cin >> a >> b; şeklinde birden fazla değişken art arda >> ile okunabilir.",
+        .baseXp = 20,
+    });
+    questions_.push_back(Question{
+        .id = 63, .topicId = 6,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Easy,
+        .prompt = "int sayi = 5;\nsayi = sayi + 3;\nstd::cout << sayi;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"8"},
+        .explanation = "sayi başlangıçta 5'tir; sayi + 3 işlemiyle 8 olur ve ekrana 8 yazdırılır.",
+        .baseXp = 10,
+    });
+    questions_.push_back(Question{
+        .id = 64, .topicId = 9,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "bool durum = false;\nstd::cout << durum;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"0"},
+        .explanation = "cout, bool değerlerini varsayılan olarak 1 (true) veya 0 (false) şeklinde yazdırır.",
+        .baseXp = 20,
+    });
+    questions_.push_back(Question{
+        .id = 65, .topicId = 1,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Easy,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint yas = 20\n\nstd::cout << yas;\n\nHatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"int yas = 20;"},
+        .explanation = "int yas = 20 satırının sonunda noktalı virgül (;) eksik; doğrusu int yas = 20; şeklindedir.",
+        .baseXp = 10,
+    });
+    questions_.push_back(Question{
+        .id = 66, .topicId = 8,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nchar harf = \"A\";\nstd::cout << harf;\n\nHatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"char harf = 'A';"},
+        .explanation = "char için çift tırnak değil tek tırnak kullanılmalıdır; doğrusu char harf = 'A'; şeklindedir.",
+        .baseXp = 20,
+    });
+    questions_.push_back(Question{
+        .id = 67, .topicId = 7,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\ndouble ortalama = 87,5;\nstd::cout << ortalama;\n\nDüzeltilmiş ilk satırı yazın.",
+        .acceptedAnswers = {"double ortalama = 87.5;"},
+        .explanation = "C++'ta ondalık ayıracı virgül değil noktadır; doğrusu double ortalama = 87.5; şeklindedir.",
+        .baseXp = 20,
+    });
+    questions_.push_back(Question{
+        .id = 68, .topicId = 4,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint yas;\ncin > yas;\n\nDüzeltilmiş ikinci satırı yazın.",
+        .acceptedAnswers = {"cin >> yas;"},
+        .explanation = "cin ile okuma yaparken tek > değil çift >> operatörü kullanılmalıdır; doğrusu cin >> yas; şeklindedir.",
+        .baseXp = 20,
+    });
+    questions_.push_back(Question{
+        .id = 69, .topicId = 4,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Easy,
+        .prompt = "Aşağıdaki satırları geçerli ve mantıklı bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın, örnek: 1 2 3):",
+        .options = {"cout << yas;", "int yas;", "cin >> yas;"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "Önce değişken tanımlanır (int yas;), sonra değer okunur (cin >> yas;), en son yazdırılır (cout << yas;): sıra 2 3 1.",
+        .baseXp = 10,
+    });
+    questions_.push_back(Question{
+        .id = 70, .topicId = 1,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları geçerli bir C++ programı oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"return 0;", "std::cout << \"Merhaba\";", "int main() {", "}"},
+        .acceptedAnswers = {"3 2 1 4"},
+        .explanation = "Program int main() { ile başlar, içinde yazdırma ve return 0; yer alır, } ile kapanır: sıra 3 2 1 4.",
+        .baseXp = 20,
+    });
+    questions_.push_back(Question{
+        .id = 71, .topicId = 6,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Kullanıcıdan bir tam sayı okuyup ekrana yazdıran bir program yazın. (Kodunuzu birden fazla satırda yazabilirsiniz.)",
+        .acceptedAnswers = {"cin", ">>", "cout", "<<"},
+        .explanation = "Program bir tam sayıyı cin >> ile okumalı ve cout << ile ekrana yazdırmalıdır.",
+        .baseXp = 40,
+    });
+    questions_.push_back(Question{
+        .id = 72, .topicId = 10,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "PI için 3.14 değerinde, değeri değiştirilemeyen bir sabit tanımlayıp ekrana yazdıran bir program yazın.",
+        .acceptedAnswers = {"const", "cout", "<<"},
+        .explanation = "Değeri değiştirilemeyen bir değişken const ile tanımlanır ve cout << ile ekrana yazdırılır.",
+        .baseXp = 40,
+    });
 }
 
 std::vector<Question> QuestionManager::questionsForTopic(int topicId) const {
