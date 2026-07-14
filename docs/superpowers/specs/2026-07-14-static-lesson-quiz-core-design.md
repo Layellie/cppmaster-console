@@ -133,11 +133,15 @@ public:
 ```
 
 `evaluate` normalizes `rawAnswer` (trim + ASCII-lowercase) and checks it
-against the question's (already-normalized) `acceptedAnswers`. XP by
-difficulty on a correct answer: VeryEasy=5, Easy=10, Medium=20, Hard=30,
-VeryHard=50 (the product spec gives Easy/Medium/Hard/VeryHard exactly this
-way; VeryEasy isn't specified there, so 5 — half of Easy — is this phase's
-reasoned default). 0 XP on a wrong answer.
+against the question's (already-normalized) `acceptedAnswers`. On a correct
+answer it returns the question's own `baseXp` field unchanged; on a wrong
+answer it returns 0. `QuizEngine` itself has no difficulty→XP table — that
+mapping is applied once, when `QuestionManager` authors each question's
+`baseXp` from its `difficulty` (VeryEasy=5, Easy=10, Medium=20, Hard=30,
+VeryHard=50 — the product spec gives Easy through VeryHard exactly this way;
+VeryEasy isn't specified there, so 5, half of Easy, is this phase's reasoned
+default). Keeping the mapping in one place (data, not evaluation logic)
+avoids the two ever disagreeing.
 
 ### `UserProgress` addition
 
