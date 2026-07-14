@@ -111,7 +111,7 @@ void Application::handleChoice(int choice) {
             showNotYetAvailable("Günlük Tekrar");
             break;
         case 4:
-            showNotYetAvailable("Hatalarımı Çöz");
+            showMistakeReview();
             break;
         case 5:
             showNotYetAvailable("Kod Yazma Alıştırmaları");
@@ -120,7 +120,7 @@ void Application::handleChoice(int choice) {
             showNotYetAvailable("Seviye Sınavı");
             break;
         case 7:
-            showNotYetAvailable("İstatistiklerim");
+            showStatistics();
             break;
         case 8:
             showNotYetAvailable("Başarımlar");
@@ -319,6 +319,93 @@ void Application::resetProgress() {
     mistakes_.saveToFile(kMistakesFilePath);
 
     ui_.printLine("İlerlemeniz sıfırlandı.");
+}
+
+void Application::showMistakeReview() {
+    const auto mistakes = mistakes_.allMistakesOldestFirst();
+    if (mistakes.empty()) {
+        ui_.printLine("");
+        ui_.printLine("Henüz kaydedilmiş bir yanlışınız yok!");
+        return;
+    }
+
+    ui_.printLine("");
+    ui_.printLine("Kayıtlı yanlışlarınız (" + std::to_string(mistakes.size()) + " soru):");
+    ui_.printLine("");
+    runMistakeQuestions(mistakes);
+}
+
+void Application::runMistakeQuestions(const std::vector<MistakeRecord>& mistakesToAsk) {
+    int correctCount = 0;
+    int sessionXp = 0;
+
+    for (const MistakeRecord& mistake : mistakesToAsk) {
+        const auto question = questions_.findById(mistake.questionId);
+        if (!question.has_value()) {
+            continue;
+        }
+        const AnswerResult result = askOneQuestion(*question);
+        if (result.correct) {
+            ++correctCount;
+            sessionXp += result.xpAwarded;
+        }
+    }
+
+    progress_.addXp(sessionXp);
+    progressManager_.save(
+        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+
+    ui_.printLine(
+        "Tamamlandı: " + std::to_string(correctCount) + "/" + std::to_string(mistakesToAsk.size()) +
+        " doğru, kazanılan XP: " + std::to_string(sessionXp));
+    ui_.printLine("");
+}
+
+void Application::showStatistics() {
+    ui_.printLine("");
+    ui_.printHeader("İSTATİSTİKLERİM");
+
+    const int topicCount = static_cast<int>(lessons_.allLessons().size());
+    int notStarted = 0;
+    int learning = 0;
+    int completed = 0;
+    int mastered = 0;
+    for (int topicId = 1; topicId <= topicCount; ++topicId) {
+        switch (progress_.statusOf(topicId)) {
+            case TopicStatus::NotStarted:
+                ++notStarted;
+                break;
+            case TopicStatus::Learning:
+                ++learning;
+                break;
+            case TopicStatus::Completed:
+                ++completed;
+                break;
+            case TopicStatus::Mastered:
+                ++mastered;
+                break;
+        }
+    }
+
+    const int totalAnswered = progress_.totalQuestionsAnswered();
+    const int totalCorrect = progress_.totalCorrectAnswers();
+    const double successRatio =
+        totalAnswered == 0 ? 0.0
+                           : static_cast<double>(totalCorrect) / static_cast<double>(totalAnswered);
+
+    ui_.printLine("Toplam XP: " + std::to_string(progress_.totalXp()));
+    ui_.printLine("Toplam çözülen soru: " + std::to_string(totalAnswered));
+    ui_.printLine("Toplam doğru cevap: " + std::to_string(totalCorrect));
+    ui_.printLine("Toplam yanlış cevap: " + std::to_string(totalAnswered - totalCorrect));
+    ui_.printLine("Genel başarı oranı: %" + std::to_string(static_cast<int>(successRatio * 100.0)));
+    ui_.printLine("");
+    ui_.printLine("Tamamlanan konu sayısı: " + std::to_string(completed));
+    ui_.printLine("Ustalaşılan konu sayısı: " + std::to_string(mastered));
+    ui_.printLine("Öğrenilmekte olan konu sayısı: " + std::to_string(learning));
+    ui_.printLine("Başlanmamış konu sayısı: " + std::to_string(notStarted));
+    ui_.printLine("");
+    ui_.printLine("Kayıtlı yanlış sayısı: " + std::to_string(mistakes_.allMistakesOldestFirst().size()));
+    ui_.printLine("");
 }
 
 void Application::showNotYetAvailable(const std::string& featureName) {
