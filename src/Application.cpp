@@ -108,7 +108,7 @@ void Application::handleChoice(int choice) {
             showNotYetAvailable("Hızlı Test");
             break;
         case 3:
-            showNotYetAvailable("Günlük Tekrar");
+            runDailyReview();
             break;
         case 4:
             showMistakeReview();
@@ -406,6 +406,25 @@ void Application::showStatistics() {
     ui_.printLine("");
     ui_.printLine("Kayıtlı yanlış sayısı: " + std::to_string(mistakes_.allMistakesOldestFirst().size()));
     ui_.printLine("");
+}
+
+void Application::runDailyReview() {
+    auto mistakes = mistakes_.allMistakesOldestFirst();
+    if (mistakes.empty()) {
+        ui_.printLine("");
+        ui_.printLine("Henüz tekrar edilecek bir yanlışınız yok! Önce birkaç konu testi çözmelisiniz.");
+        return;
+    }
+
+    constexpr std::size_t kDailyReviewCap = 20;
+    if (mistakes.size() > kDailyReviewCap) {
+        mistakes.resize(kDailyReviewCap);
+    }
+
+    ui_.printLine("");
+    ui_.printLine("Günlük tekrar başlıyor (" + std::to_string(mistakes.size()) + " soru):");
+    ui_.printLine("");
+    runMistakeQuestions(mistakes);
 }
 
 void Application::showNotYetAvailable(const std::string& featureName) {
