@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 #include "ConsoleUI.h"
 #include "LessonManager.h"
@@ -25,6 +26,9 @@ private:
     void runTopicQuiz(int topicId);
     AnswerResult askOneQuestion(const Question& question);
     void resetProgress();
+    void showMistakeReview();
+    void runMistakeQuestions(const std::vector<MistakeRecord>& mistakesToAsk);
+    void showStatistics();
     void showNotYetAvailable(const std::string& featureName);
     void ensureDataDirectoryExists();
 
