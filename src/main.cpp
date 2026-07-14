@@ -1,32 +1,17 @@
 #include <iostream>
 
-#include "LessonManager.h"
+#include "ConsoleUI.h"
 
 int main() {
-    LessonManager lessons;
+    ConsoleUI ui;
 
-    std::cout << "Toplam konu sayisi: " << lessons.allLessons().size()
-              << " (beklenen: 100)\n";
-    std::cout << "Bolum sayisi: " << lessons.sectionCount()
-              << " (beklenen: 10)\n";
+    ui.printHeader("CONSOLEUI TEST");
+    ui.printLine("0 ile 5 arasinda bir sayi girin (once gecersiz bir deger deneyin):");
+    const int choice = ui.readMenuChoice(0, 5);
+    ui.printLine("Sectiginiz deger: " + std::to_string(choice));
 
-    const auto first = lessons.findById(1);
-    std::cout << "Konu 1 basligi: "
-              << (first.has_value() ? first->title : "BULUNAMADI")
-              << " (beklenen: cout)\n";
-
-    const auto last = lessons.findById(100);
-    std::cout << "Konu 100 basligi: "
-              << (last.has_value() ? last->title : "BULUNAMADI")
-              << " (beklenen: unique_ptr)\n";
-
-    const auto missing = lessons.findById(999);
-    std::cout << "Konu 999: "
-              << (missing.has_value() ? "BULUNDU (HATA)" : "bulunamadi (OK)")
-              << '\n';
-
-    std::cout << "Bolum 1'deki konu sayisi: "
-              << lessons.lessonsInSection(1).size() << " (beklenen: 10)\n";
+    const std::string name = ui.readLine("Adiniz: ");
+    ui.printLine("Merhaba, " + name + "!");
 
     return 0;
 }
