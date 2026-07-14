@@ -41,6 +41,22 @@ char optionLetter(std::size_t index) {
 Application::Application()
     : progress_(static_cast<int>(lessons_.allLessons().size())) {
     ensureDataDirectoryExists();
+
+    const auto topicCount = static_cast<int>(lessons_.allLessons().size());
+    const auto loadResult = progressManager_.load(kProgressFilePath, kProgressBackupPath, topicCount);
+    progress_ = loadResult.progress;
+    if (loadResult.wasCorrupted) {
+        ui_.printLine(
+            "Uyarı: ilerleme dosyası bozuktu; yedeklendi (" + std::string(kProgressBackupPath) +
+            ") ve ilerlemeniz sıfırlandı.");
+    }
+
+    const bool mistakesCorrupted = mistakes_.loadFromFile(kMistakesFilePath, kMistakesBackupPath);
+    if (mistakesCorrupted) {
+        ui_.printLine(
+            "Uyarı: yanlış kayıtları dosyası bozuktu; yedeklendi (" +
+            std::string(kMistakesBackupPath) + ") ve sıfırlandı.");
+    }
 }
 
 void Application::ensureDataDirectoryExists() {
@@ -113,7 +129,7 @@ void Application::handleChoice(int choice) {
             showNotYetAvailable("Ayarlar");
             break;
         case 10:
-            showNotYetAvailable("İlerlemeyi Sıfırla");
+            resetProgress();
             break;
         case 0:
             ui_.printLine("Görüşürüz!");
@@ -284,6 +300,25 @@ AnswerResult Application::askOneQuestion(const Question& question) {
     mistakes_.saveToFile(kMistakesFilePath);
 
     return result;
+}
+
+void Application::resetProgress() {
+    ui_.printLine("");
+    ui_.printLine("İlerlemenizi sıfırlamak istediğinizden emin misiniz? (evet/hayır):");
+    const std::string confirmation = ui_.readLine("Cevabınız: ");
+    if (confirmation != "evet") {
+        ui_.printLine("İptal edildi.");
+        return;
+    }
+
+    const auto topicCount = static_cast<int>(lessons_.allLessons().size());
+    progress_ = UserProgress(topicCount);
+    mistakes_ = MistakeTracker();
+
+    progressManager_.save(progress_, kProgressFilePath, topicCount);
+    mistakes_.saveToFile(kMistakesFilePath);
+
+    ui_.printLine("İlerlemeniz sıfırlandı.");
 }
 
 void Application::showNotYetAvailable(const std::string& featureName) {
