@@ -30,12 +30,20 @@ bool tryParseInt(const std::string& text, int& outValue) {
 }
 
 bool tryParseEpochSeconds(const std::string& text, std::chrono::system_clock::time_point& outTime) {
-    int seconds = 0;
-    if (!tryParseInt(text, seconds)) {
+    if (text.empty()) {
         return false;
     }
-    outTime = std::chrono::system_clock::from_time_t(static_cast<std::time_t>(seconds));
-    return true;
+    try {
+        std::size_t consumedChars = 0;
+        const long long seconds = std::stoll(text, &consumedChars);
+        if (consumedChars != text.size()) {
+            return false;
+        }
+        outTime = std::chrono::system_clock::from_time_t(static_cast<std::time_t>(seconds));
+        return true;
+    } catch (const std::exception&) {
+        return false;
+    }
 }
 
 }  // namespace
