@@ -14,6 +14,9 @@ add_executable(CppMasterConsole
     src/Enums.h
     src/UserProgress.h
     src/UserProgress.cpp
+    src/Lesson.h
+    src/LessonManager.h
+    src/LessonManager.cpp
 )
 
 target_include_directories(CppMasterConsole PRIVATE src)
