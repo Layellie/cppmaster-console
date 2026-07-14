@@ -29,6 +29,7 @@ private:
     void showMistakeReview();
     void runMistakeQuestions(const std::vector<MistakeRecord>& mistakesToAsk);
     void showStatistics();
+    void runDailyReview();
     void showNotYetAvailable(const std::string& featureName);
     void ensureDataDirectoryExists();
 
