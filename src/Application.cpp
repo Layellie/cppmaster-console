@@ -42,7 +42,6 @@ void Application::ensureDataDirectoryExists() {
 }
 
 void Application::run() {
-    ui_.printHeader("CPPMASTER CONSOLE");
     ui_.printLine("CppMaster Console'a hoş geldin! (Foundation sürümü)");
 
     while (running_) {
@@ -53,10 +52,7 @@ void Application::run() {
 }
 
 void Application::showMainMenu() {
-    ui_.printLine("");
-    ui_.printLine("========================================");
-    ui_.printLine("           CPPMASTER CONSOLE");
-    ui_.printLine("========================================");
+    ui_.printHeader("CPPMASTER CONSOLE");
     ui_.printLine("");
     ui_.printLine("1. Konuları Öğren");
     ui_.printLine("2. Hızlı Test");
