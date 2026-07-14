@@ -25,6 +25,8 @@ add_executable(CppMasterConsole
     src/QuizEngine.h
     src/QuizEngine.cpp
     src/LevelSystem.h
+    src/AchievementTracker.h
+    src/AchievementTracker.cpp
     src/ProgressManager.h
     src/ProgressManager.cpp
     src/MistakeTracker.h
