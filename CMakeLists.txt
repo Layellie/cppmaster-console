@@ -19,6 +19,8 @@ add_executable(CppMasterConsole
     src/LessonManager.cpp
     src/ConsoleUI.h
     src/ConsoleUI.cpp
+    src/Application.h
+    src/Application.cpp
 )
 
 target_include_directories(CppMasterConsole PRIVATE src)
