@@ -6,6 +6,8 @@
 #include <string>
 #include <system_error>
 
+#include "LevelSystem.h"
+
 namespace {
 
 constexpr int kMinChoice = 0;
@@ -83,6 +85,8 @@ void Application::showMainMenu() {
     ui_.printHeader("CPPMASTER CONSOLE");
     ui_.printLine("");
     ui_.printLine("Toplam XP: " + std::to_string(progress_.totalXp()));
+    const LevelInfo level = levelForXp(progress_.totalXp());
+    ui_.printLine("Seviye: " + level.name + " (Seviye " + std::to_string(level.level) + ")");
     ui_.printLine("");
     ui_.printLine("1. Konuları Öğren");
     ui_.printLine("2. Hızlı Test");
@@ -226,7 +230,7 @@ void Application::runTopicQuiz(int topicId) {
         " doğru (%" + std::to_string(successPercent) + "), kazanılan XP: " +
         std::to_string(sessionXp));
 
-    progress_.addXp(sessionXp);
+    awardXpAndCheckLevelUp(sessionXp);
 
     if (successRatio >= kPassThreshold) {
         progress_.setStatus(topicId, TopicStatus::Completed);
@@ -302,6 +306,19 @@ AnswerResult Application::askOneQuestion(const Question& question) {
     return result;
 }
 
+void Application::awardXpAndCheckLevelUp(int amount) {
+    const LevelInfo levelBefore = levelForXp(progress_.totalXp());
+    progress_.addXp(amount);
+    const LevelInfo levelAfter = levelForXp(progress_.totalXp());
+    if (levelAfter.level > levelBefore.level) {
+        ui_.printLine("");
+        ui_.printLine(
+            "Tebrikler! Yeni seviyeye ulaştın: " + levelAfter.name + " (Seviye " +
+            std::to_string(levelAfter.level) + ")");
+        ui_.printLine("");
+    }
+}
+
 void Application::resetProgress() {
     ui_.printLine("");
     ui_.printLine("İlerlemenizi sıfırlamak istediğinizden emin misiniz? (evet/hayır):");
@@ -351,7 +368,7 @@ void Application::runMistakeQuestions(const std::vector<MistakeRecord>& mistakes
         }
     }
 
-    progress_.addXp(sessionXp);
+    awardXpAndCheckLevelUp(sessionXp);
     progressManager_.save(
         progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
 
