@@ -528,7 +528,7 @@ QuestionManager::QuestionManager() {
     questions_.push_back(Question{
         .id = 61, .topicId = 6,
         .type = QuestionType::CompleteLine, .difficulty = Difficulty::Easy,
-        .prompt = "int toplam = 10;\ntoplam = ______;\ncout << toplam;\nYukarıdaki kodun çalışması sonucunda toplam değişkeninin 15 olması isteniyor. Boşluğa ne yazılmalı?",
+        .prompt = "int toplam = 10;\ntoplam = ______;\ncout << toplam;\nYukarıdaki kodun çalışması sonucunda toplam değişkeninin 15 olması isteniyor. toplam değişkenini kullanarak boşluğa ne yazılmalı?",
         .acceptedAnswers = {"toplam + 5", "toplam+5"},
         .explanation = "toplam değişkenine 5 eklenirse (toplam + 5), 10 + 5 = 15 elde edilir.",
         .baseXp = 10,
@@ -619,7 +619,7 @@ QuestionManager::QuestionManager() {
         .id = 72, .topicId = 10,
         .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
         .prompt = "PI için 3.14 değerinde, değeri değiştirilemeyen bir sabit tanımlayıp ekrana yazdıran bir program yazın.",
-        .acceptedAnswers = {"const", "cout", "<<"},
+        .acceptedAnswers = {"const", "cout", "<<", "3.14"},
         .explanation = "Değeri değiştirilemeyen bir değişken const ile tanımlanır ve cout << ile ekrana yazdırılır.",
         .baseXp = 40,
     });
