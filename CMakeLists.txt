@@ -19,6 +19,9 @@ add_executable(CppMasterConsole
     src/LessonManager.cpp
     src/ConsoleUI.h
     src/ConsoleUI.cpp
+    src/Question.h
+    src/QuestionManager.h
+    src/QuestionManager.cpp
     src/Application.h
     src/Application.cpp
 )
