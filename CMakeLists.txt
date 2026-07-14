@@ -11,6 +11,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(CppMasterConsole
     src/main.cpp
+    src/Enums.h
+    src/UserProgress.h
+    src/UserProgress.cpp
 )
 
 target_include_directories(CppMasterConsole PRIVATE src)
