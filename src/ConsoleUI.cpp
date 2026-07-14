@@ -83,3 +83,21 @@ std::string ConsoleUI::readLine(const std::string& prompt) {
     std::getline(std::cin, line);
     return line;
 }
+
+std::string ConsoleUI::readMultilineCode() {
+    std::string result;
+    while (true) {
+        std::string line;
+        if (!std::getline(std::cin, line)) {
+            break;
+        }
+        if (line == "BITIR") {
+            break;
+        }
+        if (!result.empty()) {
+            result += '\n';
+        }
+        result += line;
+    }
+    return result;
+}
