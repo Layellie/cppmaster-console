@@ -1,5 +1,6 @@
 #include "Application.h"
 
+#include <cstddef>
 #include <filesystem>
 #include <iostream>
 #include <string>
@@ -9,6 +10,9 @@ namespace {
 
 constexpr int kMinChoice = 0;
 constexpr int kMaxChoice = 10;
+constexpr int kMinTopicId = 0;
+constexpr int kMaxTopicId = 100;
+constexpr double kPassThreshold = 0.7;
 
 char statusMarker(TopicStatus status) {
     switch (status) {
@@ -22,6 +26,10 @@ char statusMarker(TopicStatus status) {
             return '*';
     }
     return ' ';
+}
+
+char optionLetter(std::size_t index) {
+    return static_cast<char>('A' + index);
 }
 
 }  // namespace
@@ -53,6 +61,8 @@ void Application::run() {
 
 void Application::showMainMenu() {
     ui_.printHeader("CPPMASTER CONSOLE");
+    ui_.printLine("");
+    ui_.printLine("Toplam XP: " + std::to_string(progress_.totalXp()));
     ui_.printLine("");
     ui_.printLine("1. Konuları Öğren");
     ui_.printLine("2. Hızlı Test");
@@ -124,6 +134,116 @@ void Application::showTopicBrowser() {
         }
         ui_.printLine("");
     }
+
+    ui_.printLine("Görüntülemek istediğiniz konu numarasını girin (0 = ana menüye dön):");
+    const int topicChoice = ui_.readMenuChoice(kMinTopicId, kMaxTopicId);
+    if (topicChoice == 0) {
+        return;
+    }
+    openTopic(topicChoice);
+}
+
+void Application::openTopic(int topicId) {
+    const auto lesson = lessons_.findById(topicId);
+    if (!lesson.has_value() || lesson->explanation.empty()) {
+        ui_.printLine("");
+        ui_.printLine("Bu konu için ders içeriği bu sürümde henüz eklenmedi.");
+        return;
+    }
+
+    showLessonContent(*lesson);
+    runTopicQuiz(topicId);
+}
+
+void Application::showLessonContent(const Lesson& lesson) {
+    ui_.printLine("");
+    ui_.printHeader(std::to_string(lesson.id) + ". " + lesson.title);
+    ui_.printLine(lesson.explanation);
+    ui_.printLine("");
+    ui_.printLine("Sözdizimi:");
+    ui_.printLine(lesson.syntax);
+    ui_.printLine("");
+    ui_.printLine("Örnek:");
+    ui_.printLine(lesson.exampleCode);
+    ui_.printLine("");
+    ui_.printLine("Satır satır açıklama:");
+    for (const std::string& lineExplanation : lesson.lineExplanations) {
+        ui_.printLine("- " + lineExplanation);
+    }
+    ui_.printLine("");
+    ui_.printLine("Yaygın hatalar:");
+    for (const std::string& mistake : lesson.commonMistakes) {
+        ui_.printLine("- " + mistake);
+    }
+    ui_.printLine("");
+}
+
+void Application::runTopicQuiz(int topicId) {
+    const auto quizQuestions = questions_.questionsForTopic(topicId);
+
+    ui_.printLine("Konu testi başlıyor (" + std::to_string(quizQuestions.size()) + " soru).");
+    ui_.printLine("");
+
+    int correctCount = 0;
+    int sessionXp = 0;
+
+    for (const Question& question : quizQuestions) {
+        ui_.printLine(question.prompt);
+
+        if (question.type == QuestionType::MultipleChoice) {
+            for (std::size_t index = 0; index < question.options.size(); ++index) {
+                ui_.printLine(
+                    std::string(1, optionLetter(index)) + ") " + question.options[index]);
+            }
+        } else if (question.type == QuestionType::TrueFalse) {
+            ui_.printLine("1. Doğru");
+            ui_.printLine("2. Yanlış");
+        }
+
+        const std::string rawAnswer = ui_.readLine("Cevabınız: ");
+        const AnswerResult result = quizEngine_.evaluate(question, rawAnswer);
+
+        if (result.correct) {
+            ui_.printLine("Doğru! (+" + std::to_string(result.xpAwarded) + " XP)");
+            ++correctCount;
+            sessionXp += result.xpAwarded;
+        } else {
+            ui_.printLine("");
+            ui_.printLine("Yanlış cevap.");
+            ui_.printLine("");
+            ui_.printLine("Senin cevabın:");
+            ui_.printLine(rawAnswer);
+            ui_.printLine("");
+            ui_.printLine("Doğru cevap:");
+            ui_.printLine(result.correctAnswerDisplay);
+            ui_.printLine("");
+            ui_.printLine("Açıklama:");
+            ui_.printLine(question.explanation);
+        }
+        ui_.printLine("");
+    }
+
+    const auto totalQuestions = static_cast<int>(quizQuestions.size());
+    const double successRatio =
+        totalQuestions == 0 ? 0.0
+                            : static_cast<double>(correctCount) / static_cast<double>(totalQuestions);
+    const int successPercent = static_cast<int>(successRatio * 100.0);
+
+    ui_.printLine(
+        "Sonuç: " + std::to_string(correctCount) + "/" + std::to_string(totalQuestions) +
+        " doğru (%" + std::to_string(successPercent) + "), kazanılan XP: " +
+        std::to_string(sessionXp));
+
+    progress_.addXp(sessionXp);
+
+    if (successRatio >= kPassThreshold) {
+        progress_.setStatus(topicId, TopicStatus::Completed);
+        ui_.printLine("Bu konu tamamlandı olarak işaretlendi.");
+    } else {
+        progress_.setStatus(topicId, TopicStatus::Learning);
+        ui_.printLine("Bu konuyu öğrenmeye devam ediyorsun; tekrar denemek için tekrar açabilirsin.");
+    }
+    ui_.printLine("");
 }
 
 void Application::showNotYetAvailable(const std::string& featureName) {
