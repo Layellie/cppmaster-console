@@ -45,3 +45,48 @@ void UserProgress::setAnsweredCounters(int totalAnswered, int totalCorrect) {
     totalQuestionsAnswered_ = totalAnswered;
     totalCorrectAnswers_ = totalCorrect;
 }
+
+int UserProgress::currentStreak() const {
+    return currentStreak_;
+}
+
+int UserProgress::longestStreak() const {
+    return longestStreak_;
+}
+
+void UserProgress::recordStreak(bool correct) {
+    if (correct) {
+        ++currentStreak_;
+        if (currentStreak_ > longestStreak_) {
+            longestStreak_ = currentStreak_;
+        }
+    } else {
+        currentStreak_ = 0;
+    }
+}
+
+void UserProgress::setStreakCounters(int current, int longest) {
+    currentStreak_ = current;
+    longestStreak_ = longest;
+}
+
+int UserProgress::writeCodeCorrectCount() const {
+    return writeCodeCorrectCount_;
+}
+
+int UserProgress::errorFixCorrectCount() const {
+    return errorFixCorrectCount_;
+}
+
+void UserProgress::recordTypedCorrectAnswer(QuestionType type) {
+    if (type == QuestionType::WriteCode) {
+        ++writeCodeCorrectCount_;
+    } else if (type == QuestionType::FindError || type == QuestionType::FixCode) {
+        ++errorFixCorrectCount_;
+    }
+}
+
+void UserProgress::setTypedCorrectCounters(int writeCode, int errorFix) {
+    writeCodeCorrectCount_ = writeCode;
+    errorFixCorrectCount_ = errorFix;
+}
