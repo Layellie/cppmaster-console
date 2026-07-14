@@ -24,6 +24,7 @@ private:
     void showLessonContent(const Lesson& lesson);
     void runTopicQuiz(int topicId);
     AnswerResult askOneQuestion(const Question& question);
+    void resetProgress();
     void showNotYetAvailable(const std::string& featureName);
     void ensureDataDirectoryExists();
 
