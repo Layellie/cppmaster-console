@@ -135,6 +135,248 @@ constexpr TopicSeed kTopicSeeds[] = {
     {100, 10, "unique_ptr"},
 };
 
+void applyIntroLessonContent(std::vector<Lesson>& lessons) {
+    // Index 0 = topic id 1 (cout), index 9 = topic id 10 (const) — the seed
+    // table above is authored in strict ascending id order starting at 1,
+    // so this positional mapping is safe.
+
+    lessons[0].explanation =
+        "cout, ekrana veri yazdırmak için kullanılan bir çıktı akışıdır "
+        "(output stream). Kullanabilmek için <iostream> kütüphanesinin "
+        "eklenmesi gerekir. << operatörü ile bir veya birden fazla değer "
+        "art arda ekrana yazdırılabilir.";
+    lessons[0].syntax = "#include <iostream>\n\nstd::cout << \"Merhaba\";";
+    lessons[0].exampleCode =
+        "#include <iostream>\n\n"
+        "int main() {\n"
+        "    std::cout << \"Merhaba, dünya!\";\n"
+        "    return 0;\n"
+        "}";
+    lessons[0].lineExplanations = {
+        "#include <iostream> : cout kullanabilmek için gereken kütüphaneyi ekler.",
+        "std::cout << \"Merhaba, dünya!\"; : Tırnak içindeki metni olduğu gibi ekrana yazdırır.",
+        "return 0; : Programın hatasız bittiğini işletim sistemine bildirir.",
+    };
+    lessons[0].commonMistakes = {
+        "std:: önekini unutmak (using namespace std; yoksa derleme hatası oluşur).",
+        "<iostream> kütüphanesini eklemeyi unutmak.",
+        "<< operatörünü = (atama) operatörüyle karıştırmak.",
+    };
+
+    lessons[1].explanation =
+        "\\n, metin içinde yeni satıra geçmeyi sağlayan bir kaçış (escape) "
+        "dizisidir. Çift tırnak içindeki bir metnin istenilen yerine "
+        "yazılarak ekran çıktısında satır atlanmasını sağlar. std::endl de "
+        "aynı işi yapar, ancak \\n ekstra bir tamponu (buffer) boşaltma "
+        "işlemi yapmadığı için genellikle daha hızlıdır.";
+    lessons[1].syntax = "std::cout << \"Birinci satır\\n\";\nstd::cout << \"İkinci satır\\n\";";
+    lessons[1].exampleCode =
+        "#include <iostream>\n\n"
+        "int main() {\n"
+        "    std::cout << \"Merhaba\\n\";\n"
+        "    std::cout << \"Dünya\\n\";\n"
+        "    return 0;\n"
+        "}";
+    lessons[1].lineExplanations = {
+        "\"Merhaba\\n\" : Merhaba yazdıktan sonra imleci bir alt satıra geçirir.",
+        "\"Dünya\\n\" : Dünya yazdıktan sonra tekrar alt satıra geçer.",
+        "İki ayrı cout ifadesi, \\n sayesinde iki ayrı satırda görünür.",
+    };
+    lessons[1].commonMistakes = {
+        "\\n yerine yanlışlıkla /n yazmak (ters slash yerine düz slash kullanmak).",
+        "\\n ifadesini tırnakların dışına yazmak.",
+        "Satır atlamanın otomatik olduğunu sanıp \\n eklemeyi unutmak.",
+    };
+
+    lessons[2].explanation =
+        "std::endl, çıktıyı yeni satıra geçirir ve ayrıca çıktı tamponunu "
+        "(buffer) hemen boşaltır (flush). Bu ekstra boşaltma işlemi \\n'e "
+        "göre biraz daha yavaştır; bu yüzden sık tekrarlanan yazdırmalarda "
+        "genellikle \\n tercih edilir, ama endl de tamamen geçerlidir.";
+    lessons[2].syntax = "std::cout << \"Merhaba\" << std::endl;";
+    lessons[2].exampleCode =
+        "#include <iostream>\n\n"
+        "int main() {\n"
+        "    std::cout << \"Birinci\" << std::endl;\n"
+        "    std::cout << \"İkinci\" << std::endl;\n"
+        "    return 0;\n"
+        "}";
+    lessons[2].lineExplanations = {
+        "std::cout << \"Birinci\" << std::endl; : Birinci yazar, ardından satırı bitirip tamponu boşaltır.",
+        "std::cout << \"İkinci\" << std::endl; : İkinci yazar ve yine satırı bitirir.",
+        "İki endl, çıktının iki ayrı satırda görünmesini sağlar.",
+    };
+    lessons[2].commonMistakes = {
+        "endl yazarken std:: önekini unutmak.",
+        "endl ile \\n'in birebir aynı hızda olduğunu sanmak (endl ekstra flush yapar).",
+        "endl'i çift tırnak içine yazmak (\"endl\" gibi) — bu durumda sadece düz metin olarak yazdırılır, satır atlamaz.",
+    };
+
+    lessons[3].explanation =
+        "cin, klavyeden veri okumak için kullanılan giriş akışıdır (input "
+        "stream). >> operatörü ile bir değişkene değer atanır. Boşluk veya "
+        "yeni satır görene kadar okuma yapar; bu yüzden boşluk içeren "
+        "metinler için getline() tercih edilir.";
+    lessons[3].syntax = "int yas;\nstd::cin >> yas;";
+    lessons[3].exampleCode =
+        "#include <iostream>\n\n"
+        "int main() {\n"
+        "    int yas;\n"
+        "    std::cout << \"Yaşınız: \";\n"
+        "    std::cin >> yas;\n"
+        "    std::cout << \"Yaşınız: \" << yas;\n"
+        "    return 0;\n"
+        "}";
+    lessons[3].lineExplanations = {
+        "int yas; : Kullanıcının gireceği yaşı saklamak için bir tam sayı değişkeni tanımlar.",
+        "std::cin >> yas; : Klavyeden girilen değeri okuyup yas değişkenine atar.",
+        "std::cout << ... << yas; : Okunan değeri tekrar ekrana yazdırır.",
+    };
+    lessons[3].commonMistakes = {
+        ">> operatörünü << ile karıştırmak (cin için >> kullanılır).",
+        "cin ile boşluk içeren bir cümleyi okumaya çalışmak (yalnızca ilk kelimeyi alır).",
+        "Değişken türü ile girilen verinin uyuşmamasına dikkat etmemek (örneğin sayı beklenirken harf girilmesi).",
+    };
+
+    lessons[4].explanation =
+        "getline(), kullanıcıdan boşluk içeren tam bir satırı okumak için "
+        "kullanılır. cin >> yalnızca ilk boşluğa kadar okurken, "
+        "getline(std::cin, degisken) tüm satırı (yeni satıra kadar) okur. "
+        "Kullanmak için <string> kütüphanesi ve bir std::string değişkeni gerekir.";
+    lessons[4].syntax = "std::string isim;\nstd::getline(std::cin, isim);";
+    lessons[4].exampleCode =
+        "#include <iostream>\n"
+        "#include <string>\n\n"
+        "int main() {\n"
+        "    std::string isimSoyisim;\n"
+        "    std::cout << \"Adınız soyadınız: \";\n"
+        "    std::getline(std::cin, isimSoyisim);\n"
+        "    std::cout << \"Merhaba, \" << isimSoyisim;\n"
+        "    return 0;\n"
+        "}";
+    lessons[4].lineExplanations = {
+        "#include <string> : std::string ve getline için gerekli kütüphaneyi ekler.",
+        "std::string isimSoyisim; : Boşluk içerebilecek metni saklayacak değişkeni tanımlar.",
+        "std::getline(std::cin, isimSoyisim); : Kullanıcının girdiği tüm satırı (boşluklar dahil) okuyup değişkene atar.",
+    };
+    lessons[4].commonMistakes = {
+        "<string> kütüphanesini eklemeyi unutmak.",
+        "getline() öncesinde kullanılan bir cin >> ifadesinin bıraktığı yeni satır karakterini temizlememek (bu durumda getline boş okuyabilir).",
+        "getline() parametrelerinin sırasını karıştırmak (önce cin, sonra değişken gelir).",
+    };
+
+    lessons[5].explanation =
+        "int, tam sayı (ondalıksız) değerleri saklamak için kullanılan "
+        "temel bir veri türüdür. Örneğin yaş, adet veya sayaç gibi "
+        "değerler genellikle int ile tutulur.";
+    lessons[5].syntax = "int sayi = 5;";
+    lessons[5].exampleCode =
+        "#include <iostream>\n\n"
+        "int main() {\n"
+        "    int yas = 25;\n"
+        "    std::cout << yas;\n"
+        "    return 0;\n"
+        "}";
+    lessons[5].lineExplanations = {
+        "int yas = 25; : yas adında bir tam sayı değişkeni tanımlar ve 25 değerini atar.",
+        "std::cout << yas; : yas değişkeninin değerini ekrana yazdırır.",
+    };
+    lessons[5].commonMistakes = {
+        "int türüne ondalıklı bir sayı (örneğin 3.14) atamaya çalışmak (ondalık kısım kaybolur).",
+        "Değişkeni tanımlarken türünü (int) yazmayı unutmak.",
+        "Çok büyük sayılarda int'in sınırlarını (taşma riski) göz ardı etmek.",
+    };
+
+    lessons[6].explanation =
+        "double, ondalıklı (kesirli) sayıları saklamak için kullanılan bir "
+        "veri türüdür. Örneğin fiyat, ortalama veya yüzde gibi kesirli "
+        "değerler double ile tutulur.";
+    lessons[6].syntax = "double fiyat = 19.99;";
+    lessons[6].exampleCode =
+        "#include <iostream>\n\n"
+        "int main() {\n"
+        "    double ortalama = 87.5;\n"
+        "    std::cout << ortalama;\n"
+        "    return 0;\n"
+        "}";
+    lessons[6].lineExplanations = {
+        "double ortalama = 87.5; : ortalama adında ondalıklı bir değişken tanımlar ve 87.5 değerini atar.",
+        "std::cout << ortalama; : ortalama değişkeninin değerini ekrana yazdırır.",
+    };
+    lessons[6].commonMistakes = {
+        "double gereken bir yerde int kullanmak (ondalık kısmın kaybolmasına yol açar).",
+        "Ondalık ayıracı olarak virgül (,) kullanmak (C++'ta nokta (.) kullanılır).",
+        "double ile float'ı karıştırmak (ikisi de ondalıklıdır ama farklı hassasiyete sahiptir).",
+    };
+
+    lessons[7].explanation =
+        "char, tek bir karakteri (harf, rakam veya sembol) saklamak için "
+        "kullanılan bir veri türüdür. Değer tanımlarken tek tırnak (') "
+        "kullanılır, örneğin 'A'.";
+    lessons[7].syntax = "char harf = 'A';";
+    lessons[7].exampleCode =
+        "#include <iostream>\n\n"
+        "int main() {\n"
+        "    char harf = 'B';\n"
+        "    std::cout << harf;\n"
+        "    return 0;\n"
+        "}";
+    lessons[7].lineExplanations = {
+        "char harf = 'B'; : harf adında bir karakter değişkeni tanımlar ve 'B' değerini atar.",
+        "std::cout << harf; : harf değişkeninin değerini ekrana yazdırır.",
+    };
+    lessons[7].commonMistakes = {
+        "char değeri tanımlarken çift tırnak (\"A\") kullanmak (bu bir string olur, char için tek tırnak gerekir).",
+        "Bir char değişkenine birden fazla karakter atamaya çalışmak (örn. 'AB' geçersizdir).",
+        "char ile string'i karıştırmak (char tek karakter, string ise karakter dizisidir).",
+    };
+
+    lessons[8].explanation =
+        "bool, yalnızca true (doğru) veya false (yanlış) değerlerinden "
+        "birini saklayan bir veri türüdür. Genellikle bir koşulun "
+        "sonucunu tutmak için kullanılır.";
+    lessons[8].syntax = "bool aktif = true;";
+    lessons[8].exampleCode =
+        "#include <iostream>\n\n"
+        "int main() {\n"
+        "    bool gecti = true;\n"
+        "    std::cout << gecti;\n"
+        "    return 0;\n"
+        "}";
+    lessons[8].lineExplanations = {
+        "bool gecti = true; : gecti adında bir mantıksal değişken tanımlar ve true (doğru) değerini atar.",
+        "std::cout << gecti; : gecti değişkenini ekrana yazdırır (true için 1, false için 0 görünür).",
+    };
+    lessons[8].commonMistakes = {
+        "true/false yerine \"true\"/\"false\" gibi tırnaklı metin yazmak (bunlar string olur, bool değildir).",
+        "cout ile bool yazdırıldığında true/false yerine 1/0 göründüğünü unutmak.",
+        "bool değişkenine 0 veya 1 dışında sayılar atayıp anlamını karıştırmak.",
+    };
+
+    lessons[9].explanation =
+        "const, bir değişkenin değerinin tanımlandıktan sonra "
+        "değiştirilemeyeceğini belirtir. Sabit kalması gereken değerler "
+        "(örneğin pi sayısı) için kullanılır. const bir değişkene ikinci "
+        "kez değer atamaya çalışmak derleme hatası verir.";
+    lessons[9].syntax = "const double PI = 3.14;";
+    lessons[9].exampleCode =
+        "#include <iostream>\n\n"
+        "int main() {\n"
+        "    const int MAKS_PUAN = 100;\n"
+        "    std::cout << MAKS_PUAN;\n"
+        "    return 0;\n"
+        "}";
+    lessons[9].lineExplanations = {
+        "const int MAKS_PUAN = 100; : MAKS_PUAN adında, değeri sonradan değiştirilemeyecek bir sabit tanımlar.",
+        "std::cout << MAKS_PUAN; : Sabitin değerini ekrana yazdırır.",
+    };
+    lessons[9].commonMistakes = {
+        "const olarak tanımlanan bir değişkene sonradan yeni bir değer atamaya çalışmak (derleme hatası oluşur).",
+        "const bir değişkeni tanımlarken başlangıç değeri vermemek (const değişkenler tanımlandığı anda değer almalıdır).",
+        "const kullanmanın performansı yavaşlattığını sanmak (aksine, derleyiciye ek bilgi vererek optimizasyona yardımcı olabilir).",
+    };
+}
+
 }  // namespace
 
 LessonManager::LessonManager() {
@@ -159,6 +401,8 @@ LessonManager::LessonManager() {
         lesson.title = seed.title;
         lessons_.push_back(std::move(lesson));
     }
+
+    applyIntroLessonContent(lessons_);
 }
 
 const std::vector<Lesson>& LessonManager::allLessons() const {
