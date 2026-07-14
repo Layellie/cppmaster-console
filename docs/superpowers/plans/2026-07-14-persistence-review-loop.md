@@ -1277,9 +1277,9 @@ Expected: zero warnings.
 
 **Pass A — create exactly one mistake (topic 2, question id 7 answered wrong, rest correct), completing the topic:**
 
-Topic 2's 6 questions are ids 7-12: correct answers are `b`, `b`, `1`, `2`, `n`, `\n` (a literal backslash followed by `n`, two characters). Answer id 7 wrong (`a` instead of `b`):
+Topic 2's 6 questions are ids 7-12: correct answers are `b`, `b`, `1`, `2`, `n`, `\n` (a literal backslash followed by `n`, two characters). Answer id 7 wrong (`a` instead of `b`). Note: in Git Bash, getting `printf`'s format string to emit that literal 2-byte `\n` answer (rather than an actual newline) needs **4** backslashes at that position, not 2 — bash's double-quote parsing halves consecutive backslashes before a non-special character, so `\\\\n` in the source is what actually reaches `printf` as the raw `\n` it needs to pass through:
 ```bash
-printf "1\n2\na\nb\n1\n2\nn\n\\n\n0\n" | ./build/Debug/CppMasterConsole.exe
+printf "1\n2\na\nb\n1\n2\nn\n\\\\n\n0\n" | ./build/Debug/CppMasterConsole.exe
 ```
 Confirm: `Sonuç: 5/6 doğru (%83), kazanılan XP: 65` (id 7's 10 XP not earned; 20+5+10+10+20 = 65), topic marked `Completed` (83% ≥ 70%).
 
