@@ -19,9 +19,23 @@ public:
     void recordAnswer(bool correct);
     void setAnsweredCounters(int totalAnswered, int totalCorrect);
 
+    [[nodiscard]] int currentStreak() const;
+    [[nodiscard]] int longestStreak() const;
+    void recordStreak(bool correct);
+    void setStreakCounters(int current, int longest);
+
+    [[nodiscard]] int writeCodeCorrectCount() const;
+    [[nodiscard]] int errorFixCorrectCount() const;
+    void recordTypedCorrectAnswer(QuestionType type);
+    void setTypedCorrectCounters(int writeCode, int errorFix);
+
 private:
     std::unordered_map<int, TopicStatus> statusByTopicId_;
     int totalXp_ = 0;
     int totalQuestionsAnswered_ = 0;
     int totalCorrectAnswers_ = 0;
+    int currentStreak_ = 0;
+    int longestStreak_ = 0;
+    int writeCodeCorrectCount_ = 0;
+    int errorFixCorrectCount_ = 0;
 };

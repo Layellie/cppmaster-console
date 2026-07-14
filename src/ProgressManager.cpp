@@ -75,6 +75,10 @@ ProgressLoadResult ProgressManager::load(
     int xp = 0;
     int answered = 0;
     int correct = 0;
+    int streakCurrent = 0;
+    int streakLongest = 0;
+    int writeCodeCorrect = 0;
+    int errorFixCorrect = 0;
     bool corrupted = false;
 
     std::string line;
@@ -107,6 +111,34 @@ ProgressLoadResult ProgressManager::load(
                 corrupted = true;
                 break;
             }
+        } else if (recordType == "streak_current") {
+            std::string valueText;
+            lineStream >> valueText;
+            if (!tryParseInt(valueText, streakCurrent)) {
+                corrupted = true;
+                break;
+            }
+        } else if (recordType == "streak_longest") {
+            std::string valueText;
+            lineStream >> valueText;
+            if (!tryParseInt(valueText, streakLongest)) {
+                corrupted = true;
+                break;
+            }
+        } else if (recordType == "writecode_correct") {
+            std::string valueText;
+            lineStream >> valueText;
+            if (!tryParseInt(valueText, writeCodeCorrect)) {
+                corrupted = true;
+                break;
+            }
+        } else if (recordType == "errorfix_correct") {
+            std::string valueText;
+            lineStream >> valueText;
+            if (!tryParseInt(valueText, errorFixCorrect)) {
+                corrupted = true;
+                break;
+            }
         } else if (recordType == "topic") {
             std::string topicIdText;
             std::string statusText;
@@ -133,6 +165,8 @@ ProgressLoadResult ProgressManager::load(
 
     progress.addXp(xp);
     progress.setAnsweredCounters(answered, correct);
+    progress.setStreakCounters(streakCurrent, streakLongest);
+    progress.setTypedCorrectCounters(writeCodeCorrect, errorFixCorrect);
     return ProgressLoadResult{std::move(progress), false};
 }
 
@@ -145,6 +179,10 @@ void ProgressManager::save(
     file << "xp " << progress.totalXp() << '\n';
     file << "answered " << progress.totalQuestionsAnswered() << '\n';
     file << "correct " << progress.totalCorrectAnswers() << '\n';
+    file << "streak_current " << progress.currentStreak() << '\n';
+    file << "streak_longest " << progress.longestStreak() << '\n';
+    file << "writecode_correct " << progress.writeCodeCorrectCount() << '\n';
+    file << "errorfix_correct " << progress.errorFixCorrectCount() << '\n';
     for (int topicId = 1; topicId <= topicCount; ++topicId) {
         file << "topic " << topicId << ' ' << statusName(progress.statusOf(topicId)) << '\n';
     }
