@@ -363,7 +363,7 @@ QuestionManager::QuestionManager() {
         .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
         .prompt = "double sayi1 = 3.5;\ndouble sayi2 = 2.5;\nstd::cout << sayi1 + sayi2;\nYukarıdaki kodun ekran çıktısı nedir?",
         .acceptedAnswers = {"6", "6.0"},
-        .explanation = "3.5 ile 2.5 toplanınca 6.0 elde edilir.",
+        .explanation = "3.5 ile 2.5 toplanınca 6.0 elde edilir; cout bunu sondaki sıfırları göstermeden 6 olarak yazdırır.",
         .baseXp = 20,
     });
 
