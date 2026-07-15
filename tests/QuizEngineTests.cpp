@@ -4,6 +4,7 @@
 #include <utility>
 #include <vector>
 
+#include "Settings.h"
 #include "TestRunner.h"
 
 namespace {
@@ -92,4 +93,31 @@ TEST_CASE(QuizEngine_WriteCode_RequiresAllSubstringsAndBalancedBrackets) {
 
     const Question bracketQuestion = makeQuestion(QuestionType::WriteCode, {"cin"});
     CHECK(!engine.evaluate(bracketQuestion, "if (true) { cin >> x; cout << x;").correct);
+}
+
+TEST_CASE(QuizEngine_LenientCaseSensitivitySettingAcceptsDifferentCase) {
+    QuizEngine engine;
+    const Question question = makeQuestion(QuestionType::FindError, {"int yas = 20;"});
+    Settings lenientSettings;
+    lenientSettings.strictCaseSensitivity = false;
+    CHECK(engine.evaluate(question, "int Yas = 20;", lenientSettings).correct);
+
+    Settings strictSettings;
+    CHECK(!engine.evaluate(question, "int Yas = 20;", strictSettings).correct);
+}
+
+TEST_CASE(QuizEngine_LenientWriteCodeToleranceAllowsOneMissingRequirement) {
+    QuizEngine engine;
+    const Question question =
+        makeQuestion(QuestionType::WriteCode, {"cin", ">>", "cout", "<<"});
+    Settings lenientSettings;
+    lenientSettings.lenientWriteCodeTolerance = true;
+    CHECK(engine.evaluate(question, "int sayi;\ncin >> sayi;\ncout << sayi;", lenientSettings)
+              .correct);
+    CHECK(engine.evaluate(question, "int sayi;\ncin >> sayi;\ncout sayi;", lenientSettings)
+              .correct);
+    CHECK(!engine.evaluate(question, "int sayi;", lenientSettings).correct);
+
+    Settings strictSettings;
+    CHECK(!engine.evaluate(question, "int sayi;\ncin >> sayi;", strictSettings).correct);
 }

@@ -49,6 +49,15 @@ std::string collapseWhitespace(const std::string& text) {
     return result;
 }
 
+std::string lowerAscii(const std::string& text) {
+    std::string result;
+    result.reserve(text.size());
+    for (const char character : text) {
+        result.push_back(static_cast<char>(std::tolower(static_cast<unsigned char>(character))));
+    }
+    return result;
+}
+
 std::string extractDigitSequence(const std::string& text) {
     std::string result;
     std::string currentToken;
@@ -140,10 +149,17 @@ bool matchesAnyAcceptedCaseInsensitive(const Question& question, const std::stri
 }
 
 bool matchesAnyAcceptedCaseSensitiveWhitespaceNormalized(
-    const Question& question, const std::string& rawAnswer) {
-    const std::string normalizedAnswer = collapseWhitespace(rawAnswer);
+    const Question& question, const std::string& rawAnswer, bool strictCaseSensitivity) {
+    std::string normalizedAnswer = collapseWhitespace(rawAnswer);
+    if (!strictCaseSensitivity) {
+        normalizedAnswer = lowerAscii(normalizedAnswer);
+    }
     for (const std::string& accepted : question.acceptedAnswers) {
-        if (normalizedAnswer == collapseWhitespace(accepted)) {
+        std::string normalizedAccepted = collapseWhitespace(accepted);
+        if (!strictCaseSensitivity) {
+            normalizedAccepted = lowerAscii(normalizedAccepted);
+        }
+        if (normalizedAnswer == normalizedAccepted) {
             return true;
         }
     }
@@ -160,16 +176,19 @@ bool matchesOrderCode(const Question& question, const std::string& rawAnswer) {
     return false;
 }
 
-bool matchesWriteCode(const Question& question, const std::string& rawAnswer) {
+bool matchesWriteCode(
+    const Question& question, const std::string& rawAnswer, bool lenientWriteCodeTolerance) {
     if (!isBalanced(rawAnswer)) {
         return false;
     }
+    int missingCount = 0;
     for (const std::string& required : question.acceptedAnswers) {
         if (rawAnswer.find(required) == std::string::npos) {
-            return false;
+            ++missingCount;
         }
     }
-    return true;
+    const int allowedMissing = lenientWriteCodeTolerance ? 1 : 0;
+    return missingCount <= allowedMissing;
 }
 
 std::string writeCodeRequirementsDisplay(const Question& question) {
@@ -185,7 +204,8 @@ std::string writeCodeRequirementsDisplay(const Question& question) {
 
 }  // namespace
 
-AnswerResult QuizEngine::evaluate(const Question& question, const std::string& rawAnswer) const {
+AnswerResult QuizEngine::evaluate(
+    const Question& question, const std::string& rawAnswer, const Settings& settings) const {
     bool isCorrect = false;
     std::string display;
 
@@ -200,7 +220,8 @@ AnswerResult QuizEngine::evaluate(const Question& question, const std::string& r
         case QuestionType::PredictOutput:
         case QuestionType::FindError:
         case QuestionType::FixCode:
-            isCorrect = matchesAnyAcceptedCaseSensitiveWhitespaceNormalized(question, rawAnswer);
+            isCorrect = matchesAnyAcceptedCaseSensitiveWhitespaceNormalized(
+                question, rawAnswer, settings.strictCaseSensitivity);
             display = question.acceptedAnswers.empty() ? "" : question.acceptedAnswers.front();
             break;
         case QuestionType::OrderCode:
@@ -208,7 +229,7 @@ AnswerResult QuizEngine::evaluate(const Question& question, const std::string& r
             display = question.acceptedAnswers.empty() ? "" : question.acceptedAnswers.front();
             break;
         case QuestionType::WriteCode:
-            isCorrect = matchesWriteCode(question, rawAnswer);
+            isCorrect = matchesWriteCode(question, rawAnswer, settings.lenientWriteCodeTolerance);
             display = writeCodeRequirementsDisplay(question);
             break;
         default:
