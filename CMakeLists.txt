@@ -83,6 +83,8 @@ add_executable(CppMasterConsoleTests
     tests/QuestionHistoryTests.cpp
     tests/QuestionGenerationEngineTests.cpp
     tests/GeneratorsTests.cpp
+    tests/QuestionManagerTests.cpp
+    tests/LessonManagerTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
