@@ -74,6 +74,9 @@ add_executable(CppMasterConsoleTests
     tests/TestRunner.h
     tests/main.cpp
     tests/FnvHashTests.cpp
+    tests/LevelSystemTests.cpp
+    tests/UserProgressTests.cpp
+    tests/QuizEngineTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
