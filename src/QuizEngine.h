@@ -3,6 +3,7 @@
 #include <string>
 
 #include "Question.h"
+#include "Settings.h"
 
 struct AnswerResult {
     bool correct;
@@ -12,5 +13,7 @@ struct AnswerResult {
 
 class QuizEngine {
 public:
-    [[nodiscard]] AnswerResult evaluate(const Question& question, const std::string& rawAnswer) const;
+    [[nodiscard]] AnswerResult evaluate(
+        const Question& question, const std::string& rawAnswer,
+        const Settings& settings = Settings{}) const;
 };
