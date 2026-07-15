@@ -35,6 +35,11 @@ add_executable(CppMasterConsole
     src/GeneratedQuestion.h
     src/QuestionHistory.h
     src/QuestionHistory.cpp
+    src/IQuestionGenerator.h
+    src/QuestionGenerationEngine.h
+    src/QuestionGenerationEngine.cpp
+    src/generators/IntArithmeticPredictGenerator.h
+    src/generators/IntArithmeticPredictGenerator.cpp
     src/Application.h
     src/Application.cpp
 )
