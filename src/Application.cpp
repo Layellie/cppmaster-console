@@ -11,6 +11,7 @@
 #include <system_error>
 
 #include "LevelSystem.h"
+#include "TopicLock.h"
 
 namespace {
 
@@ -197,8 +198,13 @@ void Application::handleChoice(int choice) {
 void Application::showTopicBrowser() {
     ui_.printLine("");
     for (int sectionId = 1; sectionId <= lessons_.sectionCount(); ++sectionId) {
-        ui_.printLine(
-            "Bölüm " + std::to_string(sectionId) + ": " + lessons_.sectionTitle(sectionId));
+        std::string sectionHeader =
+            "Bölüm " + std::to_string(sectionId) + ": " + lessons_.sectionTitle(sectionId);
+        if (settings_.topicLockEnabled &&
+            !isSectionRecommended(sectionId, progress_.highestSectionExamPassed())) {
+            sectionHeader += " (henüz önerilmiyor)";
+        }
+        ui_.printLine(sectionHeader);
 
         for (const Lesson& lesson : lessons_.lessonsInSection(sectionId)) {
             const char marker = statusMarker(progress_.statusOf(lesson.id));
@@ -640,7 +646,8 @@ void Application::runSectionExam() {
     const double completionRatio =
         static_cast<double>(completedCount) / static_cast<double>(kExamSectionTopicCount);
 
-    if (completionRatio < kSectionCompletionGateThreshold) {
+    if (!sectionExamIsUnlocked(
+            settings_.topicLockEnabled, completionRatio, kSectionCompletionGateThreshold)) {
         ui_.printLine("");
         ui_.printLine(
             "Bu bölümün sınavına girebilmek için konuların en az %70'ini tamamlamalısınız.");
@@ -680,6 +687,10 @@ void Application::runSectionExam() {
     ui_.printLine("Kazanılan XP: " + std::to_string(examXp));
     ui_.printLine(
         std::string("Sonuç: ") + (scoreRatio >= kExamPassThreshold ? "GEÇTİN" : "KALDIN"));
+
+    if (scoreRatio >= kExamPassThreshold) {
+        progress_.recordSectionExamPassed(kExamSectionId);
+    }
 
     if (correctCount == kExamQuestionCount) {
         if (achievements_.unlock(AchievementId::PerfectExam)) {
