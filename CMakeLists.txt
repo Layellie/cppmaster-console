@@ -81,6 +81,8 @@ add_executable(CppMasterConsoleTests
     tests/MistakeTrackerTests.cpp
     tests/AchievementTrackerTests.cpp
     tests/QuestionHistoryTests.cpp
+    tests/QuestionGenerationEngineTests.cpp
+    tests/GeneratorsTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
