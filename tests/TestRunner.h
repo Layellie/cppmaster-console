@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <exception>
 #include <functional>
 #include <iostream>
 #include <string>
@@ -21,7 +22,15 @@ public:
         int failedTests = 0;
         for (const auto& test : tests_) {
             currentTestFailureCount_ = 0;
-            test.testFunction();
+            try {
+                test.testFunction();
+            } catch (const std::exception& exception) {
+                ++currentTestFailureCount_;
+                std::cout << "  Uncaught exception: " << exception.what() << '\n';
+            } catch (...) {
+                ++currentTestFailureCount_;
+                std::cout << "  Uncaught exception of unknown type\n";
+            }
             if (currentTestFailureCount_ == 0) {
                 std::cout << "[PASS] " << test.name << '\n';
             } else {
