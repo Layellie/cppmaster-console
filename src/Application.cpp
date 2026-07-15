@@ -1,8 +1,10 @@
 #include "Application.h"
 
+#include <chrono>
 #include <cstddef>
 #include <filesystem>
 #include <iostream>
+#include <random>
 #include <string>
 #include <system_error>
 
@@ -21,6 +23,8 @@ constexpr const char* kMistakesFilePath = "data/mistakes.txt";
 constexpr const char* kMistakesBackupPath = "data/mistakes_corrupted_backup.txt";
 constexpr const char* kAchievementsFilePath = "data/achievements.txt";
 constexpr const char* kAchievementsBackupPath = "data/achievements_corrupted_backup.txt";
+constexpr const char* kGeneratedHistoryFilePath = "data/generated_question_history.txt";
+constexpr const char* kGeneratedHistoryBackupPath = "data/generated_question_history_corrupted_backup.txt";
 constexpr int kExamQuestionIds[] = {
     1, 2, 3, 4, 5, 6, 19, 20, 33, 35,
     61, 62, 63, 64, 65, 66, 67, 68, 69, 71,
@@ -49,10 +53,17 @@ char optionLetter(std::size_t index) {
     return static_cast<char>('A' + index);
 }
 
+std::uint64_t createSeed() {
+    const auto now = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+    std::random_device randomDevice;
+    return static_cast<std::uint64_t>(now) ^ (static_cast<std::uint64_t>(randomDevice()) << 32U) ^
+           static_cast<std::uint64_t>(randomDevice());
+}
+
 }  // namespace
 
 Application::Application()
-    : progress_(static_cast<int>(lessons_.allLessons().size())) {
+    : progress_(static_cast<int>(lessons_.allLessons().size())), randomEngine_(createSeed()) {
     ensureDataDirectoryExists();
 
     const auto topicCount = static_cast<int>(lessons_.allLessons().size());
@@ -77,6 +88,14 @@ Application::Application()
         ui_.printLine(
             "Uyarı: başarımlar dosyası bozuktu; yedeklendi (" +
             std::string(kAchievementsBackupPath) + ") ve sıfırlandı.");
+    }
+
+    const bool historyCorrupted =
+        generationEngine_.loadHistory(kGeneratedHistoryFilePath, kGeneratedHistoryBackupPath);
+    if (historyCorrupted) {
+        ui_.printLine(
+            "Uyarı: üretilen soru geçmişi dosyası bozuktu; yedeklendi (" +
+            std::string(kGeneratedHistoryBackupPath) + ") ve sıfırlandı.");
     }
 }
 
@@ -128,7 +147,7 @@ void Application::handleChoice(int choice) {
             showTopicBrowser();
             break;
         case 2:
-            showNotYetAvailable("Hızlı Test");
+            runQuickTest();
             break;
         case 3:
             runDailyReview();
@@ -264,7 +283,7 @@ void Application::runTopicQuiz(int topicId) {
         progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
 }
 
-AnswerResult Application::askOneQuestion(const Question& question) {
+AnswerResult Application::askOneQuestion(const Question& question, bool trackMistakes) {
     ui_.printLine(question.prompt);
 
     if (question.type == QuestionType::MultipleChoice) {
@@ -313,10 +332,10 @@ AnswerResult Application::askOneQuestion(const Question& question) {
     progress_.recordStreak(result.correct);
     if (result.correct) {
         progress_.recordTypedCorrectAnswer(question.type);
-        if (mistakes_.hasMistake(question.id)) {
+        if (trackMistakes && mistakes_.hasMistake(question.id)) {
             mistakes_.recordCorrectRetry(question.id);
         }
-    } else {
+    } else if (trackMistakes) {
         mistakes_.recordWrong(question.id);
     }
 
@@ -324,7 +343,9 @@ AnswerResult Application::askOneQuestion(const Question& question) {
 
     const auto topicCount = static_cast<int>(lessons_.allLessons().size());
     progressManager_.save(progress_, kProgressFilePath, topicCount);
-    mistakes_.saveToFile(kMistakesFilePath);
+    if (trackMistakes) {
+        mistakes_.saveToFile(kMistakesFilePath);
+    }
 
     return result;
 }
@@ -532,6 +553,65 @@ void Application::runDailyReview() {
     ui_.printLine("Günlük tekrar başlıyor (" + std::to_string(mistakes.size()) + " soru):");
     ui_.printLine("");
     runMistakeQuestions(mistakes);
+}
+
+void Application::runQuickTest() {
+    ui_.printLine("");
+    ui_.printHeader("HIZLI TEST");
+    ui_.printLine("Sizin için 5 taze soru üretmeye çalışacağım.");
+    ui_.printLine("");
+
+    constexpr int kQuickTestQuestionCount = 5;
+    int correctCount = 0;
+    int sessionXp = 0;
+    int askedCount = 0;
+
+    for (int index = 0; index < kQuickTestQuestionCount; ++index) {
+        std::uniform_int_distribution<int> generatorChoice(0, 1);
+        const bool tryIntFirst = generatorChoice(randomEngine_) == 0;
+
+        std::optional<GeneratedQuestion> generated;
+        if (tryIntFirst) {
+            generated = generationEngine_.generateUnique(intArithmeticGenerator_, randomEngine_);
+            if (!generated.has_value()) {
+                generated = generationEngine_.generateUnique(boolOutputGenerator_, randomEngine_);
+            }
+        } else {
+            generated = generationEngine_.generateUnique(boolOutputGenerator_, randomEngine_);
+            if (!generated.has_value()) {
+                generated = generationEngine_.generateUnique(intArithmeticGenerator_, randomEngine_);
+            }
+        }
+
+        if (!generated.has_value()) {
+            ui_.printLine("Bu oturumda başka taze soru üretemedim; testi burada bitiriyorum.");
+            break;
+        }
+
+        generated->question.id = nextGeneratedQuestionId_++;
+        const AnswerResult result = askOneQuestion(generated->question, /*trackMistakes=*/false);
+        ++askedCount;
+        if (result.correct) {
+            ++correctCount;
+            sessionXp += result.xpAwarded;
+        }
+
+        generationEngine_.saveHistory(kGeneratedHistoryFilePath);
+    }
+
+    if (askedCount > 0) {
+        const int successPercent = static_cast<int>(
+            (static_cast<double>(correctCount) / static_cast<double>(askedCount)) * 100.0);
+        ui_.printLine(
+            "Hızlı test bitti: " + std::to_string(correctCount) + "/" + std::to_string(askedCount) +
+            " doğru (%" + std::to_string(successPercent) +
+            "), kazanılan XP: " + std::to_string(sessionXp));
+    }
+    ui_.printLine("");
+
+    awardXpAndCheckLevelUp(sessionXp);
+    progressManager_.save(
+        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
 }
 
 void Application::runSectionExam() {
