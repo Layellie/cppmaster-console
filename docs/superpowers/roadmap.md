@@ -64,18 +64,19 @@ as Phases 1-7.
   explanation detail, daily review cap, export/import); renk/ses/sınav-soru-
   sayısı deliberately deferred (see note above). Defaults reproduce every
   pre-Phase-8 hardcoded behavior exactly.
-- **Phase 9 — Konu kilidi sistemi:** %70 tamamlama eşiği, Ayarlar'dan
-  kapatılabilir. Note discovered during Phase 8: `Application.cpp` already
-  gates *Section 1's exam* behind a 70%-topic-completion ratio
-  (`kSectionCompletionGateThreshold`) — that part of the original "Bölüm
-  kilidi" spec item is done. What's still missing is gating a *section's
-  topics* behind the *previous* section's exam score, which has nowhere
-  real to plug in until Section 2 exists (a content-expansion phase, 13+).
-  Scope Phase 9 to: consuming `settings_.topicLockEnabled` to let the
-  existing Section-1 exam gate be disabled, plus building the general
-  next-section-unlock mechanism ready for when Section 2 lands — not to
-  producing an end-to-end-testable-today cross-section lock, since only one
-  section currently has content.
+- **Phase 9 — Konu kilidi sistemi: COMPLETE** (commits `ad5d4e2..4841703`,
+  final review "Ready to merge: With fixes" — one doc-only fix, this
+  roadmap entry, applied directly). `settings_.topicLockEnabled` now gates
+  Section 1's pre-existing 70%-completion exam threshold
+  (`sectionExamIsUnlocked` in `src/TopicLock.h`), a passed exam is recorded
+  via `UserProgress::recordSectionExamPassed`/persisted via
+  `ProgressManager`, and the topic browser shows a `(henüz önerilmiyor)`
+  advisory tag (`isSectionRecommended`) on any section beyond the highest
+  one whose exam has been passed — purely advisory, no topic access is
+  ever blocked, matching the brief's actual wording. The general
+  next-section mechanism is built and unit-verified now; it can only
+  currently move past Section 2 once Section 2's exam exists (a later
+  content-expansion phase, 13+), since only Section 1 has content today.
 - **Phase 10 — İpucu sistemi:** ipucu/konu/ornek/gec/cikis komutları, kademeli
   ipucu, XP azaltma.
 - **Phase 11 — Kod Yazma Alıştırmaları modu:** 25 görev (7 başlangıç + 9 orta +
@@ -97,6 +98,13 @@ as Phases 1-7.
 
 ## Status
 
-Phase 8 complete (2026-07-16). Phase 9 starting next. Update this file's
+Phase 9 complete (2026-07-16). Phase 10 starting next. Update this file's
 phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
 per-phase headers).
+
+**Recurring gap, now fixed twice (Phase 8's and Phase 9's final reviews
+both flagged this file as stale):** from Phase 10 onward, each phase's plan
+should include an explicit last step — "update `docs/superpowers/roadmap.md`'s
+phase-order entry and Status section to mark the phase COMPLETE with its
+commit range" — as part of the final task, not left as an after-the-fact
+fix following the final review.
