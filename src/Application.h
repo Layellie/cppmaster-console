@@ -13,6 +13,8 @@
 #include "QuestionGenerationEngine.h"
 #include "QuestionManager.h"
 #include "QuizEngine.h"
+#include "Settings.h"
+#include "SettingsManager.h"
 #include "UserProgress.h"
 #include "generators/BoolOutputPredictGenerator.h"
 #include "generators/IntArithmeticPredictGenerator.h"
@@ -41,6 +43,9 @@ private:
     void runQuickTest();
     void showAchievements();
     void runSectionExam();
+    void showSettingsMenu();
+    void exportProgress();
+    void importProgress();
     void showNotYetAvailable(const std::string& featureName);
     void ensureDataDirectoryExists();
 
@@ -55,6 +60,8 @@ private:
     QuestionGenerationEngine generationEngine_;
     IntArithmeticPredictGenerator intArithmeticGenerator_;
     BoolOutputPredictGenerator boolOutputGenerator_;
+    Settings settings_;
+    SettingsManager settingsManager_;
     std::mt19937_64 randomEngine_;
     int nextGeneratedQuestionId_ = 1000;
     bool running_ = true;
