@@ -31,6 +31,10 @@ add_executable(CppMasterConsole
     src/ProgressManager.cpp
     src/MistakeTracker.h
     src/MistakeTracker.cpp
+    src/FnvHash.h
+    src/GeneratedQuestion.h
+    src/QuestionHistory.h
+    src/QuestionHistory.cpp
     src/Application.h
     src/Application.cpp
 )
