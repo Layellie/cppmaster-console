@@ -90,3 +90,17 @@ void UserProgress::setTypedCorrectCounters(int writeCode, int errorFix) {
     writeCodeCorrectCount_ = writeCode;
     errorFixCorrectCount_ = errorFix;
 }
+
+int UserProgress::highestSectionExamPassed() const {
+    return highestSectionExamPassed_;
+}
+
+void UserProgress::recordSectionExamPassed(int sectionId) {
+    if (sectionId > highestSectionExamPassed_) {
+        highestSectionExamPassed_ = sectionId;
+    }
+}
+
+void UserProgress::setHighestSectionExamPassed(int value) {
+    highestSectionExamPassed_ = value;
+}

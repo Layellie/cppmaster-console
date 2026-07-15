@@ -29,6 +29,10 @@ public:
     void recordTypedCorrectAnswer(QuestionType type);
     void setTypedCorrectCounters(int writeCode, int errorFix);
 
+    [[nodiscard]] int highestSectionExamPassed() const;
+    void recordSectionExamPassed(int sectionId);
+    void setHighestSectionExamPassed(int value);
+
 private:
     std::unordered_map<int, TopicStatus> statusByTopicId_;
     int totalXp_ = 0;
@@ -38,4 +42,5 @@ private:
     int longestStreak_ = 0;
     int writeCodeCorrectCount_ = 0;
     int errorFixCorrectCount_ = 0;
+    int highestSectionExamPassed_ = 0;
 };
