@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 
+#include "AchievementTracker.h"
 #include "ConsoleUI.h"
 #include "LessonManager.h"
 #include "LevelSystem.h"
@@ -26,12 +27,14 @@ private:
     void showLessonContent(const Lesson& lesson);
     void runTopicQuiz(int topicId);
     AnswerResult askOneQuestion(const Question& question);
+    void checkAchievements(const Question& question, bool correct);
     void awardXpAndCheckLevelUp(int amount);
     void resetProgress();
     void showMistakeReview();
     void runMistakeQuestions(const std::vector<MistakeRecord>& mistakesToAsk);
     void showStatistics();
     void runDailyReview();
+    void showAchievements();
     void showNotYetAvailable(const std::string& featureName);
     void ensureDataDirectoryExists();
 
@@ -42,5 +45,6 @@ private:
     UserProgress progress_;
     ProgressManager progressManager_;
     MistakeTracker mistakes_;
+    AchievementTracker achievements_;
     bool running_ = true;
 };

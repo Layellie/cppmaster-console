@@ -19,6 +19,8 @@ constexpr const char* kProgressFilePath = "data/progress.txt";
 constexpr const char* kProgressBackupPath = "data/progress_corrupted_backup.txt";
 constexpr const char* kMistakesFilePath = "data/mistakes.txt";
 constexpr const char* kMistakesBackupPath = "data/mistakes_corrupted_backup.txt";
+constexpr const char* kAchievementsFilePath = "data/achievements.txt";
+constexpr const char* kAchievementsBackupPath = "data/achievements_corrupted_backup.txt";
 
 char statusMarker(TopicStatus status) {
     switch (status) {
@@ -58,6 +60,14 @@ Application::Application()
         ui_.printLine(
             "Uyarı: yanlış kayıtları dosyası bozuktu; yedeklendi (" +
             std::string(kMistakesBackupPath) + ") ve sıfırlandı.");
+    }
+
+    const bool achievementsCorrupted =
+        achievements_.loadFromFile(kAchievementsFilePath, kAchievementsBackupPath);
+    if (achievementsCorrupted) {
+        ui_.printLine(
+            "Uyarı: başarımlar dosyası bozuktu; yedeklendi (" +
+            std::string(kAchievementsBackupPath) + ") ve sıfırlandı.");
     }
 }
 
@@ -127,7 +137,7 @@ void Application::handleChoice(int choice) {
             showStatistics();
             break;
         case 8:
-            showNotYetAvailable("Başarımlar");
+            showAchievements();
             break;
         case 9:
             showNotYetAvailable("Ayarlar");
@@ -291,13 +301,17 @@ AnswerResult Application::askOneQuestion(const Question& question) {
     ui_.printLine("");
 
     progress_.recordAnswer(result.correct);
+    progress_.recordStreak(result.correct);
     if (result.correct) {
+        progress_.recordTypedCorrectAnswer(question.type);
         if (mistakes_.hasMistake(question.id)) {
             mistakes_.recordCorrectRetry(question.id);
         }
     } else {
         mistakes_.recordWrong(question.id);
     }
+
+    checkAchievements(question, result.correct);
 
     const auto topicCount = static_cast<int>(lessons_.allLessons().size());
     progressManager_.save(progress_, kProgressFilePath, topicCount);
@@ -336,6 +350,59 @@ void Application::resetProgress() {
     mistakes_.saveToFile(kMistakesFilePath);
 
     ui_.printLine("İlerlemeniz sıfırlandı.");
+}
+
+void Application::checkAchievements(const Question& question, bool correct) {
+    if (!correct) {
+        return;
+    }
+
+    std::vector<AchievementId> newlyUnlocked;
+
+    if (progress_.totalCorrectAnswers() == 1) {
+        if (achievements_.unlock(AchievementId::FirstStep)) {
+            newlyUnlocked.push_back(AchievementId::FirstStep);
+        }
+    }
+    if (progress_.currentStreak() == 5) {
+        if (achievements_.unlock(AchievementId::FlawlessFive)) {
+            newlyUnlocked.push_back(AchievementId::FlawlessFive);
+        }
+    }
+    if (progress_.currentStreak() == 10) {
+        if (achievements_.unlock(AchievementId::StreakMaster)) {
+            newlyUnlocked.push_back(AchievementId::StreakMaster);
+        }
+    }
+    if (progress_.writeCodeCorrectCount() >= 10) {
+        if (achievements_.unlock(AchievementId::CodeWriter)) {
+            newlyUnlocked.push_back(AchievementId::CodeWriter);
+        }
+    }
+    if (progress_.errorFixCorrectCount() >= 25) {
+        if (achievements_.unlock(AchievementId::BugHunter)) {
+            newlyUnlocked.push_back(AchievementId::BugHunter);
+        }
+    }
+
+    const auto mistakeRecord = mistakes_.findMistake(question.id);
+    if (mistakeRecord.has_value() && mistakeRecord->wrongCount >= 5) {
+        if (achievements_.unlock(AchievementId::NeverGiveUp)) {
+            newlyUnlocked.push_back(AchievementId::NeverGiveUp);
+        }
+    }
+
+    if (newlyUnlocked.empty()) {
+        return;
+    }
+
+    for (const AchievementId id : newlyUnlocked) {
+        ui_.printLine("");
+        ui_.printLine("Yeni başarım kazandın: " + achievementDisplayName(id));
+        ui_.printLine(achievementDescription(id));
+    }
+    ui_.printLine("");
+    achievements_.saveToFile(kAchievementsFilePath);
 }
 
 void Application::showMistakeReview() {
@@ -422,6 +489,18 @@ void Application::showStatistics() {
     ui_.printLine("Başlanmamış konu sayısı: " + std::to_string(notStarted));
     ui_.printLine("");
     ui_.printLine("Kayıtlı yanlış sayısı: " + std::to_string(mistakes_.allMistakesOldestFirst().size()));
+    ui_.printLine("");
+}
+
+void Application::showAchievements() {
+    ui_.printLine("");
+    ui_.printHeader("BAŞARIMLAR");
+    for (const AchievementId id : allAchievementIds()) {
+        const char marker = achievements_.isUnlocked(id) ? '+' : ' ';
+        ui_.printLine(
+            "[" + std::string(1, marker) + "] " + achievementDisplayName(id) + " - " +
+            achievementDescription(id));
+    }
     ui_.printLine("");
 }
 
