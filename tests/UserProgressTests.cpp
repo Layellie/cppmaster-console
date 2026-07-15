@@ -50,3 +50,16 @@ TEST_CASE(UserProgress_RecordAnswerCounters) {
     CHECK(progress.totalQuestionsAnswered() == 3);
     CHECK(progress.totalCorrectAnswers() == 2);
 }
+
+TEST_CASE(UserProgress_RecordSectionExamPassedOnlyIncreases) {
+    UserProgress progress(5);
+    CHECK(progress.highestSectionExamPassed() == 0);
+    progress.recordSectionExamPassed(1);
+    CHECK(progress.highestSectionExamPassed() == 1);
+    progress.recordSectionExamPassed(1);
+    CHECK(progress.highestSectionExamPassed() == 1);
+    progress.recordSectionExamPassed(3);
+    CHECK(progress.highestSectionExamPassed() == 3);
+    progress.recordSectionExamPassed(2);
+    CHECK(progress.highestSectionExamPassed() == 3);
+}

@@ -79,6 +79,7 @@ ProgressLoadResult ProgressManager::load(
     int streakLongest = 0;
     int writeCodeCorrect = 0;
     int errorFixCorrect = 0;
+    int highestSectionExamPassed = 0;
     bool corrupted = false;
 
     std::string line;
@@ -139,6 +140,13 @@ ProgressLoadResult ProgressManager::load(
                 corrupted = true;
                 break;
             }
+        } else if (recordType == "highest_section_exam_passed") {
+            std::string valueText;
+            lineStream >> valueText;
+            if (!tryParseInt(valueText, highestSectionExamPassed)) {
+                corrupted = true;
+                break;
+            }
         } else if (recordType == "topic") {
             std::string topicIdText;
             std::string statusText;
@@ -167,6 +175,7 @@ ProgressLoadResult ProgressManager::load(
     progress.setAnsweredCounters(answered, correct);
     progress.setStreakCounters(streakCurrent, streakLongest);
     progress.setTypedCorrectCounters(writeCodeCorrect, errorFixCorrect);
+    progress.setHighestSectionExamPassed(highestSectionExamPassed);
     return ProgressLoadResult{std::move(progress), false};
 }
 
@@ -183,6 +192,7 @@ void ProgressManager::save(
     file << "streak_longest " << progress.longestStreak() << '\n';
     file << "writecode_correct " << progress.writeCodeCorrectCount() << '\n';
     file << "errorfix_correct " << progress.errorFixCorrectCount() << '\n';
+    file << "highest_section_exam_passed " << progress.highestSectionExamPassed() << '\n';
     for (int topicId = 1; topicId <= topicCount; ++topicId) {
         file << "topic " << topicId << ' ' << statusName(progress.statusOf(topicId)) << '\n';
     }

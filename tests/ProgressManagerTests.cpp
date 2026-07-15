@@ -19,6 +19,7 @@ TEST_CASE(ProgressManager_MissingFileLoadsFreshNotCorrupted) {
     const ProgressLoadResult result = manager.load(path, backup, kTopicCount);
     CHECK(!result.wasCorrupted);
     CHECK(result.progress.totalXp() == 0);
+    CHECK(result.progress.highestSectionExamPassed() == 0);
 }
 
 TEST_CASE(ProgressManager_SaveThenLoadRoundTripsAllFields) {
@@ -32,6 +33,7 @@ TEST_CASE(ProgressManager_SaveThenLoadRoundTripsAllFields) {
     progress.recordStreak(true);
     progress.recordTypedCorrectAnswer(QuestionType::WriteCode);
     progress.setStatus(3, TopicStatus::Completed);
+    progress.recordSectionExamPassed(1);
 
     ProgressManager manager;
     manager.save(progress, path, kTopicCount);
@@ -44,6 +46,7 @@ TEST_CASE(ProgressManager_SaveThenLoadRoundTripsAllFields) {
     CHECK(result.progress.currentStreak() == 1);
     CHECK(result.progress.writeCodeCorrectCount() == 1);
     CHECK(result.progress.statusOf(3) == TopicStatus::Completed);
+    CHECK(result.progress.highestSectionExamPassed() == 1);
 
     std::filesystem::remove(path);
 }
