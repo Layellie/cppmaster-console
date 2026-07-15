@@ -824,7 +824,28 @@ Note: `CMakeLists.txt` already lists every file this task touches (Task 3 left i
 - Consumes: `QuestionGenerationEngine`, `IntArithmeticPredictGenerator`, `BoolOutputPredictGenerator` (Tasks 1-3).
 - Produces: `AnswerResult Application::askOneQuestion(const Question& question, bool trackMistakes = true);` (existing method, one new parameter with a default that preserves every existing call site's behavior exactly) and `void Application::runQuickTest();` (new, wired to menu option 2).
 
-- [ ] **Step 1: Modify `src/Application.h`**
+- [ ] **Step 1: Restore `src/main.cpp` to the real application entry point**
+
+Tasks 1-3 each left `src/main.cpp` as a temporary verification harness. Before
+touching `Application.h`/`.cpp`, restore it to exactly:
+
+```cpp
+#include "Application.h"
+
+int main() {
+    Application app;
+    app.run();
+    return 0;
+}
+```
+
+Commit this restoration on its own, before any other change in this task:
+```bash
+git add src/main.cpp
+git commit -m "Restore main.cpp to the real Application entry point"
+```
+
+- [ ] **Step 2: Modify `src/Application.h`**
 
 Add `#include <random>` to the include block, plus:
 ```cpp
@@ -853,7 +874,7 @@ Add these new members after `achievements_`:
     int nextGeneratedQuestionId_ = 1000;
 ```
 
-- [ ] **Step 2: Modify `src/Application.cpp`**
+- [ ] **Step 3: Modify `src/Application.cpp`**
 
 Add `#include <chrono>` and `#include <random>` to the include block (if not already present via headers).
 
@@ -1012,7 +1033,7 @@ void Application::runQuickTest() {
 }
 ```
 
-- [ ] **Step 3: Clean slate, then build**
+- [ ] **Step 4: Clean slate, then build**
 
 ```bash
 rm -f data/progress.txt data/mistakes.txt data/achievements.txt data/generated_question_history.txt
@@ -1020,7 +1041,7 @@ cmake --build build
 ```
 Expected: zero warnings.
 
-- [ ] **Step 4: Regression check for `askOneQuestion`'s new parameter**
+- [ ] **Step 5: Regression check for `askOneQuestion`'s new parameter**
 
 Confirm every EXISTING caller (`runTopicQuiz`, `runMistakeQuestions`, `runSectionExam`) still calls `askOneQuestion(question)` with no second argument — grep for `askOneQuestion(` in `Application.cpp` and confirm none of the three pre-existing call sites were changed to pass an explicit second argument (only the brand-new call inside `runQuickTest` passes `false`). Then re-run phase 3's exact topic-1 regression sequence to confirm untouched behavior:
 ```bash
@@ -1028,7 +1049,7 @@ printf "1\n1\nb\nc\n2\n1\ncout\niostream\nint yas = 20;\n3 2 1 4\n0\n" | ./build
 ```
 Confirm this still produces exactly the same output as every prior phase: `İlk Adım`/`Hatasız Beşli` unlocks, `Sonuç: 8/8 doğru (%100), kazanılan XP: 105`, the level-2 celebration, and `data/mistakes.txt` still empty (no wrong answers). This proves `trackMistakes`'s default value preserves every existing flow exactly.
 
-- [ ] **Step 5: "Hızlı Test" structural verification (this phase's acceptance test — see the Global Constraints note on why this differs from every prior phase's exact-transcript style)**
+- [ ] **Step 6: "Hızlı Test" structural verification (this phase's acceptance test — see the Global Constraints note on why this differs from every prior phase's exact-transcript style)**
 
 Clean slate again, then run "Hızlı Test" twice, as two separate process invocations, answering every question with the same fixed dummy guess (`0`) regardless of what's actually asked (since the questions are genuinely randomized, there is no fixed correct-answer sequence to predict in advance):
 
@@ -1050,7 +1071,7 @@ Confirm:
 5. `data/generated_question_history.txt` has grown (more `exact`/`semantic` lines than after the first run) — proving the second run's questions were genuinely new relative to the first run's, not repeats.
 6. At least skim the two runs' printed prompts and confirm they are not byte-for-byte identical to each other (different numbers/variable names/values) — direct evidence the feature is actually generating varied content, not a fixed script.
 
-- [ ] **Step 6: Commit**
+- [ ] **Step 7: Commit**
 
 ```bash
 git add src/Application.h src/Application.cpp
