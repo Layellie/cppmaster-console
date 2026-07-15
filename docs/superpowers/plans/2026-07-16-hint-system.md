@@ -279,9 +279,13 @@ TEST_CASE(HintProvider_PredictOutputLevel2RevealsSignForNumericAnswer) {
 }
 
 TEST_CASE(HintProvider_FindErrorLevel2RevealsFirstCharacter) {
-    const Question question = makeQuestion(QuestionType::FindError, {"int yas = 20;"});
+    // Uses an accepted answer starting with 'd', a letter that does not
+    // appear anywhere in the clue's fixed boilerplate ("Doğru satır '..'
+    // harfiyle başlıyor.") other than inside the quotes - so this genuinely
+    // pins down the first-character extraction instead of always passing.
+    const Question question = makeQuestion(QuestionType::FindError, {"double x = 5.0;"});
     const std::string hint = generateHint(question, 2);
-    CHECK(hint.find('i') != std::string::npos);
+    CHECK(hint.find('d') != std::string::npos);
 }
 
 TEST_CASE(HintProvider_OrderCodeLevel2RevealsStepCount) {
