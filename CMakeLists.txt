@@ -77,6 +77,10 @@ add_executable(CppMasterConsoleTests
     tests/LevelSystemTests.cpp
     tests/UserProgressTests.cpp
     tests/QuizEngineTests.cpp
+    tests/ProgressManagerTests.cpp
+    tests/MistakeTrackerTests.cpp
+    tests/AchievementTrackerTests.cpp
+    tests/QuestionHistoryTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
