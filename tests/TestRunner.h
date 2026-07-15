@@ -66,6 +66,8 @@ private:
         }                                                                       \
     } while (false)
 
+// name must be unique across all test files - it becomes a function with
+// external linkage, so a collision is a link error, not a local compile error.
 #define TEST_CASE(name)                                                     \
     void name();                                                            \
     namespace {                                                             \

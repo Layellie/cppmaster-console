@@ -5,9 +5,11 @@
 #include "TestRunner.h"
 
 namespace {
-// The Section 1 exam's fixed question set, as defined in Application.cpp's
-// kExamQuestionIds — duplicated here deliberately so this test fails loudly
-// if that list and the question catalog ever drift apart.
+// A frozen copy of the Section 1 exam's question set, as defined in
+// Application.cpp's kExamQuestionIds. This only catches the catalog dropping
+// an id this list still references (Application.cpp silently skips missing
+// ids otherwise) - it will NOT notice if the real kExamQuestionIds itself is
+// edited, since this copy doesn't track it live.
 constexpr int kExamQuestionIds[] = {
     1, 2, 3, 4, 5, 6, 19, 20, 33, 35,
     61, 62, 63, 64, 65, 66, 67, 68, 69, 71,
