@@ -40,6 +40,7 @@ add_library(CppMasterConsoleLib STATIC
     src/QuizEngine.h
     src/QuizEngine.cpp
     src/LevelSystem.h
+    src/TopicLock.h
     src/AchievementTracker.h
     src/AchievementTracker.cpp
     src/ProgressManager.h
@@ -78,6 +79,7 @@ add_executable(CppMasterConsoleTests
     tests/main.cpp
     tests/FnvHashTests.cpp
     tests/LevelSystemTests.cpp
+    tests/TopicLockTests.cpp
     tests/UserProgressTests.cpp
     tests/QuizEngineTests.cpp
     tests/ProgressManagerTests.cpp
