@@ -202,19 +202,30 @@ std::string writeCodeRequirementsDisplay(const Question& question) {
     return result;
 }
 
+std::string computeCorrectAnswerDisplay(const Question& question) {
+    switch (question.type) {
+        case QuestionType::MultipleChoice:
+        case QuestionType::TrueFalse:
+        case QuestionType::FillBlank:
+            return correctAnswerDisplayFor(question);
+        case QuestionType::WriteCode:
+            return writeCodeRequirementsDisplay(question);
+        default:
+            return question.acceptedAnswers.empty() ? "" : question.acceptedAnswers.front();
+    }
+}
+
 }  // namespace
 
 AnswerResult QuizEngine::evaluate(
     const Question& question, const std::string& rawAnswer, const Settings& settings) const {
     bool isCorrect = false;
-    std::string display;
 
     switch (question.type) {
         case QuestionType::MultipleChoice:
         case QuestionType::TrueFalse:
         case QuestionType::FillBlank:
             isCorrect = matchesAnyAcceptedCaseInsensitive(question, rawAnswer);
-            display = correctAnswerDisplayFor(question);
             break;
         case QuestionType::CompleteLine:
         case QuestionType::PredictOutput:
@@ -222,19 +233,21 @@ AnswerResult QuizEngine::evaluate(
         case QuestionType::FixCode:
             isCorrect = matchesAnyAcceptedCaseSensitiveWhitespaceNormalized(
                 question, rawAnswer, settings.strictCaseSensitivity);
-            display = question.acceptedAnswers.empty() ? "" : question.acceptedAnswers.front();
             break;
         case QuestionType::OrderCode:
             isCorrect = matchesOrderCode(question, rawAnswer);
-            display = question.acceptedAnswers.empty() ? "" : question.acceptedAnswers.front();
             break;
         case QuestionType::WriteCode:
             isCorrect = matchesWriteCode(question, rawAnswer, settings.lenientWriteCodeTolerance);
-            display = writeCodeRequirementsDisplay(question);
             break;
         default:
             break;
     }
 
-    return AnswerResult{isCorrect, isCorrect ? question.baseXp : 0, display};
+    return AnswerResult{
+        isCorrect, isCorrect ? question.baseXp : 0, computeCorrectAnswerDisplay(question), false};
+}
+
+std::string QuizEngine::correctAnswerDisplay(const Question& question) const {
+    return computeCorrectAnswerDisplay(question);
 }
