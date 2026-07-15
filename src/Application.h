@@ -35,6 +35,7 @@ private:
     void showStatistics();
     void runDailyReview();
     void showAchievements();
+    void runSectionExam();
     void showNotYetAvailable(const std::string& featureName);
     void ensureDataDirectoryExists();
 
