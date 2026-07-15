@@ -27,6 +27,8 @@ constexpr const char* kAchievementsFilePath = "data/achievements.txt";
 constexpr const char* kAchievementsBackupPath = "data/achievements_corrupted_backup.txt";
 constexpr const char* kGeneratedHistoryFilePath = "data/generated_question_history.txt";
 constexpr const char* kGeneratedHistoryBackupPath = "data/generated_question_history_corrupted_backup.txt";
+constexpr const char* kSettingsFilePath = "data/settings.txt";
+constexpr const char* kSettingsBackupPath = "data/settings_corrupted_backup.txt";
 constexpr int kExamQuestionIds[] = {
     1, 2, 3, 4, 5, 6, 19, 20, 33, 35,
     61, 62, 63, 64, 65, 66, 67, 68, 69, 71,
@@ -99,6 +101,14 @@ Application::Application()
             "Uyarı: üretilen soru geçmişi dosyası bozuktu; yedeklendi (" +
             std::string(kGeneratedHistoryBackupPath) + ") ve sıfırlandı.");
     }
+
+    const auto settingsLoadResult = settingsManager_.load(kSettingsFilePath, kSettingsBackupPath);
+    settings_ = settingsLoadResult.settings;
+    if (settingsLoadResult.wasCorrupted) {
+        ui_.printLine(
+            "Uyarı: ayarlar dosyası bozuktu; yedeklendi (" + std::string(kSettingsBackupPath) +
+            ") ve varsayılanlara sıfırlandı.");
+    }
 }
 
 void Application::ensureDataDirectoryExists() {
@@ -170,7 +180,7 @@ void Application::handleChoice(int choice) {
             showAchievements();
             break;
         case 9:
-            showNotYetAvailable("Ayarlar");
+            showSettingsMenu();
             break;
         case 10:
             resetProgress();
@@ -230,16 +240,18 @@ void Application::showLessonContent(const Lesson& lesson) {
     ui_.printLine("Örnek:");
     ui_.printLine(lesson.exampleCode);
     ui_.printLine("");
-    ui_.printLine("Satır satır açıklama:");
-    for (const std::string& lineExplanation : lesson.lineExplanations) {
-        ui_.printLine("- " + lineExplanation);
+    if (settings_.fullExplanationDetail) {
+        ui_.printLine("Satır satır açıklama:");
+        for (const std::string& lineExplanation : lesson.lineExplanations) {
+            ui_.printLine("- " + lineExplanation);
+        }
+        ui_.printLine("");
+        ui_.printLine("Yaygın hatalar:");
+        for (const std::string& mistake : lesson.commonMistakes) {
+            ui_.printLine("- " + mistake);
+        }
+        ui_.printLine("");
     }
-    ui_.printLine("");
-    ui_.printLine("Yaygın hatalar:");
-    for (const std::string& mistake : lesson.commonMistakes) {
-        ui_.printLine("- " + mistake);
-    }
-    ui_.printLine("");
 }
 
 void Application::runTopicQuiz(int topicId) {
@@ -311,7 +323,7 @@ AnswerResult Application::askOneQuestion(const Question& question, bool trackMis
     } else {
         rawAnswer = ui_.readLine("Cevabınız: ");
     }
-    const AnswerResult result = quizEngine_.evaluate(question, rawAnswer);
+    const AnswerResult result = quizEngine_.evaluate(question, rawAnswer, settings_);
 
     if (result.correct) {
         ui_.printLine("Doğru! (+" + std::to_string(result.xpAwarded) + " XP)");
@@ -546,9 +558,9 @@ void Application::runDailyReview() {
         return;
     }
 
-    constexpr std::size_t kDailyReviewCap = 20;
-    if (mistakes.size() > kDailyReviewCap) {
-        mistakes.resize(kDailyReviewCap);
+    const auto dailyReviewCap = static_cast<std::size_t>(settings_.dailyReviewQuestionCap);
+    if (mistakes.size() > dailyReviewCap) {
+        mistakes.resize(dailyReviewCap);
     }
 
     ui_.printLine("");
@@ -684,6 +696,129 @@ void Application::runSectionExam() {
         progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
 
     ui_.printLine("");
+}
+
+void Application::showSettingsMenu() {
+    bool inSettingsMenu = true;
+    while (inSettingsMenu) {
+        ui_.printLine("");
+        ui_.printHeader("AYARLAR");
+        ui_.printLine(
+            "1. Konu kilidini aç/kapat (şu an: " +
+            std::string(settings_.topicLockEnabled ? "Açık" : "Kapalı") + ")");
+        ui_.printLine(
+            "2. Büyük-küçük harf duyarlılığını aç/kapat (şu an: " +
+            std::string(settings_.strictCaseSensitivity ? "Açık" : "Kapalı") + ")");
+        ui_.printLine(
+            "3. Kod cevabı toleransını aç/kapat (şu an: " +
+            std::string(settings_.lenientWriteCodeTolerance ? "Esnek" : "Sıkı") + ")");
+        ui_.printLine(
+            "4. Açıklama detay seviyesini değiştir (şu an: " +
+            std::string(settings_.fullExplanationDetail ? "Tam" : "Kısa") + ")");
+        ui_.printLine(
+            "5. Günlük soru hedefini değiştir (şu an: " +
+            std::to_string(settings_.dailyReviewQuestionCap) + ")");
+        ui_.printLine("6. İlerlemeyi dışa aktar");
+        ui_.printLine("7. İlerlemeyi içe aktar");
+        ui_.printLine("0. Geri dön");
+        ui_.printLine("");
+        ui_.printLine("Seçiminiz:");
+
+        const int choice = ui_.readMenuChoice(0, 7);
+        switch (choice) {
+            case 1:
+                settings_.topicLockEnabled = !settings_.topicLockEnabled;
+                settingsManager_.save(settings_, kSettingsFilePath);
+                break;
+            case 2:
+                settings_.strictCaseSensitivity = !settings_.strictCaseSensitivity;
+                settingsManager_.save(settings_, kSettingsFilePath);
+                break;
+            case 3:
+                settings_.lenientWriteCodeTolerance = !settings_.lenientWriteCodeTolerance;
+                settingsManager_.save(settings_, kSettingsFilePath);
+                break;
+            case 4:
+                settings_.fullExplanationDetail = !settings_.fullExplanationDetail;
+                settingsManager_.save(settings_, kSettingsFilePath);
+                break;
+            case 5: {
+                ui_.printLine("Yeni günlük soru hedefini girin (1-100):");
+                const int newCap = ui_.readMenuChoice(1, 100);
+                settings_.dailyReviewQuestionCap = newCap;
+                settingsManager_.save(settings_, kSettingsFilePath);
+                break;
+            }
+            case 6:
+                exportProgress();
+                break;
+            case 7:
+                importProgress();
+                break;
+            case 0:
+                inSettingsMenu = false;
+                break;
+            default:
+                break;
+        }
+    }
+}
+
+void Application::exportProgress() {
+    const std::string targetDirectory = ui_.readLine("Hedef klasör yolunu girin: ");
+    std::error_code errorCode;
+    std::filesystem::create_directories(targetDirectory, errorCode);
+    if (errorCode) {
+        ui_.printLine("Hata: hedef klasör oluşturulamadı (" + errorCode.message() + ").");
+        return;
+    }
+
+    const std::string sourcePaths[] = {
+        kProgressFilePath, kMistakesFilePath, kAchievementsFilePath, kGeneratedHistoryFilePath,
+        kSettingsFilePath,
+    };
+    int copiedCount = 0;
+    for (const std::string& sourcePath : sourcePaths) {
+        if (!std::filesystem::exists(sourcePath)) {
+            continue;
+        }
+        const std::filesystem::path destination =
+            std::filesystem::path(targetDirectory) / std::filesystem::path(sourcePath).filename();
+        std::filesystem::copy_file(
+            sourcePath, destination, std::filesystem::copy_options::overwrite_existing, errorCode);
+        if (!errorCode) {
+            ++copiedCount;
+        }
+    }
+    ui_.printLine(std::to_string(copiedCount) + " dosya dışa aktarıldı: " + targetDirectory);
+}
+
+void Application::importProgress() {
+    const std::string sourceDirectory = ui_.readLine("İçe aktarılacak klasör yolunu girin: ");
+    const std::string fileNames[] = {
+        "progress.txt",
+        "mistakes.txt",
+        "achievements.txt",
+        "generated_question_history.txt",
+        "settings.txt",
+    };
+    int copiedCount = 0;
+    std::error_code errorCode;
+    for (const std::string& fileName : fileNames) {
+        const std::filesystem::path source = std::filesystem::path(sourceDirectory) / fileName;
+        if (!std::filesystem::exists(source)) {
+            continue;
+        }
+        const std::filesystem::path destination = std::filesystem::path("data") / fileName;
+        std::filesystem::copy_file(
+            source, destination, std::filesystem::copy_options::overwrite_existing, errorCode);
+        if (!errorCode) {
+            ++copiedCount;
+        }
+    }
+    ui_.printLine(
+        std::to_string(copiedCount) +
+        " dosya içe aktarıldı. Değişikliklerin etkili olması için uygulamayı yeniden başlatın.");
 }
 
 void Application::showNotYetAvailable(const std::string& featureName) {
