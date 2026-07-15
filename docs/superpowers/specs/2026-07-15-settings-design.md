@@ -49,9 +49,10 @@ actively changes a setting.
    = today's behavior). When `false`, `showLessonContent` skips the "Satır
    satır açıklama" and "Yaygın hatalar" sections (still shows explanation,
    syntax, example).
-6. **İlerlemeyi dışa aktar / içe aktar**: copies all four `data/*.txt` files
-   (progress, mistakes, achievements, generated question history) to/from a
-   user-supplied directory path via `std::filesystem::copy_file`. Missing
+6. **İlerlemeyi dışa aktar / içe aktar**: copies all five `data/*.txt` files
+   (progress, mistakes, achievements, generated question history, and this
+   phase's own settings file) to/from a user-supplied directory path via
+   `std::filesystem::copy_file`. Missing
    source files during export are skipped (not an error — a fresh install
    has no mistakes/achievements file yet); missing destination directory is
    created.

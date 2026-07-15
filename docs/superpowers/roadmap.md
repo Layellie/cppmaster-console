@@ -20,8 +20,12 @@ Phases 1-7. Each phase below gets its own
 
 - `Application.cpp:161` — "Kod Yazma Alıştırmaları" (menu option 5) is a
   `showNotYetAvailable(...)` stub. Not implemented at all.
-- `Application.cpp:173` — "Ayarlar" (menu option 9) is a
-  `showNotYetAvailable(...)` stub. Not implemented at all.
+- ~~"Ayarlar" (menu option 9) stub~~ — **resolved in Phase 8**: a real
+  settings menu now exists (topic-lock toggle, case-sensitivity, WriteCode
+  tolerance, explanation detail, daily review cap, export/import). Renk
+  aç/kapa and sesli uyarı remain deferred to Phase 25 (no color/sound system
+  exists yet); varsayılan sınav soru sayısı remains deferred to Phase 22
+  (only one fixed exam exists today).
 - Only topics 1-10 (Section 1) have lesson content; topics 11-100 exist only
   as id/title/section entries.
 - Only 72 hand-written questions exist (all for topics 1-10); the spec asked
@@ -54,12 +58,24 @@ Ordered by dependency and value; each is still a full phase in its own right
 (design doc + plan + subagent-driven-development + final review), same rigor
 as Phases 1-7.
 
-- **Phase 8 — Ayarlar (Settings):** persisted toggles (renk, büyük/küçük harf
-  duyarlılığı, konu kilidi aç/kapa, günlük soru hedefi, varsayılan sınav soru
-  sayısı, açıklama detay seviyesi, kod cevap tolerans seviyesi, ilerlemeyi
-  dışa/içe aktarma). Goes first because Phases 9/12 read its toggles.
+- **Phase 8 — Ayarlar (Settings): COMPLETE** (commits `cdc769b..1466130`,
+  final review "Ready to merge: Yes"). 6 real settings implemented (topic
+  lock toggle stored for Phase 9, case sensitivity, WriteCode tolerance,
+  explanation detail, daily review cap, export/import); renk/ses/sınav-soru-
+  sayısı deliberately deferred (see note above). Defaults reproduce every
+  pre-Phase-8 hardcoded behavior exactly.
 - **Phase 9 — Konu kilidi sistemi:** %70 tamamlama eşiği, Ayarlar'dan
-  kapatılabilir.
+  kapatılabilir. Note discovered during Phase 8: `Application.cpp` already
+  gates *Section 1's exam* behind a 70%-topic-completion ratio
+  (`kSectionCompletionGateThreshold`) — that part of the original "Bölüm
+  kilidi" spec item is done. What's still missing is gating a *section's
+  topics* behind the *previous* section's exam score, which has nowhere
+  real to plug in until Section 2 exists (a content-expansion phase, 13+).
+  Scope Phase 9 to: consuming `settings_.topicLockEnabled` to let the
+  existing Section-1 exam gate be disabled, plus building the general
+  next-section-unlock mechanism ready for when Section 2 lands — not to
+  producing an end-to-end-testable-today cross-section lock, since only one
+  section currently has content.
 - **Phase 10 — İpucu sistemi:** ipucu/konu/ornek/gec/cikis komutları, kademeli
   ipucu, XP azaltma.
 - **Phase 11 — Kod Yazma Alıştırmaları modu:** 25 görev (7 başlangıç + 9 orta +
@@ -81,5 +97,6 @@ as Phases 1-7.
 
 ## Status
 
-Phase 8 starting now (2026-07-15). Update this file's phase list as each
-phase completes (mirror `.superpowers/sdd/progress.md`'s per-phase headers).
+Phase 8 complete (2026-07-16). Phase 9 starting next. Update this file's
+phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
+per-phase headers).
