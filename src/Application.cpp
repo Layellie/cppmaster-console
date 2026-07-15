@@ -354,9 +354,11 @@ void Application::resetProgress() {
     const auto topicCount = static_cast<int>(lessons_.allLessons().size());
     progress_ = UserProgress(topicCount);
     mistakes_ = MistakeTracker();
+    achievements_ = AchievementTracker();
 
     progressManager_.save(progress_, kProgressFilePath, topicCount);
     mistakes_.saveToFile(kMistakesFilePath);
+    achievements_.saveToFile(kAchievementsFilePath);
 
     ui_.printLine("İlerlemeniz sıfırlandı.");
 }
