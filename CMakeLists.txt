@@ -63,6 +63,8 @@ add_library(CppMasterConsoleLib STATIC
     src/generators/BoolOutputPredictGenerator.cpp
     src/Application.h
     src/Application.cpp
+    src/HintProvider.h
+    src/HintProvider.cpp
 )
 
 target_include_directories(CppMasterConsoleLib PUBLIC src)
@@ -91,6 +93,7 @@ add_executable(CppMasterConsoleTests
     tests/QuestionManagerTests.cpp
     tests/LessonManagerTests.cpp
     tests/SettingsManagerTests.cpp
+    tests/HintProviderTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
