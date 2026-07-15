@@ -44,6 +44,9 @@ add_library(CppMasterConsoleLib STATIC
     src/AchievementTracker.cpp
     src/ProgressManager.h
     src/ProgressManager.cpp
+    src/Settings.h
+    src/SettingsManager.h
+    src/SettingsManager.cpp
     src/MistakeTracker.h
     src/MistakeTracker.cpp
     src/FnvHash.h
@@ -85,6 +88,7 @@ add_executable(CppMasterConsoleTests
     tests/GeneratorsTests.cpp
     tests/QuestionManagerTests.cpp
     tests/LessonManagerTests.cpp
+    tests/SettingsManagerTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
