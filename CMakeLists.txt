@@ -9,6 +9,22 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+function(apply_strict_warnings target)
+    if (MSVC)
+        target_compile_options(${target} PRIVATE /W4 /permissive-)
+    else()
+        target_compile_options(
+            ${target}
+            PRIVATE
+            -Wall
+            -Wextra
+            -Wpedantic
+            -Wconversion
+            -Wshadow
+        )
+    endif()
+endfunction()
+
 add_library(CppMasterConsoleLib STATIC
     src/Enums.h
     src/UserProgress.h
@@ -46,23 +62,11 @@ add_library(CppMasterConsoleLib STATIC
 )
 
 target_include_directories(CppMasterConsoleLib PUBLIC src)
-
-if (MSVC)
-    target_compile_options(CppMasterConsoleLib PRIVATE /W4 /permissive-)
-else()
-    target_compile_options(
-        CppMasterConsoleLib
-        PRIVATE
-        -Wall
-        -Wextra
-        -Wpedantic
-        -Wconversion
-        -Wshadow
-    )
-endif()
+apply_strict_warnings(CppMasterConsoleLib)
 
 add_executable(CppMasterConsole src/main.cpp)
 target_link_libraries(CppMasterConsole PRIVATE CppMasterConsoleLib)
+apply_strict_warnings(CppMasterConsole)
 
 enable_testing()
 
@@ -73,19 +77,6 @@ add_executable(CppMasterConsoleTests
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
-
-if (MSVC)
-    target_compile_options(CppMasterConsoleTests PRIVATE /W4 /permissive-)
-else()
-    target_compile_options(
-        CppMasterConsoleTests
-        PRIVATE
-        -Wall
-        -Wextra
-        -Wpedantic
-        -Wconversion
-        -Wshadow
-    )
-endif()
+apply_strict_warnings(CppMasterConsoleTests)
 
 add_test(NAME CppMasterConsoleTests COMMAND CppMasterConsoleTests)
