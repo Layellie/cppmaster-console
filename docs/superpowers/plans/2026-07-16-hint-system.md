@@ -305,7 +305,7 @@ source list.
 "C:/Program Files/CMake/bin/cmake.exe" --build build
 ./build/Debug/CppMasterConsoleTests.exe
 ```
-Expected: `75/75 test(s) passed.` (67 from Phase 9 + 8 new `HintProvider`
+Expected: `74/74 test(s) passed.` (67 from Phase 9 + 7 new `HintProvider`
 tests). Zero warnings.
 
 - [ ] **Step 6: Commit**
@@ -461,7 +461,7 @@ TEST_CASE(QuizEngine_AnswerResultExitRequestedDefaultsToFalse) {
 "C:/Program Files/CMake/bin/cmake.exe" --build build
 ./build/Debug/CppMasterConsoleTests.exe
 ```
-Expected: `77/77 test(s) passed.` (75 from Task 1 + 2 new). Zero warnings —
+Expected: `76/76 test(s) passed.` (74 from Task 1 + 2 new). Zero warnings —
 every pre-existing `QuizEngineTests.cpp` case (all 12 from Phases 7-8) must
 still pass unchanged.
 
@@ -788,7 +788,7 @@ Expected: zero warnings.
 ./build/Debug/CppMasterConsoleTests.exe
 cd build && ctest -C Debug --output-on-failure && cd ..
 ```
-Expected: `77/77 test(s) passed.`, `ctest` 100%.
+Expected: `76/76 test(s) passed.`, `ctest` 100%.
 
 - [ ] **Step 9: Manual verification — all 5 commands in one topic-1 quiz run**
 
