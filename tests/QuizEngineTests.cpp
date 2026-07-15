@@ -121,3 +121,17 @@ TEST_CASE(QuizEngine_LenientWriteCodeToleranceAllowsOneMissingRequirement) {
     Settings strictSettings;
     CHECK(!engine.evaluate(question, "int sayi;\ncin >> sayi;", strictSettings).correct);
 }
+
+TEST_CASE(QuizEngine_CorrectAnswerDisplayMatchesEvaluateOutput) {
+    QuizEngine engine;
+    const Question question = makeQuestion(QuestionType::FindError, {"int yas = 20;"});
+    const AnswerResult wrongResult = engine.evaluate(question, "wrong answer");
+    CHECK(engine.correctAnswerDisplay(question) == wrongResult.correctAnswerDisplay);
+}
+
+TEST_CASE(QuizEngine_AnswerResultExitRequestedDefaultsToFalse) {
+    QuizEngine engine;
+    const Question question = makeQuestion(QuestionType::FillBlank, {"cout"});
+    const AnswerResult result = engine.evaluate(question, "cout");
+    CHECK(!result.exitRequested);
+}
