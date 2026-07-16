@@ -1501,10 +1501,10 @@ void appendSection3Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 541, .topicId = 27,
         .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
-        .prompt = "İç içe döngülerde iç döngünün sayaç değişkeni (örneğin j), dış döngünün sayaç değişkeniyle (i) aynı isimde olabilir mi?",
-        .options = {"Evet, her zaman sorunsuz çalışır", "Hayır, aynı kapsamda (nested scope) aynı isimde iki değişken tanımlanamaz", "Yalnızca while döngülerinde olabilir", "Derleyici otomatik olarak yeniden adlandırır"},
+        .prompt = "İç içe döngülerde iç döngünün sayaç değişkeni (örneğin i), dış döngünün sayaç değişkeniyle aynı isimde olursa ne olur?",
+        .options = {"Derleme hatası oluşur, aynı isim hiçbir zaman kullanılamaz", "Yasaldır ama iç değişken dıştakini gölgeler (shadowing) ve karıştırılabilir; genelde farklı isimler (i, j) tercih edilir", "Derleyici otomatik olarak farklı isimlendirir", "Yalnızca while döngülerinde izin verilir"},
         .acceptedAnswers = {"b"},
-        .explanation = "İç döngü, dış döngünün kapsamı içinde olduğu için aynı isimde bir değişken tekrar tanımlanamaz.",
+        .explanation = "Aynı isimde iç içe değişken tanımlamak C++'ta yasaldır (iç değişken dıştakini 'gölgeler'), ancak karışıklığa yol açabileceği için genellikle farklı isimler (i, j gibi) tercih edilir.",
         .baseXp = 20,
     });
     questions.push_back(Question{
@@ -1561,9 +1561,9 @@ void appendSection3Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 548, .topicId = 27,
         .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
-        .prompt = "İç ve dış döngülerin sayaç değişkenleri aynı isimde (aynı kapsamda) tanımlanabilir.",
-        .acceptedAnswers = {"2"},
-        .explanation = "Aynı kapsamda aynı isimde iki değişken tanımlanamaz; farklı isimler (i, j gibi) kullanılmalıdır.",
+        .prompt = "İç ve dış döngülerin sayaç değişkenleri aynı isimde (iç değişkenin dıştakini gölgelemesiyle) tanımlanabilir, ancak bu genellikle önerilmez.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Bu yasal bir C++ kodudur (iç değişken dıştakini gölgeler), ancak okunabilirlik açısından farklı isimler (i, j gibi) kullanmak tercih edilir.",
         .baseXp = 10,
     });
     questions.push_back(Question{
@@ -1665,9 +1665,9 @@ void appendSection3Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 561, .topicId = 27,
         .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
-        .prompt = "Aşağıdaki kodda bir hata var:\n\nfor (int i = 0; i < 2; i++) {\nfor (int i = 0; i < 3; i++) {\n        std::cout << \"*\";\n    }\n}\n\nProgramcı iç döngü için farklı bir sayaç ismi kullanmayı unutmuş, bu da derleme hatasına yol açar (aynı kapsamda aynı isim tekrar tanımlanamaz). Hatalı satırı düzeltilmiş haliyle yazın.",
-        .acceptedAnswers = {"for (int j = 0; j < 3; j++) {"},
-        .explanation = "İç döngü, dış döngüyle aynı isimde (i) bir sayaç kullanamaz; farklı bir isim (j) gerekir.",
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nfor (int i = 0; i < 3; i++) {\n    for (int j = 0; j < 3; j++)\n        std::cout << i << j\n}\n\nHatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::cout << i << j;"},
+        .explanation = "Satırın sonunda noktalı virgül eksik; her ifade noktalı virgülle bitmelidir.",
         .baseXp = 20,
     });
     questions.push_back(Question{
