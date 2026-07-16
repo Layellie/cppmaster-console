@@ -121,9 +121,25 @@ as Phases 1-7.
   (old order `1,2,3,4,5,6,65,70`; new canonical order `3,1,70,6,2,65,5,4`
   when every answer is correct) — the old order was never actually
   difficulty-sorted, so this is a correction, not a regression.
-- **Phases 13-21 — İçerik genişletme (en büyük parça):** kalan 90 konunun ders
-  içeriği + soru bankasının ~2900'e çıkarılması. Bölüm bölüm (Section 2
-  through Section 10, 9 phases), her biri o bölümün 10 konusu + ~290 soru.
+- **Phase 13 — Bölüm 2 İçerik Genişletmesi: COMPLETE** (commits
+  `51f1557..11910f3`, 89/89 tests + ctest 100%). Topics 11-20 (Section 2:
+  "Operatörler ve koşullar") now have full lesson content
+  (`src/LessonContentSection2.cpp`) and a 290-question bank (ids 73-362, 29
+  per topic, `src/QuestionsSection2.cpp`) spanning all 11 question types.
+  `LessonManager_TopicsElevenToTwentyHaveRealContent` and the widened
+  `QuestionManager_NoDuplicateQuestionIds` (now scans topics 1-100 instead
+  of 1-10) plus the new
+  `QuestionManager_EveryTopicElevenToTwentyHasAtLeastTwentyNineQuestions`
+  test cover the whole bank; a manual end-to-end run additionally confirmed
+  `openTopic`'s content gate now passes for topic 11 with zero
+  `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29
+  soru).", a correct answer awards XP, and mid-quiz `cikis` exits cleanly
+  back to the main menu with partial XP saved. First of nine section-by-
+  section content phases (13-21) closing the roadmap's lesson-content and
+  question-bank gaps for topics 11-100.
+- **Phases 14-21 — İçerik genişletme (devamı):** kalan 80 konunun ders
+  içeriği + soru bankasının ~2320'ye çıkarılması. Bölüm bölüm (Section 3
+  through Section 10, 8 phases), her biri o bölümün 10 konusu + ~290 soru.
 - **Phase 22 — Sınavlar:** kalan 9 bölüm sınavı + 100 soruluk genel final
   sınavı (içerik tamamlandıktan sonra mümkün).
 - **Phase 23 — Üretici kütüphanesini genişletme:** en az 15 üretici,
@@ -136,8 +152,9 @@ as Phases 1-7.
 
 ## Status
 
-Phase 12 complete (2026-07-16). Phase 13 starting next — the first of the
-large content-expansion phases (Phases 13-21). Update this file's
+Phase 13 complete (2026-07-16). Phase 14 (Section 3 content: "Seçim ve
+döngüler", topics 21-30) starting next — the second of the large
+content-expansion phases (Phases 13-21). Update this file's
 phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
 per-phase headers).
 
