@@ -1703,4 +1703,733 @@ void appendSection4Questions(std::vector<Question>& questions) {
         .explanation = "Program bir isim okumalı ve length() ile uzunluğunu yazdırmalıdır.",
         .baseXp = 40,
     });
+
+    // Topic 38: String birleştirme
+    questions.push_back(Question{
+        .id = 856, .topicId = 38,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "İki std::string'i birleştirmek (concatenation) için hangi operatör kullanılır?",
+        .options = {"*", "+", "%", "&"},
+        .acceptedAnswers = {"b"},
+        .explanation = "+ operatörü iki string'i birleştirir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 857, .topicId = 38,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::string a = \"Ali\"; std::string b = \"Veli\"; std::string c = a + b; c ne olur?",
+        .options = {"AliVeli", "Ali Veli", "Veli Ali", "Hata"},
+        .acceptedAnswers = {"a"},
+        .explanation = "a + b, aralarında boşluk olmadan doğrudan birleştirir: 'AliVeli'.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 858, .topicId = 38,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::string a = \"Ali\"; a += \" Veli\"; a ne olur?",
+        .options = {"Ali", "Veli", "Ali Veli", "AliVeli"},
+        .acceptedAnswers = {"c"},
+        .explanation = "a'nın sonuna ' Veli' eklenir: 'Ali Veli'.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 859, .topicId = 38,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "\"Merhaba\" + \"Dünya\" (iki string literal, hiçbiri std::string değişkeni değil) ifadesi geçerli midir?",
+        .options = {"Evet, geçerlidir ve birleştirir", "Hayır, en az birinin std::string olması gerekir", "Yalnızca ikisi de tek karakterse geçerlidir", "Her zaman derleme hatası verir, hiçbir şekilde birleştirilemez"},
+        .acceptedAnswers = {"b"},
+        .explanation = "İki C-string literali doğrudan + ile birleştirilemez; en az birinin std::string olması gerekir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 860, .topicId = 38,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::string a = \"Merhaba\"; std::string b = a + \"!\"; b ne olur?",
+        .options = {"Merhaba!", "Merhaba", "!Merhaba", "Hata"},
+        .acceptedAnswers = {"a"},
+        .explanation = "a'nın sonuna '!' eklenir: 'Merhaba!'.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 861, .topicId = 38,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "+= operatörü bir string'e ne ekleyebilir?",
+        .options = {"Yalnızca başka bir string", "Yalnızca tek bir karakter", "Hem başka bir string hem de tek bir karakter", "Hiçbir şey ekleyemez"},
+        .acceptedAnswers = {"c"},
+        .explanation = "+= operatörü hem başka bir string'i hem de tek bir karakteri ekleyebilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 862, .topicId = 38,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::string a = \"Test\"; a = a + a; a ne olur?",
+        .options = {"Test", "TestTest", "Test2", "Hata"},
+        .acceptedAnswers = {"b"},
+        .explanation = "a kendisiyle birleştirilir: 'TestTest'.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 863, .topicId = 38,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::string ad = \"Ali\"; std::string soyad = \"Veli\"; std::string tam = ad + \" \" + soyad; tam ne olur?",
+        .options = {"AliVeli", "Ali Veli", "Ali  Veli", "Veli Ali"},
+        .acceptedAnswers = {"b"},
+        .explanation = "ad, bir boşluk ve soyad art arda birleştirilir: 'Ali Veli'.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 864, .topicId = 38,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "İki std::string, + operatörü ile birleştirilebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "+ operatörü string birleştirme için kullanılır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 865, .topicId = 38,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "İki C-string literal (\"a\" + \"b\") doğrudan + ile birleştirilebilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "En az birinin std::string olması gerekir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 866, .topicId = 38,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "+= operatörü, bir string'in sonuna başka bir string veya karakter ekler.",
+        .acceptedAnswers = {"1"},
+        .explanation = "+='in işlevi budur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 867, .topicId = 38,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "String birleştirme sonucunda orijinal string'lerden biri değişir, ikisi de kalıcı olarak birleşir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "a + b yeni bir string döndürür; a ve b değişmez.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 868, .topicId = 38,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::string a = \"X\"; std::string b = \"Y\"; std::string c = a + b; işleminden sonra a hala \"X\"'tir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "+ operatörü yeni bir string oluşturur; a değişmez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 869, .topicId = 38,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "String birleştirme yaparken araya boşluk otomatik olarak eklenir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Boşluk otomatik eklenmez; gerekiyorsa elle (\" \") eklenmelidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 870, .topicId = 38,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::string a = \"Ali\"; std::string b = \"Veli\"; std::string c = a _____ b; ifadesinin c'yi 'AliVeli' yapması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"+"},
+        .explanation = "+ operatörü iki string'i birleştirir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 871, .topicId = 38,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::string a = \"Merhaba\"; a _____ \"!\"; ifadesinin a'yı 'Merhaba!' yapması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"+="},
+        .explanation = "+= operatörü sona ekleme yapar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 872, .topicId = 38,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::string ad = \"Ali\"; std::string soyad = \"Veli\"; std::string tam = ad + _____ + soyad; ifadesinin araya boşluk koyması için boşluğa (tırnakla) ne yazılmalı?",
+        .acceptedAnswers = {"\" \""},
+        .explanation = "Aralarına boşluk koymak için \" \" eklenmelidir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 873, .topicId = 38,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::string a = \"Test\"; std::string b = a _____ a; ifadesinin b'yi 'TestTest' yapması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"+"},
+        .explanation = "+ operatörü a'yı kendisiyle birleştirir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 874, .topicId = 38,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::string mesaj = \"Merhaba\"; mesaj _____ \" Dünya\"; ifadesinin mesaj'ı 'Merhaba Dünya' yapması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"+="},
+        .explanation = "+= operatörü sona ekleme yapar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 875, .topicId = 38,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::string a = \"abc\"; std::string b = \"def\"; std::string c = a + b; c'nin uzunluğu _____ olur (sayı olarak yazın).",
+        .acceptedAnswers = {"6"},
+        .explanation = "3 + 3 = 6 karakter.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 876, .topicId = 38,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::string ad = \"Ali\";\nstd::string soyad = \"Veli\";\nstd::string tamAd = _____;\nad ve soyad'ı aralarında boşlukla birleştiren ifadeyi yazın.",
+        .acceptedAnswers = {"ad + \" \" + soyad"},
+        .explanation = "ad, boşluk ve soyad art arda birleştirilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 877, .topicId = 38,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::string mesaj = \"Merhaba\";\n_____\nstd::cout << mesaj;\nmesaj'ın sonuna \"!\" ekleyen satırı yazın.",
+        .acceptedAnswers = {"mesaj += \"!\";"},
+        .explanation = "+= ile sona ekleme yapılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 878, .topicId = 38,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::string a = \"Ali\";\nstd::string b = \"Veli\";\nstd::cout << a + b;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"AliVeli"},
+        .explanation = "a ve b aralarında boşluk olmadan birleştirilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 879, .topicId = 38,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::string mesaj = \"Merhaba\";\nmesaj += \" \";\nmesaj += \"Dünya\";\nstd::cout << mesaj;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"Merhaba Dünya"},
+        .explanation = "Sırayla boşluk ve 'Dünya' eklenir: 'Merhaba Dünya'.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 880, .topicId = 38,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::string a = \"Ali\";\nstd::string b = \"Veli\";\nstd::string c = a - b;\n\nProgramcı iki string'i birleştirmek istiyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::string c = a + b;"},
+        .explanation = "String birleştirme için - değil + operatörü kullanılmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 881, .topicId = 38,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::string tam = \"Ali\" + \"Veli\";\n\nBu satır derlenmez çünkü iki C-string literali doğrudan + ile birleştirilemez. Hatalı satırı, en az birini std::string yaparak düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::string tam = std::string(\"Ali\") + \"Veli\";"},
+        .explanation = "En az bir işlenenin std::string olması gerekir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 882, .topicId = 38,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::string a = \"Merhaba\";\na =+ \"!\";\n\nProgramcı a'nın sonuna \"!\" eklemek istiyor. Düzeltilmiş ikinci satırı yazın.",
+        .acceptedAnswers = {"a += \"!\";"},
+        .explanation = "=+ yerine += kullanılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 883, .topicId = 38,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, iki string'i birleştirip yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << c;", "std::string c = a + b;", "std::string a = \"Ali\", b = \"Veli\";"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "Önce string'ler tanımlanır (3), sonra birleştirilir (2), en son yazdırılır (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 884, .topicId = 38,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Kullanıcıdan ad ve soyad okuyup, ikisini aralarında boşlukla birleştirip ekrana yazdıran bir program yazın.",
+        .acceptedAnswers = {"cin", ">>", "string", "+", "cout", "<<"},
+        .explanation = "Program ad ve soyad'ı okumalı, + operatörüyle boşlukla birleştirmeli ve yazdırmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 39: length() ve empty()
+    questions.push_back(Question{
+        .id = 885, .topicId = 39,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "length() ne döndürür?",
+        .options = {"String'in ilk karakterini", "String'in karakter sayısını", "String'in boş olup olmadığını", "Rastgele bir değer"},
+        .acceptedAnswers = {"b"},
+        .explanation = "length(), string'in karakter sayısını döndürür.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 886, .topicId = 39,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "empty() ne döndürür?",
+        .options = {"String'in uzunluğunu", "String'in boş olup olmadığını gösteren bir bool", "İlk karakteri", "Son karakteri"},
+        .acceptedAnswers = {"b"},
+        .explanation = "empty(), string'in boş olup olmadığını gösteren bir bool döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 887, .topicId = 39,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::string s = \"Merhaba\"; s.length() kaç döner?",
+        .options = {"6", "7", "8", "0"},
+        .acceptedAnswers = {"b"},
+        .explanation = "'Merhaba' 7 karakterden oluşur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 888, .topicId = 39,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"\"; s.empty() ne döner?",
+        .options = {"true", "false", "0", "Hata"},
+        .acceptedAnswers = {"a"},
+        .explanation = "s boş olduğu için empty() true döner.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 889, .topicId = 39,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Test\"; s.empty() ne döner?",
+        .options = {"true", "false", "4", "Hata"},
+        .acceptedAnswers = {"b"},
+        .explanation = "s boş olmadığı için empty() false döner.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 890, .topicId = 39,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "length() ile size() arasındaki fark nedir?",
+        .options = {"length() daha hızlıdır", "İkisi de aynı değeri döndürür, eş anlamlıdırlar", "size() yalnızca vector'de çalışır", "length() yalnızca boş string'lerde çalışır"},
+        .acceptedAnswers = {"b"},
+        .explanation = "std::string için length() ve size() tamamen eş anlamlıdır, aynı değeri döndürürler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 891, .topicId = 39,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::string s = \" \"; (yalnızca bir boşluk karakteri) s.empty() ne döner?",
+        .options = {"true, çünkü görsel olarak boş görünüyor", "false, çünkü uzunluğu 0 değil 1'dir", "Derleme hatası verir", "Tanımsız davranış"},
+        .acceptedAnswers = {"b"},
+        .explanation = "empty() yalnızca uzunluğun tam olarak 0 olup olmadığına bakar; tek bir boşluk karakteri uzunluğu 1 yapar, bu yüzden false döner.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 892, .topicId = 39,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "s.empty() kontrolü ile s.length() == 0 kontrolü arasındaki fark nedir?",
+        .options = {"Farklı sonuçlar verirler", "Aynı sonucu verirler, empty() sadece daha okunaklıdır", "length() == 0 her zaman hatalıdır", "empty() yalnızca sayılarla çalışır"},
+        .acceptedAnswers = {"b"},
+        .explanation = "İkisi de aynı koşulu kontrol eder; empty() yalnızca daha okunaklı bir alternatiftir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 893, .topicId = 39,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "length(), bir string'in karakter sayısını döndürür.",
+        .acceptedAnswers = {"1"},
+        .explanation = "length()'in işlevi budur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 894, .topicId = 39,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "empty(), bir string'in karakter sayısını döndürür.",
+        .acceptedAnswers = {"2"},
+        .explanation = "empty() bir bool döndürür, karakter sayısını değil.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 895, .topicId = 39,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "empty(), bir string'in boş olup olmadığını (bool) kontrol eder.",
+        .acceptedAnswers = {"1"},
+        .explanation = "empty()'in işlevi budur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 896, .topicId = 39,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "length() ve size(), bir std::string için farklı sonuçlar döndürür.",
+        .acceptedAnswers = {"2"},
+        .explanation = "İkisi de aynı değeri döndürür, eş anlamlıdırlar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 897, .topicId = 39,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Yalnızca boşluk karakterlerinden oluşan bir string (\" \" gibi) empty() için true döner.",
+        .acceptedAnswers = {"2"},
+        .explanation = "empty() yalnızca uzunluğun 0 olup olmadığına bakar; boşluklu bir string uzunluğu 0 değildir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 898, .topicId = 39,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "s.empty() ile s.length() == 0 aynı sonucu verir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "İkisi de aynı koşulu farklı şekillerde ifade eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 899, .topicId = 39,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::string s = \"Merhaba\"; std::cout << s._____(); ifadesinin karakter sayısını yazdırması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"length"},
+        .explanation = "length() karakter sayısını döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 900, .topicId = 39,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::string s = \"\"; std::cout << s._____(); ifadesinin boş olup olmadığını (true) yazdırması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"empty"},
+        .explanation = "empty() boş olup olmadığını kontrol eder.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 901, .topicId = 39,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::string s = \"abc\"; std::cout << s.length() _____ s.size(); ifadesinin iki fonksiyonun aynı değeri döndürdüğünü göstermesi için boşluğa hangi operatör yazılmalı?",
+        .acceptedAnswers = {"=="},
+        .explanation = "== operatörüyle iki değerin eşitliği kontrol edilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 902, .topicId = 39,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s; if (s._____()) { std::cout << \"Boş\"; } ifadesinin s boşsa 'Boş' yazdırması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"empty"},
+        .explanation = "empty() true dönerse if bloğu çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 903, .topicId = 39,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Test\"; if (s.length() _____ 0) { std::cout << \"Boş değil\"; } ifadesinin s boş değilken çalışması için boşluğa hangi operatör yazılmalı?",
+        .acceptedAnswers = {">"},
+        .explanation = "Uzunluk 0'dan büyükse string boş değildir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 904, .topicId = 39,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Merhaba\"; int uzunluk = s.length(); uzunluk değişkeninin değeri _____ olur (sayı olarak yazın).",
+        .acceptedAnswers = {"7"},
+        .explanation = "'Merhaba' 7 karakterden oluşur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 905, .topicId = 39,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Test\";\nint uzunluk = _____;\nlength() kullanarak uzunluğu alan ifadeyi yazın.",
+        .acceptedAnswers = {"s.length()"},
+        .explanation = "length() karakter sayısını döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 906, .topicId = 39,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"\";\nif (_____) {\n    std::cout << \"Boş bir string\";\n}\ns'nin boş olup olmadığını kontrol eden if koşulunu yazın.",
+        .acceptedAnswers = {"s.empty()"},
+        .explanation = "empty() boşluk kontrolü yapar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 907, .topicId = 39,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Merhaba Dunya\";\nstd::cout << s.length();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"13"},
+        .explanation = "'Merhaba' (7) + boşluk (1) + 'Dunya' (5) = 13 bayt/karakter (tamamı ASCII harfler olduğu için bayt sayısı karakter sayısıyla aynıdır).",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 908, .topicId = 39,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::string s = \"\";\nstd::cout << s.empty() << s.length();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"10"},
+        .explanation = "empty()=true(1), length()=0; birlikte '10' yazdırılır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 909, .topicId = 39,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::string s = \"Test\";\nstd::cout << s.lenght();\n\nHatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::cout << s.length();"},
+        .explanation = "Fonksiyon adı length'tir, lenght değil (yazım hatası).",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 910, .topicId = 39,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::string s = \"\";\nif (s.empty) {\n    std::cout << \"Boş\";\n}\n\nHatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"if (s.empty()) {"},
+        .explanation = "empty bir üye fonksiyon çağrısıdır ve parantez gerektirir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 911, .topicId = 39,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::string s = \"Test\";\nstd::cout << s.length;\n\nDüzeltilmiş ikinci satırı yazın.",
+        .acceptedAnswers = {"std::cout << s.length();"},
+        .explanation = "length bir üye fonksiyon çağrısıdır ve parantez gerektirir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 912, .topicId = 39,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir string tanımlayıp uzunluğunu yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << s.length();", "std::string s = \"Merhaba\";"},
+        .acceptedAnswers = {"2 1"},
+        .explanation = "Önce string tanımlanır (2), sonra uzunluğu yazdırılır (1): sıra 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 913, .topicId = 39,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Kullanıcıdan bir metin okuyup, metnin boş olup olmadığını (empty() ile) ve uzunluğunu (length() ile) ekrana yazdıran bir program yazın.",
+        .acceptedAnswers = {"cin", ">>", "empty", "length", "cout", "<<"},
+        .explanation = "Program metni okumalı, empty() ve length() ile sonuçları yazdırmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 40: substr() ve find()
+    questions.push_back(Question{
+        .id = 914, .topicId = 40,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "substr(baslangic, uzunluk) fonksiyonu ne yapar?",
+        .options = {"String'i tersine çevirir", "Belirtilen konumdan başlayarak belirtilen uzunlukta bir alt dizi döndürür", "String'in uzunluğunu değiştirir", "İki string'i birleştirir"},
+        .acceptedAnswers = {"b"},
+        .explanation = "substr(), belirtilen konumdan başlayarak belirtilen uzunlukta bir alt dizi döndürür.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 915, .topicId = 40,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "find(aranan) fonksiyonu ne yapar?",
+        .options = {"Aranan alt diziyi bulur ve konumunu (bulunamazsa npos) döndürür", "String'i sıralar", "Aranan karakteri siler", "Yalnızca ilk karakteri kontrol eder"},
+        .acceptedAnswers = {"a"},
+        .explanation = "find(), aranan alt diziyi bulur ve başlangıç konumunu döndürür; bulamazsa std::string::npos döner.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 916, .topicId = 40,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::string s = \"Merhaba\"; s.substr(0, 3) ne döner?",
+        .options = {"Mer", "erh", "aba", "Merhaba"},
+        .acceptedAnswers = {"a"},
+        .explanation = "İndeks 0'dan başlayarak 3 karakter alınır: 'Mer'.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 917, .topicId = 40,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Merhaba\"; s.substr(2, 3) ne döner?",
+        .options = {"rha", "erh", "hab", "Mer"},
+        .acceptedAnswers = {"a"},
+        .explanation = "İndeks 2'den (r) başlayarak 3 karakter alınır: 'rha'.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 918, .topicId = 40,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Merhaba\"; s.find(\"hab\") kaç döner (bulunduğu başlangıç indeksini yazın)?",
+        .options = {"2", "3", "4", "Bulunamaz (npos)"},
+        .acceptedAnswers = {"b"},
+        .explanation = "'Merhaba' string'inde 'hab' alt dizisi indeks 3'te ('h' harfinde) başlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 919, .topicId = 40,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Merhaba\"; s.find(\"xyz\") (bulunamayan bir alt dizi) ne döner?",
+        .options = {"-1", "0", "std::string::npos", "Hata verir, programı durdurur"},
+        .acceptedAnswers = {"c"},
+        .explanation = "find(), bulamadığında std::string::npos özel sabitini döndürür, -1 değil.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 920, .topicId = 40,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "substr()'ün ikinci parametresi neyi belirtir?",
+        .options = {"Bitiş indeksini", "Alınacak karakter sayısını (uzunluğu)", "Adım büyüklüğünü", "Karakterin ASCII değerini"},
+        .acceptedAnswers = {"b"},
+        .explanation = "İkinci parametre, alınacak karakter sayısını (uzunluğu) belirtir, bitiş indeksini değil.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 921, .topicId = 40,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::string s = \"Merhaba\"; if (s.find(\"a\") != std::string::npos) { ... } ifadesi neyi kontrol eder?",
+        .options = {"s'nin 'a' ile başlayıp başlamadığını", "s'nin içinde 'a' karakterinin bulunup bulunmadığını", "s'nin uzunluğunun 'a' harfi kadar olup olmadığını", "Hiçbir şeyi kontrol etmez, her zaman true'dur"},
+        .acceptedAnswers = {"b"},
+        .explanation = "find() != npos, aranan karakterin/alt dizinin string içinde herhangi bir yerde bulunup bulunmadığını kontrol eder.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 922, .topicId = 40,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "substr(), bir string'in belirli bir bölümünü (alt dizisini) döndürür.",
+        .acceptedAnswers = {"1"},
+        .explanation = "substr()'ün işlevi budur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 923, .topicId = 40,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "find(), aranan alt diziyi bulamazsa -1 döner.",
+        .acceptedAnswers = {"2"},
+        .explanation = "find(), bulamadığında std::string::npos döner, -1 değil.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 924, .topicId = 40,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "substr()'ün ikinci parametresi, alınacak karakter sayısını (uzunluğu) belirtir, bitiş indeksini değil.",
+        .acceptedAnswers = {"1"},
+        .explanation = "İkinci parametre uzunluktur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 925, .topicId = 40,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "find(), aranan alt diziyi bulamazsa std::string::npos döner.",
+        .acceptedAnswers = {"1"},
+        .explanation = "npos, 'bulunamadı' durumunu temsil eden özel bir sabittir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 926, .topicId = 40,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "substr() çağrısı, orijinal string'i değiştirir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "substr(), yeni bir string döndürür; orijinali değiştirmez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 927, .topicId = 40,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "find() sonucunu -1 ile karşılaştırmak, npos ile karşılaştırmakla her zaman aynı doğru sonucu verir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "find()'ın dönüş türü işaretsizdir (unsigned); == -1 karşılaştırması güvenilir değildir, std::string::npos kullanılmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 928, .topicId = 40,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::string s = \"Merhaba\"; std::string parca = s._____(0, 3); ifadesinin 'Mer' alması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"substr"},
+        .explanation = "substr() bir alt dizi döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 929, .topicId = 40,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::string s = \"Merhaba\"; if (s._____(\"hab\") != std::string::npos) { ... } ifadesinin 'hab' alt dizisini araması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"find"},
+        .explanation = "find() bir alt diziyi arar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 930, .topicId = 40,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::string s = \"Merhaba\"; s.find(\"xyz\") bulunamadığında std::string::_____ döner. Boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"npos"},
+        .explanation = "std::string::npos, bulunamadı durumunu temsil eder.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 931, .topicId = 40,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Merhaba\"; std::string parca = s.substr(2, _____); ifadesinin 'rha' (3 karakter) alması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"3"},
+        .explanation = "İkinci parametre alınacak karakter sayısıdır: 3.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 932, .topicId = 40,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Merhaba\"; std::string parca = s.substr(_____, 4); ifadesinin 'haba' (indeks 3'ten başlayan 4 karakter) alması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"3"},
+        .explanation = "'haba' indeks 3'te ('h') başlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 933, .topicId = 40,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Merhaba\"; int konum = s._____(\"e\"); konum değişkeninin 'e' harfinin bulunduğu indeksi (1) alması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"find"},
+        .explanation = "find() aranan karakterin/alt dizinin indeksini döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 934, .topicId = 40,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Merhaba\";\nstd::string ilkUc = _____;\nİlk 3 karakteri alan ifadeyi yazın.",
+        .acceptedAnswers = {"s.substr(0, 3)"},
+        .explanation = "substr(0, 3), indeks 0'dan başlayarak 3 karakter alır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 935, .topicId = 40,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Merhaba\";\nbool bulunduMu = _____;\n's' içinde 'hab' aranıp bulunup bulunmadığını (npos ile karşılaştırarak) kontrol eden ifadeyi yazın.",
+        .acceptedAnswers = {"s.find(\"hab\") != std::string::npos"},
+        .explanation = "find() != npos, alt dizinin bulunup bulunmadığını kontrol eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 936, .topicId = 40,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::string s = \"Merhaba\";\nstd::cout << s.substr(0, 3);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"Mer"},
+        .explanation = "İndeks 0'dan 3 karakter alınır: 'Mer'.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 937, .topicId = 40,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::string s = \"Merhaba\";\nstd::cout << s.find(\"hab\");\nYukarıdaki kodun ekran çıktısı nedir? (sayı olarak yazın)",
+        .acceptedAnswers = {"3"},
+        .explanation = "'Merhaba' içinde 'hab' alt dizisi indeks 3'te başlar.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 938, .topicId = 40,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::string s = \"Merhaba\";\nstd::cout << s.substr(0 3);\n\nHatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::cout << s.substr(0, 3);"},
+        .explanation = "Parametreler arasında virgül eksik.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 939, .topicId = 40,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::string s = \"Merhaba\";\nif (s.find(\"xyz\") == -1) {\n    std::cout << \"Bulunamadı\";\n}\n\nBu kod her zaman 'Bulunamadı' yazdırmalı gibi görünse de, find()'ın dönüş türü işaretsiz (unsigned) olduğu ve bulunamama durumunda -1 değil std::string::npos döndüğü için == -1 karşılaştırması güvenilir değildir. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"if (s.find(\"xyz\") == std::string::npos) {"},
+        .explanation = "Bulunamama durumu std::string::npos ile karşılaştırılmalıdır, -1 ile değil.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 940, .topicId = 40,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::string s = \"Merhaba\";\nstd::string parca = s.substr(2. 3);\n\nProgramcı virgül yerine nokta yazmış. Düzeltilmiş ikinci satırı yazın.",
+        .acceptedAnswers = {"std::string parca = s.substr(2, 3);"},
+        .explanation = "Parametreler arasında virgül kullanılmalıdır, nokta değil.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 941, .topicId = 40,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir string tanımlayıp ilk 3 karakterini yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << s.substr(0, 3);", "std::string s = \"Merhaba\";"},
+        .acceptedAnswers = {"2 1"},
+        .explanation = "Önce string tanımlanır (2), sonra alt dizisi yazdırılır (1): sıra 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 942, .topicId = 40,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Kullanıcıdan bir metin okuyup, metnin ilk 3 karakterini (substr kullanarak) ekrana yazdıran bir program yazın.",
+        .acceptedAnswers = {"cin", ">>", "substr", "cout", "<<"},
+        .explanation = "Program metni okumalı ve substr(0, 3) ile ilk 3 karakteri yazdırmalıdır.",
+        .baseXp = 40,
+    });
 }
