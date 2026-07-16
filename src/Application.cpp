@@ -271,6 +271,12 @@ void Application::runTopicQuiz(int topicId) {
 
     for (const Question& question : quizQuestions) {
         const AnswerResult result = askOneQuestion(question);
+        if (result.exitRequested) {
+            awardXpAndCheckLevelUp(sessionXp);
+            progressManager_.save(
+                progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+            return;
+        }
         if (result.correct) {
             ++correctCount;
             sessionXp += result.xpAwarded;
@@ -303,7 +309,8 @@ void Application::runTopicQuiz(int topicId) {
         progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
 }
 
-AnswerResult Application::askOneQuestion(const Question& question, bool trackMistakes) {
+AnswerResult Application::askOneQuestion(
+    const Question& question, bool trackMistakes, bool allowHints) {
     ui_.printLine(question.prompt);
 
     if (question.type == QuestionType::MultipleChoice) {
@@ -321,15 +328,81 @@ AnswerResult Application::askOneQuestion(const Question& question, bool trackMis
         }
     }
 
+    int hintLevelUsed = 0;
     std::string rawAnswer;
+    bool skipped = false;
+    bool exitRequested = false;
+
     if (question.type == QuestionType::WriteCode) {
         ui_.printLine(
             "Kodunuzu birden fazla satır halinde girebilirsiniz. Bitirmek için BITIR yazıp Enter'a basın.");
         rawAnswer = ui_.readMultilineCode();
     } else {
-        rawAnswer = ui_.readLine("Cevabınız: ");
+        while (true) {
+            rawAnswer = ui_.readLine("Cevabınız: ");
+            if (rawAnswer == "cikis") {
+                exitRequested = true;
+                break;
+            }
+            if (rawAnswer == "gec") {
+                skipped = true;
+                break;
+            }
+            if (rawAnswer == "ipucu") {
+                if (!allowHints) {
+                    ui_.printLine("Sınav sırasında ipucu kullanılamaz.");
+                    continue;
+                }
+                if (hintLevelUsed < 3) {
+                    ++hintLevelUsed;
+                }
+                ui_.printLine(generateHint(question, hintLevelUsed));
+                continue;
+            }
+            if (rawAnswer == "konu") {
+                if (!allowHints) {
+                    ui_.printLine("Sınav sırasında bu komut kullanılamaz.");
+                    continue;
+                }
+                const auto lesson = lessons_.findById(question.topicId);
+                if (lesson.has_value() && !lesson->explanation.empty()) {
+                    ui_.printLine(lesson->explanation);
+                } else {
+                    ui_.printLine("Bu konu için ders içeriği bu sürümde henüz eklenmedi.");
+                }
+                continue;
+            }
+            if (rawAnswer == "ornek") {
+                if (!allowHints) {
+                    ui_.printLine("Sınav sırasında bu komut kullanılamaz.");
+                    continue;
+                }
+                const auto lesson = lessons_.findById(question.topicId);
+                if (lesson.has_value() && !lesson->exampleCode.empty()) {
+                    ui_.printLine(lesson->exampleCode);
+                } else {
+                    ui_.printLine("Bu konu için örnek bu sürümde henüz eklenmedi.");
+                }
+                continue;
+            }
+            break;
+        }
     }
-    const AnswerResult result = quizEngine_.evaluate(question, rawAnswer, settings_);
+
+    if (exitRequested) {
+        return AnswerResult{false, 0, "", true};
+    }
+
+    AnswerResult result;
+    if (skipped) {
+        result = AnswerResult{false, 0, quizEngine_.correctAnswerDisplay(question), false};
+    } else {
+        result = quizEngine_.evaluate(question, rawAnswer, settings_);
+        if (result.correct && hintLevelUsed > 0) {
+            const double multiplier = 1.0 - (0.25 * hintLevelUsed);
+            result.xpAwarded = static_cast<int>(static_cast<double>(result.xpAwarded) * multiplier);
+        }
+    }
 
     if (result.correct) {
         ui_.printLine("Doğru! (+" + std::to_string(result.xpAwarded) + " XP)");
@@ -338,7 +411,7 @@ AnswerResult Application::askOneQuestion(const Question& question, bool trackMis
         ui_.printLine("Yanlış cevap.");
         ui_.printLine("");
         ui_.printLine("Senin cevabın:");
-        ui_.printLine(rawAnswer);
+        ui_.printLine(skipped ? "(soru geçildi)" : rawAnswer);
         ui_.printLine("");
         ui_.printLine("Doğru cevap:");
         ui_.printLine(result.correctAnswerDisplay);
@@ -481,6 +554,12 @@ void Application::runMistakeQuestions(const std::vector<MistakeRecord>& mistakes
             continue;
         }
         const AnswerResult result = askOneQuestion(*question);
+        if (result.exitRequested) {
+            awardXpAndCheckLevelUp(sessionXp);
+            progressManager_.save(
+                progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+            return;
+        }
         if (result.correct) {
             ++correctCount;
             sessionXp += result.xpAwarded;
@@ -610,6 +689,13 @@ void Application::runQuickTest() {
 
         generated->question.id = nextGeneratedQuestionId_++;
         const AnswerResult result = askOneQuestion(generated->question, /*trackMistakes=*/false);
+        if (result.exitRequested) {
+            generationEngine_.saveHistory(kGeneratedHistoryFilePath);
+            awardXpAndCheckLevelUp(sessionXp);
+            progressManager_.save(
+                progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+            return;
+        }
         ++askedCount;
         if (result.correct) {
             ++correctCount;
@@ -670,7 +756,13 @@ void Application::runSectionExam() {
         if (!question.has_value()) {
             continue;
         }
-        const AnswerResult result = askOneQuestion(*question);
+        const AnswerResult result = askOneQuestion(*question, /*trackMistakes=*/true, /*allowHints=*/false);
+        if (result.exitRequested) {
+            awardXpAndCheckLevelUp(examXp);
+            progressManager_.save(
+                progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+            return;
+        }
         if (result.correct) {
             ++correctCount;
             examXp += result.xpAwarded;
