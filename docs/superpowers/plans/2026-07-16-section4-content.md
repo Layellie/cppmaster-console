@@ -197,8 +197,9 @@ void applySection4LessonContent(std::vector<Lesson>& lessons) {
         "sınır dışı olsaydı istisna fırlatırdı.",
     };
     lessons[32].commonMistakes = {
-        "std::array'in boyutunun da (C-style diziler gibi) çalışma "
-        "zamanında değiştirilebileceğini sanmak.",
+        "std::array'in boyutunun da std::vector gibi çalışma zamanında "
+        "değiştirilebileceğini sanmak (std::array'in boyutu, C-style "
+        "diziler gibi, derleme zamanında sabittir).",
         "<array> kütüphanesini eklemeyi unutmak.",
         "at() ile [] arasındaki farkı karıştırmak: [] sınır kontrolü "
         "yapmaz (tanımsız davranış), at() sınır dışı erişimde istisna "
@@ -258,7 +259,8 @@ void applySection4LessonContent(std::vector<Lesson>& lessons) {
         "sayilar.push_back(1); sayilar.push_back(2); : Vector'e sırayla "
         "1 ve 2 eklenir; boyut 2 olur.",
         "sayilar.pop_back(); : Son eleman (2) silinir; boyut 1'e düşer.",
-        "sayilar.size() 1, sayilar[0] hala 1'dir.",
+        "sayilar.size() ve sayilar[0] : sayilar.size() 1, sayilar[0] "
+        "hala 1'dir.",
     };
     lessons[34].commonMistakes = {
         "pop_back()'in silinen elemanın değerini döndürdüğünü sanmak "
