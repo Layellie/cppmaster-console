@@ -609,7 +609,7 @@ void CodeExerciseManager::addAdvancedExercises() {
         .expectedBehavior =
             "class içinde bakiye private olmalı; yatir() ve cek() gibi public "
             "metotlarla bakiye değiştirilip ekrana yazdırılmalı.",
-        .sampleInput = "100 50 -30",
+        .sampleInput = "100 50 30",
         .sampleOutput = "120",
         .hints = {
             "Bakiyeyi private yap, dışarıdan sadece metotlarla değiştirilsin.",
@@ -632,7 +632,7 @@ void CodeExerciseManager::addAdvancedExercises() {
             "    std::cin >> baslangic >> yatirilan >> cekilen;\n"
             "    BankaHesabi hesap(baslangic);\n"
             "    hesap.yatir(yatirilan);\n"
-            "    hesap.cek(-cekilen);\n"
+            "    hesap.cek(cekilen);\n"
             "    std::cout << hesap.bakiyeGetir();\n"
             "    return 0;\n"
             "}",
