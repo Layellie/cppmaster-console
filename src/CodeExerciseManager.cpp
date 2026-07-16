@@ -789,16 +789,19 @@ void CodeExerciseManager::addAdvancedExercises() {
         .tier = kIleri,
         .title = "vector kullanan görev listesi",
         .description =
-            "Kullanıcıdan görevleri okuyup bir std::vector<std::string> içinde tutan "
-            "ve hepsini numaralandırarak ekrana yazdıran bir program yaz.",
+            "Kullanıcıdan önce görev sayısını, sonra o kadar görevi satır satır "
+            "okuyup bir std::vector<std::string> içinde tutan ve hepsini "
+            "numaralandırarak ekrana yazdıran bir program yaz.",
         .expectedBehavior =
-            "Görevler bir döngüyle vector'e eklenmeli (push_back), sonra başka bir "
-            "döngüyle numaralandırılarak yazdırılmalı.",
-        .sampleInput = "Ders çalış\nSpor yap",
+            "Önce görev sayısı okunmalı; sonra o kadar görev bir döngüyle vector'e "
+            "eklenmeli (push_back); son olarak başka bir döngüyle numaralandırılarak "
+            "yazdırılmalı.",
+        .sampleInput = "2\nDers çalış\nSpor yap",
         .sampleOutput = "1. Ders çalış\n2. Spor yap",
         .hints = {
+            "Önce görev sayısını oku.",
             "std::vector<std::string> gorevler; ile başlarsın.",
-            "gorevler.push_back(gorev); ile ekleme yaparsın.",
+            "getline ile okuduğun her görevi gorevler.push_back(gorev); ile ekleyip "
             "for döngüsüyle index'i kullanarak numaralandırabilirsin.",
         },
         .requiredKeywords = {"vector", "push_back", "for"},
@@ -807,17 +810,24 @@ void CodeExerciseManager::addAdvancedExercises() {
             "#include <string>\n"
             "#include <vector>\n\n"
             "int main() {\n"
+            "    int sayi;\n"
+            "    std::cin >> sayi;\n"
+            "    std::cin.ignore();\n\n"
             "    std::vector<std::string> gorevler;\n"
-            "    gorevler.push_back(\"Ders çalış\");\n"
-            "    gorevler.push_back(\"Spor yap\");\n\n"
+            "    for (int i = 0; i < sayi; i++) {\n"
+            "        std::string gorev;\n"
+            "        std::getline(std::cin, gorev);\n"
+            "        gorevler.push_back(gorev);\n"
+            "    }\n\n"
             "    for (std::size_t i = 0; i < gorevler.size(); i++) {\n"
             "        std::cout << (i + 1) << \". \" << gorevler[i] << \"\\n\";\n"
             "    }\n"
             "    return 0;\n"
             "}",
         .alternativeSolutionNote =
-            "Range-based for kullanmak da geçerlidir, ancak bu durumda numarayı "
-            "ayrıca bir sayaçla takip etmen gerekir.",
+            "Görev sayısını sormak yerine kullanıcı boş satır girene kadar okumak da "
+            "(while (std::getline(std::cin, gorev) && !gorev.empty())) geçerli bir "
+            "alternatiftir.",
         .baseXp = kIleriXp,
     });
     exercises_.push_back(CodeExercise{
