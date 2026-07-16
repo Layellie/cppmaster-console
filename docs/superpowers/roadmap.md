@@ -122,10 +122,12 @@ as Phases 1-7.
   when every answer is correct) — the old order was never actually
   difficulty-sorted, so this is a correction, not a regression.
 - **Phase 13 — Bölüm 2 İçerik Genişletmesi: COMPLETE** (commits
-  `51f1557..11910f3`, 89/89 tests + ctest 100%). Topics 11-20 (Section 2:
+  `6df525f..11910f3`, 89/89 tests + ctest 100%). Topics 11-20 (Section 2:
   "Operatörler ve koşullar") now have full lesson content
   (`src/LessonContentSection2.cpp`) and a 290-question bank (ids 73-362, 29
-  per topic, `src/QuestionsSection2.cpp`) spanning all 11 question types.
+  per topic, `src/QuestionsSection2.cpp`) spanning 9 of the 11 question
+  types (`Scenario`/`Matching` deliberately unused, matching Section 1's
+  own dormant-type precedent).
   `LessonManager_TopicsElevenToTwentyHaveRealContent` and the widened
   `QuestionManager_NoDuplicateQuestionIds` (now scans topics 1-100 instead
   of 1-10) plus the new
