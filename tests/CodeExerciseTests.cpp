@@ -14,6 +14,7 @@ TEST_CASE(CodeExercise_ToWriteCodeQuestionCarriesRequiredFields) {
     CHECK(question.type == QuestionType::WriteCode);
     CHECK(question.acceptedAnswers == exercise->requiredKeywords);
     CHECK(question.baseXp == exercise->baseXp);
+    CHECK(question.explanation == exercise->alternativeSolutionNote);
 }
 
 TEST_CASE(CodeExercise_EverySampleSolutionPassesItsOwnRequiredKeywords) {
