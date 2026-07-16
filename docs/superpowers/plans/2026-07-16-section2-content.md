@@ -531,8 +531,8 @@ Run: `"C:/Program Files/CMake/bin/cmake.exe" --build build`
 Expected: clean build, zero warnings.
 
 Run: `./build/Debug/CppMasterConsoleTests.exe`
-Expected: `89/89 test(s) passed.` (87 existing + the 2 new tests replacing
-the 1 removed test).
+Expected: `88/88 test(s) passed.` (87 existing - 1 removed test + 2 new
+tests = 88).
 
 - [ ] **Step 7: Commit**
 
@@ -1610,7 +1610,7 @@ Run: `"C:/Program Files/CMake/bin/cmake.exe" --build build`
 Expected: clean build, zero warnings.
 
 Run: `./build/Debug/CppMasterConsoleTests.exe`
-Expected: `89/89 test(s) passed.` (topics 11-14 now have 116 more
+Expected: `88/88 test(s) passed.` (topics 11-14 now have 116 more
 questions, but no existing test currently counts them, so the pass count
 is unchanged from Task 1's end state).
 
@@ -2379,7 +2379,7 @@ Run: `"C:/Program Files/CMake/bin/cmake.exe" --build build`
 Expected: clean build, zero warnings.
 
 Run: `./build/Debug/CppMasterConsoleTests.exe`
-Expected: `89/89 test(s) passed.` (unchanged from Task 2 — no existing test
+Expected: `88/88 test(s) passed.` (unchanged from Task 2 — no existing test
 yet counts these topics' questions).
 
 - [ ] **Step 3: Commit**
@@ -3203,7 +3203,7 @@ Run: `"C:/Program Files/CMake/bin/cmake.exe" --build build`
 Expected: clean build, zero warnings.
 
 Run: `./build/Debug/CppMasterConsoleTests.exe`
-Expected: `90/90 test(s) passed.` (89 from Task 1 + 1 new test; the
+Expected: `89/89 test(s) passed.` (88 from Task 1 + 1 new test; the
 duplicate-id test widening doesn't add a new test case, only its own
 range).
 
