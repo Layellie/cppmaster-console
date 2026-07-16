@@ -1703,4 +1703,733 @@ void appendSection3Questions(std::vector<Question>& questions) {
         .explanation = "Program iç içe iki for döngüsüyle 3 satır, her satırda 3 yıldız yazdırmalıdır.",
         .baseXp = 40,
     });
+
+    // Topic 28: Range-based for
+    questions.push_back(Question{
+        .id = 566, .topicId = 28,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Range-based for hangi amaçla kullanılır?",
+        .options = {"Bir koleksiyonun her elemanını sırayla dolaşmak", "Yalnızca sayıları saymak", "Fonksiyon tanımlamak", "Hata yakalamak"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Range-based for, bir koleksiyonun her elemanını sırayla dolaşmak için kullanılır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 567, .topicId = 28,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "for (int x : vektor) yapısında x, koleksiyonun elemanlarının bir kopyasını mı yoksa referansını mı alır?",
+        .options = {"Kopyasını", "Referansını", "İkisi de olabilir, fark etmez", "Hiçbirini, yalnızca indeksi alır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "& kullanılmadığında x, her elemanın bir kopyasını alır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 568, .topicId = 28,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "for (int& x : vektor) yapısında & işareti ne anlama gelir?",
+        .options = {"x bir kopya değil, elemanın kendisine referanstır", "x bir adres değişkenidir", "& bir hata işaretidir", "Hiçbir anlamı yoktur"},
+        .acceptedAnswers = {"a"},
+        .explanation = "& ile x, elemanın kendisine referans olur; x üzerindeki değişiklik koleksiyonu da değiştirir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 569, .topicId = 28,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {1,2,3}; for (int x : v) { x *= 2; } döngüsünden sonra v'nin ilk elemanı ne olur?",
+        .options = {"1", "2", "3", "6"},
+        .acceptedAnswers = {"a"},
+        .explanation = "x bir kopya olduğu için üzerindeki değişiklik v'yi etkilemez; v[0] hala 1'dir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 570, .topicId = 28,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {1,2,3}; for (int& x : v) { x *= 2; } döngüsünden sonra v'nin ilk elemanı ne olur?",
+        .options = {"1", "2", "3", "6"},
+        .acceptedAnswers = {"b"},
+        .explanation = "x referans olduğu için üzerindeki değişiklik gerçek elemanı da değiştirir; v[0] 1*2=2 olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 571, .topicId = 28,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Range-based for içinde geleneksel bir index (i) değişkenine doğrudan erişilebilir mi?",
+        .options = {"Evet, otomatik olarak i adında bir değişken oluşur", "Hayır, yalnızca elemanın kendisine erişilir, indekse doğrudan erişilmez", "Yalnızca vector'de erişilebilir", "Yalnızca string'de erişilebilir"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Range-based for yalnızca elemanın kendisini sağlar, bir indeks değişkeni oluşturmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 572, .topicId = 28,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "for (const int& x : v) yapısında const eklenmesinin amacı nedir?",
+        .options = {"x'in değerini yanlışlıkla değiştirmeyi derleme zamanında engellemek", "Döngüyü daha hızlı çalıştırmak için zorunludur", "Hiçbir işe yaramaz", "Yalnızca vector'de kullanılabilir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "const, x üzerinden elemanın yanlışlıkla değiştirilmesini derleme zamanında engeller.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 573, .topicId = 28,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::vector<int> v = {10, 20, 30}; int toplam = 0; for (int x : v) { toplam += x; } kodundan sonra toplam kaç olur?",
+        .options = {"60", "30", "3", "10"},
+        .acceptedAnswers = {"a"},
+        .explanation = "10 + 20 + 30 = 60.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 574, .topicId = 28,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Range-based for, bir koleksiyonun tüm elemanlarını sırayla dolaşmak için kullanılır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Range-based for'un amacı budur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 575, .topicId = 28,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "for (int x : v) yapısında x her zaman bir referanstır, kopya olamaz.",
+        .acceptedAnswers = {"2"},
+        .explanation = "& kullanılmadığında x bir kopyadır, referans değildir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 576, .topicId = 28,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "for (int& x : v) kullanıldığında x üzerindeki değişiklik, koleksiyondaki gerçek elemanı da değiştirir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "& ile x, gerçek elemana referans olur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 577, .topicId = 28,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Range-based for içinde elemanın koleksiyondaki konumuna (indeksine) doğrudan erişilebilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Range-based for yalnızca elemanı sağlar, indekse doğrudan erişim yoktur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 578, .topicId = 28,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Range-based for, std::vector, std::array ve std::string gibi türlerle kullanılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Range-based for, elemanlarını sırayla dolaşılabilen (iterable) her koleksiyonla kullanılabilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 579, .topicId = 28,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Döngü sırasında bir vector'ün boyutunu değiştirmek (eleman ekleme/silme) her zaman güvenlidir ve tanımsız davranışa yol açmaz.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Range-based for döngüsü sırasında koleksiyonun boyutunu değiştirmek tanımsız davranışa yol açabilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 580, .topicId = 28,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "for (int x _____ vektor) {\n    std::cout << x;\n}\nBir koleksiyonun her elemanını dolaşmak için boşluğa hangi karakter yazılmalı?",
+        .acceptedAnswers = {":"},
+        .explanation = "Range-based for söz diziminde eleman ve koleksiyon arasına : konulur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 581, .topicId = 28,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "for (int _____ : vektor) {\n    x *= 2;\n}\nElemanların gerçek değerini değiştirebilmek için boşluğa (değişken adının önüne) ne eklenmeli? (örnek: x&)",
+        .acceptedAnswers = {"x&", "&x"},
+        .explanation = "& ile x referans olur ve gerçek elemanı değiştirebilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 582, .topicId = 28,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "for (int x : vektor) {\n    std::cout << _____;\n}\nHer elemanı yazdırmak için boşluğa hangi değişken adı yazılmalı?",
+        .acceptedAnswers = {"x"},
+        .explanation = "x, her turda o anki elemanı tutan değişkendir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 583, .topicId = 28,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {1, 2, 3};\nfor (int& x : v) {\n    x _____ 10;\n}\nHer elemana 10 eklemek için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"+="},
+        .explanation = "+= operatörü, x'e (ve dolayısıyla gerçek elemana) 10 ekler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 584, .topicId = 28,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> sayilar = {5, 10, 15};\nint toplam = 0;\nfor (int sayi : sayilar) {\n    toplam _____ sayi;\n}\nHer elemanı toplama eklemek için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"+="},
+        .explanation = "+= operatörü her elemanı toplama ekler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 585, .topicId = 28,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "for (const int& x : v) yapısında x'in yanlışlıkla değiştirilmesini derleme zamanında engellemek için boşluğa (x'in önüne) hangi anahtar kelime eklenmiş?",
+        .acceptedAnswers = {"const"},
+        .explanation = "const, x'in yalnızca okunabilir olmasını sağlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 586, .topicId = 28,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {1, 2, 3};\n_____\n    std::cout << x << \" \";\n}\nv'nin her elemanını x olarak dolaşan (kopya alan) range-based for satırını yazın.",
+        .acceptedAnswers = {"for (int x : v) {"},
+        .explanation = "for (int x : v), v'nin her elemanını kopya olarak x'e alır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 587, .topicId = 28,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {1, 2, 3};\n_____\n    x *= 3;\n}\nv'nin her elemanını referans olarak alıp değiştirebilen range-based for satırını yazın.",
+        .acceptedAnswers = {"for (int& x : v) {"},
+        .explanation = "for (int& x : v), v'nin her elemanına referans alır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 588, .topicId = 28,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {1, 2, 3};\nfor (int x : v) {\n    std::cout << x;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"123"},
+        .explanation = "v'nin elemanları sırayla (1,2,3) yazdırılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 589, .topicId = 28,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::vector<int> v = {1, 2, 3};\nfor (int& x : v) {\n    x += 1;\n}\nstd::cout << v[0] << v[1] << v[2];\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"234"},
+        .explanation = "Referans alındığı için her eleman 1 artar: 1->2, 2->3, 3->4; çıktı '234'.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 590, .topicId = 28,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::vector<int> v = {1, 2, 3};\nfor (int x : v)\n    std::cout << x\n\nHatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::cout << x;"},
+        .explanation = "Satırın sonunda noktalı virgül eksik.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 591, .topicId = 28,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::vector<int> v = {1, 2, 3};\nfor (int x : v) {\n    x *= 2;\n}\nstd::cout << v[0];\n\nProgramcı v'nin elemanlarını 2 ile çarpıp değiştirmek istiyor ama v[0] hala 1 olarak kalıyor (x bir kopya olduğu için). Hatalı satırı, elemanları gerçekten değiştirecek şekilde düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"for (int& x : v) {"},
+        .explanation = "x'in gerçek elemanı değiştirebilmesi için referans (&) olarak alınması gerekir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 592, .topicId = 28,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::vector<int> v = {1, 2, 3};\nfor (int x, v) {\n    std::cout << x;\n}\n\nDüzeltilmiş ikinci satırı yazın.",
+        .acceptedAnswers = {"for (int x : v) {"},
+        .explanation = "Range-based for'da eleman ve koleksiyon arasına virgül değil : konulmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 593, .topicId = 28,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir vector'ün toplamını range-based for ile hesaplayıp yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << toplam;", "int toplam = 0;\nfor (int x : v) {\n    toplam += x;\n}", "std::vector<int> v = {1, 2, 3};"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "Önce vector tanımlanır (3), sonra toplam hesaplanır (2), en son yazdırılır (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 594, .topicId = 28,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir tam sayı vector'ünün tüm elemanlarının toplamını range-based for kullanarak hesaplayıp ekrana yazdıran bir program yazın.",
+        .acceptedAnswers = {"for", "cout", "<<", "vector"},
+        .explanation = "Program range-based for ile vector'ün elemanlarını dolaşıp toplamalı ve sonucu yazdırmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 29: 1'den N'e kadar toplama
+    questions.push_back(Question{
+        .id = 595, .topicId = 29,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "1'den n'e kadar olan sayıların toplamını hesaplamanın en yaygın yolu nedir?",
+        .options = {"Bir toplam değişkenini döngüde güncellemek", "Yalnızca n'i yazdırmak", "Bir dizi tanımlamak", "Fonksiyon çağırmadan hesaplamak imkansızdır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Bir toplam değişkenini bir döngüde her adımda güncellemek en yaygın yöntemdir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 596, .topicId = 29,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int toplam = 0; for (int i = 1; i <= 5; i++) { toplam += i; } kodundan sonra toplam kaç olur?",
+        .options = {"10", "15", "20", "5"},
+        .acceptedAnswers = {"b"},
+        .explanation = "1+2+3+4+5 = 15.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 597, .topicId = 29,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "1'den n'e kadar toplamı hesaplayan döngüde toplam değişkeni hangi değerle başlatılmalıdır?",
+        .options = {"1", "0", "n", "Boş bırakılabilir"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Toplama işleminde başlangıç değeri 0 olmalıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 598, .topicId = 29,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "1'den 10'a kadar sayıların toplamı kapalı-form formülüyle (n*(n+1)/2) kaç eder?",
+        .options = {"45", "50", "55", "60"},
+        .acceptedAnswers = {"c"},
+        .explanation = "10*11/2 = 55.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 599, .topicId = 29,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int toplam = 0; for (int i = 1; i < 5; i++) { toplam += i; } kodunda i < 5 (i <= 5 değil) kullanıldığı için toplam kaç olur?",
+        .options = {"10", "15", "5", "4"},
+        .acceptedAnswers = {"a"},
+        .explanation = "i < 5 olduğu için yalnızca 1,2,3,4 toplanır: 1+2+3+4=10.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 600, .topicId = 29,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "1'den n'e kadar toplam hesaplayan bir döngüde toplam değişkenini 1 ile başlatmanın etkisi nedir?",
+        .options = {"Hiçbir etkisi yoktur", "Sonuca fazladan 1 eklenmiş olur", "Sonuç yarıya iner", "Döngü sonsuz olur"},
+        .acceptedAnswers = {"b"},
+        .explanation = "1 ile başlatılan toplam değişkeni, gerçek sonuca fazladan 1 ekler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 601, .topicId = 29,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "n*(n+1)/2 formülü hangi toplamı hesaplar?",
+        .options = {"1'den n'e kadar olan sayıların çarpımını", "1'den n'e kadar olan sayıların toplamını", "Yalnızca n'in karesini", "1'den n'e kadar çift sayıların toplamını"},
+        .acceptedAnswers = {"b"},
+        .explanation = "n*(n+1)/2, 1'den n'e kadar olan tüm sayıların toplamını veren kapalı-form formülüdür.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 602, .topicId = 29,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int toplam = 0; for (int i = 1; i <= 100; i++) { toplam += i; } kodundan sonra toplam kaç olur (1'den 100'e kadar toplam)?",
+        .options = {"5050", "10000", "4950", "5000"},
+        .acceptedAnswers = {"a"},
+        .explanation = "100*101/2 = 5050.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 603, .topicId = 29,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "1'den n'e kadar toplam hesaplarken toplam değişkeni genellikle 0 ile başlatılır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Toplama işleminde nötr eleman 0'dır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 604, .topicId = 29,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "n*(n+1)/2 formülü, 1'den n'e kadar olan sayıların çarpımını verir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Bu formül toplamı verir, çarpımı (faktöriyeli) değil.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 605, .topicId = 29,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "1'den 5'e kadar olan sayıların toplamı 15'tir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "1+2+3+4+5 = 15.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 606, .topicId = 29,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Toplam hesaplayan bir döngüde toplam += i; satırı döngü dışına yazılabilir ve aynı sonucu verir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "toplam += i; her turda çalışmalıdır; döngü dışına yazılırsa yalnızca son i değeri eklenir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 607, .topicId = 29,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "1'den n'e kadar toplamı hesaplamak hem bir döngüyle hem de kapalı-form (closed-form) formülüyle yapılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Her iki yöntem de aynı sonucu verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 608, .topicId = 29,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "1'den 100'e kadar olan sayıların toplamı 5050'dir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "100*101/2 = 5050.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 609, .topicId = 29,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int toplam = _____;\nfor (int i = 1; i <= n; i++) {\n    toplam += i;\n}\nToplam değişkenini başlatmak için boşluğa hangi değer yazılmalı?",
+        .acceptedAnswers = {"0"},
+        .explanation = "Toplama işleminde başlangıç değeri 0'dır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 610, .topicId = 29,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int toplam = 0;\nfor (int i = 1; i <= n; i++) {\n    toplam _____ i;\n}\nHer turda i değerini toplama eklemek için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"+="},
+        .explanation = "+= operatörü toplama i'yi ekler.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 611, .topicId = 29,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int toplam = 0;\nfor (int i = _____; i <= n; i++) {\n    toplam += i;\n}\n1'den başlamak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"1"},
+        .explanation = "Sayaç 1 değeriyle başlatılmalıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 612, .topicId = 29,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int n = 6;\nint toplamFormul = n * (n _____ 1) / 2;\nKapalı-form formülünü tamamlamak için boşluğa hangi operatör yazılmalı?",
+        .acceptedAnswers = {"+"},
+        .explanation = "Formül n * (n + 1) / 2 şeklindedir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 613, .topicId = 29,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int n = 4;\nint toplam = n * (n + 1) _____ 2;\nFormülün son adımı olan bölmeyi yapmak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"/"},
+        .explanation = "Formülün son adımı 2'ye bölmedir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 614, .topicId = 29,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int n = 10;\nint toplam = 0;\nfor (int i = 1; i _____ n; i++) {\n    toplam += i;\n}\nn dahil tüm sayıları toplaması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"<="},
+        .explanation = "<= operatörü n'i de toplama dahil eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 615, .topicId = 29,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int n = 5;\nint toplam = 0;\nfor (int i = 1; i <= n; i++) {\n    _____\n}\nHer i değerini toplama ekleyen satırı yazın.",
+        .acceptedAnswers = {"toplam += i;"},
+        .explanation = "toplam += i; her turda i'yi toplama ekler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 616, .topicId = 29,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int n = 8;\nint toplamFormul = _____;\n1'den n'e kadar toplamı kapalı-form formülüyle hesaplayan ifadeyi yazın.",
+        .acceptedAnswers = {"n * (n + 1) / 2"},
+        .explanation = "Kapalı-form formülü n * (n + 1) / 2'dir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 617, .topicId = 29,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int toplam = 0;\nfor (int i = 1; i <= 4; i++) {\n    toplam += i;\n}\nstd::cout << toplam;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"10"},
+        .explanation = "1+2+3+4 = 10.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 618, .topicId = 29,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int n = 7;\nstd::cout << n * (n + 1) / 2;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"28"},
+        .explanation = "7*8/2 = 28.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 619, .topicId = 29,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint toplam = 1;\nfor (int i = 1; i <= 5; i++) {\n    toplam += i;\n}\nstd::cout << toplam;\n\nProgramcı 1'den 5'e kadar toplamı (15) hesaplamak istiyor ama kodu 16 veriyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"int toplam = 0;"},
+        .explanation = "Toplam değişkeni 1 ile başlatıldığı için sonuca fazladan 1 eklenmiş; doğrusu 0 ile başlatmaktır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 620, .topicId = 29,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint toplam = 0;\nfor (int i = 1; i < 5; i++) {\n    toplam += i;\n}\nstd::cout << toplam;\n\nProgramcı 1'den 5'e kadar (5 dahil) toplamı (15) hesaplamak istiyor ama kod yalnızca 1'den 4'e kadar topluyor (i < 5 yüzünden). Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"for (int i = 1; i <= 5; i++) {"},
+        .explanation = "i < 5 koşulu 5'i toplama dahil etmez; i <= 5 kullanılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 621, .topicId = 29,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint toplam = 0;\nfor (int i = 1; i <= 5; i++)\n    toplam =+ i;\n\nProgramcı toplam += i; yazmak isterken yanlışlıkla =+ yazmış (bu, toplam'ı her turda yalnızca i'ye eşitler, biriktirmez). Düzeltilmiş üçüncü satırı yazın.",
+        .acceptedAnswers = {"toplam += i;"},
+        .explanation = "=+ yerine += kullanılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 622, .topicId = 29,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, 1'den n'e kadar toplamı hesaplayıp yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << toplam;", "int toplam = 0;\nfor (int i = 1; i <= n; i++) {\n    toplam += i;\n}", "int n = 5;"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "Önce n tanımlanır (3), toplam hesaplanır (2), en son yazdırılır (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 623, .topicId = 29,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Kullanıcıdan bir n sayısı okuyup, 1'den n'e kadar olan sayıların toplamını bir döngü kullanarak hesaplayıp ekrana yazdıran bir program yazın.",
+        .acceptedAnswers = {"cin", ">>", "for", "cout", "<<"},
+        .explanation = "Program n'i okumalı, 1'den n'e kadar bir döngüde toplamalı ve sonucu yazdırmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 30: Faktöriyel hesaplama
+    questions.push_back(Question{
+        .id = 624, .topicId = 30,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir sayının faktöriyeli (n!) nasıl tanımlanır?",
+        .options = {"1'den n'e kadar olan sayıların toplamı", "1'den n'e kadar olan sayıların çarpımı", "n'in karesi", "n'in yarısı"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Faktöriyel, 1'den n'e kadar olan tüm sayıların çarpımıdır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 625, .topicId = 30,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "5! (5 faktöriyel) kaçtır?",
+        .options = {"20", "60", "120", "24"},
+        .acceptedAnswers = {"c"},
+        .explanation = "1*2*3*4*5 = 120.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 626, .topicId = 30,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "0! (sıfır faktöriyel) tanım gereği kaçtır?",
+        .options = {"0", "1", "Tanımsızdır", "-1"},
+        .acceptedAnswers = {"b"},
+        .explanation = "0! tanım gereği 1'dir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 627, .topicId = 30,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int sonuc = 1; for (int i = 1; i <= 4; i++) { sonuc *= i; } kodundan sonra sonuc kaç olur?",
+        .options = {"10", "24", "4", "120"},
+        .acceptedAnswers = {"b"},
+        .explanation = "1*2*3*4 = 24.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 628, .topicId = 30,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Faktöriyel hesaplayan bir döngüde çarpım değişkeni hangi değerle başlatılmalıdır?",
+        .options = {"0", "1", "n", "Boş bırakılabilir"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Çarpımda nötr eleman 1'dir; 0 ile başlatılırsa sonuç her zaman 0 olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 629, .topicId = 30,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Çarpım değişkenini 0 ile başlatırsak faktöriyel hesaplamasında ne olur?",
+        .options = {"Doğru sonucu verir", "Sonuç her zaman 0 olur (0 ile çarpım hep 0'dır)", "Sonuç her zaman 1 olur", "Derleme hatası oluşur"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Herhangi bir sayı 0 ile çarpılırsa sonuç 0 olur; bu yüzden çarpım 1 ile başlatılmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 630, .topicId = 30,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "6! kaçtır?",
+        .options = {"120", "720", "36", "6"},
+        .acceptedAnswers = {"b"},
+        .explanation = "1*2*3*4*5*6 = 720.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 631, .topicId = 30,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "Faktöriyel hesaplarken hangi durum int taşmasına (overflow) yol açabilir?",
+        .options = {"n çok küçük olduğunda (örneğin n=0)", "n çok büyük olduğunda (örneğin n=15 ve üzeri)", "Yalnızca negatif n değerlerinde", "Hiçbir zaman, int her zaman yeterlidir"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Faktöriyel çok hızlı büyür; büyük n değerleri (örneğin 13! ve üzeri) int'in sınırlarını aşabilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 632, .topicId = 30,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Faktöriyel, 1'den n'e kadar olan sayıların çarpımıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Faktöriyelin tanımı budur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 633, .topicId = 30,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "0! tanım gereği 0'dır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "0! tanım gereği 0 değil 1'dir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 634, .topicId = 30,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "5! değeri 120'dir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "1*2*3*4*5 = 120.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 635, .topicId = 30,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Faktöriyel hesaplayan döngüde çarpım değişkeni 0 ile başlatılmalıdır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Çarpım değişkeni 1 ile başlatılmalıdır; 0 ile başlatılırsa sonuç her zaman 0 olur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 636, .topicId = 30,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Büyük n değerleri için faktöriyel sonucu int'in sınırlarını aşabilir (overflow).",
+        .acceptedAnswers = {"1"},
+        .explanation = "Faktöriyel çok hızlı büyüdüğü için büyük n'lerde overflow riski vardır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 637, .topicId = 30,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Faktöriyel hesaplaması yalnızca çıkarma işlemiyle yapılabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Faktöriyel çarpma işlemiyle hesaplanır, çıkarma ile değil.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 638, .topicId = 30,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int sonuc = _____;\nfor (int i = 1; i <= n; i++) {\n    sonuc *= i;\n}\nÇarpım değişkenini başlatmak için boşluğa hangi değer yazılmalı?",
+        .acceptedAnswers = {"1"},
+        .explanation = "Çarpımda nötr eleman 1'dir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 639, .topicId = 30,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int sonuc = 1;\nfor (int i = 1; i <= n; i++) {\n    sonuc _____ i;\n}\nHer turda i değerini çarpıma dahil etmek için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"*="},
+        .explanation = "*= operatörü sonuc'u i ile çarpar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 640, .topicId = 30,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "4! değeri _____ 'tür (sayı olarak yazın).",
+        .acceptedAnswers = {"24"},
+        .explanation = "1*2*3*4 = 24.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 641, .topicId = 30,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int n = 5;\nint sonuc = 1;\nfor (int i = 1; i _____ n; i++) {\n    sonuc *= i;\n}\nn dahil tüm sayıları çarpıma dahil etmek için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"<="},
+        .explanation = "<= operatörü n'i de çarpıma dahil eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 642, .topicId = 30,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "3! değeri _____ 'tür (sayı olarak yazın).",
+        .acceptedAnswers = {"6"},
+        .explanation = "1*2*3 = 6.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 643, .topicId = 30,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int sonuc = 1;\nfor (int i = 2; i _____ 5; i++) {\n    sonuc *= i;\n}\n5! hesaplamak isteyip 1'i çarpıma dahil etmeden (1 ile çarpmanın zaten sonucu değiştirmediğini bilerek i=2'den başlayan bir döngüde) 5 dahil olması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"<="},
+        .explanation = "<= operatörü 5'i de çarpıma dahil eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 644, .topicId = 30,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int n = 5;\nint sonuc = 1;\nfor (int i = 1; i <= n; i++) {\n    _____\n}\nHer i değerini çarpıma dahil eden satırı yazın.",
+        .acceptedAnswers = {"sonuc *= i;"},
+        .explanation = "sonuc *= i; her turda i'yi çarpıma dahil eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 645, .topicId = 30,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int sonuc = 1;\nfor (int i = 1; i <= 6; i++) {\n    sonuc *= i;\n}\nstd::cout << _____;\n6! sonucunu yazdıran ifadeyi yazın.",
+        .acceptedAnswers = {"sonuc"},
+        .explanation = "sonuc değişkeni, hesaplanan faktöriyel değerini tutar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 646, .topicId = 30,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int sonuc = 1;\nfor (int i = 1; i <= 5; i++) {\n    sonuc *= i;\n}\nstd::cout << sonuc;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"120"},
+        .explanation = "5! = 1*2*3*4*5 = 120.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 647, .topicId = 30,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int sonuc = 1;\nfor (int i = 1; i <= 3; i++) {\n    sonuc *= i;\n}\nsonuc *= 4;\nstd::cout << sonuc;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"24"},
+        .explanation = "Döngüden sonra sonuc 1*2*3=6 olur, ardından 6*4=24 bulunur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 648, .topicId = 30,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint sonuc = 0;\nfor (int i = 1; i <= 5; i++) {\n    sonuc *= i;\n}\nstd::cout << sonuc;\n\nProgramcı 5! (120) hesaplamak istiyor ama kod her zaman 0 veriyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"int sonuc = 1;"},
+        .explanation = "sonuc 0 ile başlatıldığı için tüm çarpımlar 0 kalır; doğrusu 1 ile başlatmaktır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 649, .topicId = 30,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint sonuc = 1;\nfor (int i = 1; i <= 5; i++) {\n    sonuc += i;\n}\nstd::cout << sonuc;\n\nProgramcı 5! (120) hesaplamak istiyor ama kod toplama yaptığı için yanlış bir sonuç (16) veriyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"sonuc *= i;"},
+        .explanation = "Faktöriyel çarpma gerektirir; += yerine *= kullanılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 650, .topicId = 30,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint sonuc = 1;\nfor (int i = 1; i <= 5; i++)\n    sonuc =* i;\n\nProgramcı sonuc *= i; yazmak isterken yanlışlıkla =* yazmış. Düzeltilmiş üçüncü satırı yazın.",
+        .acceptedAnswers = {"sonuc *= i;"},
+        .explanation = "=* yerine *= kullanılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 651, .topicId = 30,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, n! hesaplayıp yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << sonuc;", "int sonuc = 1;\nfor (int i = 1; i <= n; i++) {\n    sonuc *= i;\n}", "int n = 5;"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "Önce n tanımlanır (3), sonuc hesaplanır (2), en son yazdırılır (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 652, .topicId = 30,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Kullanıcıdan bir n sayısı okuyup, n! (n faktöriyel) değerini bir döngü kullanarak hesaplayıp ekrana yazdıran bir program yazın.",
+        .acceptedAnswers = {"cin", ">>", "for", "cout", "<<"},
+        .explanation = "Program n'i okumalı, 1'den n'e kadar bir döngüde çarpmalı ve sonucu yazdırmalıdır.",
+        .baseXp = 40,
+    });
 }
