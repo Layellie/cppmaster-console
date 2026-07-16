@@ -14,8 +14,10 @@ order, not difficulty order).
 
 Sorting topic 1's 8 questions by ascending difficulty **changes their
 order** from every prior phase's regression transcript
-(`1,2,3,4,5,6,65,70` → `3,1,4,5,65,2,6,70` when every answer is correct,
-because of the streak-driven reordering described below). **This is
+(`1,2,3,4,5,6,65,70` → `3,1,70,6,2,65,5,4` when every answer is correct,
+because of the streak-driven reordering described below — `3,1,4,5,65,2,6,70`
+is only the intermediate difficulty-sorted order before streak-jumps are
+applied). **This is
 intentional, unavoidable, and correctly implements "kolaydan zora doğru
 gelsin"** — the old order was never actually difficulty-sorted (it mixes
 Easy/Medium/VeryEasy by hand-authoring convenience, not intent). The
