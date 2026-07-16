@@ -65,6 +65,7 @@ add_library(CppMasterConsoleLib STATIC
     src/Application.cpp
     src/HintProvider.h
     src/HintProvider.cpp
+    src/AdaptiveDifficulty.h
     src/CodeExercise.h
     src/CodeExerciseManager.h
     src/CodeExerciseManager.cpp
@@ -99,6 +100,7 @@ add_executable(CppMasterConsoleTests
     tests/HintProviderTests.cpp
     tests/CodeExerciseManagerTests.cpp
     tests/CodeExerciseTests.cpp
+    tests/AdaptiveDifficultyTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
