@@ -139,9 +139,26 @@ as Phases 1-7.
   back to the main menu with partial XP saved. First of nine section-by-
   section content phases (13-21) closing the roadmap's lesson-content and
   question-bank gaps for topics 11-100.
-- **Phases 14-21 — İçerik genişletme (devamı):** kalan 80 konunun ders
-  içeriği + soru bankasının ~2320'ye çıkarılması. Bölüm bölüm (Section 3
-  through Section 10, 8 phases), her biri o bölümün 10 konusu + ~290 soru.
+- **Phase 14 — Bölüm 3 İçerik Genişletmesi: COMPLETE** (commits
+  `7987f8c..0e93bc7`, 90/90 tests + ctest 100%). Topics 21-30 (Section 3:
+  "Seçim ve döngüler") now have full lesson content
+  (`src/LessonContentSection3.cpp`) and a 290-question bank (ids 363-652, 29
+  per topic, `src/QuestionsSection3.cpp`) spanning the same 9 of 11 question
+  types as Section 2 (`Scenario`/`Matching` still deliberately unused). The
+  existing `LessonManager_TopicsElevenToThirtyHaveRealContent` test was
+  widened in-place (11-20 -> 11-30) and a new
+  `QuestionManager_EveryTopicTwentyOneToThirtyHasAtLeastTwentyNineQuestions`
+  test was added; `QuestionManager_NoDuplicateQuestionIds` already scanned
+  topics 1-100 from Phase 13 and needed no change. A manual end-to-end run
+  additionally confirmed `openTopic`'s content gate passes for topic 22 with
+  zero `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29
+  soru).", correct answers award XP, and mid-quiz `cikis` exits cleanly back
+  to the main menu with partial XP saved. Second of nine section-by-section
+  content phases (13-21) closing the roadmap's lesson-content and
+  question-bank gaps for topics 11-100.
+- **Phases 15-21 — İçerik genişletme (devamı):** kalan 70 konunun ders
+  içeriği + soru bankasının ~2030'a çıkarılması. Bölüm bölüm (Section 4
+  through Section 10, 7 phases), her biri o bölümün 10 konusu + ~290 soru.
 - **Phase 22 — Sınavlar:** kalan 9 bölüm sınavı + 100 soruluk genel final
   sınavı (içerik tamamlandıktan sonra mümkün).
 - **Phase 23 — Üretici kütüphanesini genişletme:** en az 15 üretici,
@@ -154,8 +171,8 @@ as Phases 1-7.
 
 ## Status
 
-Phase 13 complete (2026-07-16). Phase 14 (Section 3 content: "Seçim ve
-döngüler", topics 21-30) starting next — the second of the large
+Phase 14 complete (2026-07-16). Phase 15 (Section 4 content: "Diziler,
+vector ve string", topics 31-40) starting next — the third of the large
 content-expansion phases (Phases 13-21). Update this file's
 phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
 per-phase headers).
