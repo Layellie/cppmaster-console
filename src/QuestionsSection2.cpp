@@ -974,4 +974,733 @@ void appendSection2Questions(std::vector<Question>& questions) {
         .explanation = "Program bir for döngüsü içinde sayacı ++ ile artırmalı ve her adımda cout << ile yazdırmalıdır.",
         .baseXp = 40,
     });
+
+    // Topic 15: Karşılaştırma operatörleri
+    questions.push_back(Question{
+        .id = 189, .topicId = 15,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "int a = 5; int b = 7; a == b ifadesinin sonucu nedir?",
+        .options = {"true", "false", "5", "7"},
+        .acceptedAnswers = {"b"},
+        .explanation = "5, 7'ye eşit olmadığı için sonuç false'tur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 190, .topicId = 15,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "!= operatörü ne anlama gelir?",
+        .options = {"Eşittir", "Eşit değildir", "Küçüktür", "Büyüktür"},
+        .acceptedAnswers = {"b"},
+        .explanation = "!= operatörü, iki değerin eşit olmadığını kontrol eder.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 191, .topicId = 15,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int a = 5; int b = 7; a < b ifadesinin sonucu nedir?",
+        .options = {"true", "false", "-2", "2"},
+        .acceptedAnswers = {"a"},
+        .explanation = "5, 7'den küçük olduğu için sonuç true'dur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 192, .topicId = 15,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int a = 8; int b = 8; a >= b ifadesinin sonucu nedir?",
+        .options = {"true", "false", "0", "8"},
+        .acceptedAnswers = {"a"},
+        .explanation = ">= operatörü eşitlik durumunda da true döner; 8, 8'e eşit olduğu için sonuç true'dur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 193, .topicId = 15,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Karşılaştırma için == yerine yanlışlıkla = kullanılırsa ne olur?",
+        .options = {"Derleme hatası her zaman oluşur", "Bazı durumlarda atama yapılıp kod yine de derlenir", "Program her zaman çöker", "Hiçbir fark olmaz"},
+        .acceptedAnswers = {"b"},
+        .explanation = "if (a = b) gibi bir ifade derlenir; a'ya b'nin değerini atar ve bu atamanın sonucu koşul olarak kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 194, .topicId = 15,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int a = 3; int b = 3; a != b ifadesinin sonucu nedir?",
+        .options = {"true", "false", "3", "0"},
+        .acceptedAnswers = {"b"},
+        .explanation = "a ve b eşit olduğu için != false döner.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 195, .topicId = 15,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "double a = 0.1 + 0.2; double b = 0.3; a == b ifadesinin sonucu genellikle nedir ve neden?",
+        .options = {"true, çünkü matematiksel olarak eşitler", "false, çünkü ondalıklı sayılarda yuvarlama hataları olabilir", "Derleme hatası verir", "Her zaman true döner çünkü ikisi de double'dır"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Kayan noktalı sayılar ikili tabanda tam temsil edilemeyebilir; bu yüzden == ile doğrudan karşılaştırmak güvenilmezdir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 196, .topicId = 15,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int a = 5; int b = 5; int c = 10; (a == b) && (c > b) ifadesinin sonucu nedir?",
+        .options = {"true", "false", "5", "10"},
+        .acceptedAnswers = {"a"},
+        .explanation = "a == b true, c > b (10 > 5) de true olduğu için && ile birleşim true döner.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 197, .topicId = 15,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "== operatörü eşitlik kontrolü yapar.",
+        .acceptedAnswers = {"1"},
+        .explanation = "== operatörünün amacı budur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 198, .topicId = 15,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "= operatörü ile == operatörü aynı işi yapar.",
+        .acceptedAnswers = {"2"},
+        .explanation = "= atama yapar, == karşılaştırma yapar; ikisi farklı işlemlerdir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 199, .topicId = 15,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "<= operatörü 'küçük veya eşittir' anlamına gelir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "<= operatörünün anlamı tam olarak budur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 200, .topicId = 15,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "int a = 5; int b = 5; a > b ifadesi true döner.",
+        .acceptedAnswers = {"2"},
+        .explanation = "a ve b eşit olduğu için a > b false döner.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 201, .topicId = 15,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Karşılaştırma operatörlerinin sonucu her zaman bool (true/false) türündedir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "==, !=, <, >, <=, >= operatörleri her zaman bool sonuç döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 202, .topicId = 15,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "int a = 4; int b = 9; a >= b ifadesi true döner.",
+        .acceptedAnswers = {"2"},
+        .explanation = "4, 9'dan küçük olduğu için a >= b false döner.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 203, .topicId = 15,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int a = 5; int b = 5; a _____ b ifadesinin true dönmesi (eşitlik kontrolü) için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"=="},
+        .explanation = "Eşitlik kontrolü == operatörüyle yapılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 204, .topicId = 15,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int a = 3; int b = 5; a _____ b ifadesinin true dönmesi (a'nın b'den küçük olduğunu kontrol etmek) için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"<"},
+        .explanation = "Küçüktür kontrolü < operatörüyle yapılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 205, .topicId = 15,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int a = 8; int b = 2; a _____ b ifadesinin true dönmesi (a'nın b'den büyük olduğunu kontrol etmek) için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {">"},
+        .explanation = "Büyüktür kontrolü > operatörüyle yapılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 206, .topicId = 15,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int a = 5; int b = 5; a _____ b ifadesinin false dönmesi (eşit olmadığını kontrol etmek) için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"!="},
+        .explanation = "a ve b eşit olduğu için != false döner.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 207, .topicId = 15,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int a = 7; int b = 7; a _____ b ifadesinin true dönmesi (küçük veya eşit kontrolü) için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"<="},
+        .explanation = "Eşit değerler için <= true döner.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 208, .topicId = 15,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int a = 9; int b = 4; a _____ b ifadesinin true dönmesi (büyük veya eşit kontrolü) için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {">="},
+        .explanation = "9, 4'ten büyük olduğu için >= true döner.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 209, .topicId = 15,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int yas = 20;\nbool resit = _____;\nyas'ın 18'e eşit veya büyük olup olmadığını kontrol eden ifadeyi boşluğa yazın.",
+        .acceptedAnswers = {"yas >= 18"},
+        .explanation = ">= operatörü büyük veya eşit kontrolü yapar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 210, .topicId = 15,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int a = 10;\nint b = 20;\nbool esitDegil = _____;\na ile b'nin eşit olmadığını kontrol eden ifadeyi boşluğa yazın.",
+        .acceptedAnswers = {"a != b"},
+        .explanation = "!= operatörü eşit olmama durumunu kontrol eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 211, .topicId = 15,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int a = 6;\nint b = 9;\nstd::cout << (a < b);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"1"},
+        .explanation = "6, 9'dan küçük olduğu için sonuç true'dur; cout bunu 1 olarak yazdırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 212, .topicId = 15,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int a = 5;\nint b = 5;\nstd::cout << (a == b) << (a != b);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"10"},
+        .explanation = "(a == b) true olduğu için 1, (a != b) false olduğu için 0 yazdırılır; birlikte '10' olur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 213, .topicId = 15,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint yas = 20;\nif (yas = 18) {\n    std::cout << \"Reşit\";\n}\n\nHatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"if (yas == 18) {"},
+        .explanation = "Karşılaştırma için == kullanılmalıdır; = bir atamadır ve yas'ı 18 yapıp her zaman true döner.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 214, .topicId = 15,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint a = 10;\nint b = 20;\nbool sonuc = a =< b;\n\nProgramcı a'nın b'ye eşit veya küçük olup olmadığını kontrol etmek istiyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"bool sonuc = a <= b;"},
+        .explanation = "=< diye bir operatör yoktur; küçük veya eşit kontrolü <= şeklinde yazılır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 215, .topicId = 15,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint a = 5;\nint b = 8;\nbool sonuc = a => b;\n\nProgramcı a'nın b'den büyük veya eşit olup olmadığını kontrol etmek istiyor. Düzeltilmiş üçüncü satırı yazın.",
+        .acceptedAnswers = {"bool sonuc = a >= b;"},
+        .explanation = "=> diye bir operatör yoktur; büyük veya eşit kontrolü >= şeklinde yazılır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 216, .topicId = 15,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, iki sayının eşit olup olmadığını kontrol edip yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << sonuc;", "bool sonuc = (a == b);", "int a = 5, b = 5;"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "Önce değişkenler tanımlanır, sonra karşılaştırma yapılır, en son sonuç yazdırılır: sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 217, .topicId = 15,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Kullanıcıdan iki tam sayı okuyup, bunların birbirine eşit olup olmadığını (karşılaştırma operatörünü kullanarak) ekrana yazdıran bir program yazın.",
+        .acceptedAnswers = {"cin", ">>", "==", "cout", "<<"},
+        .explanation = "Program iki sayıyı cin >> ile okumalı, == ile karşılaştırmalı ve cout << ile sonucu yazdırmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 16: Mantıksal operatörler
+    questions.push_back(Question{
+        .id = 218, .topicId = 16,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "&& operatörü hangi mantıksal işlemi yapar?",
+        .options = {"VEYA", "VE", "DEĞİL", "XOR"},
+        .acceptedAnswers = {"b"},
+        .explanation = "&& operatörü mantıksal VE işlemini yapar; her iki koşul da doğruysa true döner.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 219, .topicId = 16,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "|| operatörü hangi mantıksal işlemi yapar?",
+        .options = {"VE", "VEYA", "DEĞİL", "XOR"},
+        .acceptedAnswers = {"b"},
+        .explanation = "|| operatörü mantıksal VEYA işlemini yapar; koşullardan en az biri doğruysa true döner.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 220, .topicId = 16,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "! operatörü ne işe yarar?",
+        .options = {"İki koşulu birleştirir", "Bir koşulun tersini alır", "Sayıyı negatif yapar", "Karşılaştırma yapar"},
+        .acceptedAnswers = {"b"},
+        .explanation = "! operatörü bir bool ifadenin tersini (true ise false, false ise true) alır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 221, .topicId = 16,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "true && false ifadesinin sonucu nedir?",
+        .options = {"true", "false", "1 ve 0", "Hata"},
+        .acceptedAnswers = {"b"},
+        .explanation = "&& operatöründe her iki taraf da true olmalıdır; burada biri false olduğu için sonuç false'tur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 222, .topicId = 16,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "true || false ifadesinin sonucu nedir?",
+        .options = {"true", "false", "0", "Hata"},
+        .acceptedAnswers = {"a"},
+        .explanation = "|| operatöründe en az biri true ise sonuç true'dur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 223, .topicId = 16,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "!true ifadesinin sonucu nedir?",
+        .options = {"true", "false", "0 ve 1", "1"},
+        .acceptedAnswers = {"b"},
+        .explanation = "! operatörü true'nun tersini alır, sonuç false'tur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 224, .topicId = 16,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int yas = 20; bool ogrenci = false; (yas < 18 || ogrenci) ifadesinin sonucu nedir?",
+        .options = {"true", "false", "20", "Hata"},
+        .acceptedAnswers = {"b"},
+        .explanation = "yas < 18 false, ogrenci de false olduğu için || ile birleşim false döner.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 225, .topicId = 16,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int a = 5; int b = 10; int c = 15; (a < b && b < c) ifadesinin sonucu nedir?",
+        .options = {"true", "false", "5", "15"},
+        .acceptedAnswers = {"a"},
+        .explanation = "a < b true (5 < 10), b < c true (10 < 15); her ikisi de true olduğu için && sonucu true'dur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 226, .topicId = 16,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "&& operatörü her iki koşul da doğruysa true döner.",
+        .acceptedAnswers = {"1"},
+        .explanation = "&& operatörünün tanımı budur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 227, .topicId = 16,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "|| operatörü yalnızca her iki koşul da doğruysa true döner.",
+        .acceptedAnswers = {"2"},
+        .explanation = "|| operatörü koşullardan en az biri doğruysa true döner, ikisinin de doğru olması gerekmez.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 228, .topicId = 16,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "! operatörü bir bool ifadenin tersini alır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "! operatörünün işlevi tam olarak budur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 229, .topicId = 16,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "true && true ifadesinin sonucu false'tur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "İki taraf da true olduğu için && sonucu true'dur, false değil.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 230, .topicId = 16,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "false || false ifadesinin sonucu false'tur.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Her iki taraf da false olduğu için || sonucu false'tur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 231, .topicId = 16,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "&& ve || operatörleri, karşılaştırma operatörlerinin (==, <, > gibi) sonuçlarıyla birlikte kullanılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Karşılaştırma operatörlerinin sonucu bool olduğu için, bu sonuçlar && ve || ile birleştirilebilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 232, .topicId = 16,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "bool a = true; bool b = false; bool sonuc = a _____ b; ifadesinin sonucunun false olması (her ikisi de doğru olmalı mantığı) için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"&&"},
+        .explanation = "&& operatöründe bir taraf false ise sonuç false olur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 233, .topicId = 16,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "bool a = true; bool b = false; bool sonuc = a _____ b; ifadesinin sonucunun true olması (en az biri doğru mantığı) için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"||"},
+        .explanation = "|| operatöründe bir taraf true ise sonuç true olur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 234, .topicId = 16,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "bool a = false; bool sonuc = _____a; ifadesinin sonucunun true olması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"!"},
+        .explanation = "! operatörü false'un tersini alarak true yapar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 235, .topicId = 16,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int yas = 25; bool sonuc = (yas >= 18 _____ yas <= 65); ifadesinin 'yas 18 ile 65 arasında (her ikisi dahil)' kontrolü yapması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"&&"},
+        .explanation = "İki koşulun da sağlanması gerektiği için && kullanılmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 236, .topicId = 16,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int puan = 95; bool basarili = (puan >= 90 _____ puan == 100); ifadesinin '90 ve üzeri VEYA tam 100' kontrolü yapması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"||"},
+        .explanation = "Koşullardan birinin sağlanması yeterli olduğu için || kullanılmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 237, .topicId = 16,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "bool girisYapildi = false; if (_____girisYapildi) { std::cout << \"Giriş yapılmadı\"; } ifadesinin girisYapildi false iken çalışması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"!"},
+        .explanation = "! operatörü girisYapildi'nin tersini alır; false'un tersi true olduğu için blok çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 238, .topicId = 16,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int yas = 30;\nbool ehliyetVar = true;\nbool arabaKullanabilir = _____;\nyas'ın 18'den büyük veya eşit VE ehliyetVar'ın true olduğunu kontrol eden ifadeyi yazın.",
+        .acceptedAnswers = {"yas >= 18 && ehliyetVar"},
+        .explanation = "İki koşulun birlikte sağlanması gerektiği için && kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 239, .topicId = 16,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int puan = 40;\nbool tekrarSinavi = _____;\npuan'ın 50'den küçük olduğunu kontrol eden (ve DEĞİL operatörü kullanmadan) ifadeyi yazın.",
+        .acceptedAnswers = {"puan < 50"},
+        .explanation = "Doğrudan < operatörüyle küçüklük kontrolü yapılabilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 240, .topicId = 16,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "bool a = true;\nbool b = false;\nstd::cout << (a && b);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"0"},
+        .explanation = "b false olduğu için && sonucu false'tur; cout bunu 0 olarak yazdırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 241, .topicId = 16,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int yas = 16;\nbool ogrenci = true;\nstd::cout << (yas < 18 || !ogrenci);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"1"},
+        .explanation = "yas < 18 true olduğu için || ifadesinin tamamı true olur (ikinci koşul ne olursa olsun); cout bunu 1 olarak yazdırır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 242, .topicId = 16,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nbool a = true;\nbool b = false;\nbool sonuc = a & b;\n\nProgramcı mantıksal VE işlemi yapmak istiyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"bool sonuc = a && b;"},
+        .explanation = "Tek & işareti bitwise (bit düzeyinde) VE anlamına gelir; mantıksal VE için çift && kullanılmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 243, .topicId = 16,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint yas = 20;\nbool sonuc = yas > 18 | yas < 65;\n\nProgramcı 'VEYA' mantığı ile kontrol yapmak istiyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"bool sonuc = yas > 18 || yas < 65;"},
+        .explanation = "Tek | işareti bitwise (bit düzeyinde) VEYA anlamına gelir; mantıksal VEYA için çift || kullanılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 244, .topicId = 16,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nbool a = true;\nbool sonuc = !!a;\n\nProgramcı a'nın tersini (false) almak istiyor ama !! iki kere ters aldığı için sonuc true kalıyor. Düzeltilmiş ikinci satırı yazın.",
+        .acceptedAnswers = {"bool sonuc = !a;"},
+        .explanation = "Tek ! yeterlidir; iki kez ! kullanmak orijinal değere geri döner.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 245, .topicId = 16,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, iki koşulu birlikte kontrol edip yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << erisimVar;", "bool erisimVar = (yasLimit && sifreDogru);", "bool yasLimit = true, sifreDogru = true;"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "Önce değişkenler tanımlanır, sonra birleşik koşul hesaplanır, en son sonuç yazdırılır: sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 246, .topicId = 16,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Kullanıcıdan bir yaş okuyup, yaşın 18 ile 65 arasında (her ikisi dahil, && operatörünü kullanarak) olup olmadığını ekrana yazdıran bir program yazın.",
+        .acceptedAnswers = {"cin", ">>", "&&", "cout", "<<"},
+        .explanation = "Program yaşı cin >> ile okumalı, && ile iki koşulu birleştirmeli ve cout << ile sonucu yazdırmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 17: if
+    questions.push_back(Question{
+        .id = 247, .topicId = 17,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "if ifadesi ne zaman çalışır?",
+        .options = {"Her zaman", "Koşul true olduğunda", "Koşul false olduğunda", "Program başladığında"},
+        .acceptedAnswers = {"b"},
+        .explanation = "if bloğu yalnızca koşul true olduğunda çalışır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 248, .topicId = 17,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "if (kosul) { ... } yapısında kosul false ise ne olur?",
+        .options = {"Blok yine de çalışır", "Blok atlanır", "Program çöker", "Derleme hatası oluşur"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Koşul false ise if bloğunun içindeki kod hiç çalışmaz.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 249, .topicId = 17,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int yas = 15; if (yas >= 18) { std::cout << \"Reşit\"; } kodu ne yazdırır?",
+        .options = {"Reşit", "Hiçbir şey", "Hata", "15"},
+        .acceptedAnswers = {"b"},
+        .explanation = "yas 15 olduğu için koşul false'tur; blok çalışmaz, hiçbir şey yazdırılmaz.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 250, .topicId = 17,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "if satırının sonuna yanlışlıkla ; konursa ne olur?",
+        .options = {"Kod derlenmez", "Blok koşuldan bağımsız olarak (her zaman) çalışmış gibi davranır", "Hiçbir fark olmaz", "Program çöker"},
+        .acceptedAnswers = {"b"},
+        .explanation = "; if'in kontrol ettiği boş bir ifade olur; sonraki satır artık koşuldan bağımsız olarak her zaman çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 251, .topicId = 17,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int puan = 60; if (puan >= 50) std::cout << \"Geçti\"; kodunda süslü parantez olmadan kaç satır if'e bağlıdır?",
+        .options = {"Hiçbiri", "Sadece bir sonraki satır", "Sonraki tüm satırlar", "İki satır"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Süslü parantez olmadan if yalnızca kendinden sonraki tek bir ifadeye bağlanır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 252, .topicId = 17,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "if (a > 0) { b = 1; c = 2; } yapısında a <= 0 olduğunda b ve c'nin değerleri ne olur?",
+        .options = {"b=1, c=2 olur", "Değişmez (blok hiç çalışmaz)", "b=0, c=0 olur", "Derleme hatası oluşur"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Koşul false olduğunda blok atlanır; b ve c'nin değerleri değişmeden kalır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 253, .topicId = 17,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int a = 5; if (a) { std::cout << \"Doğru\"; } kodu ne yazdırır (a bir int, bool bağlamında kullanılıyor)?",
+        .options = {"Doğru", "Hiçbir şey", "Derleme hatası", "5"},
+        .acceptedAnswers = {"a"},
+        .explanation = "0 dışındaki her tam sayı if koşulunda true olarak değerlendirilir; a=5 sıfır olmadığı için blok çalışır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 254, .topicId = 17,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int a = 0; if (a) { std::cout << \"Doğru\"; } else { std::cout << \"Yanlış\"; } kodu ne yazdırır?",
+        .options = {"Doğru", "Yanlış", "Hiçbir şey", "0"},
+        .acceptedAnswers = {"b"},
+        .explanation = "a=0, if koşulunda false olarak değerlendirilir; bu yüzden else bloğu çalışır ve 'Yanlış' yazdırılır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 255, .topicId = 17,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "if ifadesi, koşul true olduğunda kod bloğunu çalıştırır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "if ifadesinin temel işlevi budur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 256, .topicId = 17,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "if ifadesinin koşulu her zaman bir sayı olmalıdır, bool olamaz.",
+        .acceptedAnswers = {"2"},
+        .explanation = "if koşulu bool ifadeler için tasarlanmıştır (sayılar da bool'a örtük dönüştürülerek kullanılabilir).",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 257, .topicId = 17,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "if satırının sonuna noktalı virgül koymak zararsızdır ve hiçbir etkisi yoktur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Bu, sonraki bloğun koşuldan bağımsız her zaman çalışmasına yol açan ciddi bir hatadır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 258, .topicId = 17,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Süslü parantez kullanılmadığında if yalnızca bir sonraki satıra bağlanır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Süslü parantez olmadan if, kendinden sonraki tek bir ifadeyi kontrol eder.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 259, .topicId = 17,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "if (yas = 18) ifadesi bir karşılaştırma değil, bir atamadır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Tek = işareti atama yapar; karşılaştırma için == kullanılmalıydı.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 260, .topicId = 17,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "C++'ta 0 dışındaki her tam sayı, if koşulunda 'doğru' (true) olarak değerlendirilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "if koşulunda sayılar bool'a dönüştürülür; 0 false, 0 dışındaki her değer true'dur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 261, .topicId = 17,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "_____ (yas >= 18) {\n    std::cout << \"Reşit\";\n}\nBir koşula bağlı kod bloğu çalıştırmak için boşluğa hangi anahtar kelime yazılmalı?",
+        .acceptedAnswers = {"if"},
+        .explanation = "Koşullu blok if anahtar kelimesiyle başlar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 262, .topicId = 17,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "if (puan >= 50) _____\n    std::cout << \"Geçti\";\nBloğu açan karakteri boşluğa yazın.",
+        .acceptedAnswers = {"{"},
+        .explanation = "Kod bloğu açılış süslü parantezi { ile başlar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 263, .topicId = 17,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "if (yas >= 18) {\n    std::cout << \"Reşit\";\n_____\nBloğu kapatan karakteri boşluğa yazın.",
+        .acceptedAnswers = {"}"},
+        .explanation = "Kod bloğu kapanış süslü parantezi } ile biter.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 264, .topicId = 17,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "if (a _____ b) {\n    std::cout << \"Eşit\";\n}\na ile b'nin eşit olup olmadığını kontrol etmek için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"=="},
+        .explanation = "Eşitlik kontrolü == operatörüyle yapılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 265, .topicId = 17,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int yas = 20;\nif (yas _____ 18) {\n    std::cout << \"Reşit\";\n}\nyas'ın 18'e eşit veya büyük olduğunu kontrol etmek için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {">="},
+        .explanation = "Büyük veya eşit kontrolü >= operatörüyle yapılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 266, .topicId = 17,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int sayi = 7;\nif (sayi % 2 _____ 1) {\n    std::cout << \"Tek\";\n}\nsayi'nın tek olduğunu kontrol etmek için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"=="},
+        .explanation = "sayi % 2'nin 1'e eşit olup olmadığı == ile kontrol edilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 267, .topicId = 17,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int yas = 20;\n_____ {\n    std::cout << \"Reşit\";\n}\nyas'ın 18'den büyük veya eşit olduğunu kontrol eden if satırını yazın.",
+        .acceptedAnswers = {"if (yas >= 18)"},
+        .explanation = "if satırı koşulu parantez içinde belirtir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 268, .topicId = 17,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int sifre = 1234;\nint girilen = 1234;\n_____ {\n    std::cout << \"Doğru şifre\";\n}\nsifre ile girilen'in eşit olduğunu kontrol eden if satırını yazın.",
+        .acceptedAnswers = {"if (sifre == girilen)"},
+        .explanation = "Eşitlik kontrolü == operatörüyle if satırında yapılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 269, .topicId = 17,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int puan = 40;\nif (puan >= 50) {\n    std::cout << \"Geçti\";\n}\nstd::cout << \"Bitti\";\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"Bitti"},
+        .explanation = "puan 50'den küçük olduğu için if bloğu çalışmaz; sadece 'Bitti' yazdırılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 270, .topicId = 17,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int a = 5;\nif (a > 0)\n    std::cout << \"Pozitif\";\n    std::cout << \"İkinci satır\";\nYukarıdaki kodun ekran çıktısı nedir? (süslü parantez olmadığına dikkat edin)",
+        .acceptedAnswers = {"Pozitifİkinci satır"},
+        .explanation = "Süslü parantez olmadığı için if yalnızca ilk cout satırına bağlanır; ikinci cout satırı koşuldan bağımsız her zaman çalışır. a > 0 true olduğu için ikisi de yazdırılır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 271, .topicId = 17,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint yas = 10;\nif (yas >= 18);\n    std::cout << \"Reşit\";\n\nProgramcı yas 18'den küçükken 'Reşit' yazdırılmamasını bekliyor ama yas 10 iken bile 'Reşit' yazdırılıyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"if (yas >= 18)"},
+        .explanation = "if satırının sonundaki fazladan noktalı virgül, if'in kontrol ettiği ifadeyi boş bir ifade yapar; bu yüzden sonraki cout satırı koşuldan bağımsız olarak her zaman çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 272, .topicId = 17,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint puan = 80;\nif (puan = 90) {\n    std::cout << \"Mükemmel\";\n}\n\nProgramcı puan'ın 90'a eşit olup olmadığını kontrol etmek istiyor ama kod her zaman 'Mükemmel' yazdırıyor (ve puan'ı da 90 yapıyor). Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"if (puan == 90) {"},
+        .explanation = "Tek = işareti atama yapar ve 90 sıfır olmadığı için her zaman true olur; karşılaştırma için == kullanılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 273, .topicId = 17,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint yas = 16;\nif yas >= 18 {\n    std::cout << \"Reşit\";\n}\n\nDüzeltilmiş ikinci satırı yazın.",
+        .acceptedAnswers = {"if (yas >= 18) {"},
+        .explanation = "if koşulu her zaman parantez içine yazılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 274, .topicId = 17,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, yaş kontrolü yapan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"}", "if (yas >= 18) {", "std::cout << \"Reşit\";", "int yas = 20;"},
+        .acceptedAnswers = {"4 2 3 1"},
+        .explanation = "Önce değişken tanımlanır (4), sonra if satırı (2), blok içeriği (3), en son kapanış (1): sıra 4 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 275, .topicId = 17,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Kullanıcıdan bir not (0-100 arası) okuyup, notun 50'den büyük veya eşit olması durumunda 'Geçti' yazdıran bir program yazın (if kullanarak).",
+        .acceptedAnswers = {"cin", ">>", "if", "cout", "<<"},
+        .explanation = "Program notu cin >> ile okumalı, if (not >= 50) ile kontrol etmeli ve cout << ile 'Geçti' yazdırmalıdır.",
+        .baseXp = 40,
+    });
 }
