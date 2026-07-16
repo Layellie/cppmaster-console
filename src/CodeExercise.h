@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "Question.h"
+
 struct CodeExercise {
     int id = 0;
     std::string tier;
@@ -17,3 +19,13 @@ struct CodeExercise {
     std::string alternativeSolutionNote;
     int baseXp = 0;
 };
+
+[[nodiscard]] inline Question toWriteCodeQuestion(const CodeExercise& exercise) {
+    Question question;
+    question.id = exercise.id;
+    question.type = QuestionType::WriteCode;
+    question.acceptedAnswers = exercise.requiredKeywords;
+    question.baseXp = exercise.baseXp;
+    question.explanation = exercise.alternativeSolutionNote;
+    return question;
+}
