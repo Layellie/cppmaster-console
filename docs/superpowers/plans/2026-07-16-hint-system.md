@@ -391,9 +391,17 @@ std::string computeCorrectAnswerDisplay(const Question& question) {
             return correctAnswerDisplayFor(question);
         case QuestionType::WriteCode:
             return writeCodeRequirementsDisplay(question);
-        default:
+        case QuestionType::CompleteLine:
+        case QuestionType::PredictOutput:
+        case QuestionType::FindError:
+        case QuestionType::FixCode:
+        case QuestionType::OrderCode:
             return question.acceptedAnswers.empty() ? "" : question.acceptedAnswers.front();
+        case QuestionType::Scenario:
+        case QuestionType::Matching:
+            return "";
     }
+    return "";
 }
 
 }  // namespace
@@ -452,9 +460,11 @@ TEST_CASE(QuizEngine_CorrectAnswerDisplayMatchesEvaluateOutput) {
 }
 
 TEST_CASE(QuizEngine_AnswerResultExitRequestedDefaultsToFalse) {
-    QuizEngine engine;
-    const Question question = makeQuestion(QuestionType::FillBlank, {"cout"});
-    const AnswerResult result = engine.evaluate(question, "cout");
+    // Constructs AnswerResult directly, omitting exitRequested, so this
+    // actually exercises the struct's default member initializer - calling
+    // evaluate() instead would only prove its own hardcoded literal `false`,
+    // not the default.
+    const AnswerResult result{true, 10, "x"};
     CHECK(!result.exitRequested);
 }
 ```

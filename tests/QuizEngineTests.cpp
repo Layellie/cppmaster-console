@@ -130,8 +130,10 @@ TEST_CASE(QuizEngine_CorrectAnswerDisplayMatchesEvaluateOutput) {
 }
 
 TEST_CASE(QuizEngine_AnswerResultExitRequestedDefaultsToFalse) {
-    QuizEngine engine;
-    const Question question = makeQuestion(QuestionType::FillBlank, {"cout"});
-    const AnswerResult result = engine.evaluate(question, "cout");
+    // Constructs AnswerResult directly, omitting exitRequested, so this
+    // actually exercises the struct's default member initializer - calling
+    // evaluate() instead would only prove its own hardcoded literal `false`,
+    // not the default.
+    const AnswerResult result{true, 10, "x"};
     CHECK(!result.exitRequested);
 }

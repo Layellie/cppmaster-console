@@ -210,9 +210,17 @@ std::string computeCorrectAnswerDisplay(const Question& question) {
             return correctAnswerDisplayFor(question);
         case QuestionType::WriteCode:
             return writeCodeRequirementsDisplay(question);
-        default:
+        case QuestionType::CompleteLine:
+        case QuestionType::PredictOutput:
+        case QuestionType::FindError:
+        case QuestionType::FixCode:
+        case QuestionType::OrderCode:
             return question.acceptedAnswers.empty() ? "" : question.acceptedAnswers.front();
+        case QuestionType::Scenario:
+        case QuestionType::Matching:
+            return "";
     }
+    return "";
 }
 
 }  // namespace
