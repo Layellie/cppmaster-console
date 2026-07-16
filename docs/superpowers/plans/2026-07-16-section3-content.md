@@ -2533,8 +2533,8 @@ question added in Task 3):
     questions.push_back(Question{
         .id = 581, .topicId = 28,
         .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
-        .prompt = "for (int _____ : vektor) {\n    x *= 2;\n}\nElemanların gerçek değerini değiştirebilmek için boşluğa (değişken adının önüne) ne eklenmeli? (örnek: x&)",
-        .acceptedAnswers = {"x&", "&x"},
+        .prompt = "for (int _____ : vektor) {\n    x *= 2;\n}\nElemanların gerçek değerini değiştirebilmek için boşluğa (değişken adının önüne) ne eklenmeli? (örnek: &x)",
+        .acceptedAnswers = {"&x"},
         .explanation = "& ile x referans olur ve gerçek elemanı değiştirebilir.",
         .baseXp = 10,
     });
@@ -2955,7 +2955,7 @@ question added in Task 3):
         .id = 631, .topicId = 30,
         .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
         .prompt = "Faktöriyel hesaplarken hangi durum int taşmasına (overflow) yol açabilir?",
-        .options = {"n çok küçük olduğunda (örneğin n=0)", "n çok büyük olduğunda (örneğin n=15 ve üzeri)", "Yalnızca negatif n değerlerinde", "Hiçbir zaman, int her zaman yeterlidir"},
+        .options = {"n çok küçük olduğunda (örneğin n=0)", "n çok büyük olduğunda (örneğin n=13 ve üzeri)", "Yalnızca negatif n değerlerinde", "Hiçbir zaman, int her zaman yeterlidir"},
         .acceptedAnswers = {"b"},
         .explanation = "Faktöriyel çok hızlı büyür; büyük n değerleri (örneğin 13! ve üzeri) int'in sınırlarını aşabilir.",
         .baseXp = 30,
