@@ -42,6 +42,7 @@ add_library(CppMasterConsoleLib STATIC
     src/QuestionManager.cpp
     src/QuestionContent.h
     src/QuestionsSection2.cpp
+    src/QuestionsSection3.cpp
     src/QuizEngine.h
     src/QuizEngine.cpp
     src/LevelSystem.h
