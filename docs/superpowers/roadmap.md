@@ -93,7 +93,7 @@ as Phases 1-7.
   flag before returning). The section exam passes `allowHints = false`,
   disabling `ipucu`/`konu`/`ornek` specifically during Bölüm 1 Sınavı.
 - **Phase 11 — Kod Yazma Alıştırmaları modu: COMPLETE** (commits
-  `0c8bf08..4a49e44`, 83/83 tests + ctest 100%). 25 hand-authored
+  `867f22f..4a49e44`, 83/83 tests + ctest 100%). 25 hand-authored
   code-writing exercises (7 Başlangıç + 9 Orta + 9 İleri) live in
   `CodeExerciseManager`/`CodeExercise` (`src/CodeExerciseManager.h/.cpp`,
   `src/CodeExercise.h`), graded by reusing the existing
