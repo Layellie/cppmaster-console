@@ -1,5 +1,6 @@
 #include "Application.h"
 
+#include <algorithm>
 #include <chrono>
 #include <cstddef>
 #include <cstdint>
@@ -10,6 +11,7 @@
 #include <string>
 #include <system_error>
 
+#include "AdaptiveDifficulty.h"
 #include "LevelSystem.h"
 #include "TopicLock.h"
 
@@ -261,15 +263,40 @@ void Application::showLessonContent(const Lesson& lesson) {
 }
 
 void Application::runTopicQuiz(int topicId) {
-    const auto quizQuestions = questions_.questionsForTopic(topicId);
+    auto remaining = questions_.questionsForTopic(topicId);
+    std::stable_sort(remaining.begin(), remaining.end(), [](const Question& a, const Question& b) {
+        return a.difficulty < b.difficulty;
+    });
+    const auto totalQuestions = static_cast<int>(remaining.size());
 
-    ui_.printLine("Konu testi başlıyor (" + std::to_string(quizQuestions.size()) + " soru).");
+    ui_.printLine("Konu testi başlıyor (" + std::to_string(totalQuestions) + " soru).");
     ui_.printLine("");
+
+    const auto lesson = lessons_.findById(topicId);
 
     int correctCount = 0;
     int sessionXp = 0;
+    int correctStreak = 0;
+    int wrongStreak = 0;
 
-    for (const Question& question : quizQuestions) {
+    while (!remaining.empty()) {
+        const std::size_t nextIndex = selectNextQuestionIndex(remaining, correctStreak, wrongStreak);
+        const Question question = remaining[nextIndex];
+
+        if (shouldShowExtraHelp(wrongStreak)) {
+            if (lesson.has_value() && !lesson->explanation.empty()) {
+                ui_.printLine("");
+                ui_.printLine("Bu konuyu tekrar hatırlayalım:");
+                ui_.printLine(lesson->explanation);
+            }
+            if (question.type != QuestionType::WriteCode) {
+                ui_.printLine(generateHint(question, 1));
+            }
+            wrongStreak = 0;
+        }
+
+        remaining.erase(remaining.begin() + static_cast<std::ptrdiff_t>(nextIndex));
+
         const AnswerResult result = askOneQuestion(question);
         if (result.exitRequested) {
             awardXpAndCheckLevelUp(sessionXp);
@@ -280,10 +307,14 @@ void Application::runTopicQuiz(int topicId) {
         if (result.correct) {
             ++correctCount;
             sessionXp += result.xpAwarded;
+            ++correctStreak;
+            wrongStreak = 0;
+        } else {
+            ++wrongStreak;
+            correctStreak = 0;
         }
     }
 
-    const auto totalQuestions = static_cast<int>(quizQuestions.size());
     const double successRatio =
         totalQuestions == 0 ? 0.0
                             : static_cast<double>(correctCount) / static_cast<double>(totalQuestions);
