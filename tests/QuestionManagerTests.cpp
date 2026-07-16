@@ -27,7 +27,7 @@ TEST_CASE(QuestionManager_NoDuplicateQuestionIds) {
     QuestionManager manager;
     std::unordered_set<int> seenIds;
     bool foundDuplicate = false;
-    for (int topicId = 1; topicId <= 10; ++topicId) {
+    for (int topicId = 1; topicId <= 100; ++topicId) {
         for (const Question& question : manager.questionsForTopic(topicId)) {
             if (!seenIds.insert(question.id).second) {
                 foundDuplicate = true;
@@ -35,6 +35,17 @@ TEST_CASE(QuestionManager_NoDuplicateQuestionIds) {
         }
     }
     CHECK(!foundDuplicate);
+}
+
+TEST_CASE(QuestionManager_EveryTopicElevenToTwentyHasAtLeastTwentyNineQuestions) {
+    QuestionManager manager;
+    for (int topicId = 11; topicId <= 20; ++topicId) {
+        const auto questions = manager.questionsForTopic(topicId);
+        CHECK(questions.size() >= 29);
+        for (const Question& question : questions) {
+            CHECK(question.topicId == topicId);
+        }
+    }
 }
 
 TEST_CASE(QuestionManager_FindByIdReturnsNulloptForUnknownId) {
