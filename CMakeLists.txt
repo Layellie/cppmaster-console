@@ -98,6 +98,7 @@ add_executable(CppMasterConsoleTests
     tests/SettingsManagerTests.cpp
     tests/HintProviderTests.cpp
     tests/CodeExerciseManagerTests.cpp
+    tests/CodeExerciseTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
