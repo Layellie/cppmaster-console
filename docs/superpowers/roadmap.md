@@ -107,7 +107,20 @@ as Phases 1-7.
   single-line commands the way Phase 10's answer loop could) → multi-line
   code submission → grading → sample-solution/alternative-solution-note
   reveal after any submission attempt, correct or not.
-- **Phase 12 — Adaptif zorluk sistemi.**
+- **Phase 12 — Adaptif zorluk sistemi: COMPLETE** (commits `ca3e026..18c265e`,
+  87/87 tests + ctest 100%). `src/AdaptiveDifficulty.h` adds two pure
+  functions: `selectNextQuestionIndex` (jumps to the hardest remaining
+  question after 2+ correct answers in a row, otherwise picks the
+  next-easiest remaining) and `shouldShowExtraHelp` (true at 2+ wrong
+  answers in a row). `Application::runTopicQuiz` now sorts a topic's
+  questions once, ascending by `Difficulty`, then uses both functions on
+  every loop iteration to pick the next question and to decide when to
+  re-show the topic's lesson explanation plus an automatic level-1 hint
+  (reusing Phase 10's `generateHint`). This deliberately changes the order
+  topic 1's 8 questions are asked in versus every prior phase's transcript
+  (old order `1,2,3,4,5,6,65,70`; new canonical order `3,1,70,6,2,65,5,4`
+  when every answer is correct) — the old order was never actually
+  difficulty-sorted, so this is a correction, not a regression.
 - **Phases 13-21 — İçerik genişletme (en büyük parça):** kalan 90 konunun ders
   içeriği + soru bankasının ~2900'e çıkarılması. Bölüm bölüm (Section 2
   through Section 10, 9 phases), her biri o bölümün 10 konusu + ~290 soru.
@@ -123,7 +136,8 @@ as Phases 1-7.
 
 ## Status
 
-Phase 11 complete (2026-07-16). Phase 12 starting next. Update this file's
+Phase 12 complete (2026-07-16). Phase 13 starting next — the first of the
+large content-expansion phases (Phases 13-21). Update this file's
 phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
 per-phase headers).
 
