@@ -77,8 +77,21 @@ as Phases 1-7.
   next-section mechanism is built and unit-verified now; it can only
   currently move past Section 2 once Section 2's exam exists (a later
   content-expansion phase, 13+), since only Section 1 has content today.
-- **Phase 10 — İpucu sistemi:** ipucu/konu/ornek/gec/cikis komutları, kademeli
-  ipucu, XP azaltma.
+- **Phase 10 — İpucu sistemi: COMPLETE** (commits `212cdbb..e03f7b9`, 76/76
+  tests + ctest 100%). `ipucu`/`konu`/`ornek`/`gec`/`cikis` are now
+  recognized as exact, case-sensitive commands inside
+  `Application::askOneQuestion`'s answer-reading loop: `ipucu` reveals one
+  of three escalating computed hints (`generateHint` in
+  `src/HintProvider.h`/`.cpp`) and reduces awarded XP by 25% per hint level
+  used (up to 75% off at level 3); `konu`/`ornek` re-display the current
+  question's lesson explanation/example code; `gec` records the question as
+  a miss (correct answer shown via `QuizEngine::correctAnswerDisplay`)
+  without ending the session; `cikis` returns to the main menu immediately
+  via the new `AnswerResult::exitRequested` flag, with any XP already
+  earned in the partial session awarded and saved first (`runTopicQuiz`,
+  `runQuickTest`, `runMistakeQuestions`, `runSectionExam` all check this
+  flag before returning). The section exam passes `allowHints = false`,
+  disabling `ipucu`/`konu`/`ornek` specifically during Bölüm 1 Sınavı.
 - **Phase 11 — Kod Yazma Alıştırmaları modu:** 25 görev (7 başlangıç + 9 orta +
   9 ileri), yapısal değerlendirme (mevcut WriteCode kontrol mantığını
   yeniden kullanarak).
@@ -98,7 +111,7 @@ as Phases 1-7.
 
 ## Status
 
-Phase 9 complete (2026-07-16). Phase 10 starting next. Update this file's
+Phase 10 complete (2026-07-16). Phase 11 starting next. Update this file's
 phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
 per-phase headers).
 
