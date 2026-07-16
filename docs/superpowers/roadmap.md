@@ -92,9 +92,21 @@ as Phases 1-7.
   `runQuickTest`, `runMistakeQuestions`, `runSectionExam` all check this
   flag before returning). The section exam passes `allowHints = false`,
   disabling `ipucu`/`konu`/`ornek` specifically during Bölüm 1 Sınavı.
-- **Phase 11 — Kod Yazma Alıştırmaları modu:** 25 görev (7 başlangıç + 9 orta +
-  9 ileri), yapısal değerlendirme (mevcut WriteCode kontrol mantığını
-  yeniden kullanarak).
+- **Phase 11 — Kod Yazma Alıştırmaları modu: COMPLETE** (commits
+  `0c8bf08..4a49e44`, 83/83 tests + ctest 100%). 25 hand-authored
+  code-writing exercises (7 Başlangıç + 9 Orta + 9 İleri) live in
+  `CodeExerciseManager`/`CodeExercise` (`src/CodeExerciseManager.h/.cpp`,
+  `src/CodeExercise.h`), graded by reusing the existing
+  `QuizEngine::evaluate` WriteCode logic via `toWriteCodeQuestion` — no new
+  grading logic was written. `Application::runCodeExercises`/
+  `runCodeExerciseTier`/`runCodeExercise` wire menu option 5 into a tier
+  submenu → per-tier exercise list → description/expected-behavior/
+  sample-I-O display → an optional pre-code hint request loop (E/H prompt,
+  same escalating-penalty idea as Phase 10's `ipucu` but requested *before*
+  code entry, since `readMultilineCode()` can't be interleaved with
+  single-line commands the way Phase 10's answer loop could) → multi-line
+  code submission → grading → sample-solution/alternative-solution-note
+  reveal after any submission attempt, correct or not.
 - **Phase 12 — Adaptif zorluk sistemi.**
 - **Phases 13-21 — İçerik genişletme (en büyük parça):** kalan 90 konunun ders
   içeriği + soru bankasının ~2900'e çıkarılması. Bölüm bölüm (Section 2
@@ -111,7 +123,7 @@ as Phases 1-7.
 
 ## Status
 
-Phase 10 complete (2026-07-16). Phase 11 starting next. Update this file's
+Phase 11 complete (2026-07-16). Phase 12 starting next. Update this file's
 phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
 per-phase headers).
 
