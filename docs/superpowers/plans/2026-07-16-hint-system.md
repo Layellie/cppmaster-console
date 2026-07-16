@@ -170,9 +170,11 @@ std::string computedClueFor(const Question& question) {
                 std::size_t consumedChars = 0;
                 const int value = std::stoi(answer, &consumedChars);
                 if (consumedChars == answer.size()) {
-                    const std::string sign =
-                        value > 0 ? "pozitif" : (value < 0 ? "negatif" : "sıfır");
-                    return "Doğru cevap " + sign + " bir sayı.";
+                    if (value == 0) {
+                        return "Doğru cevap sıfır.";
+                    }
+                    return std::string("Doğru cevap ") + (value > 0 ? "pozitif" : "negatif") +
+                           " bir sayı.";
                 }
             } catch (const std::exception&) {
                 // Not a plain integer - fall through to the word-count clue below.
