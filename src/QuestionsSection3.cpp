@@ -466,9 +466,9 @@ void appendSection3Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 418, .topicId = 22,
         .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
-        .prompt = "Aşağıdaki kodu düzeltin:\n\nfor (int i = 0; i < 5; i++);\n{\n    std::cout << i;\n}\n\nProgramcı 0'dan 4'e kadar yazdırmak istiyor ama kod hiçbir sayıyı doğru yazdırmıyor (i her zaman 5 olarak yazdırılıyor, bir kez). Düzeltilmiş ilk satırı yazın.",
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nfor (int i = 0; i < 5; i++);\n{\n    std::cout << i;\n}\n\nBu kod, döngü sayacı i'nin kapsamı (scope) for satırıyla birlikte bittiği için 'i': tanımsız tanımlayıcı hatasıyla derlenmiyor. Programcı 0'dan 4'e kadar yazdırmak istiyor. Düzeltilmiş ilk satırı yazın.",
         .acceptedAnswers = {"for (int i = 0; i < 5; i++)"},
-        .explanation = "for satırının sonundaki fazladan noktalı virgül, döngünün gövdesini boş bir ifade yapar; asıl blok koşuldan bağımsız, döngü bittikten sonra (i=5 iken) bir kez çalışır.",
+        .explanation = "for satırının sonundaki fazladan noktalı virgül, for'un gövdesini boş bir ifade yapar; bu durumda i'nin kapsamı yalnızca bu boş ifadeyle sınırlı kalır ve sonraki blok i'yi göremediği için derleme hatası oluşur. Noktalı virgülü kaldırmak, süslü parantezli bloğu gerçek döngü gövdesi yapar ve i'nin kapsamını genişletir.",
         .baseXp = 30,
     });
     questions.push_back(Question{
@@ -632,7 +632,7 @@ void appendSection3Questions(std::vector<Question>& questions) {
         .prompt = "int i = 0; while (i < 5) { std::cout << i; i_____; } ifadesinin sonsuz döngüye girmemesi için boşluğa ne yazılmalı?",
         .acceptedAnswers = {"++"},
         .explanation = "i++ olmadan koşul hiç değişmez ve döngü sonsuza kadar sürer.",
-        .baseXp = 20,
+        .baseXp = 10,
     });
     questions.push_back(Question{
         .id = 438, .topicId = 23,
