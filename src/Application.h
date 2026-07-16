@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "AchievementTracker.h"
+#include "CodeExerciseManager.h"
 #include "ConsoleUI.h"
 #include "HintProvider.h"
 #include "LessonManager.h"
@@ -45,6 +46,9 @@ private:
     void runQuickTest();
     void showAchievements();
     void runSectionExam();
+    void runCodeExercises();
+    void runCodeExerciseTier(const std::string& tier);
+    void runCodeExercise(const CodeExercise& exercise);
     void showSettingsMenu();
     void exportProgress();
     void importProgress();
@@ -59,6 +63,7 @@ private:
     ProgressManager progressManager_;
     MistakeTracker mistakes_;
     AchievementTracker achievements_;
+    CodeExerciseManager codeExercises_;
     QuestionGenerationEngine generationEngine_;
     IntArithmeticPredictGenerator intArithmeticGenerator_;
     BoolOutputPredictGenerator boolOutputGenerator_;
