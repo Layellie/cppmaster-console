@@ -122,7 +122,7 @@ as Phases 1-7.
   when every answer is correct) — the old order was never actually
   difficulty-sorted, so this is a correction, not a regression.
 - **Phase 13 — Bölüm 2 İçerik Genişletmesi: COMPLETE** (commits
-  `6df525f..11910f3`, 89/89 tests + ctest 100%). Topics 11-20 (Section 2:
+  `6df525f..cf6b6f1`, 89/89 tests + ctest 100%). Topics 11-20 (Section 2:
   "Operatörler ve koşullar") now have full lesson content
   (`src/LessonContentSection2.cpp`) and a 290-question bank (ids 73-362, 29
   per topic, `src/QuestionsSection2.cpp`) spanning 9 of the 11 question
@@ -140,7 +140,7 @@ as Phases 1-7.
   section content phases (13-21) closing the roadmap's lesson-content and
   question-bank gaps for topics 11-100.
 - **Phase 14 — Bölüm 3 İçerik Genişletmesi: COMPLETE** (commits
-  `7987f8c..0e93bc7`, 90/90 tests + ctest 100%). Topics 21-30 (Section 3:
+  `7987f8c..f62ea67`, 90/90 tests + ctest 100%). Topics 21-30 (Section 3:
   "Seçim ve döngüler") now have full lesson content
   (`src/LessonContentSection3.cpp`) and a 290-question bank (ids 363-652, 29
   per topic, `src/QuestionsSection3.cpp`) spanning the same 9 of 11 question
