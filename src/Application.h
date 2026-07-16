@@ -6,6 +6,7 @@
 
 #include "AchievementTracker.h"
 #include "ConsoleUI.h"
+#include "HintProvider.h"
 #include "LessonManager.h"
 #include "LevelSystem.h"
 #include "MistakeTracker.h"
@@ -32,7 +33,8 @@ private:
     void openTopic(int topicId);
     void showLessonContent(const Lesson& lesson);
     void runTopicQuiz(int topicId);
-    AnswerResult askOneQuestion(const Question& question, bool trackMistakes = true);
+    AnswerResult askOneQuestion(
+        const Question& question, bool trackMistakes = true, bool allowHints = true);
     void checkAchievements(const Question& question, bool correct);
     void awardXpAndCheckLevelUp(int amount);
     void resetProgress();
