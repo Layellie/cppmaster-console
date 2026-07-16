@@ -19,9 +19,20 @@ TEST_CASE(LessonManager_TopicsOneToTenHaveRealContent) {
     }
 }
 
-TEST_CASE(LessonManager_TopicsElevenToHundredHaveNoContentYet) {
+TEST_CASE(LessonManager_TopicsElevenToTwentyHaveRealContent) {
     LessonManager manager;
-    for (int topicId = 11; topicId <= 100; ++topicId) {
+    for (int topicId = 11; topicId <= 20; ++topicId) {
+        const auto lesson = manager.findById(topicId);
+        CHECK(lesson.has_value());
+        CHECK(!lesson->explanation.empty());
+        CHECK(!lesson->syntax.empty());
+        CHECK(!lesson->exampleCode.empty());
+    }
+}
+
+TEST_CASE(LessonManager_TopicsTwentyOneToHundredHaveNoContentYet) {
+    LessonManager manager;
+    for (int topicId = 21; topicId <= 100; ++topicId) {
         const auto lesson = manager.findById(topicId);
         CHECK(lesson.has_value());
         CHECK(lesson->explanation.empty());

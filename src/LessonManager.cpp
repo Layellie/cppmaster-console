@@ -1,5 +1,7 @@
 #include "LessonManager.h"
 
+#include "LessonContent.h"
+
 #include <algorithm>
 #include <cstddef>
 #include <iterator>
@@ -403,6 +405,7 @@ LessonManager::LessonManager() {
     }
 
     applyIntroLessonContent(lessons_);
+    applySection2LessonContent(lessons_);
 }
 
 const std::vector<Lesson>& LessonManager::allLessons() const {
