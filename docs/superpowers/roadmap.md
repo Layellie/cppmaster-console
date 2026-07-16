@@ -156,9 +156,28 @@ as Phases 1-7.
   to the main menu with partial XP saved. Second of nine section-by-section
   content phases (13-21) closing the roadmap's lesson-content and
   question-bank gaps for topics 11-100.
-- **Phases 15-21 — İçerik genişletme (devamı):** kalan 70 konunun ders
-  içeriği + soru bankasının ~2030'a çıkarılması. Bölüm bölüm (Section 4
-  through Section 10, 7 phases), her biri o bölümün 10 konusu + ~290 soru.
+- **Phase 15 — Bölüm 4 İçerik Genişletmesi: COMPLETE** (commits
+  `23d1628..5a99e5a`, 91/91 tests + ctest 100%). Topics 31-40 (Section 4:
+  "Diziler, vector ve string") now have full lesson content
+  (`src/LessonContentSection4.cpp`) and a 290-question bank (ids 653-942, 29
+  per topic, `src/QuestionsSection4.cpp`) spanning the same 9 of 11 question
+  types as Sections 2-3 (`Scenario`/`Matching` still deliberately unused). The
+  existing `LessonManager_TopicsElevenToThirtyHaveRealContent` test was
+  widened in-place (11-30 -> 11-40, now
+  `LessonManager_TopicsElevenToFortyHaveRealContent`) and a new
+  `QuestionManager_EveryTopicThirtyOneToFortyHasAtLeastTwentyNineQuestions`
+  test was added; `QuestionManager_NoDuplicateQuestionIds` already scanned
+  topics 1-100 and needed no change. A manual end-to-end run additionally
+  confirmed `openTopic`'s content gate passes for topic 34 ("vector") with
+  zero `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29
+  soru).", a correct answer awards XP (and unlocks the "İlk Adım"
+  achievement), and mid-quiz `cikis` exits cleanly back to the main menu with
+  partial XP (5) saved. Third of nine section-by-section content phases
+  (13-21) closing the roadmap's lesson-content and question-bank gaps for
+  topics 11-100.
+- **Phases 16-21 — İçerik genişletme (devamı):** kalan 60 konunun ders
+  içeriği + soru bankasının ~1740'a çıkarılması. Bölüm bölüm (Section 5
+  through Section 10, 6 phases), her biri o bölümün 10 konusu + ~290 soru.
 - **Phase 22 — Sınavlar:** kalan 9 bölüm sınavı + 100 soruluk genel final
   sınavı (içerik tamamlandıktan sonra mümkün).
 - **Phase 23 — Üretici kütüphanesini genişletme:** en az 15 üretici,
@@ -171,9 +190,9 @@ as Phases 1-7.
 
 ## Status
 
-Phase 14 complete (2026-07-16). Phase 15 (Section 4 content: "Diziler,
-vector ve string", topics 31-40) starting next — the third of the large
-content-expansion phases (Phases 13-21). Update this file's
+Phase 15 complete (2026-07-17). Phase 16 (Section 5 content: "Fonksiyonlar",
+topics 41-50) starting next — the fourth of the large content-expansion
+phases (Phases 13-21). Update this file's
 phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
 per-phase headers).
 
