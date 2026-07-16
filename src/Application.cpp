@@ -169,7 +169,7 @@ void Application::handleChoice(int choice) {
             showMistakeReview();
             break;
         case 5:
-            showNotYetAvailable("Kod Yazma Alıştırmaları");
+            runCodeExercises();
             break;
         case 6:
             runSectionExam();
@@ -799,6 +799,131 @@ void Application::runSectionExam() {
         progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
 
     ui_.printLine("");
+}
+
+void Application::runCodeExercises() {
+    bool inCodeExercisesMenu = true;
+    while (inCodeExercisesMenu) {
+        ui_.printLine("");
+        ui_.printHeader("KOD YAZMA ALIŞTIRMALARI");
+        ui_.printLine("1. Başlangıç");
+        ui_.printLine("2. Orta");
+        ui_.printLine("3. İleri");
+        ui_.printLine("0. Geri dön");
+        ui_.printLine("");
+        ui_.printLine("Seçiminiz:");
+
+        const int tierChoice = ui_.readMenuChoice(0, 3);
+        std::string tier;
+        switch (tierChoice) {
+            case 1:
+                tier = "Başlangıç";
+                break;
+            case 2:
+                tier = "Orta";
+                break;
+            case 3:
+                tier = "İleri";
+                break;
+            case 0:
+                inCodeExercisesMenu = false;
+                break;
+            default:
+                break;
+        }
+        if (!tier.empty()) {
+            runCodeExerciseTier(tier);
+        }
+    }
+}
+
+void Application::runCodeExerciseTier(const std::string& tier) {
+    const auto exercises = codeExercises_.exercisesForTier(tier);
+    bool inTierMenu = true;
+    while (inTierMenu) {
+        ui_.printLine("");
+        ui_.printHeader(tier + " Alıştırmaları");
+        for (const CodeExercise& exercise : exercises) {
+            ui_.printLine(std::to_string(exercise.id) + ". " + exercise.title);
+        }
+        ui_.printLine("0. Geri dön");
+        ui_.printLine("");
+        ui_.printLine("Alıştırma numarasını girin:");
+
+        const int choice = ui_.readMenuChoice(0, 100);
+        if (choice == 0) {
+            inTierMenu = false;
+            continue;
+        }
+        const auto exercise = codeExercises_.findById(choice);
+        if (!exercise.has_value() || exercise->tier != tier) {
+            ui_.printLine("Geçersiz alıştırma numarası.");
+            continue;
+        }
+        runCodeExercise(*exercise);
+    }
+}
+
+void Application::runCodeExercise(const CodeExercise& exercise) {
+    ui_.printLine("");
+    ui_.printHeader(std::to_string(exercise.id) + ". " + exercise.title);
+    ui_.printLine(exercise.description);
+    ui_.printLine("");
+    ui_.printLine("Beklenen davranış:");
+    ui_.printLine(exercise.expectedBehavior);
+    ui_.printLine("");
+    ui_.printLine("Örnek giriş: " + exercise.sampleInput);
+    ui_.printLine("Örnek çıktı: " + exercise.sampleOutput);
+    ui_.printLine("");
+
+    int hintLevelUsed = 0;
+    ui_.printLine("Başlamadan önce ipucu görmek ister misiniz? (E/H)");
+    while (true) {
+        const std::string wantsHint = ui_.readLine("Cevabınız: ");
+        if (wantsHint != "E" && wantsHint != "e") {
+            break;
+        }
+        if (hintLevelUsed < static_cast<int>(exercise.hints.size())) {
+            ui_.printLine(exercise.hints[static_cast<std::size_t>(hintLevelUsed)]);
+            ++hintLevelUsed;
+        } else if (!exercise.hints.empty()) {
+            ui_.printLine(exercise.hints.back());
+        }
+        ui_.printLine("Başka bir ipucu görmek ister misiniz? (E/H)");
+    }
+
+    ui_.printLine(
+        "Kodunuzu birden fazla satır halinde girebilirsiniz. Bitirmek için BITIR yazıp Enter'a basın.");
+    const std::string submittedCode = ui_.readMultilineCode();
+
+    const Question question = toWriteCodeQuestion(exercise);
+    const AnswerResult result = quizEngine_.evaluate(question, submittedCode, settings_);
+
+    int xpAwarded = result.xpAwarded;
+    if (result.correct && hintLevelUsed > 0) {
+        const int cappedHintLevel = hintLevelUsed < 3 ? hintLevelUsed : 3;
+        const double multiplier = 1.0 - (0.25 * static_cast<double>(cappedHintLevel));
+        xpAwarded = static_cast<int>(static_cast<double>(xpAwarded) * multiplier);
+    }
+
+    ui_.printLine("");
+    if (result.correct) {
+        ui_.printLine("Doğru! (+" + std::to_string(xpAwarded) + " XP)");
+        awardXpAndCheckLevelUp(xpAwarded);
+    } else {
+        ui_.printLine("Gönderdiğiniz kod beklenen kriterleri karşılamıyor.");
+    }
+
+    ui_.printLine("");
+    ui_.printLine("Örnek çözüm:");
+    ui_.printLine(exercise.sampleSolution);
+    ui_.printLine("");
+    ui_.printLine("Alternatif çözüm notu:");
+    ui_.printLine(exercise.alternativeSolutionNote);
+    ui_.printLine("");
+
+    progressManager_.save(
+        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
 }
 
 void Application::showSettingsMenu() {
