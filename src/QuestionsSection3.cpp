@@ -974,4 +974,733 @@ void appendSection3Questions(std::vector<Question>& questions) {
         .explanation = "Program do-while ile kullanıcıdan en az bir kez şifre istemeli, doğru şifre girilene kadar tekrar sormalıdır.",
         .baseXp = 40,
     });
+
+    // Topic 25: break
+    questions.push_back(Question{
+        .id = 479, .topicId = 25,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "break ifadesi ne işe yarar?",
+        .options = {"Döngüyü/switch'i anında sonlandırır", "Döngüyü bir tur atlar", "Fonksiyonu çağırır", "Değişken tanımlar"},
+        .acceptedAnswers = {"a"},
+        .explanation = "break, içinde bulunduğu döngüyü veya switch bloğunu anında sonlandırır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 480, .topicId = 25,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "break, iç içe döngülerde hangi döngüyü etkiler?",
+        .options = {"Tüm döngüleri birden", "Yalnızca en dıştaki döngüyü", "Yalnızca içinde bulunduğu en yakın (innermost) döngüyü", "Hiçbirini"},
+        .acceptedAnswers = {"c"},
+        .explanation = "break yalnızca içinde bulunduğu en yakın döngüyü veya switch'i etkiler.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 481, .topicId = 25,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "for (int i = 1; i <= 10; i++) { if (i == 3) break; std::cout << i; } kodunun çıktısı nedir?",
+        .options = {"12", "123", "1234567890", "3"},
+        .acceptedAnswers = {"a"},
+        .explanation = "i 1 ve 2 için yazdırılır; i=3 olduğunda break tetiklenir ve döngü yazdırmadan önce durur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 482, .topicId = 25,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "break kullanıldığında döngünün geri kalan turları çalışır mı?",
+        .options = {"Evet, hepsi çalışır", "Hayır, döngü anında sonlanır", "Yalnızca bir tur daha çalışır", "Değişkene bağlıdır"},
+        .acceptedAnswers = {"b"},
+        .explanation = "break tetiklendiğinde döngü anında sonlanır, kalan turlar hiç çalışmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 483, .topicId = 25,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "break, switch bloğunda ne işe yarar?",
+        .options = {"Bir sonraki case'e atlar", "switch bloğundan çıkar", "Döngüyü başlatır", "Hiçbir işe yaramaz"},
+        .acceptedAnswers = {"b"},
+        .explanation = "break, switch bloğundan çıkışı sağlar (fall-through'u önler).",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 484, .topicId = 25,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 0; i < 5; i++) { if (i == 0) break; } döngüsü kaç kez tam olarak çalışır (break'in ilk turda tetiklendiğine dikkat edin)?",
+        .options = {"0", "1", "5", "Sonsuz"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Döngü ilk turda başlar (i=0), if koşulu hemen true olur ve break tetiklenir; toplamda 1 tur denenmiş olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 485, .topicId = 25,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "for (int i = 0; i < 3; i++) {\n    for (int j = 0; j < 3; j++) {\n        if (j == 1) break;\n        std::cout << i << j;\n    }\n}\nkodunun çıktısı nedir (break'in yalnızca iç döngüyü etkilediğine dikkat edin)?",
+        .options = {"001020", "0", "000000", "012"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Her dış tur (i=0,1,2) için iç döngü j=0'da bir kez yazdırır (i0), j=1'de break tetiklenir; sonuç '001020' olur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 486, .topicId = 25,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int sayi = 0; while (true) { sayi++; if (sayi == 5) break; } döngüsünden sonra sayi kaç olur?",
+        .options = {"4", "5", "6", "Sonsuz döngü, program asla durmaz"},
+        .acceptedAnswers = {"b"},
+        .explanation = "sayi 1'den 5'e kadar artar; sayi 5 olduğunda break tetiklenir ve döngü durur. Son değer 5'tir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 487, .topicId = 25,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "break, içinde bulunduğu döngüyü veya switch'i anında sonlandırır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "break'in işlevi tam olarak budur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 488, .topicId = 25,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "break, tüm iç içe döngüleri birden sonlandırır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "break yalnızca en yakın (innermost) döngüyü sonlandırır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 489, .topicId = 25,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "break kullanıldıktan sonra döngünün kalan turları çalışmaz.",
+        .acceptedAnswers = {"1"},
+        .explanation = "break, döngüyü anında sonlandırır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 490, .topicId = 25,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "break yalnızca for döngülerinde kullanılabilir, while'da kullanılamaz.",
+        .acceptedAnswers = {"2"},
+        .explanation = "break, for, while, do-while ve switch bloklarının hepsinde kullanılabilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 491, .topicId = 25,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "İç içe döngülerde break, yalnızca en yakın (içteki) döngüyü sonlandırır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "break, kapsamı yalnızca içinde bulunduğu en yakın döngüyle sınırlıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 492, .topicId = 25,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "break, döngü sayacının (örneğin i) değerini sıfırlar.",
+        .acceptedAnswers = {"2"},
+        .explanation = "break yalnızca döngüden çıkışı sağlar; sayacın değerini değiştirmez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 493, .topicId = 25,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "for (int i = 0; i < 10; i++) {\n    if (i == 5) {\n        _____;\n    }\n    std::cout << i;\n}\ni 5 olduğunda döngüyü sonlandırmak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"break"},
+        .explanation = "break, döngüyü anında sonlandırır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 494, .topicId = 25,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "switch (x) {\n    case 1:\n        std::cout << \"Bir\";\n        _____;\n}\nswitch bloğundan çıkmak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"break"},
+        .explanation = "break, switch bloğundan çıkışı sağlar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 495, .topicId = 25,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "while (true) {\n    sayac++;\n    if (sayac == 10) _____;\n}\nsayac 10 olduğunda sonsuz döngüyü sonlandırmak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"break"},
+        .explanation = "break, sonsuz döngüyü sonlandırmanın standart yoludur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 496, .topicId = 25,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 0; i < 100; i++) {\n    if (i _____ 20) {\n        break;\n    }\n}\ni 20'ye ulaştığında döngünün durması için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"=="},
+        .explanation = "Eşitlik kontrolü == operatörüyle yapılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 497, .topicId = 25,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 1; i <= 100; i++) {\n    if (i * i > 50) {\n        _____;\n    }\n    std::cout << i;\n}\ni'nin karesi 50'yi geçtiğinde döngüyü durdurmak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"break"},
+        .explanation = "break, koşul sağlandığında döngüyü hemen sonlandırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 498, .topicId = 25,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int hedef = 7;\nfor (int i = 1; i <= 10; i++) {\n    if (i == hedef) {\n        std::cout << \"Bulundu\";\n        _____;\n    }\n}\nhedef bulunduğunda döngüyü sonlandırmak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"break"},
+        .explanation = "hedef bulunduktan sonra döngüye devam etmenin bir anlamı olmadığı için break kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 499, .topicId = 25,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 0; i < 10; i++) {\n    _____\n    std::cout << i;\n}\ni 4'e ulaştığında döngüyü sonlandıran if+break satırlarını (tek satırda) yazın.",
+        .acceptedAnswers = {"if (i == 4) break;"},
+        .explanation = "if (i == 4) break;, i 4 olduğunda döngüyü sonlandırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 500, .topicId = 25,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int sayi;\nwhile (true) {\n    std::cin >> sayi;\n    _____\n}\nsayi 0 olduğunda sonsuz döngüyü sonlandıran if+break satırlarını (tek satırda) yazın.",
+        .acceptedAnswers = {"if (sayi == 0) break;"},
+        .explanation = "if (sayi == 0) break;, sayi 0 olduğunda döngüyü sonlandırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 501, .topicId = 25,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 1; i <= 10; i++) {\n    if (i == 4) {\n        break;\n    }\n    std::cout << i;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"123"},
+        .explanation = "i 1, 2, 3 için yazdırılır; i=4 olduğunda break tetiklenir ve döngü durur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 502, .topicId = 25,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int i = 0;\nwhile (i < 10) {\n    i++;\n    if (i == 3) {\n        break;\n    }\n}\nstd::cout << i;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"3"},
+        .explanation = "i sırasıyla 1, 2, 3 olur; i=3 olduğunda break tetiklenir. Son değer 3'tür.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 503, .topicId = 25,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nfor (int i = 0; i < 10; i++) {\n    if (i == 5)\n        breakk;\n    std::cout << i;\n}\n\nHatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"break;"},
+        .explanation = "breakk geçerli bir anahtar kelime değildir; doğrusu break;'tir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 504, .topicId = 25,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint i = 0;\nfor (; i < 10; i++) {\n    if (i = 5) {\n        break;\n    }\n}\n\nProgramcı i'nin 5'e eşit olup olmadığını kontrol etmek istiyor ama kod her zaman döngüyü ilk turda sonlandırıyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"if (i == 5) {"},
+        .explanation = "if (i = 5) bir atamadır; i'ye 5 atanır ve bu her zaman doğru (sıfır olmayan) sayıldığı için break hemen tetiklenir. Karşılaştırma için == kullanılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 505, .topicId = 25,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nfor (int i = 0; i < 10; i++) {\n    if (i == 5)\n        brake;\n}\n\nDüzeltilmiş üçüncü satırı yazın.",
+        .acceptedAnswers = {"break;"},
+        .explanation = "brake geçerli bir anahtar kelime değildir; doğrusu break;'tir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 506, .topicId = 25,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, i 3'e ulaştığında break ile durup önceki sayıları yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"}", "if (i == 3) {\n        break;\n    }", "std::cout << i;", "for (int i = 0; i < 10; i++) {"},
+        .acceptedAnswers = {"4 2 3 1"},
+        .explanation = "Önce for satırı (4), if+break (2), yazdırma (3), en son kapanış (1): sıra 4 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 507, .topicId = 25,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "1'den 100'e kadar sayıları döngüyle yazdıran, ancak 10'a ulaştığında break ile döngüyü sonlandıran bir program yazın.",
+        .acceptedAnswers = {"for", "break", "cout", "<<"},
+        .explanation = "Program bir döngüde sayıları yazdırmalı ve 10'a ulaşıldığında break ile durmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 26: continue
+    questions.push_back(Question{
+        .id = 508, .topicId = 26,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "continue ifadesi ne işe yarar?",
+        .options = {"Döngüyü tamamen sonlandırır", "O turun geri kalanını atlayıp bir sonraki tura geçer", "Fonksiyonu çağırır", "Değişken tanımlar"},
+        .acceptedAnswers = {"b"},
+        .explanation = "continue, o turun geri kalanını atlayıp döngünün bir sonraki turuna geçer.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 509, .topicId = 26,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "continue ile break arasındaki temel fark nedir?",
+        .options = {"Aralarında fark yoktur", "continue döngüyü sonlandırır, break bir sonraki tura geçer", "continue o turu atlar ve döngüye devam eder, break döngüyü tamamen sonlandırır", "continue yalnızca switch'te kullanılır"},
+        .acceptedAnswers = {"c"},
+        .explanation = "continue yalnızca o turu atlar, break ise döngüyü tamamen sonlandırır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 510, .topicId = 26,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "for (int i = 1; i <= 5; i++) { if (i == 3) continue; std::cout << i; } kodunun çıktısı nedir?",
+        .options = {"1245", "12345", "12", "345"},
+        .acceptedAnswers = {"a"},
+        .explanation = "i=3 olduğunda continue tetiklenir ve yazdırma atlanır; diğer değerler (1,2,4,5) yazdırılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 511, .topicId = 26,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "for döngüsünde continue kullanıldığında artırma adımı (örneğin i++) çalışır mı?",
+        .options = {"Evet, continue'dan sonra yine de çalışır", "Hayır, hiç çalışmaz", "Yalnızca son turda çalışır", "Sadece break ile birlikte çalışır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "for döngüsünde continue tetiklendiğinde bile artırma adımı yine çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 512, .topicId = 26,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 1; i <= 6; i++) { if (i % 2 == 0) continue; std::cout << i; } kodunun çıktısı nedir (çift sayılar atlanıyor)?",
+        .options = {"135", "246", "123456", "135246"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Çift sayılarda (2,4,6) continue tetiklenir; yalnızca tek sayılar (1,3,5) yazdırılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 513, .topicId = 26,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "while döngüsünde continue kullanırken nelere dikkat edilmelidir?",
+        .options = {"Hiçbir şeye dikkat edilmesi gerekmez", "Koşulu güncelleyen kodun continue'dan önce çalıştığından emin olunmalı (aksi halde sonsuz döngü oluşabilir)", "continue while'da kullanılamaz", "continue otomatik olarak koşulu günceller"},
+        .acceptedAnswers = {"b"},
+        .explanation = "while'da (for'un aksine) artırma otomatik olmadığı için, güncelleme kodu continue'dan önce yazılmazsa sonsuz döngü oluşabilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 514, .topicId = 26,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "for (int i = 0; i < 5; i++) {\n    for (int j = 0; j < 3; j++) {\n        if (j == 1) continue;\n        std::cout << j;\n    }\n}\nkodunun her bir dış turda ürettiği çıktı nedir (j==1 atlanıyor)?",
+        .options = {"02", "012", "0", "2"},
+        .acceptedAnswers = {"a"},
+        .explanation = "j=0 yazdırılır, j=1'de continue tetiklenir (atlanır), j=2 yazdırılır; her iç döngü turu '02' üretir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 515, .topicId = 26,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int toplam = 0;\nfor (int i = 1; i <= 5; i++) {\n    if (i == 3) continue;\n    toplam += i;\n}\ntoplam kaç olur (3 atlandığı için)?",
+        .options = {"12", "15", "9", "3"},
+        .acceptedAnswers = {"a"},
+        .explanation = "1+2+4+5 = 12 (3, continue ile atlandığı için toplama dahil edilmez).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 516, .topicId = 26,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "continue, o turun geri kalanını atlayıp bir sonraki tura geçer.",
+        .acceptedAnswers = {"1"},
+        .explanation = "continue'nun işlevi tam olarak budur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 517, .topicId = 26,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "continue, döngüyü tamamen sonlandırır (break gibi davranır).",
+        .acceptedAnswers = {"2"},
+        .explanation = "continue döngüyü sonlandırmaz, yalnızca o turu atlar.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 518, .topicId = 26,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "for döngüsünde continue'dan sonra artırma adımı (i++) yine de çalışır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "for döngüsünde continue tetiklense bile artırma adımı çalışır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 519, .topicId = 26,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "continue yalnızca for döngülerinde kullanılabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "continue, while ve do-while döngülerinde de kullanılabilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 520, .topicId = 26,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "while döngüsünde continue'dan önce koşulu güncelleyen kod yazılmazsa sonsuz döngü oluşabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Güncelleme kodu continue tarafından atlanırsa koşul hiç değişmeyebilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 521, .topicId = 26,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "continue, switch bloğundan çıkmak için kullanılır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "switch bloğundan çıkmak için break kullanılır, continue değil.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 522, .topicId = 26,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "for (int i = 1; i <= 10; i++) {\n    if (i % 2 == 0) {\n        _____;\n    }\n    std::cout << i;\n}\nçift sayıları atlamak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"continue"},
+        .explanation = "continue, çift sayılarda o turu atlar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 523, .topicId = 26,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "for (int i = 0; i < 5; i++) {\n    if (i == 2) _____;\n    std::cout << i;\n}\ni 2 olduğunda o turu atlamak (yazdırmadan geçmek) için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"continue"},
+        .explanation = "continue, i=2 turunu atlar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 524, .topicId = 26,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "for (int i = 1; i <= 5; i++) {\n    if (i _____ 3) continue;\n    std::cout << i;\n}\ni 3'e eşit olduğunda o turu atlamak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"=="},
+        .explanation = "Eşitlik kontrolü == operatörüyle yapılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 525, .topicId = 26,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int i = 0;\nwhile (i < 5) {\n    i++;\n    if (i == 2) continue;\n    std::cout << i;\n_____\nBoşluğa döngüyü kapatan karakteri yazın (i++ satırının sonsuz döngüye girmemek için continue'dan ÖNCE yazıldığına dikkat edin).",
+        .acceptedAnswers = {"}"},
+        .explanation = "i++ satırı continue'dan önce çalıştığı için sonsuz döngüye girilmez; döngü } ile kapanır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 526, .topicId = 26,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 1; i <= 20; i++) {\n    if (i _____ 5 == 0) continue;\n    std::cout << i;\n}\n5'in katlarını atlamak için boşluğa hangi operatör yazılmalı?",
+        .acceptedAnswers = {"%"},
+        .explanation = "i % 5 == 0, i'nin 5'in katı olup olmadığını kontrol eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 527, .topicId = 26,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 1; i <= 10; i++) {\n    if (i == 1 _____ i == 10) continue;\n    std::cout << i;\n}\ni'nin 1 VEYA 10 olduğunda o turları atlamak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"||"},
+        .explanation = "|| operatörü, iki koşuldan en az biri true olduğunda true döner.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 528, .topicId = 26,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 1; i <= 10; i++) {\n    _____\n    std::cout << i;\n}\ni tek sayıyken (yazdırmadan) o turu atlayan if+continue satırlarını (tek satırda) yazın.",
+        .acceptedAnswers = {"if (i % 2 != 0) continue;"},
+        .explanation = "if (i % 2 != 0) continue;, i tek olduğunda o turu atlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 529, .topicId = 26,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int toplam = 0;\nfor (int i = 1; i <= 10; i++) {\n    _____\n    toplam += i;\n}\ni 5'e eşitken o turu atlayan if+continue satırlarını (tek satırda) yazın.",
+        .acceptedAnswers = {"if (i == 5) continue;"},
+        .explanation = "if (i == 5) continue;, i 5 olduğunda toplama eklemeden o turu atlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 530, .topicId = 26,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 1; i <= 5; i++) {\n    if (i == 2) {\n        continue;\n    }\n    std::cout << i;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"1345"},
+        .explanation = "i=2'de continue tetiklenir ve yazdırma atlanır; diğer değerler (1,3,4,5) yazdırılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 531, .topicId = 26,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int toplam = 0;\nfor (int i = 1; i <= 6; i++) {\n    if (i % 3 == 0) {\n        continue;\n    }\n    toplam += i;\n}\nstd::cout << toplam;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"12"},
+        .explanation = "3'ün katları (3, 6) atlanır; 1+2+4+5 = 12 toplanır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 532, .topicId = 26,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nfor (int i = 1; i <= 5; i++) {\n    if (i == 3)\n        continuee;\n    std::cout << i;\n}\n\nHatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"continue;"},
+        .explanation = "continuee geçerli bir anahtar kelime değildir; doğrusu continue;'dir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 533, .topicId = 26,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint i = 0;\nwhile (i < 5) {\n    if (i == 2) {\n        continue;\n    }\n    std::cout << i;\n    i++;\n}\n\nProgramcı i==2 olduğunda o turu atlamak istiyor ama kod i==2'de sonsuz döngüye giriyor çünkü i++ satırı continue'dan sonra yazılmış ve hiç çalışmıyor. i++ satırının çalışması için if bloğundan önceki hangi konuma taşınması gerekir? (taşınacak satırı yazın)",
+        .acceptedAnswers = {"i++;"},
+        .explanation = "i++, continue'dan önce (if kontrolünden önce) çalışmalıdır; aksi halde i==2 durumunda i hiç güncellenmeyip sonsuz döngü oluşur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 534, .topicId = 26,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nfor (int i = 1; i <= 5; i++) {\n    if (i == 3)\n        continue\n    std::cout << i;\n}\n\nDüzeltilmiş üçüncü satırı yazın.",
+        .acceptedAnswers = {"continue;"},
+        .explanation = "continue ifadesinin sonunda noktalı virgül eksik.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 535, .topicId = 26,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, i 2'ye eşitken atlayarak diğer sayıları yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"}", "if (i == 2) {\n        continue;\n    }", "std::cout << i;", "for (int i = 1; i <= 5; i++) {"},
+        .acceptedAnswers = {"4 2 3 1"},
+        .explanation = "Önce for satırı (4), if+continue (2), yazdırma (3), en son kapanış (1): sıra 4 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 536, .topicId = 26,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "1'den 20'ye kadar sayıları yazdıran, ancak 3'ün katı olan sayıları continue ile atlayan bir program yazın.",
+        .acceptedAnswers = {"for", "continue", "%", "cout", "<<"},
+        .explanation = "Program bir döngüde sayıları yazdırmalı, 3'ün katlarında continue ile o turu atlamalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 27: İç içe döngüler
+    questions.push_back(Question{
+        .id = 537, .topicId = 27,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "İç içe döngü ne demektir?",
+        .options = {"Bir döngünün içinde başka bir döngü olması", "İki döngünün art arda (sırayla) yazılması", "Bir döngünün iki kez çağrılması", "Bir fonksiyonun kendisini çağırması"},
+        .acceptedAnswers = {"a"},
+        .explanation = "İç içe döngü, bir döngünün gövdesine başka bir döngü yazılmasıdır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 538, .topicId = 27,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "for (int i = 0; i < 2; i++) { for (int j = 0; j < 3; j++) { ... } } yapısında iç döngü toplamda kaç kez çalışır?",
+        .options = {"2", "3", "5", "6"},
+        .acceptedAnswers = {"d"},
+        .explanation = "Dış döngü 2 kez çalışır, her seferinde iç döngü 3 kez çalışır: 2*3 = 6.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 539, .topicId = 27,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "İç içe döngülerde dış döngünün her bir turunda ne olur?",
+        .options = {"İç döngü baştan sona kadar tamamen çalışır", "İç döngü yalnızca bir kez çalışır", "İç döngü hiç çalışmaz", "Dış döngü durur"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Dış döngünün her turunda, iç döngü baştan sona kadar tamamen çalışır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 540, .topicId = 27,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 1; i <= 3; i++) { for (int j = 1; j <= 2; j++) { std::cout << \"*\"; } } kodu kaç tane * yazdırır?",
+        .options = {"3", "2", "5", "6"},
+        .acceptedAnswers = {"d"},
+        .explanation = "Dış döngü 3 kez, her seferinde iç döngü 2 kez çalışır: 3*2 = 6 yıldız.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 541, .topicId = 27,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "İç içe döngülerde iç döngünün sayaç değişkeni (örneğin j), dış döngünün sayaç değişkeniyle (i) aynı isimde olabilir mi?",
+        .options = {"Evet, her zaman sorunsuz çalışır", "Hayır, aynı kapsamda (nested scope) aynı isimde iki değişken tanımlanamaz", "Yalnızca while döngülerinde olabilir", "Derleyici otomatik olarak yeniden adlandırır"},
+        .acceptedAnswers = {"b"},
+        .explanation = "İç döngü, dış döngünün kapsamı içinde olduğu için aynı isimde bir değişken tekrar tanımlanamaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 542, .topicId = 27,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Bir matrisin (2 boyutlu dizi) tüm elemanlarını dolaşmak için genellikle kaç döngü gerekir?",
+        .options = {"1", "2", "3", "Döngüye gerek yok"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Bir matrisin satır ve sütunlarını dolaşmak için genellikle iç içe iki döngü kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 543, .topicId = 27,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "for (int i = 0; i < 3; i++) {\n    for (int j = 0; j < 3; j++) {\n        if (j == i) break;\n        std::cout << \"*\";\n    }\n}\nkodu toplam kaç tane * yazdırır (break yalnızca iç döngüyü etkiler)?",
+        .options = {"3", "6", "9", "0"},
+        .acceptedAnswers = {"a"},
+        .explanation = "i=0: j=0'da hemen break (0 yıldız). i=1: j=0'da yıldız, j=1'de break (1 yıldız). i=2: j=0,1'de yıldız, j=2'de break (2 yıldız). Toplam 0+1+2=3.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 544, .topicId = 27,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "for (int i = 1; i <= 2; i++) {\n    for (int j = 1; j <= 2; j++) {\n        std::cout << i * j << \" \";\n    }\n}\nkodunun ekran çıktısı nedir?",
+        .options = {"1 2 2 4 ", "1 2 3 4 ", "1 4 ", "2 4 "},
+        .acceptedAnswers = {"a"},
+        .explanation = "i=1: j=1(1*1=1), j=2(1*2=2). i=2: j=1(2*1=2), j=2(2*2=4). Çıktı: '1 2 2 4 '.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 545, .topicId = 27,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "İç içe döngü, bir döngünün içine başka bir döngü yazılmasıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "İç içe döngünün tanımı budur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 546, .topicId = 27,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "İç içe döngülerde dış döngü her turunda iç döngü yalnızca bir kez çalışır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Dış döngünün her turunda iç döngü baştan sona kadar tamamen çalışır (bir kez değil).",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 547, .topicId = 27,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "İç içe döngülerin toplam tekrar sayısı, dış döngü tekrar sayısı ile iç döngü tekrar sayısının çarpımıdır (basit durumlarda).",
+        .acceptedAnswers = {"1"},
+        .explanation = "Basit (koşulsuz) iç içe döngülerde toplam tekrar sayısı dış*iç şeklinde hesaplanır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 548, .topicId = 27,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "İç ve dış döngülerin sayaç değişkenleri aynı isimde (aynı kapsamda) tanımlanabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Aynı kapsamda aynı isimde iki değişken tanımlanamaz; farklı isimler (i, j gibi) kullanılmalıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 549, .topicId = 27,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "İç içe döngüler, bir matrisin (2 boyutlu verinin) satır ve sütunlarını dolaşmak için sıkça kullanılır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Dış döngü satırları, iç döngü sütunları dolaşmak için tipik bir kullanımdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 550, .topicId = 27,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "break, iç içe döngülerde hem iç hem dış döngüyü aynı anda sonlandırır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "break yalnızca içinde bulunduğu en yakın (iç) döngüyü sonlandırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 551, .topicId = 27,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "for (int i = 0; i < 2; i++) {\n    for (int _____ = 0; j < 3; j++) {\n        std::cout << \"*\";\n    }\n}\nİç döngünün sayaç değişkenini tanımlamak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"j"},
+        .explanation = "İç döngünün sayacı, koşulda kullanılan j ismiyle tanımlanmalıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 552, .topicId = 27,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "for (int i = 0; i < 3; i++) {\n    _____ (int j = 0; j < 3; j++) {\n        std::cout << i << j;\n    }\n}\nİkinci (iç) döngüyü başlatmak için boşluğa hangi anahtar kelime yazılmalı?",
+        .acceptedAnswers = {"for"},
+        .explanation = "İç döngü de bir for döngüsü olduğu için for anahtar kelimesiyle başlar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 553, .topicId = 27,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "for (int i = 0; i < 2; i++) {\n    for (int j = 0; j < 2; j++) {\n        std::cout << i _____ j;\n    }\n}\ni ile j'yi çarpmak için boşluğa hangi operatör yazılmalı?",
+        .acceptedAnswers = {"*"},
+        .explanation = "* operatörü çarpma işlemi yapar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 554, .topicId = 27,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 1; i <= _____; i++) {\n    for (int j = 1; j <= 3; j++) {\n        std::cout << \"*\";\n    }\n}\nDış döngünün 4 kez çalışması (toplam 4*3=12 yıldız) için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"4"},
+        .explanation = "Dış döngü 4 kez çalışırsa toplam yıldız sayısı 4*3=12 olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 555, .topicId = 27,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 0; i < 3; i++) {\n    for (int j = 0; j < 3; j++) {\n        if (i _____ j) {\n            std::cout << \"Köşegen\";\n        }\n    }\n}\nMatrisin köşegen elemanlarını (i ve j eşit olduğunda) bulmak için boşluğa hangi operatör yazılmalı?",
+        .acceptedAnswers = {"=="},
+        .explanation = "Eşitlik kontrolü == operatörüyle yapılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 556, .topicId = 27,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 0; i < 2; i++) {\n    for (int j = 0; j < 2; j++) {\n        std::cout << \"(\" << i << \",\" << j << \")\";\n    }\n    std::cout << _____;\n}\nHer dış turdan sonra yeni bir satıra geçmek için boşluğa (tırnakla) ne yazılmalı?",
+        .acceptedAnswers = {"\"\\n\""},
+        .explanation = "\"\\n\" yeni satıra geçişi sağlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 557, .topicId = 27,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 1; i <= 2; i++) {\n    _____\n        std::cout << \"*\";\n    }\n}\nİç döngüyü (1'den 3'e kadar) başlatan for satırını yazın.",
+        .acceptedAnswers = {"for (int j = 1; j <= 3; j++) {"},
+        .explanation = "İç döngü, 1'den 3'e kadar sayan bir for döngüsüdür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 558, .topicId = 27,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int toplam = 0;\nfor (int i = 1; i <= 2; i++) {\n    for (int j = 1; j <= 2; j++) {\n        _____\n    }\n}\ntoplam değişkenine her adımda 1 ekleyen satırı yazın.",
+        .acceptedAnswers = {"toplam += 1;", "toplam++;"},
+        .explanation = "toplam += 1; veya toplam++; her adımda toplamı 1 artırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 559, .topicId = 27,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "for (int i = 1; i <= 2; i++) {\n    for (int j = 1; j <= 2; j++) {\n        std::cout << \"*\";\n    }\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"****"},
+        .explanation = "Dış döngü 2 kez, iç döngü her seferinde 2 kez çalışır: 2*2=4 yıldız.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 560, .topicId = 27,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int toplam = 0;\nfor (int i = 1; i <= 3; i++) {\n    for (int j = 1; j <= 2; j++) {\n        toplam++;\n    }\n}\nstd::cout << toplam;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"6"},
+        .explanation = "Dış döngü 3 kez, iç döngü her seferinde 2 kez çalışır: 3*2=6.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 561, .topicId = 27,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nfor (int i = 0; i < 2; i++) {\nfor (int i = 0; i < 3; i++) {\n        std::cout << \"*\";\n    }\n}\n\nProgramcı iç döngü için farklı bir sayaç ismi kullanmayı unutmuş, bu da derleme hatasına yol açar (aynı kapsamda aynı isim tekrar tanımlanamaz). Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"for (int j = 0; j < 3; j++) {"},
+        .explanation = "İç döngü, dış döngüyle aynı isimde (i) bir sayaç kullanamaz; farklı bir isim (j) gerekir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 562, .topicId = 27,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nfor (int i = 0; i < 3; i++) {\n    for (int j = 0; j < 3; j++);\n        std::cout << i << j;\n}\n\nBu kod, iç döngünün sayacı j'nin kapsamı iç for satırıyla birlikte bittiği için 'j': tanımsız tanımlayıcı hatasıyla derlenmiyor. Programcı 9 çift (i,j) yazdırmak istiyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"for (int j = 0; j < 3; j++)"},
+        .explanation = "İç for satırının sonundaki fazladan noktalı virgül, döngünün gövdesini boş bir ifade yapar; bu durumda j'nin kapsamı yalnızca bu boş ifadeyle sınırlı kalır ve sonraki satır j'yi göremediği için derleme hatası oluşur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 563, .topicId = 27,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nfor (int i = 0; i < 2; i++)\n    for (int j = 0; j < 2; j++)\n        std::cout << i j;\n\nProgramcı i ve j'yi yan yana yazdırmak istiyor. Düzeltilmiş üçüncü satırı yazın.",
+        .acceptedAnswers = {"std::cout << i << j;"},
+        .explanation = "İki değeri art arda yazdırmak için aralarına << operatörü konulmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 564, .topicId = 27,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, iç içe döngüyle 2x3 yıldız yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"for (int i = 0; i < 2; i++) {", "for (int j = 0; j < 3; j++) {", "std::cout << \"*\";", "    }\n}"},
+        .acceptedAnswers = {"1 2 3 4"},
+        .explanation = "Dış döngü (1), iç döngü (2), yıldız yazdırma (3), en son her iki döngünün kapanışı (4): sıra 1 2 3 4.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 565, .topicId = 27,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "İç içe iki döngü kullanarak 3x3'lük bir yıldız (*) karesi yazdıran bir program yazın (3 satır, her satırda 3 yıldız).",
+        .acceptedAnswers = {"for", "cout", "<<"},
+        .explanation = "Program iç içe iki for döngüsüyle 3 satır, her satırda 3 yıldız yazdırmalıdır.",
+        .baseXp = 40,
+    });
 }
