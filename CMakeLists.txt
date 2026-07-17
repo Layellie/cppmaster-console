@@ -37,6 +37,7 @@ add_library(CppMasterConsoleLib STATIC
     src/LessonContentSection3.cpp
     src/LessonContentSection4.cpp
     src/LessonContentSection5.cpp
+    src/LessonContentSection6.cpp
     src/ConsoleUI.h
     src/ConsoleUI.cpp
     src/Question.h
