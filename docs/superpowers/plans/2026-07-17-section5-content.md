@@ -1377,7 +1377,7 @@ void appendSection5Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 1034, .topicId = 44,
         .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
-        .prompt = "int f(int x); void main() { f(5); } int f(int x) { return x; } yapısında f'nin prototipi olmasaydı ne olurdu?",
+        .prompt = "int f(int x); int main() { f(5); return 0; } int f(int x) { return x; } yapısında f'nin prototipi olmasaydı ne olurdu?",
         .options = {"Hiçbir fark olmazdı", "Derleme hatası oluşurdu (main, f'yi henüz tanımadığı için)", "f otomatik olarak void olurdu", "main() çalışmazdı ama derlenirdi"},
         .acceptedAnswers = {"b"},
         .explanation = "Prototip olmadan, tanımından önce çağrılan bir fonksiyon derleme hatasına yol açar.",
