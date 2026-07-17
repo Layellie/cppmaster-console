@@ -177,9 +177,10 @@ as Phases 1-7.
   topics 11-100.
 - **Phase 16 — Bölüm 5 İçerik Genişletmesi: COMPLETE** (commits `4955846..f53d6c0`, 92/92 tests + ctest 100%). Topics 41-50 (Section 5: "Fonksiyonlar") now have full lesson content (`src/LessonContentSection5.cpp`) and a 290-question bank (ids 943-1232, 29 per topic, `src/QuestionsSection5.cpp`) spanning the same 9 of 11 question types as Sections 2-4 (`Scenario`/`Matching` still deliberately unused). A new `QuestionManager_EveryTopicFortyOneToFiftyHasAtLeastTwentyNineQuestions` test was added; `QuestionManager_NoDuplicateQuestionIds` already scanned topics 1-100 and needed no change. A manual end-to-end run additionally confirmed `openTopic`'s content gate passes for topic 43 ("Değer döndüren fonksiyon") with zero `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29 soru).", correct answers award XP, and mid-quiz `cikis` exits cleanly back to the main menu with partial XP saved. Fourth of nine section-by-section content phases (13-21) closing the roadmap's lesson-content and question-bank gaps for topics 11-100.
 - **Phase 17 — Bölüm 6 İçerik Genişletmesi: COMPLETE** (commits `bcdfbba..b5fbe3d`, 93/93 tests + ctest 100%). Topics 51-60 (Section 6: "Lambda, pointer ve bellek") now have full lesson content (`src/LessonContentSection6.cpp`) and a 290-question bank (ids 1233-1522, 29 per topic, `src/QuestionsSection6.cpp`) spanning the same 9 of 11 question types as Sections 2-5 (`Scenario`/`Matching` still deliberately unused). A new `QuestionManager_EveryTopicFiftyOneToSixtyHasAtLeastTwentyNineQuestions` test was added; `QuestionManager_NoDuplicateQuestionIds` already scanned topics 1-100 and needed no change. A manual end-to-end run additionally confirmed `openTopic`'s content gate passes for topic 57 ("new") with zero `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29 soru).", correct answers award XP, and mid-quiz `cikis` exits cleanly back to the main menu with partial XP saved. Fifth of nine section-by-section content phases (13-21) closing the roadmap's lesson-content and question-bank gaps for topics 11-100.
-- **Phases 18-21 — İçerik genişletme (devamı):** kalan 40 konunun ders
-  içeriği + soru bankasının ~1160'ye çıkarılması. Bölüm bölüm (Section 7
-  through Section 10, 4 phases), her biri o bölümün 10 konusu + ~290 soru.
+- **Phase 18 — Bölüm 7 İçerik Genişletmesi: COMPLETE** (commits `f5c69af..2291276`, 94/94 tests + ctest 100%). Topics 61-70 (Section 7: "Struct ve nesne yönelimli programlama") now have full lesson content (`src/LessonContentSection7.cpp`) and a 290-question bank (ids 1523-1812, 29 per topic, `src/QuestionsSection7.cpp`) spanning the same 9 of 11 question types as Sections 2-6 (`Scenario`/`Matching` still deliberately unused). A new `QuestionManager_EveryTopicSixtyOneToSeventyHasAtLeastTwentyNineQuestions` test was added; `QuestionManager_NoDuplicateQuestionIds` already scanned topics 1-100 and needed no change. A manual end-to-end run additionally confirmed `openTopic`'s content gate passes for topic 65 ("Constructor") with zero `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29 soru).", correct answers award XP, and mid-quiz `cikis` exits cleanly back to the main menu with partial XP saved. Sixth of nine section-by-section content phases (13-21) closing the roadmap's lesson-content and question-bank gaps for topics 11-100.
+- **Phases 19-21 — İçerik genişletme (devamı):** kalan 30 konunun ders
+  içeriği + soru bankasının ~870'ye çıkarılması. Bölüm bölüm (Section 8
+  through Section 10, 3 phases), her biri o bölümün 10 konusu + ~290 soru.
 - **Phase 22 — Sınavlar:** kalan 9 bölüm sınavı + 100 soruluk genel final
   sınavı (içerik tamamlandıktan sonra mümkün).
 - **Phase 23 — Üretici kütüphanesini genişletme:** en az 15 üretici,
@@ -192,8 +193,8 @@ as Phases 1-7.
 
 ## Status
 
-Phase 17 complete (2026-07-17). Phase 18 (Section 7 content: "Struct ve nesne
-yönelimli programlama", topics 61-70) starting next — the sixth of the large
+Phase 18 complete (2026-07-18). Phase 19 (Section 8 content: "İleri nesne
+yönelimli özellikler", topics 71-80) starting next — the seventh of the large
 content-expansion phases (Phases 13-21). Update this file's
 phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
 per-phase headers).
