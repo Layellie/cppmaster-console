@@ -1703,4 +1703,733 @@ void appendSection6Questions(std::vector<Question>& questions) {
         .explanation = "Bellek new ile ayrılmalı, kullanılmalı ve delete ile serbest bırakılmalıdır.",
         .baseXp = 40,
     });
+
+    // Topic 58: delete
+    questions.push_back(Question{
+        .id = 1436, .topicId = 58,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "delete operatörü ne yapar?",
+        .options = {"new ile ayrılmış belleği serbest bırakır", "Bir değişken tanımlar", "Bir dosya siler", "Bir referans oluşturur"},
+        .acceptedAnswers = {"a"},
+        .explanation = "delete, new ile ayrılan belleği serbest bırakır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1437, .topicId = 58,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int* p = new int(5);\ndelete p;\nBu satırdan sonra p'nin durumu nedir?",
+        .options = {"p artık sarkan (dangling) bir pointerdır", "p otomatik olarak nullptr olur", "p'nin gösterdiği bellek hala geçerlidir", "Derleme hatası oluşur"},
+        .acceptedAnswers = {"a"},
+        .explanation = "delete'ten sonra pointer, artık geçersiz bir belleği gösteren dangling bir pointer haline gelir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1438, .topicId = 58,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "Her new çağrısının karşılığında kaç tane delete çağrısı olmalıdır?",
+        .options = {"Tam olarak bir tane", "İki tane", "Hiç gerekmez", "new sayısının iki katı"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Her new'e karşılık tam olarak bir delete gerekir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1439, .topicId = 58,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = new int(5);\ndelete p;\ndelete p;\nBu kod ne olur (ikinci delete)?",
+        .options = {"Tanımsız davranış (double delete)", "Güvenle çalışır, hiçbir sorun çıkmaz", "Derleme hatası verir", "Otomatik olarak yok sayılır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Aynı pointer'ı iki kez delete etmek tanımsız davranıştır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1440, .topicId = 58,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "delete p; çağrıldıktan sonra p'yi nullptr yapmak (p = nullptr;) zorunlu mudur?",
+        .options = {"Zorunlu değildir ama yanlışlıkla tekrar kullanılmasını önlemek için iyi bir alışkanlıktır", "Zorunludur, aksi halde derleme hatası olur", "delete otomatik olarak p'yi nullptr yapar", "Hiçbir zaman yapılmamalıdır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "nullptr yapmak zorunlu değildir ama iyi bir güvenlik alışkanlığıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1441, .topicId = 58,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = new int(3);\nint* q = p;\ndelete p;\nstd::cout << *q;\nBu kod ne olur?",
+        .options = {"Tanımsız davranış (q artık sarkan bir pointerdır)", "3 yazdırır, güvenlidir", "0 yazdırır", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "q, p ile aynı belleği gösterdiğinden, p delete edildiğinde q de sarkan hale gelir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1442, .topicId = 58,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int* p = new int(5);\np = new int(10);\nstd::cout << *p;\nBu kodda bir sorun var mı?",
+        .options = {"Evet, ilk ayrılan bellek (5 değerli) hiç delete edilmeden kaybedildi (bellek sızıntısı); *p yine de 10 yazdırır", "Hayır, hiçbir sorun yok", "Derleme hatası verir", "Çalışma zamanında çöker"},
+        .acceptedAnswers = {"a"},
+        .explanation = "p, ilk ayrılan belleği delete etmeden yeniden atanmış; bu bellek artık asla serbest bırakılamaz (sızıntı).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1443, .topicId = 58,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int* p = new int(1);\ndelete p;\np = new int(2);\nstd::cout << *p;\ndelete p;\nBu kod geçerli midir?",
+        .options = {"Evet, geçerlidir; her new'e karşılık bir delete vardır ve p kullanılmadan önce yeniden atanmıştır", "Hayır, p ikinci new'den önce nullptr yapılmalıydı", "Hayır, bu double delete'tir", "Hayır, bellek sızıntısına yol açar"},
+        .acceptedAnswers = {"a"},
+        .explanation = "İlk bellek düzgünce delete edilip p yeni bir belleğe atanmış; her new'in kendi delete'i vardır, sorun yoktur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1444, .topicId = 58,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "delete operatörü, new ile ayrılmış belleği serbest bırakır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1445, .topicId = 58,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "delete çağrıldıktan sonra pointer otomatik olarak nullptr olur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: pointer, açıkça nullptr yapılmadıkça dangling kalır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1446, .topicId = 58,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Aynı pointer'ı iki kez delete etmek (double delete) tanımsız davranıştır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1447, .topicId = 58,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "delete'ten sonra pointer'ı tekrar dereference etmek güvenlidir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: delete'ten sonraki dereference tanımsız davranıştır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1448, .topicId = 58,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Her new çağrısının karşılığında tam olarak bir delete çağrısı olmalıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1449, .topicId = 58,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "delete p; çağrıldıktan sonra p'yi nullptr yapmak, yanlışlıkla tekrar kullanmayı önlemek için iyi bir alışkanlıktır (ama zorunlu değildir).",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1450, .topicId = 58,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "new ile ayrılmış belleği serbest bırakmak için _____ operatörü kullanılır (İngilizce kelime).",
+        .acceptedAnswers = {"delete"},
+        .explanation = "delete operatörü belleği serbest bırakır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1451, .topicId = 58,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "delete p; çağrıldıktan sonra p, _____ (dangling) bir pointer haline gelir (İngilizce kelime).",
+        .acceptedAnswers = {"dangling"},
+        .explanation = "Silinen belleği gösteren bir pointer'a dangling (sarkan) pointer denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1452, .topicId = 58,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Aynı pointer'ı iki kez delete etmeye _____ delete denir (İngilizce iki kelime, örn. 'double delete').",
+        .acceptedAnswers = {"double delete"},
+        .explanation = "Bu hataya double delete denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1453, .topicId = 58,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = new int(4);\ndelete p;\nBu satırdan sonra p'yi tekrar dereference etmek _____ davranıştır (İngilizce iki kelime).",
+        .acceptedAnswers = {"undefined behavior"},
+        .explanation = "delete'ten sonraki dereference undefined behavior'dır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1454, .topicId = 58,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "delete'ten sonra pointer'ı _____ yapmak (bir kelime, İngilizce), yanlışlıkla tekrar kullanılmasını önler.",
+        .acceptedAnswers = {"nullptr"},
+        .explanation = "nullptr yapmak, yanlışlıkla tekrar kullanmayı önler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1455, .topicId = 58,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = new int(2);\nint* q = p;\ndelete p;\nBu satırdan sonra q da _____ bir pointer haline gelir (İngilizce kelime, aynı bellek serbest bırakıldığı için).",
+        .acceptedAnswers = {"dangling"},
+        .explanation = "q, p ile aynı belleği gösterdiğinden o da dangling hale gelir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1456, .topicId = 58,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = new int(6);\nstd::cout << *p;\n_____\np'nin gösterdiği belleği serbest bırakan satırı yazın.",
+        .acceptedAnswers = {"delete p;"},
+        .explanation = "delete p, ayrılan belleği serbest bırakır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1457, .topicId = 58,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = new int(6);\ndelete p;\n_____\np'yi, silindikten sonra yanlışlıkla tekrar kullanılmasını önlemek için boşa ayarlayan satırı yazın.",
+        .acceptedAnswers = {"p = nullptr;"},
+        .explanation = "p, silindikten sonra nullptr yapılarak güvenli hale getirilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1458, .topicId = 58,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = new int(15);\nstd::cout << *p;\ndelete p;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"15"},
+        .explanation = "new int(15), belleği 15 ile ilklendirir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1459, .topicId = 58,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int* p = new int(3);\np = new int(9);\nstd::cout << *p;\ndelete p;\nYukarıdaki kodun ekran çıktısı nedir? (İlk ayrılan bellek delete edilmeden yeniden atandığı için bir sızıntı oluşur, ama *p'nin değeri buna bağlı değildir.)",
+        .acceptedAnswers = {"9"},
+        .explanation = "p, ikinci new ile 9 değerli belleği gösterir; ilk bellek sızar ama *p 9'dur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1460, .topicId = 58,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nint* p = new int(5);\ndelete p;\ndelete p;\n\nBu kod, aynı pointer'ı iki kez delete ettiği (double delete) için tanımsız davranışa yol açar. İkinci gereksiz delete satırını kaldırarak, kalması gereken tek delete satırını yazın.",
+        .acceptedAnswers = {"delete p;"},
+        .explanation = "Her new'e karşılık sadece bir delete olmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1461, .topicId = 58,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint* dizi = new int[5];\n// ... dizi kullanılır ...\ndelete dizi;\n\nBu kod, new[] ile ayrılan bir diziyi köşeli parantezsiz delete ile sildiği için tanımsız davranışa yol açar. Hatalı satırı, doğru şekilde (delete[] ile) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"delete[] dizi;"},
+        .explanation = "new[] ile ayrılan bir dizi mutlaka delete[] ile silinmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1462, .topicId = 58,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint* p = new int(7)\ndelete p;\n\nProgramcı new int(7) satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş ilk satırı yazın.",
+        .acceptedAnswers = {"int* p = new int(7);"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1463, .topicId = 58,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, new ile ayrılan belleği delete eden geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"int* p = new int(5);", "std::cout << *p;\n    delete p;\n    return 0;\n}", "int main() {"},
+        .acceptedAnswers = {"3 1 2"},
+        .explanation = "main açılışı (3), new ile ayırma (1), yazdırma+delete+kapanış (2): sıra 3 1 2.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1464, .topicId = 58,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "new ile bir int için bellek ayırıp değerini yazdırın, ardından delete ile belleği serbest bırakıp p'yi nullptr yapın.",
+        .acceptedAnswers = {"new", "delete", "nullptr"},
+        .explanation = "Bellek ayrılmalı, kullanılmalı, delete edilmeli ve p nullptr yapılmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 59: Dinamik dizi
+    questions.push_back(Question{
+        .id = 1465, .topicId = 59,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Çalışma zamanında boyutu belirlenen bir dizi ayırmak için hangi operatör kullanılır?",
+        .options = {"new[]", "new", "delete[]", "array[]"},
+        .acceptedAnswers = {"a"},
+        .explanation = "new[], dinamik bir dizi ayırır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1466, .topicId = 59,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int* dizi = new int[5];\nBu dizi kaç elemanlıdır?",
+        .options = {"5", "1", "0", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "new int[5], 5 elemanlık bir dizi ayırır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1467, .topicId = 59,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "new[] ile ayrılan bir dizi nasıl serbest bırakılır?",
+        .options = {"delete[] ile", "delete ile (köşeli parantezsiz)", "free() ile", "Otomatik olarak serbest bırakılır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "new[] ile ayrılan bir dizi mutlaka delete[] ile serbest bırakılmalıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1468, .topicId = 59,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int* dizi = new int[3];\ndelete dizi;\nBu kod ne olur (köşeli parantezsiz delete)?",
+        .options = {"Tanımsız davranış", "Güvenle çalışır", "Derleme hatası", "Sadece ilk elemanı siler"},
+        .acceptedAnswers = {"a"},
+        .explanation = "new[] ile ayrılan bir diziyi delete (köşeli parantezsiz) ile silmek tanımsız davranıştır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1469, .topicId = 59,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int* dizi = new int[3];\ndizi[0] = 10;\ndizi[1] = 20;\ndizi[2] = 30;\nstd::cout << dizi[1];\ndelete[] dizi;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"20", "10", "30", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "dizi[1] = 20.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1470, .topicId = 59,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Dinamik olarak ayrılan bir dizinin boyutu, program çalışırken (compile-time değil runtime'da) belirlenebilir mi?",
+        .options = {"Evet, new[] ile boyut bir değişkenden okunabilir", "Hayır, boyut her zaman derleme zamanında sabit olmalıdır", "Sadece std::vector ile mümkündür", "Hayır, C++ dinamik diziyi desteklemez"},
+        .acceptedAnswers = {"a"},
+        .explanation = "new[]'in en büyük avantajı, boyutun çalışma zamanında belirlenebilmesidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1471, .topicId = 59,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int n = 4;\nint* dizi = new int[n];\nfor (int i = 0; i < n; ++i) {\n    dizi[i] = i * i;\n}\nint toplam = 0;\nfor (int i = 0; i < n; ++i) {\n    toplam += dizi[i];\n}\nstd::cout << toplam;\ndelete[] dizi;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"14", "16", "10", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Kareler: 0, 1, 4, 9; toplam = 14.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1472, .topicId = 59,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int* dizi = new int[3];\ndizi[0] = 1;\ndizi[1] = 2;\ndizi[2] = 3;\nint* p = dizi;\n*p = 100;\nstd::cout << dizi[0];\ndelete[] dizi;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"100", "1", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "p, dizi'nin ilk elemanını (decay ile) gösterir; *p = 100, dizi[0]'ı da 100 yapar.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1473, .topicId = 59,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "new[] operatörü, çalışma zamanında boyutu belirlenen bir dizi ayırır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1474, .topicId = 59,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "new[] ile ayrılan bir dizi, sıradan delete (köşeli parantezsiz) ile güvenle silinebilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: mutlaka delete[] kullanılmalıdır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1475, .topicId = 59,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "new[] ile ayrılan bir dizinin boyutu, çalışma zamanında bir değişkenden okunabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1476, .topicId = 59,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Dinamik dizinin elemanlarına, sıradan dizilerde olduğu gibi [] operatörüyle erişilebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1477, .topicId = 59,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "new[] ile ayrılan bir dizi delete[] edilmezse bellek sızıntısı oluşur.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1478, .topicId = 59,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector, çoğu durumda new[]/delete[] kullanımına göre daha güvenli bir alternatiftir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: std::vector, manuel bellek yönetimi hatalarını önler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1479, .topicId = 59,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Dinamik bir dizi ayırmak için new _____ (köşeli parantez ekleyerek) yazılır (bir sembol çifti).",
+        .acceptedAnswers = {"[]"},
+        .explanation = "new tür[boyut] şeklinde köşeli parantez kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1480, .topicId = 59,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int* dizi = new int[3];\ndizi[0] = 5;\nstd::cout << dizi[0];\ndelete[] dizi;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"5"},
+        .explanation = "dizi[0] = 5 atandığından çıktı 5'tir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1481, .topicId = 59,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "new[] ile ayrılan bir dizi, _____ ile (köşeli parantezli haliyle) serbest bırakılmalıdır (İngilizce kelime + sembol).",
+        .acceptedAnswers = {"delete[]"},
+        .explanation = "delete[], new[] ile eşleşen serbest bırakma operatörüdür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1482, .topicId = 59,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int n = 3;\nint* dizi = new int[n];\nfor (int i = 0; i < n; ++i) { dizi[i] = i + 1; }\nstd::cout << dizi[2];\ndelete[] dizi;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"3"},
+        .explanation = "dizi[2] = 2+1 = 3.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1483, .topicId = 59,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "new[] ile ayrılan bir diziyi köşeli parantezsiz delete ile silmek _____ davranıştır (İngilizce iki kelime).",
+        .acceptedAnswers = {"undefined behavior"},
+        .explanation = "new[]/delete uyuşmazlığı undefined behavior'dır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1484, .topicId = 59,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Modern C++'ta, manuel new[]/delete[] yerine sıklıkla _____ tercih edilir (bir kelime, İngilizce, std:: olmadan).",
+        .acceptedAnswers = {"vector"},
+        .explanation = "std::vector, manuel bellek yönetimine daha güvenli bir alternatiftir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1485, .topicId = 59,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int n = 4;\n_____\nfor (int i = 0; i < n; ++i) { dizi[i] = 0; }\nn elemanlık dinamik bir int dizisi ayırıp dizi'ye atayan satırı yazın.",
+        .acceptedAnswers = {"int* dizi = new int[n];"},
+        .explanation = "new int[n], n elemanlık bir dizi ayırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1486, .topicId = 59,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int* dizi = new int[5];\n_____\nDinamik diziyi serbest bırakan satırı yazın.",
+        .acceptedAnswers = {"delete[] dizi;"},
+        .explanation = "delete[], dinamik diziyi serbest bırakır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1487, .topicId = 59,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int* dizi = new int[3];\ndizi[0] = 7;\ndizi[1] = 8;\ndizi[2] = 9;\nstd::cout << dizi[0] << dizi[1] << dizi[2];\ndelete[] dizi;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"789"},
+        .explanation = "Sırasıyla 7, 8, 9 yazdırılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1488, .topicId = 59,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int n = 3;\nint* dizi = new int[n];\nfor (int i = 0; i < n; ++i) { dizi[i] = (i + 1) * 10; }\nint toplam = 0;\nfor (int i = 0; i < n; ++i) { toplam += dizi[i]; }\nstd::cout << toplam;\ndelete[] dizi;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"60"},
+        .explanation = "10 + 20 + 30 = 60.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1489, .topicId = 59,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint* dizi = new int[5];\n// ... dizi kullanılır ...\ndelete dizi;\n\nBu kod, new[] ile ayrılan bir diziyi köşeli parantezsiz delete ile sildiği için tanımsız davranışa yol açar. Hatalı satırı, doğru şekilde (delete[] ile) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"delete[] dizi;"},
+        .explanation = "new[] ile ayrılan bir dizi delete[] ile silinmelidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1490, .topicId = 59,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint n = 5;\nint* dizi = new int[n];\nfor (int i = 0; i <= n; ++i) {\n    dizi[i] = i;\n}\ndelete[] dizi;\n\nBu kod, döngü koşulunun (i <= n) dizinin sınırını (n eleman, indeks 0'dan n-1'e) bir eleman aşmasına izin verdiği için, son turda dizinin dışına yazma yapar (tanımsız davranış). Hatalı döngü koşulunu düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"for (int i = 0; i < n; ++i) {"},
+        .explanation = "Döngü, dizinin sınırını aşmayacak şekilde (i < n) çalışmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1491, .topicId = 59,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint* dizi = new int[4];\nfor (int i = 0; i < 4; ++i) {\n    dizi[i] = i;\n}\ndelete dizi;\n\nProgramcı new[] ile ayrılan diziyi köşeli parantezsiz delete ile silmiş; bu tanımsız davranıştır. Düzeltilmiş delete satırını yazın.",
+        .acceptedAnswers = {"delete[] dizi;"},
+        .explanation = "new[] için mutlaka delete[] kullanılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1492, .topicId = 59,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, dinamik bir dizi oluşturup kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"int* dizi = new int[3];\n    dizi[0] = 1;", "std::cout << dizi[0];\n    delete[] dizi;\n    return 0;\n}", "int main() {"},
+        .acceptedAnswers = {"3 1 2"},
+        .explanation = "main açılışı (3), dizi ayırma (1), yazdırma+delete[]+kapanış (2): sıra 3 1 2.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1493, .topicId = 59,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Çalışma zamanında boyutu bir değişkenden okunan dinamik bir int dizisi oluşturun, elemanlarını doldurup ekrana yazdırın, ardından delete[] ile serbest bırakın.",
+        .acceptedAnswers = {"new", "[]", "delete[]", "cout"},
+        .explanation = "Dizi new[] ile ayrılmalı, doldurulup yazdırılmalı ve delete[] ile serbest bırakılmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 60: Referans değişkeni
+    questions.push_back(Question{
+        .id = 1494, .topicId = 60,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir referans değişkeni nasıl tanımlanır?",
+        .options = {"tür& isim = degisken;", "tür* isim = degisken;", "ref isim = degisken;", "tür isim = &degisken;"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Referans tanımı tür& isim = degisken; şeklinde yapılır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1495, .topicId = 60,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int x = 5;\nint& r = x;\nr = 10;\nstd::cout << x;\nEkrana ne yazdırılır?",
+        .options = {"10", "5", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "r, x'in kendisidir; r'yi değiştirmek doğrudan x'i değiştirir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1496, .topicId = 60,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int& r; (ilklendirmeden) tanımlamak ne olur?",
+        .options = {"Derleme hatası", "r, nullptr olur", "r, rastgele bir değeri gösterir", "Geçerlidir, r daha sonra ilklendirilebilir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Referanslar tanımlandığı anda ilklendirilmelidir; aksi halde derleme hatası oluşur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1497, .topicId = 60,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int x = 5, y = 10;\nint& r = x;\nr = y;\nstd::cout << x << \" \" << y;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"10 10\"", "\"5 10\"", "\"10 5\"", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "r = y, r'yi y'ye yeniden bağlamaz; sadece y'nin değerini x'e (r üzerinden) kopyalar. x=10, y değişmez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1498, .topicId = 60,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Bir referans, pointer'ların aksine hangi özelliğe sahip DEĞİLDİR?",
+        .options = {"Yeniden bağlanabilme (rebind edilebilme)", "Bir değişkene erişim sağlama", "Değer okuma", "Değer yazma"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Bir referans, tanımlandıktan sonra başka bir değişkeni gösterecek şekilde yeniden bağlanamaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1499, .topicId = 60,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Bir pointer null olabilirken, bir referans null olabilir mi?",
+        .options = {"Hayır, bir referans asla null olamaz", "Evet, nullptr ile ilklendirilebilir", "Evet ama sadece const referanslar null olabilir", "Sadece pointer referanslar null olabilir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Bir referans, her zaman geçerli bir değişkene bağlı olmalıdır; asla null olamaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1500, .topicId = 60,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int a = 1;\nint& r = a;\nint b = 2;\nr = b;\nstd::cout << (&r == &a) << (&r == &b);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"10\"", "\"01\"", "\"11\"", "\"00\""},
+        .acceptedAnswers = {"a"},
+        .explanation = "r, hep a'ya bağlı kalır (rebind olmaz); &r her zaman &a'ya eşittir, &b'ye asla eşit olmaz.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1501, .topicId = 60,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int x = 5;\nint& r1 = x;\nint& r2 = r1;\nr2 = 20;\nstd::cout << x << \" \" << r1;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"20 20\"", "\"5 5\"", "\"20 5\"", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "r2, r1'e (dolayısıyla x'e) bağlıdır; r2 = 20, x'i de r1'i de 20 yapar.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1502, .topicId = 60,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir referans, var olan bir değişkene ikinci bir isim (takma ad) tanımlamanın yoludur.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1503, .topicId = 60,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir referans, tanımlandıktan sonra başka bir değişkeni gösterecek şekilde yeniden bağlanabilir (rebind edilebilir).",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: bir referans, bağlandığı değişkenden asla ayrılamaz.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1504, .topicId = 60,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "int& r; (ilklendirmeden) tanımlamak derleme hatasıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1505, .topicId = 60,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Bir referans, bir pointer gibi null olabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: bir referans asla null olamaz.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1506, .topicId = 60,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "int& r = x; tanımından sonra r = y; yazmak, r'yi y'ye yeniden bağlar (rebind eder).",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: r = y, sadece y'nin değerini x'e (r üzerinden) kopyalar; rebind olmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1507, .topicId = 60,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir referans, bağlı olduğu değişkenle aynı bellek adresini paylaşır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1508, .topicId = 60,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir referans, var olan bir değişkene ikinci bir _____ tanımlamanın yoludur (Türkçe kelime).",
+        .acceptedAnswers = {"ad", "isim"},
+        .explanation = "Referans, değişkene ikinci bir ad (takma ad) tanımlar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1509, .topicId = 60,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int x = 5;\nint& r = x;\nr = 20;\nstd::cout << x;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"20"},
+        .explanation = "r üzerinden yapılan değişiklik doğrudan x'i etkiler.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1510, .topicId = 60,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int& r; (ilklendirmeden) tanımlamak _____ hatasıdır (Türkçe kelime).",
+        .acceptedAnswers = {"derleme"},
+        .explanation = "Bu bir derleme hatasıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1511, .topicId = 60,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int x = 5, y = 10;\nint& r = x;\nr = y;\nstd::cout << x;\nEkran çıktısı _____ olur (r, y'ye yeniden bağlanmadığı, sadece y'nin değerini x'e kopyaladığı için).",
+        .acceptedAnswers = {"10"},
+        .explanation = "r = y, y'nin değerini x'e kopyalar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1512, .topicId = 60,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Bir referans, bir pointer'ın aksine asla _____ olamaz (İngilizce kelime).",
+        .acceptedAnswers = {"null"},
+        .explanation = "Bir referans her zaman geçerli bir değişkene bağlıdır, asla null olamaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1513, .topicId = 60,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Bir referans, tanımlandığı andan itibaren başka bir değişkeni göstermeye asla _____ (bir kelime, Türkçe fiil, 'geçemez' anlamında).",
+        .acceptedAnswers = {"geçemez", "gecemez"},
+        .explanation = "Referanslar rebind edilemez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1514, .topicId = 60,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int sayi = 25;\n_____\nr = 100;\nstd::cout << sayi;\nsayi'ye bağlı bir referans tanımlayan satırı yazın.",
+        .acceptedAnswers = {"int& r = sayi;"},
+        .explanation = "r, sayi'ye bağlı bir referans olarak tanımlanır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1515, .topicId = 60,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int a = 1;\nint& r = a;\n_____\nstd::cout << a;\nr üzerinden a'nın değerini 50 yapan satırı yazın.",
+        .acceptedAnswers = {"r = 50;"},
+        .explanation = "r üzerinden yapılan atama a'yı da değiştirir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1516, .topicId = 60,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int x = 3;\nint& r = x;\nr += 7;\nstd::cout << x;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"10"},
+        .explanation = "3 + 7 = 10.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1517, .topicId = 60,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int a = 1, b = 2;\nint& r = a;\nr = b;\na = 99;\nstd::cout << a << \" \" << b << \" \" << r;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"99 2 99"},
+        .explanation = "r hep a'ya bağlıdır; a = 99 sonrasında r de 99'u gösterir. b hiç değişmez.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1518, .topicId = 60,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint& r;\nint x = 5;\nr = x;\n\nBu kod derlenmez çünkü referanslar tanımlandığı anda ilklendirilmelidir; r, x tanımlanmadan önce (ilklendirmeden) bildirilmiş. Hatalı ilk satırı, r'yi x ile birlikte ilklendirecek şekilde düzeltilmiş haliyle yazın (x'in zaten tanımlı olduğunu varsayarak).",
+        .acceptedAnswers = {"int& r = x;"},
+        .explanation = "Referans, tanımlandığı anda bir değişkenle ilklendirilmelidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1519, .topicId = 60,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint& r = 5;\nstd::cout << r;\n\nBu kod derlenmez çünkü normal (const olmayan) bir referans, bir literale (geçici bir değere) bağlanamaz. Hatalı satırı, const ekleyerek düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"const int& r = 5;"},
+        .explanation = "Sadece const referanslar geçici değerlere (literallere) bağlanabilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1520, .topicId = 60,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint x = 10;\nint& r;\nr = x;\nstd::cout << r;\n\nProgramcı r'yi ilklendirmeden bildirmiş; referanslar tanımlandığı anda ilklendirilmelidir. Düzeltilmiş bildirim satırını yazın.",
+        .acceptedAnswers = {"int& r = x;"},
+        .explanation = "r, tanımlandığı anda x ile ilklendirilmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1521, .topicId = 60,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir referans değişkeni tanımlayıp kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"int& r = x;\n    r = 99;\n    std::cout << x;\n    return 0;\n}", "int x = 1;", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), x tanımı (2), referans+atama+yazdırma+kapanış (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1522, .topicId = 60,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir int değişken tanımlayın, ona bağlı bir referans oluşturun, referans üzerinden değerini değiştirip orijinal değişkenin de değiştiğini ekrana yazdırarak gösterin.",
+        .acceptedAnswers = {"int&", "cout"},
+        .explanation = "Referans üzerinden yapılan değişiklik orijinal değişkeni de etkilemelidir.",
+        .baseXp = 40,
+    });
 }
