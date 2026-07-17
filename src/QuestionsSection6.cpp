@@ -974,4 +974,733 @@ void appendSection6Questions(std::vector<Question>& questions) {
         .explanation = "Pointer, dereference edilerek değişkenin değeri değiştirilmelidir.",
         .baseXp = 40,
     });
+
+    // Topic 55: nullptr
+    questions.push_back(Question{
+        .id = 1349, .topicId = 55,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "nullptr neyi ifade eder?",
+        .options = {"Hiçbir şeyi göstermeyen, tip-güvenli bir pointer değeri", "Sıfır değerli bir int", "Boş bir string", "Bir referans türü"},
+        .acceptedAnswers = {"a"},
+        .explanation = "nullptr, hiçbir şeyi göstermeyen tip-güvenli bir null pointer sabitidir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1350, .topicId = 55,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int* p = nullptr;\nif (p == nullptr) {\n    std::cout << \"bos\";\n}\nEkrana ne yazdırılır?",
+        .options = {"\"bos\"", "\"\"", "Derleme hatası", "Rastgele değer"},
+        .acceptedAnswers = {"a"},
+        .explanation = "p, nullptr ile ilklendirildiğinden koşul true olur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1351, .topicId = 55,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "nullptr, C++'ın hangi versiyonuyla birlikte geldi?",
+        .options = {"C++11", "C++98", "C++20", "C++03"},
+        .acceptedAnswers = {"a"},
+        .explanation = "nullptr, C++11 standardıyla birlikte geldi.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1352, .topicId = 55,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = nullptr;\nstd::cout << *p;\nBu satır çalıştırılırsa ne olur?",
+        .options = {"Tanımsız davranış (genellikle çöker)", "0 yazdırır", "Boş string yazdırır", "nullptr yazdırır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "nullptr'ı dereference etmek tanımsız davranıştır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1353, .topicId = 55,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "nullptr yerine eski kodlarda hangi ifadeler kullanılırdı?",
+        .options = {"NULL veya 0", "void veya empty", "undefined veya none", "blank veya zero"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Eski C++ kodlarında NULL veya düz 0 kullanılırdı.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1354, .topicId = 55,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = nullptr;\nif (p) {\n    std::cout << \"dolu\";\n} else {\n    std::cout << \"bos\";\n}\nEkrana ne yazdırılır?",
+        .options = {"\"bos\"", "\"dolu\"", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "nullptr, boolean bağlamda false olarak değerlendirilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1355, .topicId = 55,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int* p = nullptr;\nint x = 5;\np = &x;\nif (p != nullptr) {\n    std::cout << *p;\n}\nEkrana ne yazdırılır?",
+        .options = {"5", "Hiçbir şey", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "p, x'in adresine yeniden atandığından artık nullptr değildir; *p, x'in değerini (5) verir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1356, .topicId = 55,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int* p = nullptr;\nint* q = nullptr;\nstd::cout << (p == q);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"1", "0", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "İki nullptr değeri her zaman birbirine eşittir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1357, .topicId = 55,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "nullptr, hiçbir şeyi göstermeyen bir pointer'ı ifade eder.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: nullptr, boş bir pointer değeridir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1358, .topicId = 55,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "nullptr'ı dereference etmek (*p ile, p nullptr iken) güvenlidir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: nullptr'ı dereference etmek tanımsız davranıştır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1359, .topicId = 55,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "nullptr, C++11 ile gelen tip-güvenli bir null pointer sabitidir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1360, .topicId = 55,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Bir pointer, nullptr ile karşılaştırılarak (p == nullptr) güvenle kontrol edilebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: bu, bir pointer'ın boş olup olmadığını kontrol etmenin standart yoludur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1361, .topicId = 55,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "if (p) koşulu, p nullptr olduğunda true (doğru) olarak değerlendirilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: nullptr, boolean bağlamda false olarak değerlendirilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1362, .topicId = 55,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "nullptr, eski C++ kodlarında kullanılan NULL veya 0'dan daha tip-güvenlidir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: nullptr, tip-güvenli bir sabittir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1363, .topicId = 55,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Hiçbir şeyi göstermeyen bir pointer, C++11'den itibaren _____ ile ilklendirilir (bir kelime, İngilizce).",
+        .acceptedAnswers = {"nullptr"},
+        .explanation = "nullptr, boş bir pointer için kullanılan modern sabittir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1364, .topicId = 55,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int* p = nullptr;\nif (p == nullptr) {\n    std::cout << \"bos\";\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"bos"},
+        .explanation = "p nullptr olduğundan koşul true olur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1365, .topicId = 55,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int* p = nullptr;\nstd::cout << (p == nullptr);\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"1"},
+        .explanation = "p nullptr olduğundan karşılaştırma true (1) verir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1366, .topicId = 55,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = nullptr;\nif (p) {\n    std::cout << \"dolu\";\n} else {\n    std::cout << \"bos\";\n}\nEkran çıktısı _____ olur (nullptr, boolean bağlamda false değerlendirildiği için).",
+        .acceptedAnswers = {"bos"},
+        .explanation = "nullptr, if koşulunda false olarak değerlendirilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1367, .topicId = 55,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = nullptr;\nint x = 9;\np = &x;\nstd::cout << (p == nullptr);\nEkran çıktısı _____ olur (p artık x'i gösterdiği için).",
+        .acceptedAnswers = {"0"},
+        .explanation = "p artık nullptr olmadığından karşılaştırma false (0) verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1368, .topicId = 55,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "nullptr'ı dereference etmeye çalışmak _____ davranıştır (İngilizce iki kelime).",
+        .acceptedAnswers = {"undefined behavior"},
+        .explanation = "nullptr'ı dereference etmek undefined behavior'dır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1369, .topicId = 55,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = nullptr;\n_____\nstd::cout << \"p artik gecerli.\";\np'yi geçerli bir x değişkenine (zaten tanımlı olduğunu varsayarak) bağlayan satırı yazın.",
+        .acceptedAnswers = {"p = &x;"},
+        .explanation = "p, x'in adresine yeniden atanır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1370, .topicId = 55,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = nullptr;\n_____ {\n    std::cout << \"p bos.\";\n}\np'nin nullptr olup olmadığını kontrol eden if satırının başlığını yazın.",
+        .acceptedAnswers = {"if (p == nullptr)"},
+        .explanation = "if (p == nullptr) koşulu, p'nin boş olup olmadığını kontrol eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1371, .topicId = 55,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = nullptr;\nstd::cout << (p == nullptr);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"1"},
+        .explanation = "p nullptr olduğundan karşılaştırma true (1) verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1372, .topicId = 55,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int x = 4;\nint* p = nullptr;\np = &x;\nstd::cout << (p == nullptr) << *p;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"04"},
+        .explanation = "p artık nullptr olmadığından ilk karşılaştırma 0, *p ise x'in değeri (4): '04'.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1373, .topicId = 55,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint* p = nullptr;\nstd::cout << *p;\n\nBu kod, nullptr olan bir pointer'ı dereference ettiği için tanımsız davranışa (genellikle çökmeye) yol açar. Hatayı önlemek için p'yi dereference etmeden önce kontrol eden if satırının başlığını yazın.",
+        .acceptedAnswers = {"if (p != nullptr) {"},
+        .explanation = "Dereference etmeden önce pointer'ın nullptr olmadığı kontrol edilmelidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1374, .topicId = 55,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint* p;\nif (p == nullptr) {\n    std::cout << \"bos\";\n}\n\nBu kod derlenir ama p, nullptr ile değil ilklendirilmeden bırakılmıştır; bu yüzden p == nullptr karşılaştırması güvenilir bir sonuç vermez (p belirsiz bir değer taşıdığından tesadüfen nullptr'a eşit olmayabilir). p'yi tanımlandığı anda nullptr ile ilklendiren düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"int* p = nullptr;"},
+        .explanation = "Pointer'lar tanımlandığı anda nullptr ile ilklendirilmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1375, .topicId = 55,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint* p = nullptr;\nint deger = *p;\nstd::cout << deger;\n\nProgramcı p'yi hiç geçerli bir adrese bağlamadan dereference etmiş; bu tanımsız davranıştır. p'yi önce geçerli bir x değişkenine (zaten tanımlı olduğunu varsayarak) bağlayan düzeltilmiş ilk satırı yazın.",
+        .acceptedAnswers = {"int* p = &x;"},
+        .explanation = "p, dereference edilmeden önce geçerli bir adrese bağlanmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1376, .topicId = 55,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, nullptr kontrolü yapan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"if (p == nullptr) {\n        std::cout << \"bos\";\n    }\n    return 0;\n}", "int* p = nullptr;", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), p tanımı (2), if kontrolü ve kapanış (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1377, .topicId = 55,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir pointer'ı nullptr ile ilklendirin, ardından nullptr olup olmadığını if ile kontrol edip uygun bir mesaj yazdırın.",
+        .acceptedAnswers = {"nullptr", "if", "cout"},
+        .explanation = "Pointer nullptr ile ilklendirilmeli ve if ile kontrol edilmelidir.",
+        .baseXp = 40,
+    });
+
+    // Topic 56: Pointer ile dizi dolaşma
+    questions.push_back(Question{
+        .id = 1378, .topicId = 56,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir dizi adı, kullanıldığı çoğu bağlamda neye dönüşür (decay olur)?",
+        .options = {"İlk elemanının adresine", "Son elemanının adresine", "Elemanların toplamına", "Dizinin boyutuna"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Bir dizi adı, ilk elemanının adresine dönüşür.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1379, .topicId = 56,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int dizi[3] = {10, 20, 30};\nint* p = dizi;\nstd::cout << *p;\nEkrana ne yazdırılır?",
+        .options = {"10", "20", "30", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "p, dizinin ilk elemanını (10) gösterir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1380, .topicId = 56,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int dizi[3] = {10, 20, 30};\nint* p = dizi;\n++p;\nstd::cout << *p;\nEkrana ne yazdırılır?",
+        .options = {"20", "10", "30", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "++p, p'yi bir sonraki elemana (20) ilerletir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1381, .topicId = 56,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int dizi[5];\nint* p = dizi;\np + 1 ifadesi, p'yi kaç byte ileri taşır (int 4 byte varsayılırsa)?",
+        .options = {"4 byte", "1 byte", "5 byte", "8 byte"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Pointer aritmetiği, gösterilen türün boyutu (sizeof) kadar ilerler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1382, .topicId = 56,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int dizi[3] = {1, 2, 3};\nint* p = dizi;\np += 2;\nstd::cout << *p;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"3", "2", "1", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "p += 2, p'yi dizi[2]'ye (3) taşır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1383, .topicId = 56,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int dizi[3] = {5, 10, 15};\nstd::cout << *(dizi + 1);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"10", "5", "15", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "dizi + 1, dizi[1]'i (10) gösterir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1384, .topicId = 56,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int dizi[4] = {1, 2, 3, 4};\nint* p = dizi;\nint toplam = 0;\nfor (int i = 0; i < 4; ++i) {\n    toplam += *p;\n    ++p;\n}\nstd::cout << toplam;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"10", "4", "24", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "1 + 2 + 3 + 4 = 10.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1385, .topicId = 56,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int dizi[3] = {7, 8, 9};\nint* p = dizi + 3;\nstd::cout << *p;\nBu kod ne yapar?",
+        .options = {"Tanımsız davranış (dizinin sonunu geçen bir elemanı dereference eder)", "0 yazdırır", "9 yazdırır", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "dizi + 3, dizinin son elemanından (indeks 2) bir sonraki, geçersiz bir konumu dereference eder.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1386, .topicId = 56,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir dizi adı, kullanıldığı çoğu bağlamda ilk elemanının adresine dönüşür.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: dizi adı, decay olarak ilk elemanının adresine dönüşür.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1387, .topicId = 56,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir int pointer'ı bir artırmak (++p), p'yi her zaman 1 byte ileri taşır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: p, gösterdiği türün boyutu (genellikle 4 byte) kadar ilerler.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1388, .topicId = 56,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "ptr++ ifadesi, pointer'ı gösterdiği türün boyutu (sizeof) kadar ileri taşır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1389, .topicId = 56,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Bir pointer, bir dizi üzerinde döngüyle (for/while) elemanları tek tek dolaşmak için kullanılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1390, .topicId = 56,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir dizinin son elemanından sonraki adresi (dizi + n) hesaplamak (dereference etmeden) geçerlidir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: bu adresi hesaplamak geçerlidir, sadece dereference etmek tanımsız davranıştır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1391, .topicId = 56,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Dizinin son elemanından sonraki adresi (dizi + n) dereference etmek (* ile okumak) tanımsız davranıştır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1392, .topicId = 56,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir dizi adı, kullanıldığı çoğu bağlamda ilk elemanının _____ dönüşür (Türkçe kelime).",
+        .acceptedAnswers = {"adresine"},
+        .explanation = "Dizi adı, ilk elemanının adresine dönüşür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1393, .topicId = 56,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int dizi[3] = {1, 2, 3};\nint* p = dizi;\nstd::cout << *p;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"1"},
+        .explanation = "p, dizinin ilk elemanını gösterir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1394, .topicId = 56,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int dizi[3] = {1, 2, 3};\nint* p = dizi;\n++p;\nstd::cout << *p;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "++p, p'yi bir sonraki elemana ilerletir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1395, .topicId = 56,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int dizi[3] = {1, 2, 3};\nstd::cout << *(dizi + 2);\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"3"},
+        .explanation = "dizi + 2, dizi[2]'yi (3) gösterir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1396, .topicId = 56,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "ptr + 1, ptr'yi 1 byte değil, gösterdiği türün _____ (sizeof) kadar ileri taşır (Türkçe kelime, İngilizce köküyle de kabul edilir).",
+        .acceptedAnswers = {"boyutu", "sizeof"},
+        .explanation = "Pointer aritmetiği, elemanın boyutu (sizeof) kadar ilerler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1397, .topicId = 56,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int dizi[4] = {2, 4, 6, 8};\nint* p = dizi + 3;\nstd::cout << *p;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"8"},
+        .explanation = "dizi + 3, dizi[3]'ü (8) gösterir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1398, .topicId = 56,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int dizi[3] = {10, 20, 30};\n_____\nstd::cout << *p;\ndizi'nin ilk elemanını gösteren p adlı bir pointer tanımlayan satırı yazın.",
+        .acceptedAnswers = {"int* p = dizi;"},
+        .explanation = "p, dizi adının decay olduğu ilk eleman adresiyle ilklendirilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1399, .topicId = 56,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int dizi[3] = {1, 2, 3};\nint* p = dizi;\n_____\nstd::cout << *p;\np'yi bir sonraki elemana ilerleten satırı yazın.",
+        .acceptedAnswers = {"++p;"},
+        .explanation = "++p, p'yi bir sonraki elemana taşır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1400, .topicId = 56,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int dizi[3] = {4, 5, 6};\nint* p = dizi;\nstd::cout << *p << *(p + 1) << *(p + 2);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"456"},
+        .explanation = "Sırasıyla dizi[0], dizi[1], dizi[2]: 4, 5, 6.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1401, .topicId = 56,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int dizi[4] = {1, 2, 3, 4};\nint* p = dizi;\nfor (int i = 0; i < 4; ++i) {\n    *p = *p * 2;\n    ++p;\n}\nfor (int i = 0; i < 4; ++i) {\n    std::cout << dizi[i];\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"2468"},
+        .explanation = "Her eleman pointer üzerinden 2 ile çarpılır: 2, 4, 6, 8.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1402, .topicId = 56,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint dizi[3] = {1, 2, 3};\nint* p = dizi;\nfor (int i = 0; i <= 3; ++i) {\n    std::cout << *p;\n    ++p;\n}\n\nBu kod, döngü koşulunun (i <= 3) dizinin sınırını (3 eleman, indeks 0-2) bir eleman aşmasına izin verdiği için, son turda dizinin dışına taşan bir bellek konumunu dereference eder (tanımsız davranış). Hatalı döngü koşulunu düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"for (int i = 0; i < 3; ++i) {"},
+        .explanation = "Döngü, dizinin sınırını aşmayacak şekilde (i < 3) çalışmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1403, .topicId = 56,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint dizi[3] = {1, 2, 3};\nint* p = dizi + 3;\nstd::cout << *p;\n\nBu kod, dizinin son elemanından (indeks 2) bir sonraki konumu (dizi + 3, dizinin dışı) dereference ettiği için tanımsız davranışa yol açar. p'yi dizinin son geçerli elemanını (indeks 2) gösterecek şekilde düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"int* p = dizi + 2;"},
+        .explanation = "p, dizinin son geçerli elemanını (indeks 2) göstermelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1404, .topicId = 56,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint dizi[3] = {5, 10, 15};\nint* p = dizi;\nfor (int i = 0; i < 4; ++i) {\n    std::cout << *p << \" \";\n    ++p;\n}\n\nDöngü, dizinin 3 elemanı olmasına rağmen 4 kez çalışıyor; bu, dizinin dışına taşar. Döngü koşulunu düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"for (int i = 0; i < 3; ++i) {"},
+        .explanation = "Döngü, dizinin gerçek eleman sayısı (3) kadar çalışmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1405, .topicId = 56,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, pointer ile dizi dolaşan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"int* p = dizi;\n    std::cout << *p << *(p + 1);\n    return 0;\n}", "int dizi[2] = {3, 6};", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), dizi tanımı (2), pointer ve yazdırma (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1406, .topicId = 56,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir int dizisi tanımlayın, bir pointer ile ilk elemanına erişip, döngüyle tüm elemanları pointer aritmetiği kullanarak (indeks yerine ++p ile) ekrana yazdırın.",
+        .acceptedAnswers = {"int*", "++", "cout"},
+        .explanation = "Pointer, döngü içinde ++p ile ilerletilerek tüm elemanlar yazdırılmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 57: new
+    questions.push_back(Question{
+        .id = 1407, .topicId = 57,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "new operatörü ne yapar?",
+        .options = {"Bellekte dinamik olarak (heap üzerinde) yer ayırır", "Bir değişkeni siler", "Bir referans oluşturur", "Bir dosya açar"},
+        .acceptedAnswers = {"a"},
+        .explanation = "new, çalışma zamanında heap üzerinde dinamik olarak yer ayırır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1408, .topicId = 57,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int* p = new int(5);\nstd::cout << *p;\ndelete p;\nEkrana ne yazdırılır?",
+        .options = {"5", "0", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "new int(5), ayrılan belleği 5 ile ilklendirir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1409, .topicId = 57,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "new int(5) ifadesi ne döndürür?",
+        .options = {"Ayrılan belleğin adresini tutan bir int*", "Doğrudan 5 değerini", "Bir referans", "Bir string"},
+        .acceptedAnswers = {"a"},
+        .explanation = "new, ayrılan yerin adresini bir pointer olarak döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1410, .topicId = 57,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "new ile ayrılan bellek ne zamana kadar ayrılmış kalır?",
+        .options = {"delete ile serbest bırakılana ya da program sonlanana kadar", "Fonksiyon bitene kadar (otomatik olarak)", "Bir sonraki new çağrısına kadar", "1 saniye boyunca"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Dinamik bellek, açıkça serbest bırakılana ya da program sonlanana kadar ayrılmış kalır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1411, .topicId = 57,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = new int(10);\n*p = *p + 5;\nstd::cout << *p;\ndelete p;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"15", "10", "5", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "10 + 5 = 15.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1412, .topicId = 57,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "new ile ayrılan bir bellek, karşılık gelen delete çağrılmadan unutulursa ne olur?",
+        .options = {"Bellek sızıntısı (memory leak) oluşur, program çökmez", "Program hemen çöker", "Derleyici hata verir", "Bellek otomatik olarak serbest bırakılır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "delete edilmeyen new belleği bir sızıntıya yol açar; program bundan dolayı çökmez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1413, .topicId = 57,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int* p1 = new int(1);\nint* p2 = new int(2);\nstd::cout << (p1 == p2);\ndelete p1;\ndelete p2;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"0", "1", "Belirsiz", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "İki ayrı new çağrısı farklı bellek adresleri döndürür.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1414, .topicId = 57,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int* p = new int(7);\nint* q = p;\n*q = 20;\nstd::cout << *p;\ndelete p;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"20", "7", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "q = p, aynı adresi kopyalar; *q = 20 aynı belleği değiştirir, *p de artık 20'dir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1415, .topicId = 57,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "new operatörü, bellekte çalışma zamanında (heap üzerinde) dinamik olarak yer ayırır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1416, .topicId = 57,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "new ile ayrılan bellek, program tarafından otomatik olarak serbest bırakılır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: programcı delete ile serbest bırakmalıdır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1417, .topicId = 57,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "new int(5) ifadesi, ayrılan int'i 5 değeriyle ilklendirir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1418, .topicId = 57,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "new ile ayrılan bir bellek unutulursa (delete edilmezse) program hemen çöker.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: bir bellek sızıntısı oluşur ama program çalışmaya devam eder.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1419, .topicId = 57,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "new, ayrılan yerin adresini bir pointer olarak döndürür.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1420, .topicId = 57,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "İki ayrı new int(...) çağrısı, her zaman aynı adresi döndürür.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: her çağrı ayrı bir bellek bloğu ayırır, farklı adresler döner.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1421, .topicId = 57,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bellekte dinamik olarak yer ayırmak için _____ operatörü kullanılır (İngilizce kelime).",
+        .acceptedAnswers = {"new"},
+        .explanation = "new operatörü dinamik bellek ayırır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1422, .topicId = 57,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int* p = new int(8);\nstd::cout << *p;\ndelete p;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"8"},
+        .explanation = "new int(8), ayrılan belleği 8 ile ilklendirir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1423, .topicId = 57,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "new ile ayrılan bellek, delete ile serbest bırakılana kadar veya program _____ kadar ayrılmış kalır (Türkçe kelime).",
+        .acceptedAnswers = {"sonlanana"},
+        .explanation = "Bellek, delete edilene ya da program sonlanana kadar ayrılmış kalır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1424, .topicId = 57,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = new int(10);\n*p = *p * 2;\nstd::cout << *p;\ndelete p;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"20"},
+        .explanation = "10 * 2 = 20.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1425, .topicId = 57,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "new ile ayrılan bir bellek karşılık gelen delete olmadan unutulursa buna bellek _____ denir (Türkçe kelime).",
+        .acceptedAnswers = {"sızıntısı"},
+        .explanation = "Bu duruma bellek sızıntısı (memory leak) denir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1426, .topicId = 57,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "new int(5) ifadesinin döndürdüğü değerin türü _____ olur (İngilizce, bir kelime + sembol).",
+        .acceptedAnswers = {"int*"},
+        .explanation = "new int(5), int* türünde bir değer döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1427, .topicId = 57,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\nstd::cout << *p;\ndelete p;\n5 değeriyle ilklendirilmiş bir int için dinamik bellek ayırıp p'ye atayan satırı yazın.",
+        .acceptedAnswers = {"int* p = new int(5);"},
+        .explanation = "new int(5), p'ye atanan ayrılmış bir int adresi döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1428, .topicId = 57,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = new int(3);\n_____\nstd::cout << *p;\np'nin gösterdiği değeri 3 katına çıkaran satırı yazın.",
+        .acceptedAnswers = {"*p = *p * 3;"},
+        .explanation = "*p = *p * 3, ayrılan belleği 3 katına çıkarır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1429, .topicId = 57,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int* p = new int(4);\n*p += 6;\nstd::cout << *p;\ndelete p;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"10"},
+        .explanation = "4 + 6 = 10.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1430, .topicId = 57,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int* p = new int(2);\nint* q = new int(2);\nstd::cout << (*p == *q) << (p == q);\ndelete p;\ndelete q;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"10"},
+        .explanation = "*p == *q true (değerler eşit); p == q false (farklı bellek blokları).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1431, .topicId = 57,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nvoid fonksiyon() {\n    int* p = new int(5);\n    std::cout << *p;\n}\n\nBu fonksiyon, new ile ayrılan belleği hiçbir zaman delete etmiyor; fonksiyon her çağrıldığında bir bellek sızıntısı oluşur (program çökmez ama bellek asla geri kazanılmaz). Fonksiyonun sonuna eksik olan satırı ekleyin.",
+        .acceptedAnswers = {"delete p;"},
+        .explanation = "new ile ayrılan her bellek, karşılık gelen bir delete ile serbest bırakılmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1432, .topicId = 57,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint* p = new int(5)\nstd::cout << *p;\ndelete p;\n\nBu kod derlenmez çünkü new int(5) satırının sonunda noktalı virgül eksik. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"int* p = new int(5);"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1433, .topicId = 57,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint* p = new int(9)\nstd::cout << *p;\ndelete p;\n\nProgramcı new int(9) satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"int* p = new int(9);"},
+        .explanation = "Eksik noktalı virgül eklenmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1434, .topicId = 57,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, new ile bellek ayırıp kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"int* p = new int(7);", "std::cout << *p;\n    delete p;\n    return 0;\n}", "int main() {"},
+        .acceptedAnswers = {"3 1 2"},
+        .explanation = "main açılışı (3), new ile ayırma (1), yazdırma+delete+kapanış (2): sıra 3 1 2.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1435, .topicId = 57,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "new ile bir int için dinamik bellek ayırıp bir değerle ilklendirin, değerini ekrana yazdırın, ardından belleği delete ile serbest bırakın.",
+        .acceptedAnswers = {"new", "delete", "cout"},
+        .explanation = "Bellek new ile ayrılmalı, kullanılmalı ve delete ile serbest bırakılmalıdır.",
+        .baseXp = 40,
+    });
 }
