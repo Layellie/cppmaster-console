@@ -842,7 +842,7 @@ void appendSection6Questions(std::vector<Question>& questions) {
         .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
         .prompt = "İki farklı pointer aynı değişkeni gösteriyorsa, birini dereference ederek yapılan değişiklik diğerinden de görülür.",
         .acceptedAnswers = {"1"},
-        .explanation = "Doğru: ikisi de aynı belleği gösterdiğünden değişiklik ortaktır.",
+        .explanation = "Doğru: ikisi de aynı belleği gösterdiğinden değişiklik ortaktır.",
         .baseXp = 20,
     });
     questions.push_back(Question{
