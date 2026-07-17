@@ -1703,4 +1703,733 @@ void appendSection5Questions(std::vector<Question>& questions) {
         .explanation = "Fonksiyon parametreyi değer ile almalı, kareyi döndürmeli; orijinal değişken değişmemelidir.",
         .baseXp = 40,
     });
+
+    // Topic 48: Referans ile parametre gönderme
+    questions.push_back(Question{
+        .id = 1146, .topicId = 48,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir fonksiyonun parametresi int& x şeklinde tanımlanırsa, x nedir?",
+        .options = {"Çağırandaki değişkenin kendisine bir referans (takma ad)", "Çağırandaki değişkenin bağımsız bir kopyası", "Bir gösterici (pointer)", "Sabit bir değer"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Referans parametre, çağırandaki değişkenin kendisine bir takma addır; kopya oluşturulmaz.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1147, .topicId = 48,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int& x) {\n    x = 100;\n}\nint main() {\n    int a = 5;\n    f(a);\n    std::cout << a;\n}\nEkrana ne yazdırılır?",
+        .options = {"100", "5", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "x, a'nın kendisine bir referanstır; x'in değişmesi doğrudan a'yı değiştirir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1148, .topicId = 48,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int& x) {\n    x++;\n}\nint main() {\n    int sayac = 10;\n    f(sayac);\n    f(sayac);\n    std::cout << sayac;\n}\nEkrana ne yazdırılır?",
+        .options = {"12", "10", "11", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Her çağrı doğrudan sayac'ı bir artırır: 10 -> 11 -> 12.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1149, .topicId = 48,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int& x) {\n    x = x * 2;\n}\nint main() {\n    f(5);\n    return 0;\n}\nBu kod ne olur?",
+        .options = {"Derleme hatası, çünkü int& bir literale (5) bağlanamaz", "10 yazdırır", "5 yazdırır", "Çalışma zamanı hatası verir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Non-const bir referans (int&) yalnızca bir değişkene (lvalue) bağlanabilir, doğrudan bir literale bağlanamaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1150, .topicId = 48,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "void degistir(int& x, int& y) {\n    int t = x;\n    x = y;\n    y = t;\n}\nint main() {\n    int a = 1, b = 2;\n    degistir(a, b);\n    std::cout << a << \" \" << b;\n}\nEkrana ne yazdırılır?",
+        .options = {"\"2 1\"", "\"1 2\"", "\"1 1\"", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "x ve y referans olduğundan a ve b'nin kendileri takas edilir: a=2, b=1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1151, .topicId = 48,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Referans parametrenin (T&), değer parametresine (T) göre temel avantajı nedir?",
+        .options = {"Hem kopyalamadan kaçınmak hem de çağırandaki değişkeni değiştirebilmek", "Sadece daha az bellek kullanmak, değiştirememek", "Sadece okunabilirlik", "Fonksiyonun daha hızlı derlenmesi"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Referans, kopyalamadan kaçınırken çağırandaki değişkeni doğrudan değiştirmeye de izin verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1152, .topicId = 48,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "void f(int& x) {\n    x += 10;\n}\nint main() {\n    int a = 5;\n    int& r = a;\n    f(r);\n    std::cout << a;\n}\nEkrana ne yazdırılır?",
+        .options = {"15", "5", "10", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "r, a'nın bir takma adıdır; f(r) çağrısı x'i de a'ya bağlar, dolayısıyla a doğrudan değişir: 5+10=15.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1153, .topicId = 48,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "void f(int& x, int y) {\n    x = x + y;\n    y = 0;\n}\nint main() {\n    int a = 3, b = 4;\n    f(a, b);\n    std::cout << a << \" \" << b;\n}\nEkrana ne yazdırılır?",
+        .options = {"\"7 4\"", "\"7 0\"", "\"3 4\"", "\"3 0\""},
+        .acceptedAnswers = {"a"},
+        .explanation = "x referans olduğundan a=a+b=7 olur; y ise değer ile geldiğinden y=0 yapmak b'yi etkilemez, b 4 kalır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1154, .topicId = 48,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Referans parametre (T&), çağırandaki değişkenin kendisine bir takma addır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: referans, ayrı bir kopya değil, orijinal değişkenin kendisidir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1155, .topicId = 48,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Referans parametre kullanan bir fonksiyon çağrılırken, argümanın ayrı bir kopyası oluşturulur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: referans, mevcut değişkenin kendisidir; kopya oluşturulmaz.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1156, .topicId = 48,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int& x) { x = 0; } int main() { int a = 5; f(a); } çağrısından sonra a artık 0'dır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: x, a'nın kendisi olduğundan x=0 yapmak a'yı da sıfırlar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1157, .topicId = 48,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "int& x parametreli bir fonksiyon, f(10) gibi doğrudan bir literal ile çağrılabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: non-const bir referans yalnızca bir değişkene bağlanabilir, literale bağlanamaz.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1158, .topicId = 48,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Referans parametreler, büyük nesnelerin (örneğin büyük bir std::string) fonksiyona kopyalanmadan geçirilmesini sağlar.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: referans, nesnenin kendisine erişim sağlar, kopyalama yapmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1159, .topicId = 48,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int& a, int& b) { int t = a; a = b; b = t; } çağrısı, çağırandaki iki değişkenin değerlerini gerçekten takas eder.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: a ve b referans olduğundan, fonksiyon içindeki değişiklikler çağırandaki orijinal değişkenlere yansır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1160, .topicId = 48,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "int& x şeklinde tanımlanan bir parametre, çağırandaki argümana bir _____ (takma ad) olur (Türkçe kelime).",
+        .acceptedAnswers = {"referans"},
+        .explanation = "Referans parametre, argümanın kendisine bir takma addır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1161, .topicId = 48,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int& x) {\n    x = 20;\n}\nint main() {\n    int a = 5;\n    f(a);\n    std::cout << a;\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"20"},
+        .explanation = "x, a'nın kendisi olduğundan x=20 yapmak a'yı da 20 yapar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1162, .topicId = 48,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "void carpZaman2(int& x) {\n    x = x * 2;\n}\nint main() {\n    int sayi = 6;\n    carpZaman2(sayi);\n    std::cout << sayi;\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"12"},
+        .explanation = "Referans parametre sayi'nin kendisini değiştirir: 6*2=12.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1163, .topicId = 48,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Referans parametreler, büyük nesnelerin kopyalanmasını önler ve aynı zamanda çağırandaki değeri _____ imkanı verir (Türkçe kelime, isim hali).",
+        .acceptedAnswers = {"değiştirme", "degistirme"},
+        .explanation = "Referans, hem kopyalamayı önler hem de çağırandaki değişkenin değiştirilmesine izin verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1164, .topicId = 48,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int& a, int& b) {\n    int t = a;\n    a = b;\n    b = t;\n}\nint main() {\n    int x = 3, y = 8;\n    f(x, y);\n    std::cout << x << \" \" << y;\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"8 3"},
+        .explanation = "a ve b referans olduğundan x ve y gerçekten takas edilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1165, .topicId = 48,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int& x parametreli bir fonksiyon çağrılırken, f(5) gibi bir _____ ile çağrılamaz çünkü referans bir değişkene bağlanmalıdır (İngilizce kelime).",
+        .acceptedAnswers = {"literal"},
+        .explanation = "Non-const referans, geçici bir değere (literale) değil, bir değişkene bağlanmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1166, .topicId = 48,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "void ikiyeBol(int& x) {\n    _____\n}\nint main() {\n    int sayi = 20;\n    ikiyeBol(sayi);\n    std::cout << sayi;\n    return 0;\n}\nikiyeBol fonksiyonunun gövdesini (x'i ikiye bölen satırı) tamamlayın.",
+        .acceptedAnswers = {"x = x / 2;"},
+        .explanation = "x referans olduğundan, x üzerindeki değişiklik doğrudan sayi'yi etkiler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1167, .topicId = 48,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\nint main() {\n    int a = 1, b = 2;\n    takasEt(a, b);\n    std::cout << a << \" \" << b;\n    return 0;\n}\ntakasEt fonksiyonunu, iki int'i referans parametrelerle gerçekten takas edecek şekilde (gövdesiyle) yazın.",
+        .acceptedAnswers = {"void takasEt(int& a, int& b) { int t = a; a = b; b = t; }"},
+        .explanation = "Gerçek takas için parametrelerin referans (&) olması gerekir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1168, .topicId = 48,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int& x) {\n    x = x + 1;\n}\nint main() {\n    int a = 9;\n    f(a);\n    f(a);\n    std::cout << a;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"11"},
+        .explanation = "Her çağrı a'yı doğrudan bir artırır: 9 -> 10 -> 11.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1169, .topicId = 48,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "void f(int& x, int y) {\n    x = x * y;\n    y = y + 1;\n}\nint main() {\n    int a = 2, b = 3;\n    f(a, b);\n    std::cout << a << \" \" << b;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"6 3"},
+        .explanation = "x referans olduğundan a=a*b=6 olur; y değer ile geldiğinden y=y+1 yapmak b'yi etkilemez, b 3 kalır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1170, .topicId = 48,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nvoid f(int& x) {\n    x = x + 1;\n}\nint main() {\n    f(5);\n    return 0;\n}\n\nBu kod derlenmez çünkü int& parametresi bir literale (5) bağlanamaz; referans bir değişkene ihtiyaç duyar. main() içindeki hatalı çağrı satırını, önce bir int değişken tanımlayıp onu göndererek düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"int a = 5; f(a);"},
+        .explanation = "int& yalnızca bir değişkene (lvalue) bağlanabilir; önce bir değişken tanımlanmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1171, .topicId = 48,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nvoid takasEt(int& a, int b) {\n    int t = a;\n    a = b;\n    b = t;\n}\nint main() {\n    int x = 1, y = 2;\n    takasEt(x, y);\n    std::cout << x << \" \" << y;\n    return 0;\n}\n\nProgramcı x ve y'nin tamamen takas edilmesini bekliyor ama ikinci parametre (b) referans olmadığından sadece x güncellenir, y değişmeden kalır. Fonksiyon başlığını, her iki parametre de referans olacak şekilde düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"void takasEt(int& a, int& b) {"},
+        .explanation = "Gerçek takas için her iki parametrenin de referans (&) olması gerekir; b değer ile geldiğinden y hiç değişmez.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1172, .topicId = 48,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nvoid sifirla(int a) {\n    a = 0;\n}\nint main() {\n    int deger = 42;\n    sifirla(deger);\n    std::cout << deger;\n    return 0;\n}\n\nProgramcı deger'in 0 yazdırılmasını bekliyor ama parametre değer ile gönderildiği için deger değişmeden 42 kalıyor. Fonksiyon başlığını, çağırandaki değişkeni gerçekten sıfırlayacak şekilde (referans parametreyle) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"void sifirla(int& a) {"},
+        .explanation = "Çağırandaki değişkeni kalıcı olarak değiştirmek için parametre referans (&) olmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1173, .topicId = 48,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, referans parametreli bir fonksiyon kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"void f(int& x) {\n    x = x + 10;\n}", "int a = 5;\n    f(a);\n    std::cout << a;\n    return 0;\n}", "int main() {"},
+        .acceptedAnswers = {"1 3 2"},
+        .explanation = "Fonksiyon tanımı (1), main açılışı (3), gövde ve kapanış (2): sıra 1 3 2.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1174, .topicId = 48,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir değişkenin değerini referans (&) ile alan bir parametre üzerinden iki katına çıkaran bir fonksiyon yazın; main() içinde çağırıp orijinal değişkenin değiştiğini ekrana yazdırarak gösterin.",
+        .acceptedAnswers = {"&", "cout"},
+        .explanation = "Fonksiyon parametreyi referans olarak almalı ve çağırandaki değişkeni doğrudan değiştirmelidir.",
+        .baseXp = 40,
+    });
+
+    // Topic 49: const referans
+    questions.push_back(Question{
+        .id = 1175, .topicId = 49,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "const int& x parametreli bir fonksiyon içinde x'in değerini değiştirmeye (x = ...;) çalışmak ne olur?",
+        .options = {"Derleme hatası", "Çalışır, çağırandaki değişkeni değiştirir", "Çalışır ama hiçbir etkisi olmaz", "Çalışma zamanı hatası verir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "const bir referansa atama yapılamaz; bu bir derleme hatasıdır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1176, .topicId = 49,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "const int& parametresinin normal int& parametresine göre temel farkı nedir?",
+        .options = {"const referans, fonksiyon içinde değiştirilemez", "const referans, kopyalama yapar", "const referans, sadece global değişkenlere bağlanabilir", "Fark yoktur"},
+        .acceptedAnswers = {"a"},
+        .explanation = "const T&, T&'nin sağladığı erişimi verirken değiştirilmeyi engeller.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1177, .topicId = 49,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "void yazdir(const std::string& s) {\n    std::cout << s;\n}\nint main() {\n    yazdir(\"Merhaba\");\n    return 0;\n}\nBu kod derlenir mi?",
+        .options = {"Evet, çünkü const referans bir literale (geçici değere) bağlanabilir", "Hayır, referanslar asla literale bağlanamaz", "Hayır, std::string const alamaz", "Evet ama çalışma zamanında çöker"},
+        .acceptedAnswers = {"a"},
+        .explanation = "const T&, normal T&'nin aksine, geçici bir değere (literale) bağlanabilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1178, .topicId = 49,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "void f(const int& x) {\n    x = 5;\n}\nBu kod neden derlenmez?",
+        .options = {"const olarak tanımlanan x'e atama yapılamaz", "int türü const olamaz", "Fonksiyon parametreleri asla değiştirilemez", "x tanımsızdır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "const nitelikli bir referansa değer atamak derleme hatasıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1179, .topicId = 49,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "const int& parametresi kullanmanın büyük nesneler (std::string, std::vector gibi) için avantajı nedir?",
+        .options = {"Kopyalama olmadan (verimli) salt-okunur erişim sağlar", "Nesneyi otomatik olarak küçültür", "Bellek sızıntısını önler", "Fonksiyonun void dönmesini sağlar"},
+        .acceptedAnswers = {"a"},
+        .explanation = "const T&, kopyalamadan kaçınırken değiştirilmeyi engeller — büyük nesneler için ideal bir birleşimdir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1180, .topicId = 49,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "void f(const int& x, int& y) {\n    y = x + 1;\n}\nint main() {\n    int a = 5, b = 0;\n    f(a, b);\n    std::cout << a << \" \" << b;\n}\nEkrana ne yazdırılır?",
+        .options = {"\"5 6\"", "\"6 6\"", "\"5 0\"", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "x const referans olduğundan a hiç değişmez (5); y referans olduğundan b, x+1=6 olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1181, .topicId = 49,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "const int& r = 10;\nstd::cout << r;\nBu kod derlenir mi?",
+        .options = {"Evet, const referans geçici bir değere (10) bağlanabilir", "Hayır, referanslar sadece değişkenlere bağlanabilir", "Hayır, int literal const olamaz", "Evet ama r kullanılamaz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "const referanslar, ömrü referansın kapsamı süresince uzatılan geçici (temporary) değerlere bağlanabilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1182, .topicId = 49,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "void f(const int& x) {\n    std::cout << \"const: \" << x;\n}\nvoid f(int& x) {\n    x = 0;\n    std::cout << \"nonconst: \" << x;\n}\nint main() {\n    int a = 7;\n    f(a);\n    return 0;\n}\nHangi f çağrılır?",
+        .options = {"f(int&) çağrılır, \"nonconst: 0\" yazdırılır", "f(const int&) çağrılır, \"const: 7\" yazdırılır", "Belirsizlik hatası (ambiguous)", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "a const olmayan bir lvalue olduğundan, overload çözümlemesi tam eşleşen f(int&) overload'ını tercih eder (const'a nitelik eklemek gerektiren f(const int&)'e göre daha iyi eşleşme).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1183, .topicId = 49,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "const int& parametresi, fonksiyon içinde değiştirilemez.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: const nitelik, referans üzerinden değiştirmeyi engeller.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1184, .topicId = 49,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "const int& bir parametre, normal int& gibi kopyalama yapmadan çalışır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: her ikisi de referans olduğundan kopyalama yapmaz; fark, değiştirilebilirliktedir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1185, .topicId = 49,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "const int& x parametreli bir fonksiyonun içinde x = 5; şeklinde bir atama yapmak geçerlidir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: const nitelikli bir referansa atama yapmak derleme hatasıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1186, .topicId = 49,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "const T& bir parametre, bir literal (örneğin 5 veya \"Merhaba\") ile çağrılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: const referans, geçici değerlere (literallere) bağlanabilir; non-const referans bağlanamaz.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1187, .topicId = 49,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "const int& parametresi, büyük nesnelerde kopyalama maliyetinden kaçınırken aynı zamanda değişkenin yanlışlıkla değiştirilmesini de engeller.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: const T&, verimlilik ve güvenliği bir arada sağlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1188, .topicId = 49,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "void f(const int& x, int& y) { y = x; } çağrısında x parametresi, kendisi (a) değiştirilerek kullanılabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: x const referans olduğundan sadece okunabilir, fonksiyon içinde değiştirilemez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1189, .topicId = 49,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "const int& x parametresi, fonksiyon içinde değiştirilemez çünkü _____ olarak tanımlanmıştır (İngilizce anahtar kelime).",
+        .acceptedAnswers = {"const"},
+        .explanation = "const anahtar kelimesi, referansın salt-okunur olduğunu belirtir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1190, .topicId = 49,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "void f(const int& x) {\n    std::cout << x;\n}\nint main() {\n    f(42);\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"42"},
+        .explanation = "const referans literale bağlanabildiğinden 42 doğrudan yazdırılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1191, .topicId = 49,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "const std::string& parametresi, büyük bir string'i kopyalamadan okumayı sağlar; buradaki const anahtar kelimesi, parametrenin fonksiyon içinde _____ olduğunu belirtir (Türkçe kelime).",
+        .acceptedAnswers = {"değiştirilemez", "degistirilemez"},
+        .explanation = "const, parametrenin salt-okunur (değiştirilemez) olduğunu belirtir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1192, .topicId = 49,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "void f(const int& x) {\n    x = x + 1;\n}\nBu kod derlenmez çünkü const olarak tanımlanan bir referansa _____ yapılamaz (Türkçe kelime, isim hali).",
+        .acceptedAnswers = {"atama"},
+        .explanation = "const bir referansa atama yapmak derleme hatasıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1193, .topicId = 49,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "const int& r = 5;\nBurada r, kalıcı olmayan (geçici) bir değere bağlanabilir çünkü _____ referanslar, geçici değerlerin ömrünü referansın kapsamı boyunca uzatır (İngilizce anahtar kelime).",
+        .acceptedAnswers = {"const"},
+        .explanation = "const referanslar, geçici (temporary) değerlere bağlanıp onların ömrünü uzatabilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1194, .topicId = 49,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "void f(const int& x, int& y) {\n    y = x * 2;\n}\nint main() {\n    int a = 4, b = 0;\n    f(a, b);\n    std::cout << b;\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"8"},
+        .explanation = "y referans olduğundan b, x*2=8 olur (a const referans olduğundan hiç değişmez).",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1195, .topicId = 49,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "void yazdir(const std::string& s) {\n    _____\n}\nint main() {\n    yazdir(\"Merhaba Dunya\");\n    return 0;\n}\nyazdir fonksiyonunun gövdesini (s'i ekrana yazdıran satırı) tamamlayın.",
+        .acceptedAnswers = {"std::cout << s;"},
+        .explanation = "const referans, sadece okumak için kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1196, .topicId = 49,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\nint main() {\n    int sayi = 7;\n    std::cout << ikiKatiniGoster(sayi);\n    return 0;\n}\nint ikiKatiniGoster fonksiyonunu, parametreyi const referans olarak alıp iki katını döndürecek şekilde (gövdesiyle) yazın.",
+        .acceptedAnswers = {"int ikiKatiniGoster(const int& x) { return x * 2; }"},
+        .explanation = "Parametre const referans olarak alınır, sadece okunur ve iki katı döndürülür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1197, .topicId = 49,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "void f(const int& x) {\n    std::cout << x * 3;\n}\nint main() {\n    f(5);\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"15"},
+        .explanation = "x, 5'e bağlanan const bir referanstır: 5*3=15.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1198, .topicId = 49,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "void f(const int& x, int& y) {\n    y = x + y;\n}\nint main() {\n    int a = 10, b = 5;\n    f(a, b);\n    std::cout << a << \" \" << b;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"10 15"},
+        .explanation = "a const referans olduğundan hiç değişmez (10); y referans olduğundan b, x+y=10+5=15 olur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1199, .topicId = 49,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nvoid f(const int& x) {\n    x = x + 1;\n    std::cout << x;\n}\nint main() {\n    f(5);\n    return 0;\n}\n\nBu kod derlenmez çünkü const olarak tanımlanan x referansına atama yapılamaz. Hatalı satırı, x'i değiştirmek yerine sonuc adlı yeni bir yerel değişkende x+1 değerini hesaplayan haliyle düzeltilmiş olarak yazın.",
+        .acceptedAnswers = {"int sonuc = x + 1;"},
+        .explanation = "const referansa atama yapılamaz; bunun yerine ayrı bir yerel değişkende hesaplama yapılabilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1200, .topicId = 49,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nvoid f(const std::string& s) {\n    s += \"!\";\n    std::cout << s;\n}\nint main() {\n    f(\"Merhaba\");\n    return 0;\n}\n\nBu kod derlenmez çünkü const std::string& referansına += ile atama yapılamaz. Hatalı satırı, s'i değiştirmek yerine yeni bir yerel değişkende (sonuc adlı) s + \"!\" değerini hesaplayan haliyle düzeltilmiş olarak yazın.",
+        .acceptedAnswers = {"std::string sonuc = s + \"!\";"},
+        .explanation = "const referansa += ile atama yapmak da bir atama işlemidir ve derleme hatası verir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1201, .topicId = 49,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nvoid f(const int& x) {\n    x++;\n    std::cout << x;\n}\nint main() {\n    int a = 9;\n    f(a);\n    return 0;\n}\n\nProgramcı x'i doğrudan artırmaya (x++;) çalışmış ama x const referans olduğundan bu satır derlenmez. Hatalı x++; satırını, x'i değiştirmeden bir fazlasını (x + 1) ekrana yazdıran tek bir satırla değiştirin.",
+        .acceptedAnswers = {"std::cout << x + 1;"},
+        .explanation = "const referans değiştirilemez; bunun yerine x + 1 ifadesi doğrudan yazdırılabilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1202, .topicId = 49,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, const referans parametreli bir fonksiyon kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"void yazdir(const std::string& s) {\n    std::cout << s;\n}", "yazdir(\"Merhaba\");\n    return 0;\n}", "int main() {"},
+        .acceptedAnswers = {"1 3 2"},
+        .explanation = "Fonksiyon tanımı (1), main açılışı (3), çağrı ve kapanış (2): sıra 1 3 2.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1203, .topicId = 49,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir std::string'i const referans parametre olarak alıp ekrana yazdıran bir fonksiyon yazın; main() içinde bir string literal ile çağırın.",
+        .acceptedAnswers = {"const", "&", "cout"},
+        .explanation = "Parametre const std::string& olarak tanımlanmalı ve bir literal ile çağrılabilmelidir.",
+        .baseXp = 40,
+    });
+
+    // Topic 50: Recursion
+    questions.push_back(Question{
+        .id = 1204, .topicId = 50,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Recursion (özyineleme) nedir?",
+        .options = {"Bir fonksiyonun kendi kendini çağırması", "Bir döngünün sonsuza kadar çalışması", "Bir değişkenin kendi kendini değiştirmesi", "İki fonksiyonun birbirini çağırmadan çalışması"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Recursion, bir fonksiyonun doğrudan veya dolaylı olarak kendini çağırmasıdır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1205, .topicId = 50,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "Bir recursive fonksiyonun çağrı yığınını taşırmasını (stack overflow) önlemek için ne gereklidir?",
+        .options = {"Ulaşılabilir bir taban durum (base case)", "Bir for döngüsü", "Bir global değişken", "Bir sınıf tanımı"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Taban durum, özyinelemenin sonlanmasını sağlayan koşuldur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1206, .topicId = 50,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int f(int n) {\n    if (n == 0) return 0;\n    return n + f(n - 1);\n}\nf(3) çağrısı hangi değeri döndürür?",
+        .options = {"6", "3", "0", "9"},
+        .acceptedAnswers = {"a"},
+        .explanation = "3 + 2 + 1 + 0 = 6.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1207, .topicId = 50,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int f(int n) {\n    return n + f(n - 1);\n}\n(taban durum yok) f(3) çağrısı ne olur?",
+        .options = {"Çağrı yığını taşana (stack overflow) kadar sonsuz özyinelemeye girer", "Sonsuz döngüye girer ama çökmez", "6 değerini döndürür", "Derleme hatası verir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Taban durumu olmadığından n hiçbir zaman durmaz ve çağrı yığını taşana kadar özyineleme sürer.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1208, .topicId = 50,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Bir fonksiyon kendini çağırdığında (recursive çağrı), her çağrı için ne oluşturulur?",
+        .options = {"Kendi parametre ve yerel değişkenlerine sahip yeni, bağımsız bir yığın çerçevesi (stack frame)", "Önceki çağrıyla paylaşılan tek bir ortak değişken kümesi", "Hiçbir şey, tüm çağrılar aynı belleği kullanır", "Yeni bir thread"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Her çağrı, kendine özgü parametre ve yerel değişkenlere sahip bağımsız bir stack frame alır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1209, .topicId = 50,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int fib(int n) {\n    if (n <= 1) return n;\n    return fib(n - 1) + fib(n - 2);\n}\nfib(4) çağrısı hangi değeri döndürür?",
+        .options = {"3", "4", "5", "2"},
+        .acceptedAnswers = {"a"},
+        .explanation = "fib(0)=0, fib(1)=1, fib(2)=1, fib(3)=2, fib(4)=fib(3)+fib(2)=2+1=3.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1210, .topicId = 50,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int f(int n) {\n    if (n == 5) return 0;\n    return n + f(n + 1);\n}\nf(2) çağrısı ne olur?",
+        .options = {"9", "0", "Sonsuz özyineleme (taban duruma hiç ulaşılamaz)", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "n, 2'den başlayıp artarak 5'e ulaşır (taban durum): 2+3+4+0=9.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1211, .topicId = 50,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int f(int n) {\n    if (n == 0) return 1;\n    return n * f(n - 2);\n}\nf(3) çağrısı ne olur?",
+        .options = {"Stack overflow oluşur çünkü n hiçbir zaman tam olarak 0 olmaz (hep tek sayı kalır)", "3 döndürür", "1 döndürür", "Derleme hatası verir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "n=3'ten başlayıp 2'şer azalınca 3,1,-1,-3,... hep tek sayı kalır; taban durum olan n==0'a hiçbir zaman ulaşılamaz.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1212, .topicId = 50,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Recursion, bir fonksiyonun doğrudan veya dolaylı olarak kendini çağırmasıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: bu, recursion'ın tanımıdır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1213, .topicId = 50,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Taban durumu (base case) olmayan bir recursive fonksiyon, güvenli bir şekilde sonsuza kadar çalışabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: taban durumu olmayan bir fonksiyon, çağrı yığınını taşırıp (stack overflow) çöker.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1214, .topicId = 50,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Taban duruma ulaşamayan bir recursive fonksiyon, sonsuz bir while döngüsü gibi güvenle çalışmaya devam eder, sadece daha yavaştır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: her çağrı çağrı yığınında yer kapladığından, sonunda yığın taşar ve program çöker; bu bir while döngüsünden farklıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1215, .topicId = 50,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Her recursive çağrı, kendi bağımsız yerel değişken ve parametre kopyasına sahiptir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: her çağrı kendi stack frame'ine sahiptir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1216, .topicId = 50,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "int f(int n) { if (n == 0) return 0; return n + f(n - 1); }\nf(-1) çağrısı taban duruma (n==0) hiçbir zaman ulaşamaz çünkü n azalarak sıfırdan uzaklaşır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: n, -1'den başlayıp azaldıkça (-2, -3, ...) hiçbir zaman 0'a ulaşmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1217, .topicId = 50,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir recursive fonksiyonun taban durumu, her zaman n == 0 şeklinde olmalıdır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: taban durum, probleme uygun herhangi bir ulaşılabilir koşul olabilir (örneğin n == 5).",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1218, .topicId = 50,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir fonksiyonun kendi kendini çağırmasına _____ denir (İngilizce terim).",
+        .acceptedAnswers = {"recursion"},
+        .explanation = "Bu kavrama recursion (özyineleme) denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1219, .topicId = 50,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Recursive bir fonksiyonun sonsuza gitmesini önleyen, ulaşılabilir durdurma koşuluna _____ _____ denir (İngilizce iki kelime).",
+        .acceptedAnswers = {"base case"},
+        .explanation = "Bu koşula base case (taban durum) denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1220, .topicId = 50,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int f(int n) {\n    if (n == 0) return 1;\n    return n * f(n - 1);\n}\nf(4) çağrısı _____ değerini döndürür (bu, 4 faktöriyeldir).",
+        .acceptedAnswers = {"24"},
+        .explanation = "4*3*2*1*1=24.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1221, .topicId = 50,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Taban durumu hiç sağlanmayan bir recursive fonksiyon, sonunda çağrı yığını (call stack) dolarak _____ _____ hatasıyla çöker (İngilizce iki kelime, örn. 'stack overflow').",
+        .acceptedAnswers = {"stack overflow"},
+        .explanation = "Bu hataya stack overflow (yığın taşması) denir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1222, .topicId = 50,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int f(int n) {\n    if (n == 0) return 0;\n    return f(n - 1) + n;\n}\nf(5) çağrısı _____ değerini döndürür.",
+        .acceptedAnswers = {"15"},
+        .explanation = "5+4+3+2+1+0=15.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1223, .topicId = 50,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Her recursive çağrı, önceki çağrılarla paylaşılmayan, kendine özgü bağımsız bir _____ _____ (stack frame) oluşturur (İngilizce iki kelime).",
+        .acceptedAnswers = {"stack frame"},
+        .explanation = "Her çağrı kendi stack frame'ine sahiptir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1224, .topicId = 50,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int faktoriyel(int n) {\n    _____\n}\nint main() {\n    std::cout << faktoriyel(5);\n    return 0;\n}\nfaktoriyel fonksiyonunun gövdesini (taban durum ve recursive adım dahil) tamamlayın.",
+        .acceptedAnswers = {"if (n == 0) return 1; return n * faktoriyel(n - 1);"},
+        .explanation = "Taban durum n==0 için 1 döner; aksi halde n * faktoriyel(n-1) hesaplanır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1225, .topicId = 50,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int topla(int n) {\n    if (n == 0) return 0;\n    _____\n}\nint main() {\n    std::cout << topla(4);\n    return 0;\n}\ntopla fonksiyonunun recursive adımını (n ile topla(n-1) toplamını döndüren satırı) tamamlayın.",
+        .acceptedAnswers = {"return n + topla(n - 1);"},
+        .explanation = "Recursive adım, n'i topla(n-1)'in sonucuna ekler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1226, .topicId = 50,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int f(int n) {\n    if (n == 0) return 1;\n    return n * f(n - 1);\n}\nint main() {\n    std::cout << f(4);\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"24"},
+        .explanation = "4! = 4*3*2*1 = 24.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1227, .topicId = 50,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int f(int n) {\n    if (n <= 1) return n;\n    return f(n - 1) + f(n - 2);\n}\nint main() {\n    std::cout << f(6);\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"8"},
+        .explanation = "Fibonacci dizisi: 0,1,1,2,3,5,8 -> f(6)=8.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1228, .topicId = 50,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint f(int n) {\n    return n * f(n - 1);\n}\nint main() {\n    std::cout << f(5);\n    return 0;\n}\n\nBu fonksiyonun taban durumu (base case) yok, bu yüzden f(5) çağrısı sonsuz özyinelemeye girip çağrı yığınını taşırır (stack overflow). Fonksiyonun ilk satırını, n==0 olduğunda 1 döndüren bir taban durum ekleyerek düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"if (n == 0) return 1;"},
+        .explanation = "Taban durum eklenmeden özyineleme hiçbir zaman durmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1229, .topicId = 50,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint f(int n) {\n    if (n == 0) return 1;\n    return n * f(n - 2);\n}\nint main() {\n    std::cout << f(5);\n    return 0;\n}\n\nBu kod stack overflow ile çöker çünkü n tek sayılarla (5, 3, 1, -1, -3, ...) azalır ve taban durum olan n==0'a hiçbir zaman ulaşılamaz. Taban durumunu, hem çift hem tek n değerleri için çalışacak şekilde (n <= 0 koşuluyla) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"if (n <= 0) return 1;"},
+        .explanation = "n <= 0 koşulu, n'in tek ya da çift olmasından bağımsız olarak taban duruma ulaşılmasını garanti eder.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1230, .topicId = 50,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint geriSay(int n) {\n    std::cout << n << \" \";\n    geriSay(n - 1);\n}\nint main() {\n    geriSay(3);\n    return 0;\n}\n\nBu fonksiyonun taban durumu yok, bu yüzden n eksiye giderek sonsuz özyinelemeye girip çağrı yığınını taşırır. Fonksiyonun ilk satırını, n < 0 olduğunda hemen dönen bir taban durum ekleyerek düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"if (n < 0) return 0;"},
+        .explanation = "Taban durum, n negatif olduğunda özyinelemeyi durdurur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1231, .topicId = 50,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, taban durumu olan recursive bir faktoriyel fonksiyonu kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << faktoriyel(4);\n    return 0;\n}", "int faktoriyel(int n) {\n    if (n == 0) return 1;\n    return n * faktoriyel(n - 1);\n}", "int main() {"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "Fonksiyon tanımı (2), main açılışı (3), çağrı ve kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1232, .topicId = 50,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir sayının faktöriyelini, taban durumu (n==0 için 1 döndüren) olan recursive bir fonksiyonla hesaplayıp döndüren bir program yazın; main() içinde çağırıp sonucu yazdırın.",
+        .acceptedAnswers = {"if", "return", "faktoriyel", "cout"},
+        .explanation = "Fonksiyon bir taban durum ve bir recursive adım içermeli, main() içinde çağrılıp sonuç yazdırılmalıdır.",
+        .baseXp = 40,
+    });
 }
