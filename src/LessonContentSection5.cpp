@@ -9,7 +9,7 @@ void applySection5LessonContent(std::vector<Lesson>& lessons) {
 
     lessons[40].explanation =
         "Parametresiz bir fonksiyon, herhangi bir girdi (parametre) "
-        "almayan bir fonksiyondur. Fonksiyon tanımı, dönüş "
+        "almadan çalışan bir fonksiyondur. Fonksiyon tanımı, dönüş "
         "türü, fonksiyon adı ve boş parantezlerden oluşur. Çağrıldığında "
         "her seferinde aynı işi yapar (parametreye bağlı olarak "
         "davranış değişmez).";
