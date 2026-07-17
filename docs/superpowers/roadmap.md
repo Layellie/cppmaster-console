@@ -157,7 +157,7 @@ as Phases 1-7.
   content phases (13-21) closing the roadmap's lesson-content and
   question-bank gaps for topics 11-100.
 - **Phase 15 — Bölüm 4 İçerik Genişletmesi: COMPLETE** (commits
-  `23d1628..5a99e5a`, 91/91 tests + ctest 100%). Topics 31-40 (Section 4:
+  `23d1628..3d230f9`, 91/91 tests + ctest 100%). Topics 31-40 (Section 4:
   "Diziler, vector ve string") now have full lesson content
   (`src/LessonContentSection4.cpp`) and a 290-question bank (ids 653-942, 29
   per topic, `src/QuestionsSection4.cpp`) spanning the same 9 of 11 question
