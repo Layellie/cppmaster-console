@@ -9,3 +9,4 @@ void applySection3LessonContent(std::vector<Lesson>& lessons);
 void applySection4LessonContent(std::vector<Lesson>& lessons);
 void applySection5LessonContent(std::vector<Lesson>& lessons);
 void applySection6LessonContent(std::vector<Lesson>& lessons);
+void applySection7LessonContent(std::vector<Lesson>& lessons);
