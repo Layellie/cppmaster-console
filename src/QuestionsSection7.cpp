@@ -974,4 +974,733 @@ void appendSection7Questions(std::vector<Question>& questions) {
         .explanation = "İki bağımsız Araba nesnesi oluşturulup farklı hiz değerleri atanmalı ve yazdırılmalıdır.",
         .baseXp = 40,
     });
+
+    // Topic 65: Constructor
+    questions.push_back(Question{
+        .id = 1639, .topicId = 65,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir constructor'ın adı ne olmalıdır?",
+        .options = {"Sınıfın adıyla aynı", "init", "new", "Herhangi bir isim olabilir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Constructor, sınıfla aynı isme sahiptir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1640, .topicId = 65,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "Bir constructor'ın dönüş türü nedir?",
+        .options = {"Dönüş türü yoktur (void bile yazılmaz)", "void", "int", "Sınıfın kendi türü"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Constructor'ların hiçbir dönüş türü yoktur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1641, .topicId = 65,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    Nokta(int xd) { x = xd; }\n};\nNokta p(5);\nstd::cout << p.x;\nEkrana ne yazdırılır?",
+        .options = {"5", "0", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Constructor, x'i 5 ile ilklendirir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1642, .topicId = 65,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Bir sınıfta hiçbir constructor tanımlanmazsa ne olur?",
+        .options = {"Derleyici parametresiz bir varsayılan constructor otomatik oluşturur", "Nesne asla oluşturulamaz", "Derleme hatası oluşur", "Tüm üyeler otomatik olarak public olur"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Hiç constructor tanımlanmazsa derleyici varsayılan bir constructor oluşturur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1643, .topicId = 65,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    Nokta(int xd) { x = xd; }\n};\nNokta p;\nBu satır derlenir mi?",
+        .options = {"Hayır, çünkü sadece parametreli bir constructor tanımlanmış ve varsayılan constructor otomatik oluşturulmaz", "Evet, x otomatik olarak 0 olur", "Evet, her zaman bir varsayılan constructor vardır", "Hayır, Nokta sınıfı hatalı tanımlanmış"},
+        .acceptedAnswers = {"a"},
+        .explanation = "En az bir constructor tanımlandığından derleyici varsayılan constructor'ı otomatik oluşturmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1644, .topicId = 65,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Nokta {\npublic:\n    int x, y;\n    Nokta() { x = 0; y = 0; }\n    Nokta(int xd, int yd) { x = xd; y = yd; }\n};\nNokta p1;\nNokta p2(3, 4);\nstd::cout << p1.x << p2.x;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"03\"", "\"00\"", "\"33\"", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "p1 varsayılan constructor ile x=0 olur; p2 parametreli constructor ile x=3 olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1645, .topicId = 65,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Kutu {\npublic:\n    int deger;\n    Kutu() { deger = 100; }\n    Kutu(int d) { deger = d; }\n};\nKutu k1;\nKutu k2(5);\nstd::cout << k1.deger << \" \" << k2.deger;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"100 5\"", "\"100 100\"", "\"5 5\"", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "k1 varsayılan constructor ile 100 olur; k2 parametreli constructor ile 5 olur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1646, .topicId = 65,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Sayac {\npublic:\n    int deger;\n    Sayac(int baslangic = 0) { deger = baslangic; }\n};\nSayac s1;\nSayac s2(10);\nstd::cout << s1.deger << \" \" << s2.deger;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"0 10\"", "\"10 10\"", "Derleme hatası", "\"0 0\""},
+        .acceptedAnswers = {"a"},
+        .explanation = "Varsayılan parametreli constructor, s1 için varsayılan (0), s2 için verilen (10) değeri kullanır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1647, .topicId = 65,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir constructor'ın adı, sınıfın adıyla aynı olmalıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1648, .topicId = 65,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir constructor'ın bir dönüş türü vardır (örneğin void).",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: constructor'ların hiçbir dönüş türü yoktur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1649, .topicId = 65,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Bir sınıfta birden fazla constructor (overload edilmiş) tanımlanabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1650, .topicId = 65,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Eğer bir sınıfta sadece parametreli bir constructor tanımlanırsa, derleyici yine de parametresiz bir varsayılan constructor otomatik oluşturur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: en az bir constructor tanımlanınca derleyici varsayılan constructor oluşturmayı bırakır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1651, .topicId = 65,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Varsayılan parametre değerine sahip bir constructor (örneğin Sayac(int x = 0)), hem parametresiz hem de parametreli çağrılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1652, .topicId = 65,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir sınıfta hiç constructor tanımlanmazsa, o sınıftan asla nesne oluşturulamaz.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: derleyici bu durumda varsayılan bir constructor otomatik oluşturur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1653, .topicId = 65,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir constructor'ın adı, ait olduğu _____ ile aynı olmalıdır (Türkçe kelime, örn. 'sınıf').",
+        .acceptedAnswers = {"sınıf"},
+        .explanation = "Constructor adı sınıf adıyla aynı olmalıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1654, .topicId = 65,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    Nokta(int xd) { x = xd; }\n};\nNokta p(9);\nstd::cout << p.x;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"9"},
+        .explanation = "Constructor x'i 9 ile ilklendirir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1655, .topicId = 65,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Bir constructor'ın dönüş türü _____ tir (Türkçe kelime, 'hiç yok' anlamında).",
+        .acceptedAnswers = {"yok"},
+        .explanation = "Constructor'ların dönüş türü yoktur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1656, .topicId = 65,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "class Kutu {\npublic:\n    int deger;\n    Kutu() { deger = 5; }\n};\nKutu k;\nstd::cout << k.deger;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"5"},
+        .explanation = "Varsayılan constructor deger'i 5 yapar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1657, .topicId = 65,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Bir sınıfta EN AZ BİR constructor tanımlanırsa, derleyici artık _____ constructor'ı otomatik oluşturmaz (Türkçe kelime).",
+        .acceptedAnswers = {"varsayılan"},
+        .explanation = "Bu durumda derleyici varsayılan constructor'ı oluşturmayı bırakır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1658, .topicId = 65,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "class Sayac {\npublic:\n    int deger;\n    Sayac(int b = 0) { deger = b; }\n};\nSayac s;\nstd::cout << s.deger;\nEkran çıktısı _____ olur (varsayılan parametre değeri kullanıldığı için).",
+        .acceptedAnswers = {"0"},
+        .explanation = "Varsayılan parametre değeri (0) kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1659, .topicId = 65,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    _____\n};\nNokta p(7);\nstd::cout << p.x;\nx'i parametre olarak alan bir constructor tanımlayan satırı yazın.",
+        .acceptedAnswers = {"Nokta(int xd) { x = xd; }"},
+        .explanation = "Constructor, parametreyle x'i ilklendirir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1660, .topicId = 65,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Kutu {\npublic:\n    int deger;\n    Kutu(int d) { deger = d; }\n};\nint main() {\n    _____\n    std::cout << k.deger;\n    return 0;\n}\nKutu türünde, 42 değeriyle ilklendirilmiş bir k nesnesi oluşturan satırı yazın.",
+        .acceptedAnswers = {"Kutu k(42);"},
+        .explanation = "k, constructor'a 42 argümanıyla oluşturulur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1661, .topicId = 65,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "class Nokta {\npublic:\n    int x, y;\n    Nokta(int xd, int yd) { x = xd; y = yd; }\n};\nint main() {\n    Nokta p(6, 9);\n    std::cout << p.x + p.y;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"15"},
+        .explanation = "6 + 9 = 15.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1662, .topicId = 65,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "class Kutu {\npublic:\n    int deger;\n    Kutu() { deger = 1; }\n    Kutu(int d) { deger = d * 2; }\n};\nint main() {\n    Kutu k1;\n    Kutu k2(5);\n    std::cout << k1.deger << \" \" << k2.deger;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"1 10"},
+        .explanation = "k1 varsayılan constructor ile 1 olur; k2 parametreli constructor ile 5*2=10 olur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1663, .topicId = 65,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Nokta {\npublic:\n    int x;\n    Nokta(int xd) { x = xd; }\n};\nint main() {\n    Nokta p;\n    return 0;\n}\n\nBu kod derlenmez çünkü Nokta'da sadece parametreli bir constructor var; derleyici varsayılan constructor'ı otomatik oluşturmaz. Nokta p; satırını, mevcut constructor'a bir argüman (örneğin 0) vererek düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"Nokta p(0);"},
+        .explanation = "Mevcut parametreli constructor'a uygun bir argüman verilmelidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1664, .topicId = 65,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Kutu {\npublic:\n    int deger;\n    void Kutu(int d) { deger = d; }\n};\n\nBu kod derlenmez çünkü constructor'ların dönüş türü yoktur (void bile yazılmaz); void yazmak Kutu'yu sıradan bir metot yapar, gerçek bir constructor olmaktan çıkarır. Hatalı satırı, dönüş türü olmadan (gerçek bir constructor olarak) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"Kutu(int d) { deger = d; }"},
+        .explanation = "Constructor'ların dönüş türü (void dahil) olmamalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1665, .topicId = 65,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nclass Nokta {\npublic:\n    int x;\n    Nokta(int xd) { x = xd }\n};\n\nProgramcı x = xd; satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"x = xd;"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1666, .topicId = 65,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir constructor tanımlayıp nesne oluşturan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"Nokta p(5);\n    std::cout << p.x;\n    return 0;\n}", "class Nokta {\npublic:\n    int x;\n    Nokta(int xd) { x = xd; }\n};", "int main() {"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "class+constructor tanımı (2), main açılışı (3), kullanım ve kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1667, .topicId = 65,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "x adlı bir int üyesi ve bunu parametre olarak alan bir constructor içeren Nokta adlı bir class tanımlayın; main() içinde bir nesne oluşturup x'i yazdırın.",
+        .acceptedAnswers = {"class", "Nokta", "cout"},
+        .explanation = "Constructor parametreyle x'i ilklendirmeli, main() içinde kullanılmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 66: Destructor
+    questions.push_back(Question{
+        .id = 1668, .topicId = 66,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir destructor'ın adı nasıl yazılır?",
+        .options = {"Sınıf adının başına ~ konarak", "Sınıf adının sonuna ~ konarak", "destructor anahtar kelimesiyle", "del anahtar kelimesiyle"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Destructor, sınıf adının başına ~ konularak yazılır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1669, .topicId = 66,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "Bir destructor parametre alabilir mi?",
+        .options = {"Hayır, destructor parametre alamaz", "Evet, istenildiği kadar parametre alabilir", "Sadece bir parametre alabilir", "Sadece const parametre alabilir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Destructor hiçbir parametre alamaz.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1670, .topicId = 66,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "Bir sınıfın kaç tane destructor'ı olabilir?",
+        .options = {"Tam olarak bir tane", "Overload edilerek birden fazla", "Hiç olmayabilir, hiçbir zaman çağrılmaz", "Sınırsız sayıda"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Bir sınıfın sadece bir destructor'ı olabilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1671, .topicId = 66,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Stack üzerinde (otomatik/local) oluşturulan bir nesnenin destructor'ı ne zaman çağrılır?",
+        .options = {"Nesne kapsamdan (scope) çıktığında otomatik olarak", "Sadece programcı açıkça çağırırsa", "Program tamamen bittiğinde", "Hiçbir zaman otomatik çağrılmaz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Stack nesnesi kapsamdan çıktığında destructor otomatik çağrılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1672, .topicId = 66,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "new ile heap'te oluşturulan bir nesnenin destructor'ı ne zaman çağrılır?",
+        .options = {"delete çağrıldığında", "Otomatik olarak, pointer kapsamdan çıktığında", "Hiçbir zaman çağrılmaz", "new çağrıldığı anda"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Heap nesnesinin destructor'ı sadece delete çağrıldığında çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1673, .topicId = 66,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Kaynak {\npublic:\n    ~Kaynak() { std::cout << \"Yok edildi\"; }\n};\nint main() {\n    Kaynak* p = new Kaynak();\n    return 0;\n}\n(delete p; hiç çağrılmıyor) Bu programda \"Yok edildi\" yazdırılır mı?",
+        .options = {"Hayır, delete hiç çağrılmadığından destructor çalışmaz", "Evet, program bitince otomatik çağrılır", "Evet, new çağrıldığı anda çağrılır", "Derleme hatası verir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "delete çağrılmadığından destructor hiçbir zaman çalışmaz (bellek sızıntısı).",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1674, .topicId = 66,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Kaynak {\npublic:\n    Kaynak() { std::cout << \"Ac \"; }\n    ~Kaynak() { std::cout << \"Kapa \"; }\n};\nint main() {\n    {\n        Kaynak k;\n    }\n    std::cout << \"Devam \";\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"Ac Kapa Devam \"", "\"Ac Devam Kapa \"", "\"Devam Ac Kapa \"", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "k, iç blok bitiminde (Devam'dan ÖNCE) kapsamdan çıkar ve destructor çalışır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1675, .topicId = 66,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class A {\npublic:\n    ~A() { std::cout << \"~A \"; }\n};\nclass B {\npublic:\n    ~B() { std::cout << \"~B \"; }\n};\nint main() {\n    A a;\n    B b;\n    return 0;\n}\nmain sonlanırken a ve b hangi sırayla yok edilir (ekran çıktısı nedir)?",
+        .options = {"\"~B ~A \"", "\"~A ~B \"", "Sıra belirsizdir", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Yerel nesneler, tanımlanma sırasının tersine yok edilir; b sonra tanımlandığından önce yok edilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1676, .topicId = 66,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir destructor'ın adı, sınıf adının başına ~ konularak yazılır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1677, .topicId = 66,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir destructor parametre alabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: destructor parametre alamaz.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1678, .topicId = 66,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Bir sınıfın sadece bir destructor'ı olabilir; overload edilemez.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1679, .topicId = 66,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Stack üzerinde oluşturulan bir nesnenin destructor'ı, nesne kapsamdan çıktığında otomatik çağrılır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1680, .topicId = 66,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "new ile oluşturulan bir nesnenin pointer'ı hiç delete edilmezse, o nesnenin destructor'ı yine de bir noktada otomatik çağrılır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: delete çağrılmadıkça destructor hiçbir zaman çalışmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1681, .topicId = 66,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Aynı kapsamda art arda tanımlanan yerel nesneler, tanımlanma sırasının TERSİNE (son tanımlanan ilk yok edilir) yok edilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1682, .topicId = 66,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir destructor'ın adı sınıf adının başına _____ konularak yazılır (bir sembol).",
+        .acceptedAnswers = {"~"},
+        .explanation = "~ sembolü destructor'ı belirtir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1683, .topicId = 66,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Bir destructor, tıpkı bir constructor gibi _____ almaz (Türkçe kelime, çoğul).",
+        .acceptedAnswers = {"parametre"},
+        .explanation = "Destructor parametre almaz.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1684, .topicId = 66,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Bir sınıfın kaç tane destructor'ı olabilir? _____ (bir sayı, rakamla).",
+        .acceptedAnswers = {"1"},
+        .explanation = "Bir sınıfın sadece bir destructor'ı olabilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1685, .topicId = 66,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "class Kaynak {\npublic:\n    ~Kaynak() { std::cout << \"Bitti\"; }\n};\nint main() {\n    Kaynak k;\n    return 0;\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"Bitti"},
+        .explanation = "k, main sonlanırken kapsamdan çıkar ve destructor çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1686, .topicId = 66,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "new ile heap'te oluşturulan bir nesnenin destructor'ı ancak _____ çağrıldığında çalışır (İngilizce kelime).",
+        .acceptedAnswers = {"delete"},
+        .explanation = "Heap nesnesinin destructor'ı sadece delete ile çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1687, .topicId = 66,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Aynı kapsamda art arda tanımlanan yerel nesneler, tanımlanma sırasının _____ yok edilir (Türkçe kelime).",
+        .acceptedAnswers = {"tersine"},
+        .explanation = "Yerel nesneler tanımlanma sırasının tersine yok edilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1688, .topicId = 66,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Kaynak {\npublic:\n    _____\n};\nKaynak k;\nk kapsamdan çıkarken \"Temizlendi\" yazdıran destructor'ı tanımlayan satırı yazın.",
+        .acceptedAnswers = {"~Kaynak() { std::cout << \"Temizlendi\"; }"},
+        .explanation = "Destructor, kapsamdan çıkışta \"Temizlendi\" yazdırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1689, .topicId = 66,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class A {\npublic:\n    ~A() { std::cout << \"Yok edildi\"; }\n};\nint main() {\n    _____\n    return 0;\n}\nA türünde bir nesne oluşturan satırı yazın (destructor'ın main sonunda otomatik çalışması için).",
+        .acceptedAnswers = {"A a;"},
+        .explanation = "a, main sonlanırken kapsamdan çıkıp destructor'ı tetikler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1690, .topicId = 66,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "class Kaynak {\npublic:\n    Kaynak() { std::cout << \"Ac \"; }\n    ~Kaynak() { std::cout << \"Kapa \"; }\n};\nint main() {\n    Kaynak k;\n    std::cout << \"Orta \";\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"Ac Orta Kapa "},
+        .explanation = "Constructor önce, sonra \"Orta \", sonra main sonunda destructor çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1691, .topicId = 66,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "class A {\npublic:\n    ~A() { std::cout << \"~A \"; }\n};\nclass B {\npublic:\n    ~B() { std::cout << \"~B \"; }\n};\nint main() {\n    A a;\n    B b;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"~B ~A "},
+        .explanation = "b sonra tanımlandığından önce yok edilir (tersine sıra).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1692, .topicId = 66,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Kaynak {\npublic:\n    void ~Kaynak() { std::cout << \"Bitti\"; }\n};\n\nBu kod derlenmez çünkü destructor'ların (constructor'lar gibi) dönüş türü yoktur; void yazmak geçersizdir. Hatalı satırı, dönüş türü olmadan düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"~Kaynak() { std::cout << \"Bitti\"; }"},
+        .explanation = "Destructor'ın dönüş türü (void dahil) olmamalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1693, .topicId = 66,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Kaynak {\npublic:\n    ~Kaynak(int kod) { std::cout << kod; }\n};\n\nBu kod derlenmez çünkü bir destructor parametre alamaz. Hatalı satırı, parametresiz düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"~Kaynak() {"},
+        .explanation = "Destructor hiçbir parametre alamaz.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1694, .topicId = 66,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nclass Kaynak {\npublic:\n    ~Kaynak() { std::cout << \"Bitti\" }\n};\n\nProgramcı std::cout << \"Bitti\" satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"~Kaynak() { std::cout << \"Bitti\"; }"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1695, .topicId = 66,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir destructor tanımlayıp gözlemleyen geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"Kaynak k;\n    return 0;\n}", "class Kaynak {\npublic:\n    ~Kaynak() { std::cout << \"Bitti\"; }\n};", "int main() {"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "class+destructor tanımı (2), main açılışı (3), nesne+kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1696, .topicId = 66,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Constructor'ında \"Acildi\" ve destructor'ında \"Kapandi\" yazdıran Kaynak adlı bir class tanımlayın; main() içinde bir nesne oluşturup her ikisinin de doğru sırayla çalıştığını gösterin.",
+        .acceptedAnswers = {"~Kaynak", "cout"},
+        .explanation = "Constructor önce, destructor kapsam sonunda çalışmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 67: private ve public
+    questions.push_back(Question{
+        .id = 1697, .topicId = 67,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "private bir üyeye nereden erişilebilir?",
+        .options = {"Sadece sınıfın kendi metotları içinden", "Her yerden", "Sadece main() içinden", "Sadece türetilmiş sınıflardan"},
+        .acceptedAnswers = {"a"},
+        .explanation = "private üyelere sadece sınıfın kendi metotları içinden erişilebilir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1698, .topicId = 67,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "public bir üyeye nereden erişilebilir?",
+        .options = {"Her yerden", "Sadece sınıfın kendi metotları içinden", "Hiçbir yerden", "Sadece türetilmiş sınıflardan"},
+        .acceptedAnswers = {"a"},
+        .explanation = "public üyelere her yerden erişilebilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1699, .topicId = 67,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "class Hesap {\nprivate:\n    int bakiye;\n};\nHesap h;\nh.bakiye = 100;\nBu kod derlenir mi?",
+        .options = {"Hayır, bakiye private olduğundan dışarıdan erişilemez", "Evet, her üyeye her zaman erişilebilir", "Evet ama sadece okumak için", "Hayır, Hesap sınıfı geçersizdir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "private bir üyeye dışarıdan erişmek derleme hatasıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1700, .topicId = 67,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Hesap {\nprivate:\n    int bakiye;\npublic:\n    void ata(int d) { bakiye = d; }\n    int getir() { return bakiye; }\n};\nHesap h;\nh.ata(50);\nstd::cout << h.getir();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"50", "0", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "ata(50), bakiye'yi 50 yapar; getir() bu değeri döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1701, .topicId = 67,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Bir sınıfın kendi metodu içinden (örneğin ata()), o sınıfın private üyelerine erişilebilir mi?",
+        .options = {"Evet, sınıfın kendi metotları private üyelere her zaman erişebilir", "Hayır, private üyelere hiçbir yerden erişilemez", "Sadece const metotlar erişebilir", "Sadece static metotlar erişebilir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Sınıfın kendi metotları private üyelerine her zaman erişebilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1702, .topicId = 67,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class A {\nprivate:\n    int x;\npublic:\n    void ayarla(int deger) { x = deger; }\n};\nBu kod (ayarla metodu içinde x'e erişim) derlenir mi?",
+        .options = {"Evet, sınıfın kendi metodu private üyeye erişebilir", "Hayır, x'e hiçbir metot erişemez", "Hayır, ayarla de x gibi private olmalıydı", "Evet ama sadece const olarak"},
+        .acceptedAnswers = {"a"},
+        .explanation = "ayarla, A sınıfının kendi metodu olduğundan private x'e erişebilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1703, .topicId = 67,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Hesap {\nprivate:\n    int bakiye = 0;\npublic:\n    void yatir(int miktar) {\n        if (miktar > 0) {\n            bakiye += miktar;\n        }\n    }\n    int getirBakiye() { return bakiye; }\n};\nint main() {\n    Hesap h;\n    h.yatir(100);\n    h.yatir(-50);\n    std::cout << h.getirBakiye();\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"100", "50", "150", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "yatir(100) bakiye'yi 100 yapar; yatir(-50), miktar>0 kontrolünü geçemediği için hiçbir şey değiştirmez.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1704, .topicId = 67,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class A {\nprivate:\n    int x;\npublic:\n    void kopyala(A& diger) {\n        x = diger.x;\n    }\n};\nBu kod (bir metodun BAŞKA bir A nesnesinin private x'ine erişmesi) derlenir mi?",
+        .options = {"Evet, aynı sınıfın bir metodu, o sınıftan başka bir nesnenin private üyesine de erişebilir", "Hayır, sadece kendi nesnesinin private üyelerine erişebilir", "Hayır, bu bir derleme hatasıdır", "Evet ama sadece diger de const ise"},
+        .acceptedAnswers = {"a"},
+        .explanation = "C++'ta erişim denetimi nesne bazlı değil sınıf bazlıdır; aynı sınıfın metodu başka bir örneğin private üyesine de erişebilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1705, .topicId = 67,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "private bir üyeye sadece sınıfın kendi metotları içinden erişilebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1706, .topicId = 67,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "public bir üyeye sadece sınıf içinden erişilebilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: public üyelere her yerden erişilebilir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1707, .topicId = 67,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "private bir üyeye sınıf dışından (örneğin main() içinden) doğrudan erişmek derleme hatasıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1708, .topicId = 67,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Bir sınıfın metotları kendi private üyelerine erişemez.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: sınıfın kendi metotları private üyelere her zaman erişebilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1709, .topicId = 67,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir sınıfın bir metodu, aynı sınıftan BAŞKA bir nesnenin private üyesine de erişebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: erişim denetimi sınıf bazlıdır, nesne bazlı değil.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1710, .topicId = 67,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Getter ve setter metotları genellikle public olarak tanımlanır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1711, .topicId = 67,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "private bir üyeye sadece sınıfın kendi _____ içinden erişilebilir (Türkçe kelime).",
+        .acceptedAnswers = {"metotları"},
+        .explanation = "Sadece sınıfın kendi metotları içinden erişilebilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1712, .topicId = 67,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "class Hesap {\nprivate:\n    int bakiye;\npublic:\n    void ata(int d) { bakiye = d; }\n    int getir() { return bakiye; }\n};\nHesap h;\nh.ata(30);\nstd::cout << h.getir();\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"30"},
+        .explanation = "ata(30), bakiye'yi 30 yapar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1713, .topicId = 67,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "public bir üyeye erişim kısıtlaması _____ (Türkçe kelime, 'yoktur' anlamında).",
+        .acceptedAnswers = {"yoktur"},
+        .explanation = "public üyelere her yerden erişilebilir, kısıtlama yoktur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1714, .topicId = 67,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "h.bakiye = 100; şeklinde private bir üyeye sınıf dışından erişmek _____ verir (Türkçe kelime).",
+        .acceptedAnswers = {"hata", "derleme hatası"},
+        .explanation = "Bu bir derleme hatasıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1715, .topicId = 67,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "private bir üyeye kontrollü dışarıdan erişim sağlamak için genellikle _____ ve setter metotları yazılır (İngilizce kelime).",
+        .acceptedAnswers = {"getter"},
+        .explanation = "getter ve setter, kontrollü erişim sağlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1716, .topicId = 67,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Bir sınıfın bir metodu, aynı sınıftan başka bir nesnenin private üyesine erişebilir çünkü erişim denetimi nesne bazlı değil, _____ bazlıdır (Türkçe kelime).",
+        .acceptedAnswers = {"sınıf"},
+        .explanation = "Erişim denetimi sınıf bazlıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1717, .topicId = 67,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Hesap {\nprivate:\n    int bakiye;\npublic:\n    _____\n};\nHesap h;\nh.ata(75);\nbakiye'yi ayarlayan bir ata(int) metodu tanımlayan satırı yazın.",
+        .acceptedAnswers = {"void ata(int d) { bakiye = d; }"},
+        .explanation = "ata metodu, private bakiye'yi ayarlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1718, .topicId = 67,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Hesap {\nprivate:\n    int bakiye;\npublic:\n    void ata(int d) { bakiye = d; }\n};\nint main() {\n    Hesap h;\n    _____\n    return 0;\n}\nh nesnesinin bakiye'sini 200 yapan (public metot üzerinden) satırı yazın.",
+        .acceptedAnswers = {"h.ata(200);"},
+        .explanation = "ata metodu üzerinden bakiye 200 yapılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1719, .topicId = 67,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "class Hesap {\nprivate:\n    int bakiye = 0;\npublic:\n    void yatir(int m) { bakiye += m; }\n    int getir() { return bakiye; }\n};\nint main() {\n    Hesap h;\n    h.yatir(30);\n    h.yatir(20);\n    std::cout << h.getir();\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"50"},
+        .explanation = "30 + 20 = 50.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1720, .topicId = 67,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "class Ornek {\nprivate:\n    int x;\npublic:\n    void kopyala(Ornek& diger) { x = diger.x; }\n    void ata(int d) { x = d; }\n    int getir() { return x; }\n};\nint main() {\n    Ornek a, b;\n    a.ata(10);\n    b.kopyala(a);\n    std::cout << b.getir();\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"10"},
+        .explanation = "kopyala metodu, aynı sınıftan başka bir nesnenin (a'nın) private x'ine erişip b'ye kopyalar.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1721, .topicId = 67,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Hesap {\nprivate:\n    int bakiye;\n};\nint main() {\n    Hesap h;\n    h.bakiye = 500;\n    return 0;\n}\n\nBu kod derlenmez çünkü bakiye private olduğundan sınıf dışından (main() içinden) doğrudan erişilemez. bakiye'yi ayarlayan, Hesap sınıfına eklenmesi gereken public metodu yazın.",
+        .acceptedAnswers = {"void bakiyeAta(int d) { bakiye = d; }"},
+        .explanation = "private bir üyeye dışarıdan erişmek için public bir metot (setter) gerekir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1722, .topicId = 67,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Ornek {\nprivate:\n    int x;\npublic:\n    void kopyala(Ornek diger) { x = diger.y; }\n};\n\nBu kod derlenmez çünkü Ornek sınıfının hiç y üyesi yok (sadece x var); diger.y bilinmeyen bir üyeye erişmeye çalışıyor. Hatalı satırı, diger.x kullanarak düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"void kopyala(Ornek diger) { x = diger.x; }"},
+        .explanation = "Ornek sınıfında sadece x üyesi tanımlı olduğundan diger.x kullanılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1723, .topicId = 67,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nclass Hesap {\nprivate:\n    int bakiye;\npublic:\n    void ata(int d) { bakiye = d }\n};\n\nProgramcı bakiye = d; satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"void ata(int d) { bakiye = d; }"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1724, .topicId = 67,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, private bir üyeye public bir metotla erişen geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"h.ata(80);\n    std::cout << h.getir();\n    return 0;\n}", "class Hesap {\nprivate:\n    int bakiye;\npublic:\n    void ata(int d) { bakiye = d; }\n    int getir() { return bakiye; }\n};", "int main() {\n    Hesap h;"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "class tanımı (2), main+nesne (3), kullanım ve kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1725, .topicId = 67,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "bakiye adlı private bir int üyesi olan Hesap adlı bir class tanımlayın; public bir ata() ve bir getir() metodu ekleyip main() içinde kullanın.",
+        .acceptedAnswers = {"private", "public", "cout"},
+        .explanation = "private üyeye public metotlarla erişilmelidir.",
+        .baseXp = 40,
+    });
 }
