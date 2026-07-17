@@ -2306,9 +2306,9 @@ void appendSection4Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 927, .topicId = 40,
         .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
-        .prompt = "find() sonucunu -1 ile karşılaştırmak, npos ile karşılaştırmakla her zaman aynı doğru sonucu verir.",
-        .acceptedAnswers = {"2"},
-        .explanation = "find()'ın dönüş türü işaretsizdir (unsigned); == -1 karşılaştırması güvenilir değildir, std::string::npos kullanılmalıdır.",
+        .prompt = "std::string::npos kullanmak, find() sonucunu -1 ile karşılaştırmaktan daha okunaklı ve tercih edilen bir yöntemdir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "find()'ın dönüş türü işaretsizdir (size_type); std::string::npos kullanmak niyeti daha açık ifade eder ve okunabilirliği artırır.",
         .baseXp = 20,
     });
     questions.push_back(Question{
@@ -2402,9 +2402,9 @@ void appendSection4Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 939, .topicId = 40,
         .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
-        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::string s = \"Merhaba\";\nif (s.find(\"xyz\") == -1) {\n    std::cout << \"Bulunamadı\";\n}\n\nBu kod her zaman 'Bulunamadı' yazdırmalı gibi görünse de, find()'ın dönüş türü işaretsiz (unsigned) olduğu ve bulunamama durumunda -1 değil std::string::npos döndüğü için == -1 karşılaştırması güvenilir değildir. Hatalı satırı düzeltilmiş haliyle yazın.",
-        .acceptedAnswers = {"if (s.find(\"xyz\") == std::string::npos) {"},
-        .explanation = "Bulunamama durumu std::string::npos ile karşılaştırılmalıdır, -1 ile değil.",
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::string s = \"Merhaba\";\nstd::string parca = s.substr(10, 3);\n\nBu kod çalışma zamanında std::out_of_range fırlatarak çöker çünkü 10, s'nin uzunluğundan (7) büyüktür. Programcı son 3 karakteri (\"aba\") almak istiyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::string parca = s.substr(4, 3);"},
+        .explanation = "substr()'ün başlangıç konumu (pos), string'in uzunluğundan büyük olamaz; aksi halde std::out_of_range fırlatılır. Son 3 karakteri almak için başlangıç konumu 4 olmalıdır (7 - 3 = 4).",
         .baseXp = 30,
     });
     questions.push_back(Question{
