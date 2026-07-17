@@ -5,7 +5,7 @@
 #include "QuestionContent.h"
 
 QuestionManager::QuestionManager() {
-    questions_.reserve(1522);
+    questions_.reserve(1812);
 
     // Topic 1: cout
     questions_.push_back(Question{
@@ -633,6 +633,7 @@ QuestionManager::QuestionManager() {
     appendSection4Questions(questions_);
     appendSection5Questions(questions_);
     appendSection6Questions(questions_);
+    appendSection7Questions(questions_);
 }
 
 std::vector<Question> QuestionManager::questionsForTopic(int topicId) const {
