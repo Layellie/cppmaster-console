@@ -2141,8 +2141,8 @@ function's closing `}`):
         .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
         .prompt = "Aşağıdaki satırları, overload edilmiş bir yazdir fonksiyonu kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
         .options = {"void yazdir(double x) {\n    std::cout << x;\n}", "yazdir(5);\n    yazdir(5.5);\n    return 0;\n}", "void yazdir(int x) {\n    std::cout << x;\n}\nint main() {"},
-        .acceptedAnswers = {"3 2 1"},
-        .explanation = "int overload (3), main içeriği (2), double overload (1): sıra 3 2 1.",
+        .acceptedAnswers = {"1 3 2"},
+        .explanation = "Her iki overload'ın da main()'den önce tanımlanmış olması gerekir ki çağrılar doğru overload'a gitsin: double overload (1), int overload + main açılışı (3), gövde ve kapanış (2): sıra 1 3 2.",
         .baseXp = 20,
     });
     questions.push_back(Question{

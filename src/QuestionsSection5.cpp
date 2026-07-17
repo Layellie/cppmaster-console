@@ -1440,8 +1440,8 @@ void appendSection5Questions(std::vector<Question>& questions) {
         .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
         .prompt = "Aşağıdaki satırları, overload edilmiş bir yazdir fonksiyonu kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
         .options = {"void yazdir(double x) {\n    std::cout << x;\n}", "yazdir(5);\n    yazdir(5.5);\n    return 0;\n}", "void yazdir(int x) {\n    std::cout << x;\n}\nint main() {"},
-        .acceptedAnswers = {"3 2 1"},
-        .explanation = "int overload (3), main içeriği (2), double overload (1): sıra 3 2 1.",
+        .acceptedAnswers = {"1 3 2"},
+        .explanation = "Her iki overload'ın da main()'den önce tanımlanmış olması gerekir ki çağrılar doğru overload'a gitsin: double overload (1), int overload + main açılışı (3), gövde ve kapanış (2): sıra 1 3 2.",
         .baseXp = 20,
     });
     questions.push_back(Question{
@@ -1528,7 +1528,7 @@ void appendSection5Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 1124, .topicId = 47,
         .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
-        .prompt = "Değer ile parametre gönderiminde, fonksiyon çağrıldığında argüman için ne zaman kopyalama gerçekleşir?",
+        .prompt = "Değer ile parametre gönderiminde, fonksiyon çağrılırken argüman için ne zaman kopyalama gerçekleşir?",
         .options = {"Fonksiyon çağrıldığı anda, parametre oluşturulurken", "Fonksiyon return yaptığında", "Program sonlandığında", "Hiçbir zaman, kopyalama olmaz"},
         .acceptedAnswers = {"a"},
         .explanation = "Kopyalama, çağrı anında parametrenin ilklendirilmesiyle gerçekleşir.",
@@ -1537,7 +1537,7 @@ void appendSection5Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 1125, .topicId = 47,
         .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
-        .prompt = "Değer ile gönderilen bir parametre, çağılanın orijinal değişkeninin bir kopyasıdır.",
+        .prompt = "Değer ile gönderilen bir parametre, çağıranın orijinal değişkeninin bir kopyasıdır.",
         .acceptedAnswers = {"1"},
         .explanation = "Doğru: değer ile gönderim bağımsız bir kopya oluşturur.",
         .baseXp = 5,
@@ -1545,7 +1545,7 @@ void appendSection5Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 1126, .topicId = 47,
         .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
-        .prompt = "Değer ile gönderilen bir parametrenin fonksiyon içinde değiştirilmesi, çağılanın orijinal değişkenini de değiştirir.",
+        .prompt = "Değer ile gönderilen bir parametrenin fonksiyon içinde değiştirilmesi, çağıranın orijinal değişkenini de değiştirir.",
         .acceptedAnswers = {"2"},
         .explanation = "Yanlış: parametre bağımsız bir kopya olduğundan, orijinal değişken etkilenmez.",
         .baseXp = 5,
@@ -1657,7 +1657,7 @@ void appendSection5Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 1140, .topicId = 47,
         .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
-        .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nvoid ikiyeKatla(int x) {\n    x = x * 2;\n}\nint main() {\n    int sayi = 5;\n    ikiyeKatla(sayi);\n    std::cout << sayi;\n    return 0;\n}\n\nProgramcı sayi'nin 10 yazdırılmasını bekliyor ama değer ile gönderim yüzünden 5 yazdırılıyor. Fonksiyonun, çağılanın değişkenini gerçekten değiştirmesi için parametre bildirimini (referansa çevirerek) düzeltilmiş haliyle yazın.",
+        .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nvoid ikiyeKatla(int x) {\n    x = x * 2;\n}\nint main() {\n    int sayi = 5;\n    ikiyeKatla(sayi);\n    std::cout << sayi;\n    return 0;\n}\n\nProgramcı sayi'nin 10 yazdırılmasını bekliyor ama değer ile gönderim yüzünden 5 yazdırılıyor. Fonksiyonun, çağıranın değişkenini gerçekten değiştirmesi için parametre bildirimini (referansa çevirerek) düzeltilmiş haliyle yazın.",
         .acceptedAnswers = {"void ikiyeKatla(int& x) {"},
         .explanation = "Çağılanın değişkenini değiştirmek için parametre referans (&) olmalıdır.",
         .baseXp = 20,
@@ -1673,7 +1673,7 @@ void appendSection5Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 1142, .topicId = 47,
         .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
-        .prompt = "Aşağıdaki kodu düzeltin:\n\nvoid birEkle(int sayi) {\n    sayi = sayi + 1;\n}\nint main() {\n    int deger = 9;\n    birEkle(deger);\n    std::cout << deger;\n    return 0;\n}\n\nProgramcı deger'in 10 olmasını bekliyor ama değer ile gönderim yüzünden 9 kalıyor. Fonksiyon başlığını, çağılanın değişkenini değiştirecek şekilde (referans parametreyle) düzeltilmiş haliyle yazın.",
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nvoid birEkle(int sayi) {\n    sayi = sayi + 1;\n}\nint main() {\n    int deger = 9;\n    birEkle(deger);\n    std::cout << deger;\n    return 0;\n}\n\nProgramcı deger'in 10 olmasını bekliyor ama değer ile gönderim yüzünden 9 kalıyor. Fonksiyon başlığını, çağıranın değişkenini değiştirecek şekilde (referans parametreyle) düzeltilmiş haliyle yazın.",
         .acceptedAnswers = {"void birEkle(int& sayi) {"},
         .explanation = "Çağılanın değişkenini kalıcı olarak değiştirmek için parametre referans (&) olmalıdır.",
         .baseXp = 30,
