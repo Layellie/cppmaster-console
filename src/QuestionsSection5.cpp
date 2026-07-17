@@ -974,4 +974,733 @@ void appendSection5Questions(std::vector<Question>& questions) {
         .explanation = "Program prototip, main() içinde çağrı ve main()'den sonra gerçek tanım içermelidir.",
         .baseXp = 40,
     });
+
+    // Topic 45: Varsayılan parametre
+    questions.push_back(Question{
+        .id = 1059, .topicId = 45,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "void selamla(std::string isim = \"Misafir\");\nBu fonksiyon parametresiz çağrıldığında (selamla();) isim parametresi ne olur?",
+        .options = {"\"Misafir\"", "Boş string", "Derleme hatası", "Rastgele değer"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Parametre verilmezse varsayılan değer (\"Misafir\") kullanılır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1060, .topicId = 45,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir parametreye varsayılan değer, fonksiyonun neresinde belirtilir?",
+        .options = {"Parametre tanımının yanında (=değer)", "Fonksiyon gövdesinin içinde", "Sadece main() içinde", "Yorum satırında"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Varsayılan değer, parametre listesinde `tür ad = değer` şeklinde belirtilir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1061, .topicId = 45,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int a, int b = 10);\nf(5) çağrısında b'nin değeri nedir?",
+        .options = {"10", "5", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "b için değer verilmediğinden varsayılan 10 kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1062, .topicId = 45,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int a, int b = 10);\nf(5, 20) çağrısında b'nin değeri nedir?",
+        .options = {"20", "10", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Çağrıda açıkça verilen değer (20), varsayılan değerin yerine geçer.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1063, .topicId = 45,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdakilerden hangisi geçerli bir fonksiyon tanımıdır?",
+        .options = {"void f(int a, int b = 5)", "void f(int a = 5, int b)", "void f(int a = 5, int b = 10, int c)", "void f(int a, int b = 5, int c)"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Varsayılan değerli parametreler, listenin sonunda (trailing) olmalıdır; varsayılan olmayan bir parametre varsayılandan sonra gelemez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1064, .topicId = 45,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int a, int b = 5, int c = 10);\nf(1, 2) çağrısında c'nin değeri nedir?",
+        .options = {"10", "5", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "c için değer verilmediğinden varsayılan 10 kullanılır (b ise 2 olur).",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1065, .topicId = 45,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int f(int a = 1, int b);\nBu tanım neden derleme hatası verir?",
+        .options = {"Varsayılan değerli parametre, varsayılan olmayandan önce gelemez", "int türü varsayılan değer alamaz", "Fonksiyonlar en fazla bir parametre alabilir", "f adı geçersizdir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "a varsayılan değer aldığı için ondan sonraki tüm parametreler (b) de varsayılan değer almalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1066, .topicId = 45,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int f(int a = 1, int b = 2) {\n    return a + b;\n}\nint main() {\n    std::cout << f() << f(10);\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"312", "33", "1210", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "f() -> 1+2=3, f(10) -> 10+2=12; birlikte '312' yazdırılır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1067, .topicId = 45,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Varsayılan parametre değeri olan bir fonksiyon, o parametre verilmeden de çağrılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: varsayılan değer, parametre atlandığında kullanılır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1068, .topicId = 45,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir parametreye varsayılan değer atansa bile, çağrıda o parametreye farklı bir değer vermek mümkündür.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: çağrıda verilen değer varsayılanın yerine geçer.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1069, .topicId = 45,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int a = 1, int b); şeklindeki bir tanım geçerlidir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: varsayılan değerli bir parametreden sonra varsayılansız parametre gelemez.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1070, .topicId = 45,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int a, int b = 5); tanımlı fonksiyon f(1, 2) şeklinde de çağrılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: varsayılan parametreye açıkça değer vermek serbesttir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1071, .topicId = 45,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir fonksiyonun tüm parametreleri aynı anda varsayılan değere sahip olabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: tüm parametreler varsayılan değerli olabilir, bu durumda fonksiyon hiç argüman almadan da çağrılabilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1072, .topicId = 45,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int a = 1, int b = 2, int c); tanımı derlenir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: c varsayılan değeri olmadan a ve b'den sonra gelemez; trailing kuralı ihlal edilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1073, .topicId = 45,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "void f(int a, int b _____ 5);\nb parametresine 5 varsayılan değerini atamak için boşluğa ne yazılmalı?",
+        .acceptedAnswers = {"="},
+        .explanation = "Varsayılan değer atama `=` işaretiyle yapılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1074, .topicId = 45,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int a, int b = 5);\nf(3) çağrısında b'nin değeri _____ olur.",
+        .acceptedAnswers = {"5"},
+        .explanation = "b verilmediğinden varsayılan 5 kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1075, .topicId = 45,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int a = 1, int b = 2, int c = 3);\nf(10, 20) çağrısında c'nin değeri _____ olur.",
+        .acceptedAnswers = {"3"},
+        .explanation = "c verilmediğinden varsayılan 3 kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1076, .topicId = 45,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int a, int b = 5, int _____);\nBu tanım derlenmez çünkü varsayılan değeri olmayan bir parametre, varsayılan değerli b'den sonra geliyor. Kuralı hatırlayarak, varsayılan değerli parametrelerin listenin neresinde olması gerektiğini (bir kelimeyle, İngilizce) yazın.",
+        .acceptedAnswers = {"trailing"},
+        .explanation = "Varsayılan değerli parametreler listenin sonunda (trailing) olmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1077, .topicId = 45,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int f(int a = 1, int b = 2) {\n    return a + b;\n}\nint main() {\n    std::cout << f(5);\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"7"},
+        .explanation = "a=5, b varsayılan 2 olduğundan 5+2=7.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1078, .topicId = 45,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int f(int a = 1, int b = 2) {\n    return a + b;\n}\nint main() {\n    std::cout << f();\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"3"},
+        .explanation = "Her iki parametre de varsayılan değerini alır: 1+2=3.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1079, .topicId = 45,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\nint main() {\n    std::cout << selamla();\n    return 0;\n}\nstd::string selamla(std::string isim) {\n    return \"Merhaba \" + isim;\n}\nselamla fonksiyonunun isim parametresi için \"Dünya\" varsayılan değerini veren bildirimini (prototip olarak) yazın.",
+        .acceptedAnswers = {"std::string selamla(std::string isim = \"Dünya\");"},
+        .explanation = "Varsayılan değer, tanım veya bildirimde (burada bildirimde) belirtilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1080, .topicId = 45,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int carp(int a, int b = 2) {\n    return a * b;\n}\nint main() {\n    _____\n    return 0;\n}\ncarp fonksiyonunu tek argümanla (a=6) çağırıp sonucu ekrana yazdıran satırı tamamlayın.",
+        .acceptedAnswers = {"std::cout << carp(6);"},
+        .explanation = "b verilmezse varsayılan 2 kullanılır: 6*2=12.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1081, .topicId = 45,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int f(int a, int b = 3) {\n    return a * b;\n}\nint main() {\n    std::cout << f(4);\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"12"},
+        .explanation = "b varsayılan 3 kullanılır: 4*3=12.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1082, .topicId = 45,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int f(int a = 2, int b = 3) {\n    return a + b;\n}\nint main() {\n    std::cout << f() << f(10) << f(10, 20);\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"51330"},
+        .explanation = "f()=2+3=5, f(10)=10+3=13, f(10,20)=10+20=30; birlikte '51330' yazdırılır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1083, .topicId = 45,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nvoid f(int a = 1, int b) {\n    std::cout << a + b;\n}\nint main() {\n    f(5, 6);\n    return 0;\n}\n\nBu kod derlenmez çünkü varsayılan değerli a parametresinden sonra varsayılansız b geliyor. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"void f(int a, int b = 1) {"},
+        .explanation = "Varsayılan değer, listenin sonundaki parametreye (b) taşınmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1084, .topicId = 45,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nvoid f(int a = 1, int b = 2, int c) {\n    std::cout << a + b + c;\n}\nint main() {\n    f(1, 2, 3);\n    return 0;\n}\n\nBu kod derlenmez çünkü c, varsayılan değerli a ve b'den sonra varsayılansız kalmış. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"void f(int c, int a = 1, int b = 2) {"},
+        .explanation = "Varsayılansız parametre (c), varsayılan değerli parametrelerden önce gelmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1085, .topicId = 45,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nvoid selamla(std::string isim, std::string mesaj = \"Merhaba\") {\n    std::cout << mesaj << \" \" << isim;\n}\nint main() {\n    selamla(mesaj);\n    return 0;\n}\n\nProgramcı main() içinde tanımsız bir mesaj değişkenini argüman olarak kullanmış; onun yerine sadece isim argümanını (\"Ali\") vererek çağırmalı. Düzeltilmiş çağrı satırını yazın.",
+        .acceptedAnswers = {"selamla(\"Ali\");"},
+        .explanation = "mesaj parametresi varsayılan değerli olduğundan çağrıda atlanabilir; sadece isim verilmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1086, .topicId = 45,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, varsayılan parametreli bir fonksiyon kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << topla(5);\n    return 0;\n}", "int topla(int a, int b = 10) {\n    return a + b;\n}", "int main() {"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "Fonksiyon tanımı (2), main açılışı (3), çağrı ve kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1087, .topicId = 45,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "isim parametresi varsayılan olarak \"Misafir\" değerini alan bir selamla fonksiyonu yazın; main() içinde hem argümansız hem de \"Ayşe\" argümanıyla çağırın.",
+        .acceptedAnswers = {"std::string", "=", "cout"},
+        .explanation = "Fonksiyon varsayılan parametreli tanımlanmalı ve iki farklı şekilde çağrılmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 46: Fonksiyon aşırı yükleme
+    questions.push_back(Question{
+        .id = 1088, .topicId = 46,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Aynı isimli birden fazla fonksiyonun farklı parametre listeleriyle tanımlanmasına ne denir?",
+        .options = {"Fonksiyon aşırı yükleme (overloading)", "Fonksiyon devralma (inheritance)", "Fonksiyon gizleme (hiding)", "Fonksiyon şablonu (template)"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Aynı isimli, farklı parametre listeli fonksiyonlara aşırı yükleme (overloading) denir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1089, .topicId = 46,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "İki fonksiyonun overload sayılabilmesi için ne farklı olmalıdır?",
+        .options = {"Parametre listesi (tür ve/veya sayı)", "Sadece dönüş türü", "Sadece fonksiyon gövdesi", "Sadece yorum satırları"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Overload, parametre listesinin (tür ve/veya sayısının) farklılığıyla belirlenir; dönüş türü tek başına yeterli değildir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1090, .topicId = 46,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "int f(int a);\ndouble f(int a);\nBu iki bildirim aynı dosyada bulunursa ne olur?",
+        .options = {"Derleme hatası (aynı parametre listesiyle yeniden tanım)", "Geçerli bir overload olur", "İkincisi birinciyi sessizce geçersiz kılar", "Sadece bir uyarı verir, çalışır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Parametre listeleri aynı olduğundan, sadece dönüş türü farklı olması overload için yetersizdir; bu bir yeniden tanım hatasıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1091, .topicId = 46,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "void yazdir(int x);\nvoid yazdir(double x);\nBu iki fonksiyon geçerli bir overload çifti midir?",
+        .options = {"Evet, parametre türleri farklı (int/double)", "Hayır, isimler aynı olduğundan hata verir", "Hayır, dönüş türleri aynı olduğundan hata verir", "Evet ama sadece biri çağrılabilir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Parametre türleri farklı olduğundan (int vs double) bu geçerli bir overload'dır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1092, .topicId = 46,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int a);\nvoid f(int a, int b);\nBu iki fonksiyon geçerli bir overload çifti midir?",
+        .options = {"Evet, parametre sayıları farklı (1 ve 2)", "Hayır, isimler aynı olduğundan hata verir", "Hayır, ikisi de int aldığından hata verir", "Evet ama ikincisi hiç çağrılamaz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Parametre sayısı farklı olduğundan (1 ve 2) bu geçerli bir overload'dır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1093, .topicId = 46,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int a);\nvoid f(double a);\nint main() {\n    f(3.5);\n}\nHangi f çağrılır?",
+        .options = {"f(double a) — argüman zaten double", "f(int a) — int'e yuvarlanır", "İkisi birden çağrılır", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "3.5 bir double literal olduğundan, tam eşleşen f(double) overload'ı seçilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1094, .topicId = 46,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "int f(int a, int b);\ndouble f(int a, int b);\nBu iki bildirim neden derleme hatasıdır?",
+        .options = {"Parametre listeleri aynı; sadece dönüş türü farklı, bu overload için yetersiz", "int ve double aynı fonksiyonda kullanılamaz", "Fonksiyonlar en fazla bir kez tanımlanabilir", "b parametresi geçersizdir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Overload çözümlemesi dönüş türüne bakmaz; parametre listesi aynı olduğundan bu geçerli bir overload değil, yeniden tanım hatasıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1095, .topicId = 46,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "void f(int a, int b);\nvoid f(int a, double b);\nint main() {\n    f(1, 2);\n}\nHangi f çağrılır?",
+        .options = {"f(int, int) — her iki argüman da tam sayı, tam eşleşme", "f(int, double) — ikinci argüman double'a çevrilir", "Belirsizlik hatası (ambiguous)", "Derleme hatası, hiçbiri eşleşmez"},
+        .acceptedAnswers = {"a"},
+        .explanation = "f(1, 2) çağrısında her iki argüman da int olduğundan, f(int,int) overload'ı tam eşleşme sağlar ve belirsizlik olmadan çağrılır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1096, .topicId = 46,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Fonksiyon overloading, aynı isimli fonksiyonların farklı parametre listeleriyle tanımlanmasıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: overload, parametre listesi farklılığına dayanır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1097, .topicId = 46,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Sadece dönüş türü farklı olan iki fonksiyon, geçerli bir overload çifti oluşturur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: overload çözümlemesi dönüş türüne bakmaz, parametre listesi aynıysa bu bir yeniden tanım hatasıdır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1098, .topicId = 46,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "int f(int a); ve int f(double a); geçerli bir overload çiftidir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: parametre türleri farklı (int/double).",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1099, .topicId = 46,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Overload çözümlemesi, çağrıdaki argüman sayısı ve türlerine bakarak hangi fonksiyonun çağrılacağını belirler.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: derleyici, argümanların sayı ve türüne göre en uygun overload'ı seçer.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1100, .topicId = 46,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int a); ve int f(int a); (parametre listeleri aynı, dönüş türleri farklı) aynı dosyada birlikte derlenir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: parametre listeleri aynı olduğundan, sadece dönüş türü farkı overload sağlamaz; derleme hatası oluşur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1101, .topicId = 46,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int a, int b); ve void f(int a, int b, int c); geçerli bir overload çiftidir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: parametre sayıları farklı (2 ve 3).",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1102, .topicId = 46,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Aynı isimli fonksiyonların farklı parametre listeleriyle birden fazla kez tanımlanmasına fonksiyon _____ denir (İngilizce terim).",
+        .acceptedAnswers = {"overloading", "overload"},
+        .explanation = "Bu kavrama overloading (aşırı yükleme) denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1103, .topicId = 46,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Overload olabilmek için fonksiyonların _____ listesi farklı olmalıdır (dönüş türü değil).",
+        .acceptedAnswers = {"parametre"},
+        .explanation = "Overload çözümlemesi parametre listesine bakar, dönüş türüne bakmaz.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1104, .topicId = 46,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "int f(int a);\ndouble f(int a);\nBu iki bildirim aynı dosyada olursa derleyici bunu geçerli bir overload olarak KABUL ETMEZ, çünkü sadece _____ türü farklıdır (parametre listesi aynıdır).",
+        .acceptedAnswers = {"dönüş"},
+        .explanation = "Sadece dönüş türü farkı, overload için yeterli değildir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1105, .topicId = 46,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int a, int b);\nvoid f(int a, double b);\nint main() {\n    f(1, 2);\n}\nBu çağrıda f(int, _____) overload'ı çağrılır çünkü her iki argüman da tam sayıdır.",
+        .acceptedAnswers = {"int"},
+        .explanation = "f(1,2) çağrısında iki argüman da int olduğundan tam eşleşen f(int,int) seçilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1106, .topicId = 46,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "void yazdir(int x);\nvoid yazdir(std::string x);\nyazdir(\"Merhaba\") çağrısı yazdir(_____) overload'ını çağırır.",
+        .acceptedAnswers = {"std::string"},
+        .explanation = "\"Merhaba\" bir string literal olduğundan std::string overload'ı çağrılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1107, .topicId = 46,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "void yazdir(int x) {\n    std::cout << \"int: \" << x;\n}\n_____\nvoid yazdir(double x) {\n    std::cout << \"double: \" << x;\n}\nyazdir fonksiyonunun int yerine double parametre alan overload'unun bildirimini (tanım satırının başlığını) yazın.",
+        .acceptedAnswers = {"void yazdir(double x) {"},
+        .explanation = "Overload, farklı parametre türüyle (double) tanımlanır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1108, .topicId = 46,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int topla(int a, int b) {\n    return a + b;\n}\n_____\nint main() {\n    std::cout << topla(1, 2, 3);\n    return 0;\n}\ntopla fonksiyonunun üç int parametre alan overload'unun tanımını yazın (a+b+c döndürsün).",
+        .acceptedAnswers = {"int topla(int a, int b, int c) { return a + b + c; }"},
+        .explanation = "Parametre sayısı farklı olduğundan bu geçerli bir overload'dır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1109, .topicId = 46,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int a) {\n    std::cout << \"int\";\n}\nvoid f(double a) {\n    std::cout << \"double\";\n}\nint main() {\n    f(5);\n    f(5.5);\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"intdouble"},
+        .explanation = "f(5) int overload'ını, f(5.5) double overload'ını çağırır: 'intdouble'.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1110, .topicId = 46,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "void f(int a, int b) {\n    std::cout << \"iki\";\n}\nvoid f(int a, int b, int c) {\n    std::cout << \"uc\";\n}\nint main() {\n    f(1, 2);\n    f(1, 2, 3);\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"ikiuc"},
+        .explanation = "f(1,2) iki parametreli overload'ı, f(1,2,3) üç parametreli overload'ı çağırır: 'ikiuc'.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1111, .topicId = 46,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint f(int a) {\n    return a;\n}\ndouble f(int a) {\n    return a;\n}\nint main() {\n    std::cout << f(5);\n    return 0;\n}\n\nBu kod derlenmez çünkü iki f fonksiyonu aynı parametre listesine (int a) sahip, sadece dönüş türleri farklı. Hatalı ikinci fonksiyon tanımının başlığını, geçerli bir overload olacak şekilde (bir int parametre daha ekleyerek) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"double f(int a, int b) {"},
+        .explanation = "Parametre listesi farklılaştırılarak (ikinci bir int parametre eklenerek) geçerli bir overload elde edilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1112, .topicId = 46,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nvoid yazdir(int x) {\n    std::cout << x;\n}\nvoid yazdir(int y) {\n    std::cout << y;\n}\nint main() {\n    yazdir(5);\n    return 0;\n}\n\nBu kod derlenmez çünkü iki yazdir fonksiyonu tamamen aynı parametre listesine (int) sahip; parametre adının farklı olması (x/y) yeterli değildir. İkinci fonksiyonun başlığını, double parametre alacak şekilde düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"void yazdir(double y) {"},
+        .explanation = "Parametre adları değil, parametre TÜRLERİ overload'ı belirler; türü değiştirmek (double) geçerli bir overload sağlar.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1113, .topicId = 46,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint carp(int a, int b) {\n    return a * b;\n}\ndouble carp(int a, int b) {\n    return a * b;\n}\nint main() {\n    std::cout << carp(2, 3);\n    return 0;\n}\n\nİki carp fonksiyonu aynı parametre listesine sahip; ikincisi çift sayı (double) parametre alacak şekilde değiştirilmeli. Düzeltilmiş ikinci fonksiyonun başlığını yazın.",
+        .acceptedAnswers = {"double carp(double a, double b) {"},
+        .explanation = "Parametre türleri double yapılarak, int overload'dan farklı geçerli bir overload elde edilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1114, .topicId = 46,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, overload edilmiş bir yazdir fonksiyonu kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"void yazdir(double x) {\n    std::cout << x;\n}", "yazdir(5);\n    yazdir(5.5);\n    return 0;\n}", "void yazdir(int x) {\n    std::cout << x;\n}\nint main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "int overload (3), main içeriği (2), double overload (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1115, .topicId = 46,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "void yazdir(int x);\nvoid yazdir(int x, int y);\nİlk fonksiyon 1, ikincisi 2 parametre aldığından, bunlar parametre _____ farklı olduğu için geçerli bir overload'dır (Türkçe kelime).",
+        .acceptedAnswers = {"sayısı", "sayisi"},
+        .explanation = "Parametre sayısının farklı olması (1 ve 2) overload için yeterlidir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1116, .topicId = 46,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "topla adında biri iki int, diğeri iki double parametre alan iki overload fonksiyon yazın; main() içinde her ikisini de çağırıp sonuçlarını yazdırın.",
+        .acceptedAnswers = {"int", "double", "return", "cout"},
+        .explanation = "İki fonksiyon aynı isimle ama farklı parametre türleriyle (int/double) tanımlanmalı ve her ikisi de çağrılmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 47: Değer ile parametre gönderme
+    questions.push_back(Question{
+        .id = 1117, .topicId = 47,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir fonksiyona değer ile (by value) parametre gönderildiğinde ne olur?",
+        .options = {"Argümanın bağımsız bir kopyası oluşturulur", "Argümanın kendisi doğrudan değiştirilir", "Argüman hiç kopyalanmadan referans olarak kullanılır", "Argüman bellekte silinir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Değer ile gönderimde parametre, argümanın bağımsız bir kopyasıdır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1118, .topicId = 47,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "void f(int x) {\n    x = 100;\n}\nint main() {\n    int a = 5;\n    f(a);\n    std::cout << a;\n}\nEkrana ne yazdırılır?",
+        .options = {"5", "100", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "x, a'nın bir kopyasıdır; x'in değişmesi a'yı etkilemez, a hâlâ 5'tir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1119, .topicId = 47,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "Değer ile parametre göndermenin en belirgin dezavantajı nedir?",
+        .options = {"Büyük nesnelerde kopyalama maliyeti", "Fonksiyonun hiç çalışmaması", "Derleyicinin bunu desteklememesi", "Sadece int türü için çalışması"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Kopyalama, büyük nesneler (ör. büyük string/vector) için performans maliyeti getirir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1120, .topicId = 47,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "void kare(int x) {\n    x = x * x;\n}\nint main() {\n    int sayi = 4;\n    kare(sayi);\n    std::cout << sayi;\n}\nEkrana ne yazdırılır?",
+        .options = {"4", "16", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "kare fonksiyonu sayi'nin kopyasını değiştirir; orijinal sayi değişmez, 4 kalır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1121, .topicId = 47,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "void artir(int x) {\n    x++;\n}\nint main() {\n    int sayac = 10;\n    artir(sayac);\n    artir(sayac);\n    std::cout << sayac;\n}\nEkrana ne yazdırılır?",
+        .options = {"10", "11", "12", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Her artir çağrısı sadece kendi kopyasını artırır; sayac hiç değişmeden 10 kalır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1122, .topicId = 47,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "int f(int x) {\n    x += 5;\n    return x;\n}\nint main() {\n    int a = 10;\n    int b = f(a);\n    std::cout << a << \" \" << b;\n}\nEkrana ne yazdırılır?",
+        .options = {"10 15", "15 15", "10 10", "15 10"},
+        .acceptedAnswers = {"a"},
+        .explanation = "a, f'ye kopyalanır ve fonksiyon içinde değişen kopya döndürülür (b=15); a orijinali değişmeden 10 kalır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1123, .topicId = 47,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "void f(int x, int y) {\n    x = x + y;\n    y = 0;\n}\nint main() {\n    int a = 3, b = 4;\n    f(a, b);\n    std::cout << a << \" \" << b;\n}\nEkrana ne yazdırılır?",
+        .options = {"3 4", "7 0", "7 4", "3 0"},
+        .acceptedAnswers = {"a"},
+        .explanation = "x ve y, a ve b'nin kopyalarıdır; fonksiyon içindeki değişiklikler a ve b'yi etkilemez, ikisi de değişmeden kalır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1124, .topicId = 47,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "Değer ile parametre gönderiminde, fonksiyon çağrıldığında argüman için ne zaman kopyalama gerçekleşir?",
+        .options = {"Fonksiyon çağrıldığı anda, parametre oluşturulurken", "Fonksiyon return yaptığında", "Program sonlandığında", "Hiçbir zaman, kopyalama olmaz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Kopyalama, çağrı anında parametrenin ilklendirilmesiyle gerçekleşir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1125, .topicId = 47,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Değer ile gönderilen bir parametre, çağılanın orijinal değişkeninin bir kopyasıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: değer ile gönderim bağımsız bir kopya oluşturur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1126, .topicId = 47,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Değer ile gönderilen bir parametrenin fonksiyon içinde değiştirilmesi, çağılanın orijinal değişkenini de değiştirir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: parametre bağımsız bir kopya olduğundan, orijinal değişken etkilenmez.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1127, .topicId = 47,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int x) { x = 0; } int main() { int a = 5; f(a); } çağrısından sonra a hâlâ 5'tir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: x, a'nın kopyasıdır; x'in sıfırlanması a'yı etkilemez.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1128, .topicId = 47,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Büyük bir std::string'i değer ile parametre olarak göndermek, referans ile göndermeye kıyasla daha fazla kopyalama maliyeti taşır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: değer ile gönderim, tüm string içeriğini kopyalarken referans hiç kopyalamaz.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1129, .topicId = 47,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int x) { x++; } int main() { int a = 1; f(a); f(a); std::cout << a; } kodu ekrana 3 yazdırır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: her çağrı yalnızca kendi kopyasını artırır, a hiç değişmeden 1 kalır; ekrana 1 yazdırılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1130, .topicId = 47,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Değer ile parametre gönderimi, temel türler (int, double gibi) için genellikle ucuz bir kopyalama işlemidir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: temel türlerin kopyalanması ucuzdur; maliyet asıl büyük nesnelerde (string, vector) belirginleşir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1131, .topicId = 47,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Değer ile gönderimde, parametre argümanın bağımsız bir _____ olur.",
+        .acceptedAnswers = {"kopyası", "kopyasi"},
+        .explanation = "Değer ile gönderim, argümanın bağımsız bir kopyasını oluşturur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1132, .topicId = 47,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int x) {\n    x = 50;\n}\nint main() {\n    int a = 5;\n    f(a);\n    std::cout << a;\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"5"},
+        .explanation = "x bağımsız bir kopya olduğundan a değişmeden 5 kalır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1133, .topicId = 47,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "int f(int x) {\n    return x * 2;\n}\nint main() {\n    int a = 5;\n    int b = f(a);\n    std::cout << a << \" \" << b;\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"5 10"},
+        .explanation = "a değişmez (5), b ise f'nin döndürdüğü değeri alır (10).",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1134, .topicId = 47,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Değer ile parametre gönderiminin en büyük maliyeti, büyük nesnelerde oluşan _____ (kopyalama) işlemidir (bir kelimeyle, Türkçe).",
+        .acceptedAnswers = {"kopyalama"},
+        .explanation = "Büyük nesnelerin kopyalanması işlem maliyeti getirir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1135, .topicId = 47,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "void degistir(int x) {\n    x = x + 100;\n}\nint main() {\n    int deger = 1;\n    degistir(deger);\n    std::cout << deger;\n}\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"1"},
+        .explanation = "degistir, deger'in kopyasını değiştirir; orijinal deger değişmeden 1 kalır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1136, .topicId = 47,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "void sifirla(int x) {\n    _____\n}\nint main() {\n    int a = 5;\n    sifirla(a);\n    std::cout << a;\n    return 0;\n}\nsifirla fonksiyonunun gövdesini (x'i 0 yapan satırı) tamamlayın. (Not: değer ile gönderim olduğu için a yine de 5 kalacaktır.)",
+        .acceptedAnswers = {"x = 0;"},
+        .explanation = "x, a'nın bir kopyası olduğundan x=0 yapmak a'yı etkilemez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1137, .topicId = 47,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "int ikiKatiniAl(int x) {\n    _____\n}\nint main() {\n    std::cout << ikiKatiniAl(7);\n    return 0;\n}\nikiKatiniAl fonksiyonunun x'in iki katını döndüren gövdesini tamamlayın.",
+        .acceptedAnswers = {"return x * 2;"},
+        .explanation = "Fonksiyon, parametrenin kopyasını iki katına çıkarıp döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1138, .topicId = 47,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "void f(int x) {\n    x = x * 10;\n    std::cout << x << \" \";\n}\nint main() {\n    int a = 3;\n    f(a);\n    std::cout << a;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"30 3"},
+        .explanation = "Fonksiyon içinde x=30 yazdırılır, ardından a hâlâ 3 olduğundan 3 yazdırılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1139, .topicId = 47,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "void f(int x) {\n    x++;\n}\nint main() {\n    int a = 1;\n    f(a);\n    f(a);\n    f(a);\n    std::cout << a;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"1"},
+        .explanation = "Her f çağrısı yalnızca kendi kopyasını artırır; a hiçbir zaman değişmez, 1 kalır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1140, .topicId = 47,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nvoid ikiyeKatla(int x) {\n    x = x * 2;\n}\nint main() {\n    int sayi = 5;\n    ikiyeKatla(sayi);\n    std::cout << sayi;\n    return 0;\n}\n\nProgramcı sayi'nin 10 yazdırılmasını bekliyor ama değer ile gönderim yüzünden 5 yazdırılıyor. Fonksiyonun, çağılanın değişkenini gerçekten değiştirmesi için parametre bildirimini (referansa çevirerek) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"void ikiyeKatla(int& x) {"},
+        .explanation = "Çağılanın değişkenini değiştirmek için parametre referans (&) olmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1141, .topicId = 47,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nvoid takasEt(int a, int b) {\n    int gecici = a;\n    a = b;\n    b = gecici;\n}\nint main() {\n    int x = 1, y = 2;\n    takasEt(x, y);\n    std::cout << x << \" \" << y;\n    return 0;\n}\n\nProgramcı x ve y'nin takas edilmesini bekliyor ama değer ile gönderim yüzünden ikisi de değişmeden kalıyor (1 2 yazdırılır). Fonksiyonun gerçekten takas yapması için parametre bildirimini (referansa çevirerek) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"void takasEt(int& a, int& b) {"},
+        .explanation = "Gerçek takas için parametrelerin referans (&) olması gerekir; değer ile gönderim sadece kopyaları takas eder.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1142, .topicId = 47,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nvoid birEkle(int sayi) {\n    sayi = sayi + 1;\n}\nint main() {\n    int deger = 9;\n    birEkle(deger);\n    std::cout << deger;\n    return 0;\n}\n\nProgramcı deger'in 10 olmasını bekliyor ama değer ile gönderim yüzünden 9 kalıyor. Fonksiyon başlığını, çağılanın değişkenini değiştirecek şekilde (referans parametreyle) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"void birEkle(int& sayi) {"},
+        .explanation = "Çağılanın değişkenini kalıcı olarak değiştirmek için parametre referans (&) olmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1143, .topicId = 47,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, değer ile parametre gönderilen bir fonksiyon kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"int a = 5;\n    f(a);\n    std::cout << a;\n    return 0;\n}", "void f(int x) {\n    x = 100;\n}", "int main() {"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "Fonksiyon tanımı (2), main açılışı (3), gövde ve kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1144, .topicId = 47,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "void f(int x) {\n    x = x + 1;\n}\nDeğer ile gönderimde x, çağırandaki argümanın bir kopyası olduğundan, bu fonksiyonun çağırandaki değişken üzerinde hiçbir kalıcı _____ yoktur (bir kelimeyle, Türkçe).",
+        .acceptedAnswers = {"etkisi"},
+        .explanation = "Değer ile gönderim, çağırandaki orijinal değişkeni asla etkilemez.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1145, .topicId = 47,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir sayının karesini değer ile parametre alarak hesaplayıp döndüren bir fonksiyon yazın; main() içinde çağırıp hem orijinal değişkeni hem de dönen sonucu yazdırarak orijinalin değişmediğini gösterin.",
+        .acceptedAnswers = {"int", "return", "cout"},
+        .explanation = "Fonksiyon parametreyi değer ile almalı, kareyi döndürmeli; orijinal değişken değişmemelidir.",
+        .baseXp = 40,
+    });
 }
