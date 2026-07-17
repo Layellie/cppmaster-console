@@ -1659,7 +1659,7 @@ void appendSection5Questions(std::vector<Question>& questions) {
         .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
         .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nvoid ikiyeKatla(int x) {\n    x = x * 2;\n}\nint main() {\n    int sayi = 5;\n    ikiyeKatla(sayi);\n    std::cout << sayi;\n    return 0;\n}\n\nProgramcı sayi'nin 10 yazdırılmasını bekliyor ama değer ile gönderim yüzünden 5 yazdırılıyor. Fonksiyonun, çağıranın değişkenini gerçekten değiştirmesi için parametre bildirimini (referansa çevirerek) düzeltilmiş haliyle yazın.",
         .acceptedAnswers = {"void ikiyeKatla(int& x) {"},
-        .explanation = "Çağılanın değişkenini değiştirmek için parametre referans (&) olmalıdır.",
+        .explanation = "Çağıranın değişkenini değiştirmek için parametre referans (&) olmalıdır.",
         .baseXp = 20,
     });
     questions.push_back(Question{
@@ -1675,7 +1675,7 @@ void appendSection5Questions(std::vector<Question>& questions) {
         .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
         .prompt = "Aşağıdaki kodu düzeltin:\n\nvoid birEkle(int sayi) {\n    sayi = sayi + 1;\n}\nint main() {\n    int deger = 9;\n    birEkle(deger);\n    std::cout << deger;\n    return 0;\n}\n\nProgramcı deger'in 10 olmasını bekliyor ama değer ile gönderim yüzünden 9 kalıyor. Fonksiyon başlığını, çağıranın değişkenini değiştirecek şekilde (referans parametreyle) düzeltilmiş haliyle yazın.",
         .acceptedAnswers = {"void birEkle(int& sayi) {"},
-        .explanation = "Çağılanın değişkenini kalıcı olarak değiştirmek için parametre referans (&) olmalıdır.",
+        .explanation = "Çağıranın değişkenini kalıcı olarak değiştirmek için parametre referans (&) olmalıdır.",
         .baseXp = 30,
     });
     questions.push_back(Question{
