@@ -175,9 +175,10 @@ as Phases 1-7.
   partial XP (5) saved. Third of nine section-by-section content phases
   (13-21) closing the roadmap's lesson-content and question-bank gaps for
   topics 11-100.
-- **Phases 16-21 — İçerik genişletme (devamı):** kalan 60 konunun ders
-  içeriği + soru bankasının ~1740'a çıkarılması. Bölüm bölüm (Section 5
-  through Section 10, 6 phases), her biri o bölümün 10 konusu + ~290 soru.
+- **Phase 16 — Bölüm 5 İçerik Genişletmesi: COMPLETE** (commits `4955846..5720c8a`, 92/92 tests + ctest 100%). Topics 41-50 (Section 5: "Fonksiyonlar") now have full lesson content (`src/LessonContentSection5.cpp`) and a 290-question bank (ids 943-1232, 29 per topic, `src/QuestionsSection5.cpp`) spanning the same 9 of 11 question types as Sections 2-4 (`Scenario`/`Matching` still deliberately unused). A new `QuestionManager_EveryTopicFortyOneToFiftyHasAtLeastTwentyNineQuestions` test was added; `QuestionManager_NoDuplicateQuestionIds` already scanned topics 1-100 and needed no change. A manual end-to-end run additionally confirmed `openTopic`'s content gate passes for topic 43 ("Değer döndüren fonksiyon") with zero `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29 soru).", correct answers award XP, and mid-quiz `cikis` exits cleanly back to the main menu with partial XP saved. Fourth of nine section-by-section content phases (13-21) closing the roadmap's lesson-content and question-bank gaps for topics 11-100.
+- **Phases 17-21 — İçerik genişletme (devamı):** kalan 50 konunun ders
+  içeriği + soru bankasının ~1450'ye çıkarılması. Bölüm bölüm (Section 6
+  through Section 10, 5 phases), her biri o bölümün 10 konusu + ~290 soru.
 - **Phase 22 — Sınavlar:** kalan 9 bölüm sınavı + 100 soruluk genel final
   sınavı (içerik tamamlandıktan sonra mümkün).
 - **Phase 23 — Üretici kütüphanesini genişletme:** en az 15 üretici,
@@ -190,8 +191,8 @@ as Phases 1-7.
 
 ## Status
 
-Phase 15 complete (2026-07-17). Phase 16 (Section 5 content: "Fonksiyonlar",
-topics 41-50) starting next — the fourth of the large content-expansion
+Phase 16 complete (2026-07-17). Phase 17 (Section 6 content: "Lambda, pointer
+ve bellek", topics 51-60) starting next — the fifth of the large content-expansion
 phases (Phases 13-21). Update this file's
 phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
 per-phase headers).
