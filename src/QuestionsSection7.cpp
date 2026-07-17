@@ -1703,4 +1703,733 @@ void appendSection7Questions(std::vector<Question>& questions) {
         .explanation = "private üyeye public metotlarla erişilmelidir.",
         .baseXp = 40,
     });
+
+    // Topic 68: Getter ve setter
+    questions.push_back(Question{
+        .id = 1726, .topicId = 68,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir getter metodunun amacı nedir?",
+        .options = {"private bir üyenin değerini okuyup döndürmek", "private bir üyeyi silmek", "Yeni bir nesne oluşturmak", "Bir üyeyi public yapmak"},
+        .acceptedAnswers = {"a"},
+        .explanation = "getter, private bir üyenin değerini okuyup döndürür.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1727, .topicId = 68,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "Bir setter metodunun amacı nedir?",
+        .options = {"private bir üyeye (genellikle kontrollü şekilde) yeni bir değer atamak", "private bir üyenin değerini okumak", "Bir metodu silmek", "Bir sınıfı yok etmek"},
+        .acceptedAnswers = {"a"},
+        .explanation = "setter, private bir üyeye kontrollü olarak değer atar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1728, .topicId = 68,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "class Ogrenci {\nprivate:\n    int yas;\npublic:\n    int getYas() { return yas; }\n    void setYas(int d) { yas = d; }\n};\nOgrenci o;\no.setYas(18);\nstd::cout << o.getYas();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"18", "0", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "setYas(18) yas'ı 18 yapar, getYas() bu değeri döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1729, .topicId = 68,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Ogrenci {\nprivate:\n    int yas = 0;\npublic:\n    void setYas(int d) {\n        if (d > 0) {\n            yas = d;\n        }\n    }\n    int getYas() { return yas; }\n};\nOgrenci o;\no.setYas(-5);\nstd::cout << o.getYas();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"0", "-5", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "setYas(-5), d>0 kontrolünü geçemediği için yas değişmez, varsayılan 0 kalır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1730, .topicId = 68,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Getter ve setter kullanmanın, üyeyi doğrudan public yapmaya göre avantajı nedir?",
+        .options = {"Erişim üzerinde kontrol sağlar (örneğin geçerlilik kontrolü yapılabilir)", "Daha az kod yazmayı gerektirir", "Programı daha hızlı çalıştırır", "Hiçbir avantajı yoktur"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Getter/setter, erişim üzerinde kontrol sağlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1731, .topicId = 68,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Kutu {\nprivate:\n    int deger = 0;\npublic:\n    int getDeger() { return deger; }\n    void setDeger(int d) { deger = d; }\n};\nKutu k;\nk.setDeger(5);\nk.setDeger(k.getDeger() + 3);\nstd::cout << k.getDeger();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"8", "5", "3", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "setDeger(5) sonra setDeger(5+3=8) çağrılır; sonuç 8'dir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1732, .topicId = 68,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Hesap {\nprivate:\n    int bakiye = 0;\npublic:\n    void setBakiye(int d) {\n        if (d >= 0) {\n            bakiye = d;\n        }\n    }\n    int getBakiye() { return bakiye; }\n};\nHesap h;\nh.setBakiye(50);\nh.setBakiye(-10);\nh.setBakiye(30);\nstd::cout << h.getBakiye();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"30", "50", "-10", "70"},
+        .acceptedAnswers = {"a"},
+        .explanation = "setBakiye(-10) geçersiz olduğundan atlanır; son geçerli çağrı setBakiye(30) sonucu belirler.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1733, .topicId = 68,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Urun {\nprivate:\n    int fiyat = 0;\npublic:\n    void setFiyat(int f) {\n        if (f >= 0) {\n            fiyat = f;\n        } else {\n            fiyat = 0;\n        }\n    }\n    int getFiyat() { return fiyat; }\n};\nUrun u;\nu.setFiyat(-20);\nstd::cout << u.getFiyat();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"0", "-20", "20", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "f>=0 false olduğundan else dalı çalışır, fiyat 0 olur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1734, .topicId = 68,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir getter, private bir üyenin değerini okuyup döndüren bir metottur.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1735, .topicId = 68,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir setter, private bir üyenin değerini okuyan bir metottur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: setter, üyeye değer atamak içindir; okumak getter'ın işidir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1736, .topicId = 68,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Getter ve setter metotları genellikle public olarak tanımlanır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1737, .topicId = 68,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Bir setter'da geçerlilik kontrolü (validasyon) yapmak zorunludur, aksi halde derleme hatası oluşur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: geçerlilik kontrolü isteğe bağlı bir tasarım kararıdır, derleyici zorunlu kılmaz.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1738, .topicId = 68,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Getter ve setter kullanmak, private bir üyeye kontrollü erişim sağlar.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1739, .topicId = 68,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir setter'da if kontrolü olmadan doğrudan atama yapmak, üyeyi public yapmaktan işlevsel olarak farksızdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1740, .topicId = 68,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "private bir üyenin değerini okuyup döndüren metoda _____ denir (İngilizce kelime).",
+        .acceptedAnswers = {"getter"},
+        .explanation = "Bu metoda getter denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1741, .topicId = 68,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "private bir üyeye yeni bir değer atayan metoda _____ denir (İngilizce kelime).",
+        .acceptedAnswers = {"setter"},
+        .explanation = "Bu metoda setter denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1742, .topicId = 68,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "class Ogrenci {\nprivate:\n    int not_ = 0;\npublic:\n    int getNot() { return not_; }\n    void setNot(int d) { not_ = d; }\n};\nOgrenci o;\no.setNot(85);\nstd::cout << o.getNot();\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"85"},
+        .explanation = "setNot(85) not_'u 85 yapar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1743, .topicId = 68,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Bir setter'da genellikle atamadan önce _____ kontrolü yapılır (Türkçe kelime, 'geçerlilik' anlamında).",
+        .acceptedAnswers = {"geçerlilik"},
+        .explanation = "Setter'lar genellikle geçerlilik kontrolü yapar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1744, .topicId = 68,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "class Kutu {\nprivate:\n    int deger = 0;\npublic:\n    void setDeger(int d) {\n        if (d > 0) {\n            deger = d;\n        }\n    }\n    int getDeger() { return deger; }\n};\nKutu k;\nk.setDeger(-5);\nstd::cout << k.getDeger();\nEkran çıktısı _____ olur (geçersiz değer reddedildiği için).",
+        .acceptedAnswers = {"0"},
+        .explanation = "setDeger(-5) reddedilir, deger varsayılan 0 kalır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1745, .topicId = 68,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Getter ve setter, bir üyeyi doğrudan public yapmak yerine erişim üzerinde _____ sağlar (Türkçe kelime).",
+        .acceptedAnswers = {"kontrol"},
+        .explanation = "Getter/setter erişim üzerinde kontrol sağlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1746, .topicId = 68,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Ogrenci {\nprivate:\n    int yas = 0;\npublic:\n    _____\n    void setYas(int d) { yas = d; }\n};\nyas'ı döndüren bir getYas() metodu tanımlayan satırı yazın.",
+        .acceptedAnswers = {"int getYas() { return yas; }"},
+        .explanation = "getYas metodu yas'ı döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1747, .topicId = 68,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Ogrenci {\nprivate:\n    int yas = 0;\npublic:\n    int getYas() { return yas; }\n    _____\n};\nyas'ı sadece pozitif değerlerle güncelleyen bir setYas(int) metodu tanımlayan satırı yazın.",
+        .acceptedAnswers = {"void setYas(int d) { if (d > 0) { yas = d; } }"},
+        .explanation = "setYas metodu, sadece pozitif değerleri kabul eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1748, .topicId = 68,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "class Kutu {\nprivate:\n    int deger = 0;\npublic:\n    int getDeger() { return deger; }\n    void setDeger(int d) { deger = d; }\n};\nint main() {\n    Kutu k;\n    k.setDeger(7);\n    std::cout << k.getDeger() * 3;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"21"},
+        .explanation = "7 * 3 = 21.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1749, .topicId = 68,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "class Hesap {\nprivate:\n    int bakiye = 0;\npublic:\n    void setBakiye(int d) {\n        if (d >= 0) {\n            bakiye = d;\n        }\n    }\n    int getBakiye() { return bakiye; }\n};\nint main() {\n    Hesap h;\n    h.setBakiye(20);\n    h.setBakiye(-100);\n    h.setBakiye(h.getBakiye() + 5);\n    std::cout << h.getBakiye();\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"25"},
+        .explanation = "setBakiye(20)->20; setBakiye(-100) reddedilir; setBakiye(20+5=25)->25.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1750, .topicId = 68,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Ogrenci {\nprivate:\n    int yas;\n};\nint main() {\n    Ogrenci o;\n    o.yas = 20;\n    return 0;\n}\n\nBu kod derlenmez çünkü yas private olduğundan dışarıdan doğrudan erişilemez. yas'ı ayarlayan, Ogrenci sınıfına eklenmesi gereken setter metodunu yazın.",
+        .acceptedAnswers = {"void setYas(int d) { yas = d; }"},
+        .explanation = "private bir üyeye dışarıdan erişmek için bir setter gerekir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1751, .topicId = 68,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nclass Hesap {\nprivate:\n    int bakiye = 0;\npublic:\n    void setBakiye(int d) {\n        bakiye = d;\n    }\n    int getBakiye() { return bakiye; }\n};\nint main() {\n    Hesap h;\n    h.setBakiye(-999);\n    std::cout << h.getBakiye();\n    return 0;\n}\n\nBu kod, setBakiye'nin negatif değerleri de kabul etmesi (geçerlilik kontrolü olmaması) nedeniyle -999 yazdırır; bu genellikle istenmeyen bir durumdur. setBakiye metodunu, sadece negatif olmayan (d >= 0) değerleri kabul edecek şekilde düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"void setBakiye(int d) { if (d >= 0) { bakiye = d; } }"},
+        .explanation = "Geçerlilik kontrolü eklenerek negatif değerler reddedilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1752, .topicId = 68,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nclass Ogrenci {\nprivate:\n    int yas = 0;\npublic:\n    void setYas(int d) { yas = d }\n};\n\nProgramcı yas = d; satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"void setYas(int d) { yas = d; }"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1753, .topicId = 68,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, getter ve setter kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"o.setYas(20);\n    std::cout << o.getYas();\n    return 0;\n}", "class Ogrenci {\nprivate:\n    int yas = 0;\npublic:\n    int getYas() { return yas; }\n    void setYas(int d) { yas = d; }\n};", "int main() {\n    Ogrenci o;"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "class tanımı (2), main+nesne (3), kullanım ve kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1754, .topicId = 68,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "yas adlı private bir int üyesi olan Ogrenci adlı bir class tanımlayın; getYas() ve sadece pozitif değerleri kabul eden bir setYas(int) metodu ekleyip main() içinde kullanın.",
+        .acceptedAnswers = {"getYas", "setYas", "cout"},
+        .explanation = "getYas ve setYas metotlarıyla private yas'a kontrollü erişim sağlanmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 69: Kalıtım
+    questions.push_back(Question{
+        .id = 1755, .topicId = 69,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir sınıfın başka bir sınıftan türetilmesi için hangi sözdizimi kullanılır?",
+        .options = {"class Turetilmis : public Taban { ... };", "class Turetilmis extends Taban { ... };", "class Turetilmis inherits Taban { ... };", "class Turetilmis(Taban) { ... };"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Kalıtım, class Turetilmis : public Taban { ... }; şeklinde tanımlanır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1756, .topicId = 69,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "class Hayvan {\npublic:\n    int yas;\n};\nclass Kopek : public Hayvan {\n};\nKopek k;\nk.yas = 3;\nBu kod derlenir mi?",
+        .options = {"Evet, yas public olduğundan Kopek nesnesi üzerinden de erişilebilir", "Hayır, kalıtım üye erişimini engeller", "Hayır, Kopek kendi yas'ını tanımlamalı", "Evet ama sadece Kopek içinden"},
+        .acceptedAnswers = {"a"},
+        .explanation = "yas public olduğundan türetilmiş sınıf nesnesi üzerinden de erişilebilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1757, .topicId = 69,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "Kalıtımda hangi sınıf 'taban' (base), hangisi 'türetilmiş' (derived) sınıftır?",
+        .options = {"Devralınan sınıf taban, devralan sınıf türetilmiştir", "Devralan sınıf taban, devralınan sınıf türetilmiştir", "İkisi de taban sınıftır", "İkisi de türetilmiş sınıftır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Devralınan sınıf taban (base), devralan sınıf türetilmiş (derived) sınıftır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1758, .topicId = 69,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Hayvan {\npublic:\n    void sesCikar() { std::cout << \"...\"; }\n};\nclass Kopek : public Hayvan {\n};\nKopek k;\nk.sesCikar();\nBu kod derlenir mi?",
+        .options = {"Evet, Kopek, Hayvan'ın public metotlarını devralır", "Hayır, Kopek kendi sesCikar()'ını tanımlamalı", "Hayır, metotlar kalıtılamaz", "Evet ama sadece private olarak"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Kopek, Hayvan'ın public metotlarını devralır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1759, .topicId = 69,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Hayvan {\npublic:\n    Hayvan() { std::cout << \"H\"; }\n};\nclass Kopek : public Hayvan {\npublic:\n    Kopek() { std::cout << \"K\"; }\n};\nKopek k;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"HK\"", "\"KH\"", "Sadece \"K\"", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Taban sınıfın constructor'ı önce, türetilmiş sınıfın constructor'ı sonra çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1760, .topicId = 69,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Hayvan {\npublic:\n    ~Hayvan() { std::cout << \"~H\"; }\n};\nclass Kopek : public Hayvan {\npublic:\n    ~Kopek() { std::cout << \"~K\"; }\n};\nint main() {\n    Kopek k;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"~K~H\"", "\"~H~K\"", "Sadece ~Kopek çalışır", "Sadece ~Hayvan çalışır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Yok etme sırası, kurma sırasının tersinedir: önce türetilmiş, sonra taban destructor'ı çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1761, .topicId = 69,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Hayvan {\nprivate:\n    int yas;\n};\nclass Kopek : public Hayvan {\npublic:\n    void yasGoster() { std::cout << yas; }\n};\nBu kod (Kopek'in yasGoster metodundan Hayvan'ın private yas'ına erişimi) derlenir mi?",
+        .options = {"Hayır, private üyeler türetilmiş sınıftan bile doğrudan erişilemez", "Evet, kalıtım tüm üyeleri erişilebilir yapar", "Evet ama sadece const olarak", "Hayır, Kopek Hayvan'dan türetilemez"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Taban sınıfın private üyeleri türetilmiş sınıftan bile doğrudan erişilemez.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1762, .topicId = 69,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Sekil {\npublic:\n    Sekil(int k) { std::cout << \"S(\" << k << \")\"; }\n};\nclass Kare : public Sekil {\npublic:\n    Kare() : Sekil(4) { std::cout << \"K\"; }\n};\nKare kr;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"S(4)K\"", "\"KS(4)\"", "Derleme hatası", "\"S(4)\""},
+        .acceptedAnswers = {"a"},
+        .explanation = "Kare'nin constructor'ı, initializer list ile Sekil(4)'ü çağırır; taban önce, türetilmiş sonra çalışır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1763, .topicId = 69,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Kalıtımda bir sınıf, başka bir sınıfın üyelerini devralabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1764, .topicId = 69,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir nesne oluşturulduğunda önce türetilmiş sınıfın constructor'ı, sonra taban sınıfın constructor'ı çalışır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: sıra tam tersidir, taban sınıf önce çalışır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1765, .topicId = 69,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Taban sınıfın public metotları, türetilmiş sınıfın nesneleri üzerinden de çağrılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1766, .topicId = 69,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Taban sınıfın private üyeleri, türetilmiş sınıfın kendi metotları içinden doğrudan erişilebilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: private üyeler türetilmiş sınıftan bile erişilemez.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1767, .topicId = 69,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir nesne yok edilirken, önce türetilmiş sınıfın destructor'ı, sonra taban sınıfın destructor'ı çalışır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1768, .topicId = 69,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "class Turetilmis : public Taban { ... }; şeklindeki bir tanımda Turetilmis, taban sınıftır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: Turetilmis türetilmiş sınıf, Taban ise taban sınıftır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1769, .topicId = 69,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Kalıtımda üyelerin devralındığı sınıfa _____ (taban) sınıf denir (Türkçe kelime).",
+        .acceptedAnswers = {"taban"},
+        .explanation = "Devralınan sınıfa taban sınıf denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1770, .topicId = 69,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Kalıtımda başka bir sınıftan üye devralan sınıfa _____ sınıf denir (Türkçe kelime).",
+        .acceptedAnswers = {"türetilmiş"},
+        .explanation = "Devralan sınıfa türetilmiş sınıf denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1771, .topicId = 69,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "class Hayvan {\npublic:\n    Hayvan() { std::cout << \"H\"; }\n};\nclass Kopek : public Hayvan {\npublic:\n    Kopek() { std::cout << \"K\"; }\n};\nKopek k;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"HK"},
+        .explanation = "Taban sınıf önce, türetilmiş sınıf sonra çalışır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1772, .topicId = 69,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Kalıtımda nesne oluşturulduğunda önce _____ sınıfın constructor'ı çalışır (Türkçe kelime).",
+        .acceptedAnswers = {"taban"},
+        .explanation = "Taban sınıfın constructor'ı önce çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1773, .topicId = 69,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Taban sınıfın _____ üyeleri, türetilmiş sınıftan doğrudan erişilemez (İngilizce kelime).",
+        .acceptedAnswers = {"private"},
+        .explanation = "private üyeler türetilmiş sınıftan erişilemez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1774, .topicId = 69,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "class A {\npublic:\n    ~A() { std::cout << \"~A\"; }\n};\nclass B : public A {\npublic:\n    ~B() { std::cout << \"~B\"; }\n};\nint main() {\n    B b;\n    return 0;\n}\nEkran çıktısı _____ olur (yok etme sırası kurulma sırasının tersine olduğu için).",
+        .acceptedAnswers = {"~B~A"},
+        .explanation = "Türetilmiş sınıfın destructor'ı önce, taban sınıfınki sonra çalışır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1775, .topicId = 69,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Hayvan {\npublic:\n    void yasa() { std::cout << \"Yasiyor\"; }\n};\n_____\nKopek k;\nk.yasa();\nHayvan'dan public olarak türetilen Kopek adlı bir class tanımlayan satırı yazın.",
+        .acceptedAnswers = {"class Kopek : public Hayvan {\n};"},
+        .explanation = "Kopek, Hayvan'dan public olarak türetilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1776, .topicId = 69,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Sekil {\npublic:\n    Sekil(int k) { std::cout << k; }\n};\nclass Kare : public Sekil {\npublic:\n    _____\n};\nKare kr;\nKare'nin constructor'ını, Sekil'in constructor'ını 4 argümanıyla çağıracak şekilde (initializer list ile) tanımlayan satırı yazın.",
+        .acceptedAnswers = {"Kare() : Sekil(4) {}"},
+        .explanation = "Initializer list ile taban sınıf constructor'ı açıkça çağrılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1777, .topicId = 69,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "class Hayvan {\npublic:\n    Hayvan() { std::cout << \"H\"; }\n    ~Hayvan() { std::cout << \"h\"; }\n};\nclass Kopek : public Hayvan {\npublic:\n    Kopek() { std::cout << \"K\"; }\n    ~Kopek() { std::cout << \"k\"; }\n};\nint main() {\n    Kopek kop;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"HKkh"},
+        .explanation = "Kurulma: H sonra K; yok edilme (ters sıra): k sonra h. Toplam: 'HKkh'.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1778, .topicId = 69,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "class Sekil {\npublic:\n    Sekil(int kenar) { std::cout << \"Sekil\" << kenar; }\n};\nclass Ucgen : public Sekil {\npublic:\n    Ucgen() : Sekil(3) { std::cout << \"Ucgen\"; }\n};\nint main() {\n    Ucgen u;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"Sekil3Ucgen"},
+        .explanation = "Sekil(3) önce çalışır (\"Sekil3\"), sonra Ucgen'in kendi gövdesi (\"Ucgen\").",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1779, .topicId = 69,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Hayvan {\nprivate:\n    int yas;\n};\nclass Kopek : public Hayvan {\npublic:\n    void yasAta(int d) { yas = d; }\n};\n\nBu kod derlenmez çünkü yas, Hayvan'da private olduğundan türetilmiş sınıf Kopek'ten bile doğrudan erişilemez. Hayvan sınıfındaki yas tanımını, Kopek'in erişebileceği şekilde (protected yaparak) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"protected: int yas;"},
+        .explanation = "protected, türetilmiş sınıftan erişime izin verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1780, .topicId = 69,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Sekil {\npublic:\n    Sekil(int k) { std::cout << k; }\n};\nclass Kare : public Sekil {\npublic:\n    Kare() { std::cout << \"K\"; }\n};\nKare kr;\n\nBu kod derlenmez çünkü Sekil'in sadece parametreli bir constructor'ı var (varsayılan constructor yok) ve Kare'nin constructor'ı, Sekil'in constructor'ını hangi argümanla çağıracağını belirtmiyor. Kare'nin constructor'ını, Sekil'i 4 argümanıyla çağıracak şekilde (initializer list ekleyerek) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"Kare() : Sekil(4) { std::cout << \"K\"; }"},
+        .explanation = "Initializer list ile taban sınıfın constructor'ı çağrılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1781, .topicId = 69,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nclass Hayvan {\npublic:\n    Hayvan() { std::cout << \"H\" }\n};\nclass Kopek : public Hayvan {\n};\n\nProgramcı std::cout << \"H\" satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"Hayvan() { std::cout << \"H\"; }"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1782, .topicId = 69,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, kalıtım kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"Kopek k;\n    return 0;\n}", "class Hayvan {\npublic:\n    Hayvan() { std::cout << \"H\"; }\n};\nclass Kopek : public Hayvan {\npublic:\n    Kopek() { std::cout << \"K\"; }\n};", "int main() {"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "class tanımları (2), main açılışı (3), nesne+kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1783, .topicId = 69,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Hayvan adlı bir taban sınıf ve ondan public olarak türetilen Kopek adlı bir sınıf tanımlayın; her ikisinde de constructor tanımlayıp main() içinde bir Kopek nesnesi oluşturarak çağrılma sırasını gösterin.",
+        .acceptedAnswers = {"class Kopek : public Hayvan", "cout"},
+        .explanation = "Taban sınıfın constructor'ı önce, türetilmiş sınıfınki sonra çalışmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 70: protected
+    questions.push_back(Question{
+        .id = 1784, .topicId = 70,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "protected erişim belirleyicisi, private ve public arasında nasıl bir konumdadır?",
+        .options = {"Dışarıdan private gibidir ama türetilmiş sınıflardan erişilebilir", "Her yerden erişilebilir, public ile aynıdır", "Hiçbir yerden erişilemez, private'tan da kısıtlıdır", "Sadece const metotlardan erişilebilir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "protected, dışarıdan private gibi davranır ama türetilmiş sınıflara izin verir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1785, .topicId = 70,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "class Hayvan {\nprotected:\n    int yas;\n};\nclass Kopek : public Hayvan {\npublic:\n    void yasAta(int d) { yas = d; }\n};\nBu kod (Kopek'ten protected yas'a erişim) derlenir mi?",
+        .options = {"Evet, protected üyelere türetilmiş sınıftan erişilebilir", "Hayır, protected private ile aynıdır", "Hayır, sadece taban sınıf erişebilir", "Evet ama sadece const olarak"},
+        .acceptedAnswers = {"a"},
+        .explanation = "protected üyelere türetilmiş sınıfın kendi metotlarından erişilebilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1786, .topicId = 70,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "class Hayvan {\nprotected:\n    int yas;\n};\nint main() {\n    Hayvan h;\n    h.yas = 5;\n    return 0;\n}\nBu kod derlenir mi (main'den doğrudan erişim)?",
+        .options = {"Hayır, protected üyelere sınıf dışından erişilemez", "Evet, protected her yerden erişilebilir", "Evet ama sadece pozitif değerler için", "Hayır, Hayvan sınıfı geçersizdir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "protected üyelere sınıf dışından (main() içinden) erişilemez.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1787, .topicId = 70,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "protected, hangi iki erişim belirleyicisi arasında bir denge sağlar?",
+        .options = {"private ve public", "private ve static", "public ve const", "static ve public"},
+        .acceptedAnswers = {"a"},
+        .explanation = "protected, private ve public arasında bir orta yoldur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1788, .topicId = 70,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Hayvan {\nprotected:\n    int yas = 0;\npublic:\n    void yasAta(int d) { yas = d; }\n};\nclass Kopek : public Hayvan {\npublic:\n    void goster() { std::cout << yas; }\n};\nKopek k;\nk.yasAta(4);\nk.goster();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"4", "0", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "yasAta(4), protected yas'ı 4 yapar; goster() bunu yazdırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1789, .topicId = 70,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Bir taban sınıfın protected üyesi, o taban sınıfın kendi metotlarından erişilebilir mi?",
+        .options = {"Evet, protected üyeler taban sınıfın kendi metotlarından da erişilebilir (private gibi)", "Hayır, sadece türetilmiş sınıftan erişilebilir", "Hayır, hiçbir yerden erişilemez", "Evet ama sadece const metotlardan"},
+        .acceptedAnswers = {"a"},
+        .explanation = "protected üyeler, taban sınıfın kendi metotlarından da (private gibi) erişilebilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1790, .topicId = 70,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Hayvan {\nprotected:\n    int yas;\npublic:\n    Hayvan(int y) { yas = y; }\n};\nclass Kopek : public Hayvan {\npublic:\n    Kopek(int y) : Hayvan(y) {}\n    void goster() { std::cout << yas * 2; }\n};\nKopek k(5);\nk.goster();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"10", "5", "Derleme hatası", "0"},
+        .acceptedAnswers = {"a"},
+        .explanation = "yas, Hayvan(5) ile 5 olur; goster() yas*2=10 yazdırır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1791, .topicId = 70,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class A {\nprotected:\n    int x = 1;\n};\nclass B : public A {\npublic:\n    void artir() { x++; }\n    int getir() { return x; }\n};\nB b;\nb.artir();\nb.artir();\nstd::cout << b.getir();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"3", "1", "2", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "x=1'den başlayarak iki kez artırılır: 1+1+1=3.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1792, .topicId = 70,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "protected üyeler, türetilmiş sınıfların kendi metotları içinden erişilebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1793, .topicId = 70,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "protected üyeler, sınıf dışından (örneğin main() içinden) doğrudan erişilebilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: protected üyeler dışarıdan erişilemez.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1794, .topicId = 70,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "protected, private ile public arasında bir erişim seviyesidir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1795, .topicId = 70,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "protected üyeler, private üyeler gibi türetilmiş sınıftan bile erişilemez.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: protected üyelere türetilmiş sınıftan erişilebilir; bu private'tan farkıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1796, .topicId = 70,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir taban sınıfın protected üyesi, o taban sınıfın kendi metotlarından da erişilebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1797, .topicId = 70,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "protected konusu, kalıtım (inheritance) konusundan önce anlamlı bir şekilde öğretilemez çünkü asıl faydası türetilmiş sınıflarla ortaya çıkar.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1798, .topicId = 70,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "protected üyeler, dışarıdan private gibi davranır ama _____ sınıflardan erişilebilir (Türkçe kelime).",
+        .acceptedAnswers = {"türetilmiş"},
+        .explanation = "protected, türetilmiş sınıflardan erişime izin verir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1799, .topicId = 70,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "class Hayvan {\nprotected:\n    int yas = 0;\npublic:\n    void yasAta(int d) { yas = d; }\n};\nclass Kopek : public Hayvan {\npublic:\n    void goster() { std::cout << yas; }\n};\nKopek k;\nk.yasAta(7);\nk.goster();\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"7"},
+        .explanation = "yasAta(7), yas'ı 7 yapar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1800, .topicId = 70,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "protected, _____ ve public arasında bir erişim seviyesidir (İngilizce kelime).",
+        .acceptedAnswers = {"private"},
+        .explanation = "protected, private ve public arasındadır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1801, .topicId = 70,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "class Hayvan {\nprotected:\n    int yas;\n};\nint main() {\n    Hayvan h;\n    h.yas = 3;\n    return 0;\n}\nBu kod _____ verir çünkü protected üyelere sınıf dışından erişilemez (Türkçe kelime).",
+        .acceptedAnswers = {"hata", "derleme hatası"},
+        .explanation = "protected üyelere dışarıdan erişmek derleme hatasıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1802, .topicId = 70,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "protected'ın kalıtımdan (Kalıtım konusundan) hemen sonra öğretilmesinin nedeni, asıl faydasının _____ sınıflarla ortaya çıkmasıdır (Türkçe kelime).",
+        .acceptedAnswers = {"türetilmiş"},
+        .explanation = "protected'ın faydası türetilmiş sınıflarla ortaya çıkar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1803, .topicId = 70,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "class A {\nprotected:\n    int x = 2;\n};\nclass B : public A {\npublic:\n    int getir() { return x * 3; }\n};\nB b;\nstd::cout << b.getir();\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"6"},
+        .explanation = "2 * 3 = 6.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1804, .topicId = 70,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Hayvan {\n_____\n    int yas;\npublic:\n    void yasAta(int d) { yas = d; }\n};\nyas'ı türetilmiş sınıflardan erişilebilir ama dışarıdan erişilemez yapan erişim belirleyicisini yazın.",
+        .acceptedAnswers = {"protected:"},
+        .explanation = "protected, türetilmiş sınıflardan erişime izin verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1805, .topicId = 70,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Hayvan {\nprotected:\n    int yas = 0;\npublic:\n    void yasAta(int d) { yas = d; }\n};\nclass Kopek : public Hayvan {\npublic:\n    _____\n};\nKopek k;\nk.yasAta(5);\nk.goster();\nyas'ı ekrana yazdıran bir goster() metodu (protected yas'a doğrudan erişerek) tanımlayan satırı yazın.",
+        .acceptedAnswers = {"void goster() { std::cout << yas; }"},
+        .explanation = "goster metodu, protected yas'a doğrudan erişir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1806, .topicId = 70,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "class Hayvan {\nprotected:\n    int yas = 0;\npublic:\n    void yasAta(int d) { yas = d; }\n};\nclass Kopek : public Hayvan {\npublic:\n    void goster() { std::cout << yas; }\n};\nint main() {\n    Kopek k;\n    k.yasAta(9);\n    k.goster();\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"9"},
+        .explanation = "yasAta(9), yas'ı 9 yapar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1807, .topicId = 70,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "class A {\nprotected:\n    int x = 10;\n};\nclass B : public A {\npublic:\n    void yariya() { x = x / 2; }\n    int getir() { return x; }\n};\nint main() {\n    B b;\n    b.yariya();\n    b.yariya();\n    std::cout << b.getir();\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"2"},
+        .explanation = "10/2=5, sonra 5/2=2 (tam sayı bölmesi).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1808, .topicId = 70,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Hayvan {\nprotected:\n    int yas;\n};\nint main() {\n    Hayvan h;\n    h.yas = 5;\n    return 0;\n}\n\nBu kod derlenmez çünkü protected bir üyeye sınıf dışından (main() içinden) doğrudan erişilemez. yas'ı ayarlayan, Hayvan sınıfına eklenmesi gereken public metodu yazın.",
+        .acceptedAnswers = {"void yasAta(int d) { yas = d; }"},
+        .explanation = "protected bir üyeye dışarıdan erişmek için public bir metot gerekir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1809, .topicId = 70,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Hayvan {\nprotected:\n    int yas;\n};\nclass Kopek : public Hayvan {\npublic:\n    void disariyaVer() { std::cout << yas; }\n};\nint main() {\n    Kopek k;\n    std::cout << k.yas;\n    return 0;\n}\n\nBu kod derlenmez çünkü k.yas satırı, protected bir üyeye main() (sınıf dışından) doğrudan erişmeye çalışıyor; protected sadece türetilmiş sınıfın KENDİ metotları içinden erişime izin verir, dışarıdan değil. Hatalı k.yas satırını, zaten var olan disariyaVer() public metodunu çağıracak şekilde düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"k.disariyaVer();"},
+        .explanation = "Dışarıdan erişim, public bir metot üzerinden yapılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1810, .topicId = 70,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nclass Hayvan {\nprotected:\n    int yas;\npublic:\n    void yasAta(int d) { yas = d }\n};\n\nProgramcı yas = d; satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"void yasAta(int d) { yas = d; }"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1811, .topicId = 70,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, protected bir üyeye türetilmiş sınıftan erişen geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"k.yasAta(6);\n    k.goster();\n    return 0;\n}", "class Hayvan {\nprotected:\n    int yas = 0;\npublic:\n    void yasAta(int d) { yas = d; }\n};\nclass Kopek : public Hayvan {\npublic:\n    void goster() { std::cout << yas; }\n};", "int main() {\n    Kopek k;"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "class tanımları (2), main+nesne (3), kullanım ve kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1812, .topicId = 70,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "protected bir int yas üyesi olan Hayvan adlı bir taban sınıf tanımlayın; ondan türetilen Kopek adlı bir sınıfta yas'a doğrudan erişen bir metot ekleyip main() içinde kullanın.",
+        .acceptedAnswers = {"protected", "class Kopek : public Hayvan", "cout"},
+        .explanation = "protected üye, türetilmiş sınıfın kendi metodundan doğrudan erişilebilmelidir.",
+        .baseXp = 40,
+    });
 }
