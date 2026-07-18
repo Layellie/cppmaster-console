@@ -974,4 +974,733 @@ void appendSection9Questions(std::vector<Question>& questions) {
         .explanation = "map elemanları for döngüsünde .first/.second ile erişilen pair'lerdir.",
         .baseXp = 40,
     });
+
+    // Topic 85: unordered_map
+    questions.push_back(Question{
+        .id = 2219, .topicId = 85,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::unordered_map<K,V> ile std::map<K,V> arasındaki temel fark nedir?",
+        .options = {"unordered_map anahtarları sıralı tutar, map tutmaz", "unordered_map anahtarları hash tablosunda sırasız tutar, map ise sıralı tutar", "unordered_map sadece int anahtarları destekler", "İkisi arasında fark yoktur"},
+        .acceptedAnswers = {"b"},
+        .explanation = "unordered_map hash tabanlıdır ve sıralama garantisi vermez; map sıralıdır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2220, .topicId = 85,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::unordered_map<std::string,int> m;\nm[\"a\"] = 5;\nstd::cout << m[\"a\"];\nEkran çıktısı nedir?",
+        .options = {"0", "a", "5", "Derleme hatası"},
+        .acceptedAnswers = {"c"},
+        .explanation = "m[\"a\"], 5 değerini döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2221, .topicId = 85,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::unordered_map, iç yapı olarak neyi kullanır?",
+        .options = {"Sıralı bir ağaç (sorted tree)", "Bağlı liste (linked list)", "Dizi (array), sıralı tutar", "Hash tablosu (hash table)"},
+        .acceptedAnswers = {"d"},
+        .explanation = "unordered_map bir hash tablosu kullanır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2222, .topicId = 85,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::unordered_map<std::string,int> m;\nm[\"x\"]=1; m[\"y\"]=2; m[\"z\"]=3;\nfor (auto& kv : m) { ... }\nBu döngünün elemanları gezme sırası hakkında ne söylenebilir?",
+        .options = {"Sıra tanımsızdır (implementation-defined); ekleme sırasıyla veya alfabetik sırayla eşleşeceği varsayılamaz", "Her zaman ekleme sırasıyla aynıdır", "Her zaman alfabetik sıradadır", "Her zaman ekleme sırasının tersidir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "unordered_map iterasyon sırası implementation-defined'dır, hiçbir sıra varsayılamaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2223, .topicId = 85,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::unordered_map ile anahtar bazlı arama (.find()/operator[]) ortalama hangi sürede çalışır?",
+        .options = {"O(n)", "O(1)", "O(log n)", "O(n^2)"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Hash tabanlı arama ortalama O(1) sürer.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2224, .topicId = 85,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::map'te anahtar bazlı arama ortalama hangi sürede çalışır?",
+        .options = {"O(1)", "O(n)", "O(log n)", "O(n^2)"},
+        .acceptedAnswers = {"c"},
+        .explanation = "map, dengeli bir ağaç kullandığından arama O(log n) sürer.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2225, .topicId = 85,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::unordered_map<std::string,int> m;\nm[\"a\"] = 1;\nstd::cout << m[\"b\"];\nstd::cout << \" \" << m.size();\nEkran çıktısı nedir?",
+        .options = {"1 1", "Derleme hatası", "0 1", "0 2"},
+        .acceptedAnswers = {"d"},
+        .explanation = "m[\"b\"] okuması, map'teki ile aynı şekilde \"b\"'yi 0 ile ekler; size 2 olur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2226, .topicId = 85,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "Sıralı gezinme (alfabetik/artan sırayla) gerektiren bir program için hangi konteyner tercih edilmelidir?",
+        .options = {"std::map (sıralı garanti verir)", "std::unordered_map (daha hızlı olduğundan her zaman tercih edilir)", "İkisi de aynıdır, fark etmez", "std::unordered_map (sıralı garanti verir)"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Sıralı gezinme garantisi gereken durumlarda std::map tercih edilmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2227, .topicId = 85,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::unordered_map, anahtarları bir hash tablosunda tutar.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2228, .topicId = 85,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::unordered_map, std::map gibi anahtarları sıralı (artan) tutar.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: unordered_map sıralama garantisi vermez.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2229, .topicId = 85,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::unordered_map üzerinde iterasyon sırası tanımsızdır (implementation-defined).",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2230, .topicId = 85,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::unordered_map'te anahtar bazlı erişim (operator[]/.find()), ortalama olarak std::map'ten daha YAVAŞTIR.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: unordered_map ortalama O(1), map ise O(log n) sürer; unordered_map genellikle daha hızlıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2231, .topicId = 85,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::unordered_map'in operator[]'i de, std::map gibi, olmayan bir anahtarı okurken onu otomatik olarak ekler.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2232, .topicId = 85,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Sıralı gezinme gerektiren bir uygulamada std::unordered_map, std::map'ten daha uygun bir seçimdir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: sıralama garantisi olmadığından std::map daha uygundur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2233, .topicId = 85,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Anahtarları bir hash tablosunda sırasız tutan STL konteynerine _____ denir (İngilizce iki kelime, alt çizgiyle).",
+        .acceptedAnswers = {"unordered_map"},
+        .explanation = "Bu konteynere unordered_map denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2234, .topicId = 85,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::unordered_map<std::string,int> m;\nm[\"p\"] = 9;\nstd::cout << m[\"p\"];\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"9"},
+        .explanation = "m[\"p\"], 9 değerini döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2235, .topicId = 85,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "unordered_map'in iç yapısı bir _____ tablosudur (İngilizce kelime).",
+        .acceptedAnswers = {"hash"},
+        .explanation = "unordered_map bir hash tablosu kullanır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2236, .topicId = 85,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "unordered_map'te anahtar bazlı erişim ortalama _____ sürede çalışır (Büyük O gösterimi, örn. O(1)).",
+        .acceptedAnswers = {"O(1)"},
+        .explanation = "Hash tabanlı erişim ortalama O(1) sürer.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2237, .topicId = 85,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::map'te anahtar bazlı erişim ortalama _____ sürede çalışır (Büyük O gösterimi).",
+        .acceptedAnswers = {"O(log n)"},
+        .explanation = "Ağaç tabanlı erişim O(log n) sürer.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2238, .topicId = 85,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "unordered_map üzerinde iterasyon sırası _____ (Türkçe kelime, 'belirsiz/tanımsız' anlamında).",
+        .acceptedAnswers = {"tanımsızdır", "tanımsız"},
+        .explanation = "İterasyon sırası implementation-defined'dır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2239, .topicId = 85,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\nm[\"kalem\"] = 3;\nm adlı bir std::string-int unordered_map tanımlayan satırı yazın.",
+        .acceptedAnswers = {"std::unordered_map<std::string, int> m;"},
+        .explanation = "unordered_map, hash tabanlı bir anahtar-değer konteyneridir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2240, .topicId = 85,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::unordered_map<std::string,int> m;\nm[\"a\"] = 1;\n_____\n\"a\" anahtarının değerini ekrana yazdıran satırı yazın.",
+        .acceptedAnswers = {"std::cout << m[\"a\"];"},
+        .explanation = "operator[] ile anahtarın değerine erişilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2241, .topicId = 85,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::unordered_map<std::string,int> m;\nm[\"x\"] = 4;\nm[\"y\"] = 6;\nstd::cout << m[\"x\"] + m[\"y\"];\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"10"},
+        .explanation = "4 + 6 = 10.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2242, .topicId = 85,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::unordered_map<std::string,int> m;\nm[\"a\"] = 2;\nstd::cout << m.size() << \" \";\nm[\"b\"];\nstd::cout << m.size();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"1 2"},
+        .explanation = "İlk size 1; m[\"b\"] okuması \"b\"'yi ekler, size 2 olur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2243, .topicId = 85,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::unordered_map<std::string,int> m;\nm[\"a\"] = 1;\nstd::cout << m.first;\n\nBu kod derlenmez çünkü std::unordered_map'in .first üye değişkeni yoktur (bu pair'e özgüdür, konteynerin kendisine değil). Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::cout << m[\"a\"];"},
+        .explanation = "unordered_map'in kendisinin .first üyesi yoktur; anahtar ile erişilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2244, .topicId = 85,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::unordered_map<std::string,int> m;\nm[\"a\"] = 1;\nif (m[\"b\"] == 1) { std::cout << \"var\"; }\n\nBu kod \"b\" anahtarının var olup olmadığını YANLIŞ kontrol eder çünkü m[\"b\"] okuması \"b\"'yi 0 değeriyle map'e EKLER (side effect, std::map'teki ile aynı davranış); doğru kontrol .find() ile yapılmalıdır. Hatalı if satırını düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"if (m.find(\"b\") != m.end()) {"},
+        .explanation = ".find() ile eklemeden kontrol edilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2245, .topicId = 85,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::unordered_map<std::string,int> m\nm[\"a\"] = 1;\n\nProgramcı m tanımının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"std::unordered_map<std::string, int> m;"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2246, .topicId = 85,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir unordered_map tanımlayıp bir değeri yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << m[\"k\"];\n    return 0;\n}", "std::unordered_map<std::string,int> m;\n    m[\"k\"] = 8;", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), tanım+atama (2), yazdır+kapanış (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2247, .topicId = 85,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir std::string anahtar ve int değer tutan bir unordered_map tanımlayın; bir anahtar-değer çifti ekleyin ve o anahtarın değerini ekrana yazdırın.",
+        .acceptedAnswers = {"unordered_map"},
+        .explanation = "unordered_map, hash tabanlı bir anahtar-değer konteyneridir.",
+        .baseXp = 40,
+    });
+
+    // Topic 86: stack
+    questions.push_back(Question{
+        .id = 2248, .topicId = 86,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::stack<T>'nin çalışma mantığı nedir?",
+        .options = {"FIFO (ilk giren ilk çıkar)", "Elemanları sıralı (artan) tutar", "LIFO (son giren ilk çıkar)", "Elemanları hash tablosunda tutar"},
+        .acceptedAnswers = {"c"},
+        .explanation = "std::stack LIFO mantığıyla çalışır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2249, .topicId = 86,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::stack<int> s;\ns.push(1);\ns.push(2);\nstd::cout << s.top();\nEkran çıktısı nedir?",
+        .options = {"1", "0", "Derleme hatası", "2"},
+        .acceptedAnswers = {"d"},
+        .explanation = "top(), en son eklenen (2) elemanı döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2250, .topicId = 86,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::stack<int> s;\ns.push(1);\ns.push(2);\ns.pop();\nstd::cout << s.top();\nEkran çıktısı nedir?",
+        .options = {"1", "2", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "pop(), en üstteki (2) elemanı kaldırır; yeni tepe 1 olur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2251, .topicId = 86,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::stack<int> s;\ns.push(5);\nfor (int x : s) { std::cout << x; }\nBu kod derlenir mi?",
+        .options = {"Evet, çıktı 5'tir", "Hayır, std::stack'in begin()/end() tanımı yoktur, derleme hatası oluşur", "Evet ama çıktı boştur", "Evet, çıktı 0'dır"},
+        .acceptedAnswers = {"b"},
+        .explanation = "std::stack begin()/end() sunmaz, range-for derlenmez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2252, .topicId = 86,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::stack<int> s;\ns.push(3); s.push(6); s.push(9);\nstd::cout << s.top();\ns.pop();\nstd::cout << \" \" << s.top();\ns.pop();\nstd::cout << \" \" << s.top();\nEkran çıktısı nedir?",
+        .options = {"3 6 9", "9 9 9", "9 6 3", "Derleme hatası"},
+        .acceptedAnswers = {"c"},
+        .explanation = "LIFO sırayla en son eklenenden başlanarak: 9, 6, 3.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2253, .topicId = 86,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::stack, hangi konteyner tarafından desteklenen (varsayılan olarak) bir adaptördür?",
+        .options = {"std::vector", "std::set", "std::map", "std::deque"},
+        .acceptedAnswers = {"d"},
+        .explanation = "std::stack'in varsayılan alttaki konteyneri std::deque'dur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2254, .topicId = 86,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::stack<int> s;\nstd::cout << s.empty();\ns.push(1);\nstd::cout << \" \" << s.empty();\nEkran çıktısı nedir?",
+        .options = {"1 0", "0 1", "true false", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "İlk empty() true (1); push sonrası empty() false (0).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2255, .topicId = 86,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::stack<int> s1;\ns1.push(1);\ns1.push(2);\nstd::stack<int> s2 = s1;\ns2.pop();\nstd::cout << s1.top() << \" \" << s2.top();\nEkran çıktısı nedir?",
+        .options = {"1 2", "2 1", "2 2", "Derleme hatası"},
+        .acceptedAnswers = {"b"},
+        .explanation = "s2, s1'in bağımsız bir kopyasıdır; s2.pop() s1'i etkilemez.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2256, .topicId = 86,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::stack, LIFO (son giren ilk çıkar) mantığıyla çalışır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2257, .topicId = 86,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::stack, begin()/end() sunar ve for döngüsüyle doğrudan gezilebilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: std::stack begin()/end() sunmaz.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2258, .topicId = 86,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::stack'te top(), en üstteki elemanı kaldırmadan döndürür.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2259, .topicId = 86,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::stack'te pop(), en üstteki elemanı döndürür.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: pop() void döndürür, sadece elemanı kaldırır; değere bakmak için top() kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2260, .topicId = 86,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::stack kopyalandığında, kopya bağımsız bir yığındır; birini değiştirmek diğerini etkilemez.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2261, .topicId = 86,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::stack, varsayılan olarak std::vector tarafından desteklenir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: varsayılan alttaki konteyner std::deque'dur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2262, .topicId = 86,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "LIFO (son giren ilk çıkar) mantığıyla çalışan konteyner adaptörüne _____ denir (İngilizce kelime).",
+        .acceptedAnswers = {"stack"},
+        .explanation = "Bu adaptöre stack denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2263, .topicId = 86,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::stack<int> s;\ns.push(7);\nstd::cout << s.top();\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"7"},
+        .explanation = "top(), en üstteki (7) elemanı döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2264, .topicId = 86,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "stack'in en üstteki elemanını kaldıran (ama döndürmeyen) üye fonksiyon _____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"pop"},
+        .explanation = "pop() kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2265, .topicId = 86,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::stack<int> s;\ns.push(1); s.push(2); s.push(3);\ns.pop();\nstd::cout << s.top();\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "pop(), en üstteki (3) elemanı kaldırır; yeni tepe 2 olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2266, .topicId = 86,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::stack'in begin()/end() tanımı olmadığından, elemanlarına sadece top()/pop() ile _____ erişilebilir (Türkçe kelime, 'teker teker/sırayla' anlamında).",
+        .acceptedAnswers = {"sırayla"},
+        .explanation = "Elemanlara sadece sırayla erişilebilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2267, .topicId = 86,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::stack, varsayılan olarak std::_____ tarafından desteklenir (İngilizce kelime).",
+        .acceptedAnswers = {"deque"},
+        .explanation = "Varsayılan alttaki konteyner std::deque'dur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2268, .topicId = 86,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\ns.push(4);\ns adlı bir int stack'i tanımlayan satırı yazın.",
+        .acceptedAnswers = {"std::stack<int> s;"},
+        .explanation = "std::stack<int> ile bir int stack'i tanımlanır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2269, .topicId = 86,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::stack<int> s;\ns.push(1);\ns.push(2);\n_____\nyığının en üstteki elemanını ekrana yazdıran satırı yazın.",
+        .acceptedAnswers = {"std::cout << s.top();"},
+        .explanation = "top(), en üstteki elemanı döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2270, .topicId = 86,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::stack<int> s;\ns.push(2);\ns.push(4);\ns.push(6);\nstd::cout << s.top();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"6"},
+        .explanation = "En son eklenen (6), en üstte olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2271, .topicId = 86,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::stack<int> s;\ns.push(1);\ns.push(2);\ns.push(3);\nint toplam = 0;\nwhile (!s.empty()) {\n    toplam += s.top();\n    s.pop();\n}\nstd::cout << toplam;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"6"},
+        .explanation = "1 + 2 + 3 = 6 (sıra LIFO olsa da toplam aynıdır).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2272, .topicId = 86,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::stack<int> s;\ns.push(5);\nfor (int x : s) { std::cout << x; }\n\nBu kod derlenmez çünkü std::stack'in begin()/end() tanımı yoktur. Hatalı satırı, top()/pop() kullanarak düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::cout << s.top();"},
+        .explanation = "stack elemanlarına top()/pop() ile erişilir, iterasyonla değil.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2273, .topicId = 86,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::stack<int> s;\ns.push(3);\nint deger = s.pop();\n\nBu kod derlenmez çünkü std::stack::pop(), void döndürür (bir değer döndürmez); önce top() ile değere bakılıp SONRA pop() çağrılmalıdır. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"int deger = s.top();"},
+        .explanation = "pop() void döndürür; değere top() ile bakılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2274, .topicId = 86,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::stack<int> s\ns.push(1);\n\nProgramcı s tanımının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"std::stack<int> s;"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2275, .topicId = 86,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir stack tanımlayıp en üstteki elemanı yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << s.top();\n    return 0;\n}", "std::stack<int> s;\n    s.push(11);", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), tanım+push (2), yazdır+kapanış (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2276, .topicId = 86,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir int stack'i tanımlayın; üç değer push edin ve top()/pop() kullanarak elemanları LIFO sırayla (son eklenen ilk) ekrana yazdırın.",
+        .acceptedAnswers = {"stack", "push", "pop"},
+        .explanation = "stack, LIFO sırayla erişim sağlar.",
+        .baseXp = 40,
+    });
+
+    // Topic 87: queue
+    questions.push_back(Question{
+        .id = 2277, .topicId = 87,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::queue<T>'nin çalışma mantığı nedir?",
+        .options = {"LIFO (son giren ilk çıkar)", "Elemanları sıralı (artan) tutar", "Elemanları hash tablosunda tutar", "FIFO (ilk giren ilk çıkar)"},
+        .acceptedAnswers = {"d"},
+        .explanation = "std::queue FIFO mantığıyla çalışır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2278, .topicId = 87,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::queue<int> q;\nq.push(1);\nq.push(2);\nstd::cout << q.front();\nEkran çıktısı nedir?",
+        .options = {"1", "2", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "front(), en önce eklenen (1) elemanı döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2279, .topicId = 87,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::queue<int> q;\nq.push(1);\nq.push(2);\nstd::cout << q.back();\nEkran çıktısı nedir?",
+        .options = {"1", "2", "0", "Derleme hatası"},
+        .acceptedAnswers = {"b"},
+        .explanation = "back(), en son eklenen (2) elemanı döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2280, .topicId = 87,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::queue<int> q;\nq.push(5);\nfor (int x : q) { std::cout << x; }\nBu kod derlenir mi?",
+        .options = {"Evet, çıktı 5'tir", "Evet ama çıktı boştur", "Hayır, std::queue'nun begin()/end() tanımı yoktur, derleme hatası oluşur", "Evet, çıktı 0'dır"},
+        .acceptedAnswers = {"c"},
+        .explanation = "std::queue begin()/end() sunmaz, range-for derlenmez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2281, .topicId = 87,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::queue<int> q;\nq.push(1); q.push(2); q.push(3);\nq.pop();\nstd::cout << q.front();\nEkran çıktısı nedir?",
+        .options = {"1", "3", "0", "2"},
+        .acceptedAnswers = {"d"},
+        .explanation = "pop(), en öndeki (1) elemanı kaldırır; yeni ön 2 olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2282, .topicId = 87,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::queue, hangi konteyner tarafından desteklenen (varsayılan olarak) bir adaptördür?",
+        .options = {"std::deque", "std::vector", "std::set", "std::list"},
+        .acceptedAnswers = {"a"},
+        .explanation = "std::queue'nun varsayılan alttaki konteyneri std::deque'dur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2283, .topicId = 87,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::queue<int> q;\nq.push(1); q.push(2); q.push(3);\nstd::cout << q.front() << \" \" << q.back();\nEkran çıktısı nedir?",
+        .options = {"3 1", "1 3", "1 1", "Derleme hatası"},
+        .acceptedAnswers = {"b"},
+        .explanation = "front() ilk eklenen (1), back() son eklenen (3) elemanı döndürür.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2284, .topicId = 87,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::queue<int> q1;\nq1.push(1);\nq1.push(2);\nstd::queue<int> q2 = q1;\nq2.pop();\nstd::cout << q1.front() << \" \" << q2.front();\nEkran çıktısı nedir?",
+        .options = {"2 2", "1 1", "1 2", "Derleme hatası"},
+        .acceptedAnswers = {"c"},
+        .explanation = "q2, q1'in bağımsız bir kopyasıdır; q2.pop() q1'i etkilemez.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2285, .topicId = 87,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::queue, FIFO (ilk giren ilk çıkar) mantığıyla çalışır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2286, .topicId = 87,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::queue, begin()/end() sunar ve for döngüsüyle doğrudan gezilebilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: std::queue begin()/end() sunmaz.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2287, .topicId = 87,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::queue'da front(), en öndeki elemana bakar (kaldırmaz).",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2288, .topicId = 87,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::queue'da back(), en öndeki elemana bakar.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: back(), en SONDAKİ elemana bakar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2289, .topicId = 87,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::queue kopyalandığında, kopya bağımsız bir kuyruktur.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2290, .topicId = 87,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::queue, varsayılan olarak std::vector tarafından desteklenir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: varsayılan alttaki konteyner std::deque'dur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2291, .topicId = 87,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "FIFO (ilk giren ilk çıkar) mantığıyla çalışan konteyner adaptörüne _____ denir (İngilizce kelime).",
+        .acceptedAnswers = {"queue"},
+        .explanation = "Bu adaptöre queue denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2292, .topicId = 87,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::queue<int> q;\nq.push(8);\nstd::cout << q.front();\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"8"},
+        .explanation = "front(), tek eleman olan 8'i döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2293, .topicId = 87,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "kuyruğun en öndeki elemanını kaldıran (ama döndürmeyen) üye fonksiyon _____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"pop"},
+        .explanation = "pop() kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2294, .topicId = 87,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::queue<int> q;\nq.push(1); q.push(2); q.push(3);\nq.pop();\nq.pop();\nstd::cout << q.front();\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"3"},
+        .explanation = "İki pop, 1 ve 2'yi sırayla kaldırır; kalan front 3'tür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2295, .topicId = 87,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "kuyruğun en sondaki elemanına bakmak için kullanılan üye fonksiyon _____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"back"},
+        .explanation = "back() kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2296, .topicId = 87,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::queue, varsayılan olarak std::_____ tarafından desteklenir (İngilizce kelime).",
+        .acceptedAnswers = {"deque"},
+        .explanation = "Varsayılan alttaki konteyner std::deque'dur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2297, .topicId = 87,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\nq.push(5);\nq adlı bir int kuyruğu tanımlayan satırı yazın.",
+        .acceptedAnswers = {"std::queue<int> q;"},
+        .explanation = "std::queue<int> ile bir int kuyruğu tanımlanır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2298, .topicId = 87,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::queue<int> q;\nq.push(1);\nq.push(2);\n_____\nkuyruğun en öndeki elemanını ekrana yazdıran satırı yazın.",
+        .acceptedAnswers = {"std::cout << q.front();"},
+        .explanation = "front(), en öndeki elemanı döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2299, .topicId = 87,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::queue<int> q;\nq.push(3);\nq.push(6);\nq.push(9);\nstd::cout << q.front();\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"3"},
+        .explanation = "En önce eklenen (3), front olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2300, .topicId = 87,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::queue<int> q;\nq.push(1);\nq.push(2);\nq.push(3);\nint toplam = 0;\nwhile (!q.empty()) {\n    toplam += q.front();\n    q.pop();\n}\nstd::cout << toplam;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"6"},
+        .explanation = "1 + 2 + 3 = 6.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2301, .topicId = 87,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::queue<int> q;\nq.push(5);\nfor (int x : q) { std::cout << x; }\n\nBu kod derlenmez çünkü std::queue'nun begin()/end() tanımı yoktur. Hatalı satırı, front() kullanarak düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::cout << q.front();"},
+        .explanation = "queue elemanlarına front()/pop() ile erişilir, iterasyonla değil.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2302, .topicId = 87,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::queue<int> q;\nq.push(3);\nint deger = q.pop();\n\nBu kod derlenmez çünkü std::queue::pop(), void döndürür (bir değer döndürmez); önce front() ile değere bakılıp SONRA pop() çağrılmalıdır. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"int deger = q.front();"},
+        .explanation = "pop() void döndürür; değere front() ile bakılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2303, .topicId = 87,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::queue<int> q\nq.push(1);\n\nProgramcı q tanımının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"std::queue<int> q;"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2304, .topicId = 87,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir kuyruk tanımlayıp en öndeki elemanı yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << q.front();\n    return 0;\n}", "std::queue<int> q;\n    q.push(13);", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), tanım+push (2), yazdır+kapanış (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2305, .topicId = 87,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir int kuyruğu tanımlayın; üç değer push edin ve front()/pop() kullanarak elemanları FIFO sırayla (ilk eklenen ilk) ekrana yazdırın.",
+        .acceptedAnswers = {"queue", "push", "pop"},
+        .explanation = "queue, FIFO sırayla erişim sağlar.",
+        .baseXp = 40,
+    });
 }
