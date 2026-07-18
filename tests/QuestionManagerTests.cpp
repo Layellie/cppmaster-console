@@ -103,6 +103,17 @@ TEST_CASE(QuestionManager_EveryTopicSixtyOneToSeventyHasAtLeastTwentyNineQuestio
     }
 }
 
+TEST_CASE(QuestionManager_EveryTopicSeventyOneToEightyHasAtLeastTwentyNineQuestions) {
+    QuestionManager manager;
+    for (int topicId = 71; topicId <= 80; ++topicId) {
+        const auto questions = manager.questionsForTopic(topicId);
+        CHECK(questions.size() >= 29);
+        for (const Question& question : questions) {
+            CHECK(question.topicId == topicId);
+        }
+    }
+}
+
 TEST_CASE(QuestionManager_FindByIdReturnsNulloptForUnknownId) {
     QuestionManager manager;
     CHECK(!manager.findById(999999).has_value());
