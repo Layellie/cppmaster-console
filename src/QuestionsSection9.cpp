@@ -1024,7 +1024,7 @@ void appendSection9Questions(std::vector<Question>& questions) {
     questions.push_back(Question{
         .id = 2224, .topicId = 85,
         .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
-        .prompt = "std::map'te anahtar bazlı arama ortalama hangi sürede çalışır?",
+        .prompt = "std::map ile anahtar bazlı arama ortalama hangi sürede çalışır?",
         .options = {"O(1)", "O(n)", "O(log n)", "O(n^2)"},
         .acceptedAnswers = {"c"},
         .explanation = "map, dengeli bir ağaç kullandığından arama O(log n) sürer.",
