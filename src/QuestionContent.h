@@ -11,3 +11,4 @@ void appendSection5Questions(std::vector<Question>& questions);
 void appendSection6Questions(std::vector<Question>& questions);
 void appendSection7Questions(std::vector<Question>& questions);
 void appendSection8Questions(std::vector<Question>& questions);
+void appendSection9Questions(std::vector<Question>& questions);
