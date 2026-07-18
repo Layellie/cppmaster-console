@@ -1703,4 +1703,733 @@ void appendSection8Questions(std::vector<Question>& questions) {
         .explanation = "operator+, x ve y'leri ayrı ayrı toplamalıdır.",
         .baseXp = 40,
     });
+
+    // Topic 78: Template fonksiyon
+    questions.push_back(Question{
+        .id = 2016, .topicId = 78,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir template fonksiyonun amacı nedir?",
+        .options = {"Türden bağımsız (generic), birden fazla türle çalışabilen bir fonksiyon tanımlamak", "Bir fonksiyonu virtual yapmak", "Bir sınıfı soyut yapmak", "Bir değişkeni sabit yapmak"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Template fonksiyonlar türden bağımsız, generic kod yazmayı sağlar.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2017, .topicId = 78,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "template<typename T>\nT topla(T a, T b) { return a + b; }\ntopla(3, 4) çağrısında T hangi türe çıkarılır?",
+        .options = {"int", "double", "void", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Argümanlar int olduğundan T de int olarak çıkarılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2018, .topicId = 78,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "template<typename T>\nT topla(T a, T b) { return a + b; }\nstd::cout << topla(3, 4);\nEkrana ne yazdırılır?",
+        .options = {"7", "34", "Derleme hatası", "0"},
+        .acceptedAnswers = {"a"},
+        .explanation = "3 + 4 = 7.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2019, .topicId = 78,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "template<typename T>\nT topla(T a, T b) { return a + b; }\nstd::cout << topla(2.5, 1.5);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"4", "4.0", "Derleme hatası", "3"},
+        .acceptedAnswers = {"a"},
+        .explanation = "2.5+1.5=4.0; cout varsayılan biçimde tam sayı değerli double'ı '4' olarak yazdırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2020, .topicId = 78,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Aynı template fonksiyon, aynı programda kaç farklı türle örneklenebilir (instantiate edilebilir)?",
+        .options = {"Sınırsız sayıda farklı türle", "Sadece bir türle", "En fazla iki türle", "Hiçbiriyle, sadece bir kez derlenir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Aynı template, farklı türlerle birden fazla kez örneklenebilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2021, .topicId = 78,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "template<typename T>\nT topla(T a, T b) { return a + b; }\ntopla<int>(3, 4) çağrısında <int> ne işe yarar?",
+        .options = {"T türünü açıkça int olarak belirtir", "Fonksiyonu silmek için kullanılır", "Bir hata mesajıdır", "Derleyici tarafından yok sayılır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "<int>, T'yi açıkça belirtmek için kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2022, .topicId = 78,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "template<typename T>\nT buyukOlan(T a, T b) {\n    if (a > b) return a;\n    return b;\n}\nstd::cout << buyukOlan(3, 7) << \" \" << buyukOlan(2.5, 1.1);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"7 2.5\"", "\"3 1.1\"", "Derleme hatası", "\"7 2\""},
+        .acceptedAnswers = {"a"},
+        .explanation = "buyukOlan(3,7)=7 (int); buyukOlan(2.5,1.1)=2.5 (double).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2023, .topicId = 78,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "template<typename T>\nT topla(T a, T b) { return a + b; }\nstd::cout << topla(3, 4.5);\nBu kod derlenir mi (int ve double karışık argümanlar)?",
+        .options = {"Hayır, T için int ve double çakıştığından derleme hatası oluşur (deduction başarısız)", "Evet, T otomatik olarak double olur", "Evet, T otomatik olarak int olur", "Evet, ikisi de kullanılır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "T, tüm argümanlardan AYNI türe çıkarılmalıdır; farklı türler çakışma hatası verir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2024, .topicId = 78,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir template fonksiyon, türden bağımsız (generic) bir fonksiyon tanımlamanın yoludur.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2025, .topicId = 78,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir template fonksiyon, sadece TEK bir türle çalışabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: birden fazla farklı türle çalışabilir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2026, .topicId = 78,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Template'in gerçek türü, fonksiyon çağrıldığında argümanlardan derleme zamanında çıkarılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2027, .topicId = 78,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Template türü, her zaman açıkça belirtilmelidir (örn. topla<int>(...)); derleyici asla çıkarım yapamaz.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: derleyici genellikle türü argümanlardan çıkarabilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2028, .topicId = 78,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Aynı template fonksiyon aynı programda hem int hem double ile ayrı ayrı çağrılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2029, .topicId = 78,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "template<typename T> T f(T a, T b) fonksiyonu, a ve b farklı türlerde (biri int biri double) verildiğinde ve tür açıkça belirtilmediğinde her zaman sorunsuz derlenir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: T için çıkarım çakışır, derleme hatası oluşur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2030, .topicId = 78,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Türden bağımsız bir fonksiyon tanımlamak için _____ anahtar kelimesi kullanılır (İngilizce kelime).",
+        .acceptedAnswers = {"template"},
+        .explanation = "template anahtar kelimesi kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2031, .topicId = 78,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "template<typename T>\nT topla(T a, T b) { return a + b; }\nstd::cout << topla(5, 6);\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"11"},
+        .explanation = "5 + 6 = 11.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2032, .topicId = 78,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "template<typename T> ifadesindeki T, bir _____ türüdür (Türkçe iki kelime).",
+        .acceptedAnswers = {"yer tutucu"},
+        .explanation = "T, çağrıya göre belirlenecek bir yer tutucu türdür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2033, .topicId = 78,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "template<typename T>\nT topla(T a, T b) { return a + b; }\nstd::cout << topla(1.5, 2.5);\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"4"},
+        .explanation = "1.5+2.5=4.0, cout '4' yazdırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2034, .topicId = 78,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Template fonksiyonda gerçek tür, çağrıdaki argümanlardan derleme zamanında otomatik olarak _____ (Türkçe kelime, 'belirlenir/çıkarılır' anlamında).",
+        .acceptedAnswers = {"çıkarılır", "cikarilir"},
+        .explanation = "Tür, argümanlardan çıkarılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2035, .topicId = 78,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "topla<int>(3, 4) çağrısındaki <int>, T türünü _____ olarak belirtir (İngilizce kelime).",
+        .acceptedAnswers = {"int"},
+        .explanation = "T açıkça int olarak belirtilmiştir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2036, .topicId = 78,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\nT topla(T a, T b) {\n    return a + b;\n}\nstd::cout << topla(3, 4);\ntopla fonksiyonunu template olarak tanımlayan (template<typename T>) satırı yazın.",
+        .acceptedAnswers = {"template<typename T>"},
+        .explanation = "template<typename T>, T'yi bir yer tutucu tür olarak tanımlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2037, .topicId = 78,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "template<typename T>\nT buyukOlan(T a, T b) {\n    _____\n}\nstd::cout << buyukOlan(3, 7);\na ve b'den büyük olanı döndüren gövdeyi (if ile) yazın.",
+        .acceptedAnswers = {"if (a > b) return a; return b;"},
+        .explanation = "Büyük olan değer döndürülür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2038, .topicId = 78,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "template<typename T>\nT carp(T a, T b) {\n    return a * b;\n}\nint main() {\n    std::cout << carp(3, 4);\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"12"},
+        .explanation = "3 * 4 = 12.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2039, .topicId = 78,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "template<typename T>\nT carp(T a, T b) {\n    return a * b;\n}\nint main() {\n    std::cout << carp(3, 4) << \" \" << carp(2.0, 5.0);\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"12 10"},
+        .explanation = "carp(3,4)=12 (int); carp(2.0,5.0)=10.0 (double, '10' yazdırılır).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2040, .topicId = 78,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\ntypename T\nT topla(T a, T b) {\n    return a + b;\n}\n\nBu kod derlenmez çünkü template<...> öneki eksik. Hatalı ilk satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"template<typename T>"},
+        .explanation = "template<typename T> önekiyle T bir template parametresi olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2041, .topicId = 78,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\ntemplate<typename T>\nT topla(T a, T b) {\n    return a + b;\n}\nint main() {\n    std::cout << topla(3, 4.5);\n    return 0;\n}\n\nBu kod derlenmez çünkü argümanlar farklı türde (int ve double); T için çıkarım çakışıyor. Çağrıyı, T'yi açıkça double olarak belirterek düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"topla<double>(3, 4.5);"},
+        .explanation = "T'yi açıkça belirtmek çakışmayı çözer.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2042, .topicId = 78,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\ntemplate<typename T>\nT topla(T a, T b) {\n    return a + b\n}\n\nProgramcı return a + b satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"return a + b;"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2043, .topicId = 78,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir template fonksiyon tanımlayıp kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << topla(3, 4);\n    return 0;\n}", "template<typename T>\nT topla(T a, T b) {\n    return a + b;\n}", "int main() {"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "template tanımı (2), main açılışı (3), kullanım+kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2044, .topicId = 78,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "İki değeri toplayıp döndüren bir template fonksiyon tanımlayın; main() içinde hem int hem double türleriyle çağırıp sonuçlarını yazdırın.",
+        .acceptedAnswers = {"template", "typename", "cout"},
+        .explanation = "Aynı template fonksiyon hem int hem double ile çağrılabilmelidir.",
+        .baseXp = 40,
+    });
+
+    // Topic 79: namespace
+    questions.push_back(Question{
+        .id = 2045, .topicId = 79,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "namespace'in amacı nedir?",
+        .options = {"İlgili isimleri gruplandırıp isim çakışmalarını önlemek", "Bir sınıfı soyut yapmak", "Bir fonksiyonu virtual yapmak", "Bellek ayırmak"},
+        .acceptedAnswers = {"a"},
+        .explanation = "namespace, isim çakışmalarını önleyen bir gruplama mekanizmasıdır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2046, .topicId = 79,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "namespace Matematik { int kare(int x) { return x*x; } }\nMatematik::kare(4) çağrısı ne döndürür?",
+        .options = {"16", "4", "8", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "4 * 4 = 16.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2047, .topicId = 79,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "Bir namespace içindeki bir isme erişmenin iki yolu nedir?",
+        .options = {"NamespaceAdi::isim ya da using namespace NamespaceAdi;", "Sadece isim yazarak", "NamespaceAdi.isim", "NamespaceAdi->isim"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Nitelenmiş erişim veya using namespace ile erişilebilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2048, .topicId = 79,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "namespace A { int x = 1; }\nnamespace B { int x = 2; }\nstd::cout << A::x << B::x;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"12\"", "\"11\"", "Derleme hatası", "\"21\""},
+        .acceptedAnswers = {"a"},
+        .explanation = "A::x=1, B::x=2: '12'.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2049, .topicId = 79,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "İki farklı namespace, aynı isimde bir fonksiyon/değişken tanımlarsa ne olur?",
+        .options = {"Çakışma olmaz, her biri kendi namespace'inin kapsamındadır", "Derleme hatası oluşur", "İkincisi birincisini geçersiz kılar", "Sadece ilki kullanılabilir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Farklı namespace'lerdeki aynı isimli tanımlar çakışmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2050, .topicId = 79,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "using namespace Matematik; kullanıldıktan sonra kare(4) (önek olmadan) çağrılabilir mi?",
+        .options = {"Evet, using namespace, isimleri önek olmadan kullanılabilir hale getirir", "Hayır, hiçbir zaman önek olmadan çağrılamaz", "Hayır, using namespace geçersiz bir sözdizimidir", "Evet ama sadece Matematik::kare olarak"},
+        .acceptedAnswers = {"a"},
+        .explanation = "using namespace, isimleri önek olmadan kullanılabilir hale getirir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2051, .topicId = 79,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "namespace Matematik { int kare(int x) { return x*x; } }\nnamespace Metin { int kare(int x) { return x; } }\nusing namespace Matematik;\nusing namespace Metin;\nstd::cout << kare(4);\nBu kod (her iki namespace de açılmışken önek olmadan kare çağırmak) derlenir mi?",
+        .options = {"Hayır, iki namespace'te de kare olduğundan belirsizlik (ambiguous) hatası oluşur", "Evet, Matematik::kare çağrılır", "Evet, Metin::kare çağrılır", "Evet, ikisi de çağrılır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Her iki namespace de açık olduğundan çağrı belirsizdir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2052, .topicId = 79,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "namespace Sekiller {\n    namespace Ikili {\n        int cizgiSayisi = 2;\n    }\n}\nstd::cout << Sekiller::Ikili::cizgiSayisi;\nBu, iç içe (nested) namespace kullanımı mıdır ve derlenir mi?",
+        .options = {"Evet, iç içe namespace'ler geçerlidir ve Dış::İç::isim şeklinde erişilir", "Hayır, namespace'ler iç içe olamaz", "Hayır, en fazla bir seviye namespace kullanılabilir", "Evet ama farklı bir sözdizimi gerekir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "İç içe namespace'ler geçerlidir, zincirleme :: ile erişilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2053, .topicId = 79,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "namespace, ilgili isimleri gruplandırıp isim çakışmalarını önler.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2054, .topicId = 79,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "İki farklı namespace, aynı isimde bir fonksiyon tanımlayamaz; bu her zaman derleme hatasıdır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: farklı namespace'ler aynı isimli tanımlara sahip olabilir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2055, .topicId = 79,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Bir namespace içindeki isme NamespaceAdi:: öneki ile erişilebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2056, .topicId = 79,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "using namespace ile bir namespace açıldıktan sonra, o namespace'teki isimlere önek olmadan erişilebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2057, .topicId = 79,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "İki farklı namespace aynı anda using namespace ile açılırsa ve ikisinde de aynı isimli bir fonksiyon varsa, önek olmadan çağırmak her zaman sorunsuz çalışır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: bu durumda çağrı belirsiz (ambiguous) olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2058, .topicId = 79,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Namespace'ler iç içe (nested) tanımlanabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2059, .topicId = 79,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "İlgili isimleri gruplandırıp isim çakışmalarını önleyen mekanizmaya _____ denir (İngilizce kelime).",
+        .acceptedAnswers = {"namespace"},
+        .explanation = "Bu mekanizmaya namespace denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2060, .topicId = 79,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "namespace Matematik { int kare(int x) { return x*x; } }\nstd::cout << Matematik::kare(5);\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"25"},
+        .explanation = "5 * 5 = 25.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2061, .topicId = 79,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Bir namespace içindeki isme erişmek için kullanılan operatör _____ dir (bir sembol).",
+        .acceptedAnswers = {"::"},
+        .explanation = "Kapsam çözümleme operatörü (::) kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2062, .topicId = 79,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "İki namespace aynı isimli bir isim tanımlarsa, bunlara nitelenmemiş (önek olmadan) erişmek ve ikisi de using namespace ile açıksa _____ hatası oluşur (İngilizce kelime).",
+        .acceptedAnswers = {"ambiguous", "belirsizlik"},
+        .explanation = "Bu duruma ambiguous (belirsiz) hata denir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2063, .topicId = 79,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "namespace A { int x = 5; } namespace B { int x = 10; } std::cout << A::x + B::x; Ekran çıktısı _____ olur.",
+        .acceptedAnswers = {"15"},
+        .explanation = "5 + 10 = 15.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2064, .topicId = 79,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Bir namespace'in içine başka bir namespace tanımlamaya _____ namespace denir (İngilizce kelime).",
+        .acceptedAnswers = {"nested"},
+        .explanation = "Bu tür namespace'lere nested (iç içe) denir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2065, .topicId = 79,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\nstd::cout << Matematik::kare(6);\nkare(int x) fonksiyonunu x*x döndürecek şekilde, Matematik adlı bir namespace içinde tanımlayan satırları yazın.",
+        .acceptedAnswers = {"namespace Matematik { int kare(int x) { return x * x; } }"},
+        .explanation = "Fonksiyon, Matematik namespace'i içinde tanımlanır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2066, .topicId = 79,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "namespace Matematik {\n    int kare(int x) { return x * x; }\n}\n_____\nstd::cout << kare(5);\nMatematik namespace'ini önek olmadan kullanılabilir hale getiren satırı yazın.",
+        .acceptedAnswers = {"using namespace Matematik;"},
+        .explanation = "using namespace, önek gereksinimini kaldırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2067, .topicId = 79,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "namespace Matematik {\n    int kare(int x) { return x * x; }\n}\nint main() {\n    std::cout << Matematik::kare(7);\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"49"},
+        .explanation = "7 * 7 = 49.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2068, .topicId = 79,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "namespace A {\n    int deger() { return 10; }\n}\nnamespace B {\n    int deger() { return 20; }\n}\nint main() {\n    std::cout << A::deger() + B::deger();\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"30"},
+        .explanation = "10 + 20 = 30.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2069, .topicId = 79,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nnamespace Matematik {\n    int kare(int x) { return x * x; }\n}\nint main() {\n    std::cout << kare(4);\n    return 0;\n}\n\nBu kod derlenmez çünkü kare, Matematik:: öneki olmadan ya da using namespace olmadan çağrılamaz. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::cout << Matematik::kare(4);"},
+        .explanation = "kare, Matematik:: öneki ile nitelenmelidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2070, .topicId = 79,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nnamespace Matematik {\n    int kare(int x) { return x * x; }\n}\nnamespace Metin {\n    int kare(int x) { return x; }\n}\nusing namespace Matematik;\nusing namespace Metin;\nint main() {\n    std::cout << kare(4);\n    return 0;\n}\n\nBu kod derlenmez çünkü her iki namespace de açık olduğundan kare(4) çağrısı belirsizdir (ambiguous). Hatalı satırı, Matematik::kare kullanarak açıkça nitelenmiş haliyle düzeltilmiş olarak yazın.",
+        .acceptedAnswers = {"std::cout << Matematik::kare(4);"},
+        .explanation = "Açık nitelendirme belirsizliği çözer.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2071, .topicId = 79,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nnamespace Matematik {\n    int kare(int x) { return x * x }\n}\n\nProgramcı return x * x satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"int kare(int x) { return x * x; }"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2072, .topicId = 79,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, namespace kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << Matematik::kare(3);\n    return 0;\n}", "namespace Matematik {\n    int kare(int x) { return x * x; }\n}", "int main() {"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "namespace tanımı (2), main açılışı (3), kullanım+kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2073, .topicId = 79,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Matematik adlı bir namespace içinde kare(int) adlı bir fonksiyon tanımlayın; main() içinde Matematik:: öneki ile çağırıp sonucu yazdırın.",
+        .acceptedAnswers = {"namespace", "Matematik::", "cout"},
+        .explanation = "Fonksiyon namespace içinde tanımlanmalı ve nitelenerek çağrılmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 80: auto
+    questions.push_back(Question{
+        .id = 2074, .topicId = 80,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "auto anahtar kelimesinin amacı nedir?",
+        .options = {"Bir değişkenin türünü, ilklendirildiği ifadeden otomatik olarak çıkarmak", "Bir değişkeni sabit yapmak", "Bir değişkeni silmek", "Bir fonksiyonu virtual yapmak"},
+        .acceptedAnswers = {"a"},
+        .explanation = "auto, türü ilklendirme ifadesinden çıkarır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2075, .topicId = 80,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "auto x = 5;\nx'in türü nedir?",
+        .options = {"int", "double", "auto", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "5 bir int literal olduğundan x'in türü int'tir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2076, .topicId = 80,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "auto degisken;\nBu kod derlenir mi (ilk değer olmadan)?",
+        .options = {"Hayır, auto'nun türü çıkarabilmesi için mutlaka bir ilklendirme gereklidir", "Evet, degisken varsayılan olarak int olur", "Evet, degisken varsayılan olarak 0 olur", "Evet, auto her zaman void olur"},
+        .acceptedAnswers = {"a"},
+        .explanation = "auto, ilklendirme olmadan türü çıkaramaz; bu bir derleme hatasıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2077, .topicId = 80,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "auto y = 3.14;\ny'nin türü nedir?",
+        .options = {"double", "float", "int", "auto"},
+        .acceptedAnswers = {"a"},
+        .explanation = "3.14 bir double literal olduğundan y'nin türü double'dır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2078, .topicId = 80,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "auto isim = std::string(\"Merhaba\");\nisim'in türü nedir?",
+        .options = {"std::string", "const char*", "auto", "int"},
+        .acceptedAnswers = {"a"},
+        .explanation = "isim, std::string türünden çıkarılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2079, .topicId = 80,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "auto a = 5;\nauto b = 5.0;\na ve b aynı türde midir?",
+        .options = {"Hayır, a int, b double türündedir", "Evet, ikisi de auto türündedir", "Evet, ikisi de double'dır", "Evet, ikisi de int'tir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "5 int, 5.0 double literal olduğundan a ve b farklı türdedir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2080, .topicId = 80,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "auto x = 10;\nx = 3.14;\nBu kod derlenir mi (x'in türü int iken ona 3.14 atamak)?",
+        .options = {"Evet, derlenir ama x'in türü int olduğundan 3.14, 3'e kesilir (truncate)", "Hayır, derleme hatası verir", "Evet, x'in türü otomatik olarak double'a değişir", "Evet, x 3.14 olarak kalır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "auto ile bir kez belirlenen tür (int) sabittir; sonraki atamalar o türe dönüştürülür.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2081, .topicId = 80,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "auto listele() {\n    return 5;\n}\nauto x = listele();\nx'in türü nedir?",
+        .options = {"int", "auto", "void", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "C++14'ten itibaren fonksiyonun dönüş türü de auto ile çıkarılabilir; 5 int olduğundan listele()'nin dönüş türü ve x'in türü int'tir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2082, .topicId = 80,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "auto, bir değişkenin türünü ilklendirildiği ifadeden otomatik olarak çıkarır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2083, .topicId = 80,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "auto ile tanımlanan bir değişken, ilk değer olmadan tanımlanabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: auto mutlaka bir ilklendirme gerektirir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2084, .topicId = 80,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "auto x = 5; ifadesinde x'in türü int olarak çıkarılır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2085, .topicId = 80,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "auto kullanmak, değişkenin türünün çalışma zamanında (runtime) belirlenmesi anlamına gelir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: tür derleme zamanında (compile-time) belirlenir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2086, .topicId = 80,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "auto a = 5; auto b = 5.0; a ve b aynı türdedir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: a int, b double'dır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2087, .topicId = 80,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir fonksiyonun dönüş türü de auto ile otomatik olarak çıkarılabilir (C++14 itibarıyla).",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2088, .topicId = 80,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir değişkenin türünü ilklendirildiği ifadeden çıkarmak için _____ anahtar kelimesi kullanılır (İngilizce kelime).",
+        .acceptedAnswers = {"auto"},
+        .explanation = "auto anahtar kelimesi kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2089, .topicId = 80,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "auto x = 7;\nx'in türü _____ olarak çıkarılır (İngilizce kelime).",
+        .acceptedAnswers = {"int"},
+        .explanation = "7 bir int literal olduğundan x int'tir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2090, .topicId = 80,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "auto degisken; şeklinde ilk değer vermeden tanımlamak _____ verir (Türkçe kelime).",
+        .acceptedAnswers = {"hata", "derleme hatası"},
+        .explanation = "Bu bir derleme hatasıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2091, .topicId = 80,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "auto y = 2.71;\ny'nin türü _____ olarak çıkarılır (İngilizce kelime).",
+        .acceptedAnswers = {"double"},
+        .explanation = "2.71 bir double literal olduğundan y double'dır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2092, .topicId = 80,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "auto'nun türü çıkarabilmesi için bir değişken mutlaka bir _____ ile tanımlanmalıdır (İngilizce kelime).",
+        .acceptedAnswers = {"initializer"},
+        .explanation = "Bir initializer (ilklendirici) gereklidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2093, .topicId = 80,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "auto türü, derleme _____ (compile-time) belirlenir, çalışma zamanında değil (Türkçe kelime).",
+        .acceptedAnswers = {"zamanında"},
+        .explanation = "Tür derleme zamanında belirlenir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2094, .topicId = 80,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\nstd::cout << x;\nx adlı bir değişkeni 42 değeriyle, türünü auto ile çıkararak tanımlayan satırı yazın.",
+        .acceptedAnswers = {"auto x = 42;"},
+        .explanation = "x'in türü 42'den int olarak çıkarılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2095, .topicId = 80,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "auto isim = std::string(\"Merhaba\");\n_____\nisim değişkenini ekrana yazdıran satırı yazın.",
+        .acceptedAnswers = {"std::cout << isim;"},
+        .explanation = "isim değişkeni doğrudan yazdırılabilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2096, .topicId = 80,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "int main() {\n    auto x = 100;\n    auto y = 2.5;\n    std::cout << x << \" \" << y;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"100 2.5"},
+        .explanation = "x=100 (int), y=2.5 (double).",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2097, .topicId = 80,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "int main() {\n    auto a = 3;\n    auto b = 4.0;\n    std::cout << a + b;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"7"},
+        .explanation = "a (int) + b (double) işlemi double'a yükseltilir: 3+4.0=7.0, cout '7' yazdırır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2098, .topicId = 80,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint main() {\n    auto x;\n    x = 5;\n    return 0;\n}\n\nBu kod derlenmez çünkü auto ile tanımlanan bir değişken mutlaka bir ilk değerle tanımlanmalıdır. Hatalı satırı, ilk değer eklenmiş haliyle düzeltilmiş olarak yazın.",
+        .acceptedAnswers = {"auto x = 5;"},
+        .explanation = "auto, ilklendirme olmadan türü çıkaramaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2099, .topicId = 80,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nint main() {\n    auto x = 5;\n    auto x = 10;\n    return 0;\n}\n\nBu kod derlenmez çünkü aynı kapsamda x adlı bir değişken iki kez tanımlanmış (yeniden tanımlama). İkinci satırı, x'e sadece yeni bir değer atayan (yeniden tanımlamadan) haliyle düzeltilmiş olarak yazın.",
+        .acceptedAnswers = {"x = 10;"},
+        .explanation = "Aynı değişken tekrar tanımlanamaz, sadece değer atanabilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2100, .topicId = 80,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nint main() {\n    auto x = 5\n    return 0;\n}\n\nProgramcı auto x = 5 satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"auto x = 5;"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2101, .topicId = 80,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, auto kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"auto x = 15;", "std::cout << x;\n    return 0;\n}", "int main() {"},
+        .acceptedAnswers = {"3 1 2"},
+        .explanation = "main açılışı (3), auto tanımı (1), yazdırma+kapanış (2): sıra 3 1 2.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2102, .topicId = 80,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "auto kullanarak bir int, bir double ve bir std::string değişkeni tanımlayın; main() içinde üçünü de ekrana yazdırın.",
+        .acceptedAnswers = {"auto", "cout"},
+        .explanation = "Her üç değişken de auto ile tanımlanıp yazdırılmalıdır.",
+        .baseXp = 40,
+    });
 }
