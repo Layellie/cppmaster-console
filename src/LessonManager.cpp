@@ -413,6 +413,7 @@ LessonManager::LessonManager() {
     applySection7LessonContent(lessons_);
     applySection8LessonContent(lessons_);
     applySection9LessonContent(lessons_);
+    applySection10LessonContent(lessons_);
 }
 
 const std::vector<Lesson>& LessonManager::allLessons() const {
