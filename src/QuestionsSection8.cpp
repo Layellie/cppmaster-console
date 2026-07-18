@@ -974,4 +974,733 @@ void appendSection8Questions(std::vector<Question>& questions) {
         .explanation = "Her iki sınıf da kendi sesCikar() versiyonunu çalıştırmalıdır.",
         .baseXp = 40,
     });
+
+    // Topic 75: this pointer'ı
+    questions.push_back(Question{
+        .id = 1929, .topicId = 75,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "this pointer'ı neyi tutar?",
+        .options = {"Geçerli nesnenin adresini", "Sınıfın adını", "İlk üyenin değerini", "Bir sonraki nesnenin adresini"},
+        .acceptedAnswers = {"a"},
+        .explanation = "this, geçerli nesnenin adresini tutan bir pointer'dır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1930, .topicId = 75,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "this'in türü nedir (Sayac sınıfının bir metodunda)?",
+        .options = {"Sayac*", "Sayac", "Sayac&", "void*"},
+        .acceptedAnswers = {"a"},
+        .explanation = "this, SinifAdi* türünde bir pointer'dır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1931, .topicId = 75,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "class Sayac {\npublic:\n    int deger;\n    void ata(int d) { this->deger = d; }\n};\nSayac s;\ns.ata(7);\nstd::cout << s.deger;\nEkrana ne yazdırılır?",
+        .options = {"7", "0", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "this->deger = d, deger üyesini 7 yapar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1932, .topicId = 75,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "this->uye ile uye ifadeleri bir üye fonksiyon içinde ne ilişkidedir?",
+        .options = {"Aynı şeyi ifade ederler", "Farklı değişkenlerdir", "this->uye her zaman 0'dır", "uye, this->uye'den farklı bir tür döndürür"},
+        .acceptedAnswers = {"a"},
+        .explanation = "this->uye ve uye aynı şeyi ifade eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1933, .topicId = 75,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "*this ifadesini (referans olarak) döndürmenin amacı nedir?",
+        .options = {"Metot zincirleme (method chaining) yapabilmek", "Nesneyi silmek", "Bellek sızıntısını önlemek", "Nesneyi kopyalamak"},
+        .acceptedAnswers = {"a"},
+        .explanation = "*this döndürmek, zincirleme çağrılara izin verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1934, .topicId = 75,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Sayac {\npublic:\n    int deger = 0;\n    Sayac& artir(int m) { deger += m; return *this; }\n};\nSayac s;\ns.artir(2).artir(3);\nstd::cout << s.deger;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"5", "3", "2", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "0 + 2 + 3 = 5.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1935, .topicId = 75,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Sayac {\npublic:\n    int deger = 0;\n    Sayac& artir(int m) { this->deger += m; return *this; }\n};\nSayac s;\ns.artir(1).artir(2).artir(3);\nstd::cout << s.deger;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"6", "3", "1", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "0 + 1 + 2 + 3 = 6.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1936, .topicId = 75,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    Nokta(int x) {\n        this->x = x;\n    }\n};\nNokta p(5);\nstd::cout << p.x;\nBu kodda parametre adı (x) ile üye adı (x) AYNI olduğunda this->x ne anlama gelir?",
+        .options = {"Üye x'i (this->x), parametre x'ten ayırt eder", "Parametre x'i ifade eder", "Derleme hatası oluşur", "İkisi de aynı anda değişir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "this->x açıkça üyeyi ifade eder; bare x, parametreyi gölgeler (shadow).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1937, .topicId = 75,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "this, geçerli nesnenin adresini tutan bir pointer'dır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1938, .topicId = 75,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "this, static bir üye fonksiyonu içinde de kullanılabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: static fonksiyonların örtük this'i yoktur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1939, .topicId = 75,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "this->uye ile uye, bir üye fonksiyon içinde aynı şeyi ifade eder.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1940, .topicId = 75,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "*this ifadesi, geçerli nesnenin kendisini (dereference edilmiş) ifade eder.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1941, .topicId = 75,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir metot *this'i referans olarak döndürürse, ardışık metot çağrıları (zincirleme) yapılabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1942, .topicId = 75,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "this, üyelere erişmek için nokta (.) operatörüyle kullanılır (this.uye).",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: this bir pointer olduğundan ok (->) operatörü kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1943, .topicId = 75,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Geçerli nesnenin adresini tutan örtük pointer'a _____ denir (İngilizce kelime).",
+        .acceptedAnswers = {"this"},
+        .explanation = "Bu pointer'a this denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1944, .topicId = 75,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "class Sayac {\npublic:\n    int deger;\n    void ata(int d) { this->deger = d; }\n};\nSayac s;\ns.ata(12);\nstd::cout << s.deger;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"12"},
+        .explanation = "ata(12), deger'i 12 yapar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1945, .topicId = 75,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "this bir pointer olduğundan üyelere erişmek için nokta değil _____ operatörü kullanılır (bir sembol).",
+        .acceptedAnswers = {"->"},
+        .explanation = "Ok operatörü (->) kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1946, .topicId = 75,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Metot zincirleme (chaining) yapabilmek için bir metot _____ ifadesini referans olarak döndürmelidir (İngilizce iki karakter).",
+        .acceptedAnswers = {"*this"},
+        .explanation = "*this döndürmek zincirlemeye izin verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1947, .topicId = 75,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "class Sayac {\npublic:\n    int deger = 0;\n    Sayac& artir(int m) { deger += m; return *this; }\n};\nSayac s;\ns.artir(4).artir(6);\nstd::cout << s.deger;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"10"},
+        .explanation = "0 + 4 + 6 = 10.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1948, .topicId = 75,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Bir constructor parametresi ile üye adı aynıysa (örneğin ikisi de x), this->x kullanmak üye x'i _____ x'ten ayırt eder (Türkçe kelime).",
+        .acceptedAnswers = {"parametre"},
+        .explanation = "this->x, üyeyi parametreden ayırt eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1949, .topicId = 75,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Sayac {\npublic:\n    int deger = 0;\n    _____\n};\nSayac s;\ns.artir(5).artir(2);\nstd::cout << s.deger;\nartir(int) metodunu, deger'i artırıp *this döndürecek şekilde tanımlayan satırı yazın.",
+        .acceptedAnswers = {"Sayac& artir(int m) { deger += m; return *this; }"},
+        .explanation = "*this döndürmek zincirlemeye izin verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1950, .topicId = 75,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    Nokta(int x) {\n        _____\n    }\n};\nNokta p(9);\nstd::cout << p.x;\nconstructor gövdesinde, parametre x'i üye x'e (this-> ile) atayan satırı yazın.",
+        .acceptedAnswers = {"this->x = x;"},
+        .explanation = "this->x, üye x'i ifade eder.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1951, .topicId = 75,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "class Sayac {\npublic:\n    int deger = 0;\n    Sayac& artir(int m) { this->deger += m; return *this; }\n};\nint main() {\n    Sayac s;\n    s.artir(10).artir(20);\n    std::cout << s.deger;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"30"},
+        .explanation = "0 + 10 + 20 = 30.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1952, .topicId = 75,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "class Nokta {\npublic:\n    int x, y;\n    Nokta(int x, int y) {\n        this->x = x;\n        this->y = y;\n    }\n};\nint main() {\n    Nokta p(3, 4);\n    std::cout << p.x + p.y;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"7"},
+        .explanation = "3 + 4 = 7.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1953, .topicId = 75,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nclass Nokta {\npublic:\n    int x;\n    Nokta(int x) {\n        x = x;\n    }\n};\nint main() {\n    Nokta p(5);\n    std::cout << p.x;\n    return 0;\n}\n\nBu kod derlenir ama x = x; ifadesi parametre x'i kendisine atar (üye x'e değil), üye x hiçbir zaman ilklendirilmez. Constructor gövdesindeki hatalı satırı, this-> ile üyeyi doğru ilklendirecek haliyle düzeltilmiş olarak yazın.",
+        .acceptedAnswers = {"this->x = x;"},
+        .explanation = "this->x, üyeyi parametreden ayırt ederek doğru ilklendirmeyi sağlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1954, .topicId = 75,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Sayac {\npublic:\n    int deger = 0;\n    void artir(int m) { deger += m; return *this; }\n};\n\nBu kod derlenmez çünkü artir(int)'in dönüş türü void'dir ama gövde *this döndürmeye çalışıyor. Fonksiyon başlığını, Sayac& dönüş türüyle düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"Sayac& artir(int m) { deger += m; return *this; }"},
+        .explanation = "Dönüş türü, *this'in türüne (Sayac&) uygun olmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1955, .topicId = 75,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nclass Sayac {\npublic:\n    int deger = 0;\n    Sayac& artir(int m) { this->deger += m; return *this }\n};\n\nProgramcı return *this satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"Sayac& artir(int m) { this->deger += m; return *this; }"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1956, .topicId = 75,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, this pointer'ı ve metot zincirleme kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"s.artir(2).artir(3);\n    std::cout << s.deger;\n    return 0;\n}", "class Sayac {\npublic:\n    int deger = 0;\n    Sayac& artir(int m) { this->deger += m; return *this; }\n};", "int main() {\n    Sayac s;"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "class tanımı (2), main+nesne (3), zincirleme çağrı+kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1957, .topicId = 75,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "deger adlı bir int üyesi olan Sayac adlı bir sınıf tanımlayın; this->deger kullanan ve *this döndüren bir artir(int) metodu ekleyip main() içinde zincirleme çağırın.",
+        .acceptedAnswers = {"this->", "*this", "cout"},
+        .explanation = "artir metodu this->deger'i güncelleyip *this döndürmelidir.",
+        .baseXp = 40,
+    });
+
+    // Topic 76: static sınıf üyesi
+    questions.push_back(Question{
+        .id = 1958, .topicId = 76,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "static bir sınıf üyesi neyi ifade eder?",
+        .options = {"Sınıfın TÜM nesneleri arasında paylaşılan tek bir kopya", "Her nesnenin kendine özel bir kopyası", "Sadece const olabilen bir üye", "Silinmesi mümkün olmayan bir üye"},
+        .acceptedAnswers = {"a"},
+        .explanation = "static üye, sınıfın tüm nesneleri arasında paylaşılan tek bir kopyadır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1959, .topicId = 76,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "class Sayac {\npublic:\n    static inline int toplam = 0;\n    Sayac() { toplam++; }\n};\nSayac a, b, c;\nstd::cout << Sayac::toplam;\nEkrana ne yazdırılır?",
+        .options = {"3", "1", "0", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Üç nesne oluşturulduğunda paylaşılan toplam 3 olur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1960, .topicId = 76,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "static bir üyeye sınıf adıyla (nesne olmadan) nasıl erişilir?",
+        .options = {"SinifAdi::uye", "SinifAdi->uye", "SinifAdi.uye", "SinifAdi(uye)"},
+        .acceptedAnswers = {"a"},
+        .explanation = "static üyeye SinifAdi:: ile erişilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1961, .topicId = 76,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Sayac {\npublic:\n    static inline int toplam = 0;\n};\nSayac a;\na.toplam = 5;\nstd::cout << Sayac::toplam;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"5", "0", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "static üye paylaşılan tek kopya olduğundan nesne üzerinden değiştirme, sınıf adıyla erişimi de etkiler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1962, .topicId = 76,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Sayac {\npublic:\n    static inline int toplam = 0;\n};\nSayac a, b;\na.toplam = 10;\nstd::cout << b.toplam;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"10", "0", "Derleme hatası", "Belirsiz"},
+        .acceptedAnswers = {"a"},
+        .explanation = "toplam paylaşılan tek kopya olduğundan a üzerinden değişiklik b üzerinden de görünür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1963, .topicId = 76,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "static bir üye fonksiyonu, static olmayan bir üyeye doğrudan erişmeye çalışırsa ne olur?",
+        .options = {"Derleme hatası (static fonksiyonun örtük this'i yoktur)", "Sorunsuz çalışır", "Değer her zaman 0 olur", "Çalışma zamanı hatası verir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "static fonksiyonların örtük this'i olmadığından static olmayan üyelere erişemez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1964, .topicId = 76,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Hesap {\npublic:\n    static inline int toplamHesap = 0;\n    Hesap() { toplamHesap++; }\n    ~Hesap() { toplamHesap--; }\n};\nint main() {\n    Hesap h1;\n    {\n        Hesap h2;\n        std::cout << Hesap::toplamHesap << \" \";\n    }\n    std::cout << Hesap::toplamHesap;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"2 1\"", "\"1 2\"", "\"2 2\"", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "h1 ve h2 ile toplamHesap 2 olur (\"2 \"); h2 kapsam dışına çıkınca 1'e düşer (\"1\").",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1965, .topicId = 76,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Sayac {\npublic:\n    static int getToplam() { return toplam; }\nprivate:\n    static inline int toplam = 5;\n};\nstd::cout << Sayac::getToplam();\nBu kod derlenir mi (static metot, static üyeye erişiyor)?",
+        .options = {"Evet, static bir metot başka bir static üyeye doğrudan erişebilir", "Hayır, static metotlar hiçbir üyeye erişemez", "Hayır, private static üyeye erişilemez", "Evet ama sadece const ise"},
+        .acceptedAnswers = {"a"},
+        .explanation = "static metotlar diğer static üyelere doğrudan erişebilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1966, .topicId = 76,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "static bir üye, sınıfın TÜM nesneleri arasında paylaşılan tek bir kopyaya sahiptir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1967, .topicId = 76,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "static bir üyenin her nesne için ayrı bir kopyası vardır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: static üye tek bir paylaşılan kopyadır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1968, .topicId = 76,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "static bir üyeye, sınıf adıyla (SinifAdi::uye) nesne oluşturmadan erişilebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1969, .topicId = 76,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "static bir üye fonksiyonunun örtük bir this pointer'ı vardır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: static fonksiyonların örtük this'i yoktur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1970, .topicId = 76,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "static bir üye fonksiyonu, başka bir static üyeye doğrudan erişebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1971, .topicId = 76,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "static bir üye fonksiyonu, static olmayan bir üyeye doğrudan erişebilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: örtük this olmadığından erişemez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1972, .topicId = 76,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Sınıfın tüm nesneleri arasında paylaşılan tek bir kopyaya sahip üyeye _____ üye denir (İngilizce kelime).",
+        .acceptedAnswers = {"static"},
+        .explanation = "Bu tür üyeye static üye denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1973, .topicId = 76,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "class Sayac {\npublic:\n    static inline int toplam = 0;\n    Sayac() { toplam++; }\n};\nSayac a, b;\nstd::cout << Sayac::toplam;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "İki nesne oluşturulduğunda toplam 2 olur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1974, .topicId = 76,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "static bir üyeye sınıf adıyla erişmek için _____ operatörü kullanılır (bir sembol).",
+        .acceptedAnswers = {"::"},
+        .explanation = "Kapsam çözümleme operatörü (::) kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1975, .topicId = 76,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "static bir üye fonksiyonu, static olmayan üyelere doğrudan erişemez çünkü örtük bir _____ pointer'ı yoktur (İngilizce kelime).",
+        .acceptedAnswers = {"this"},
+        .explanation = "static fonksiyonların this'i yoktur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1976, .topicId = 76,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "class Sayac {\npublic:\n    static inline int toplam = 0;\n};\nSayac a, b;\na.toplam = 7;\nstd::cout << b.toplam;\nEkran çıktısı _____ olur (paylaşılan tek kopya olduğu için).",
+        .acceptedAnswers = {"7"},
+        .explanation = "toplam paylaşılan tek kopya olduğundan b üzerinden de 7 görünür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1977, .topicId = 76,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "C++17'den itibaren, static bir üyeyi sınıf içinde ilklendirmek için static _____ anahtar kelimesi kullanılabilir (İngilizce kelime).",
+        .acceptedAnswers = {"inline"},
+        .explanation = "static inline, C++17'de sınıf içi ilklendirmeyi sağlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1978, .topicId = 76,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Sayac {\npublic:\n    _____\n    Sayac() { toplam++; }\n};\ntoplam adlı, 0 ile ilklendirilmiş static bir int üye tanımlayan satırı (static inline ile) yazın.",
+        .acceptedAnswers = {"static inline int toplam = 0;"},
+        .explanation = "static inline int toplam = 0; paylaşılan üyeyi tanımlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1979, .topicId = 76,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Sayac {\npublic:\n    static inline int toplam = 0;\n    _____\n};\nSayac a, b, c;\nstd::cout << Sayac::toplam;\nHer nesne oluşturulduğunda toplam'ı bir artıran bir constructor tanımlayan satırı yazın.",
+        .acceptedAnswers = {"Sayac() { toplam++; }"},
+        .explanation = "Constructor, her çağrıda paylaşılan toplam'ı artırır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1980, .topicId = 76,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "class Sayac {\npublic:\n    static inline int toplam = 0;\n    Sayac() { toplam++; }\n};\nint main() {\n    Sayac a;\n    Sayac b;\n    Sayac c;\n    Sayac d;\n    std::cout << Sayac::toplam;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"4"},
+        .explanation = "Dört nesne oluşturulduğunda toplam 4 olur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1981, .topicId = 76,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "class Hesap {\npublic:\n    static inline int toplamHesap = 0;\n    Hesap() { toplamHesap++; }\n    ~Hesap() { toplamHesap--; }\n};\nint main() {\n    Hesap h1;\n    Hesap h2;\n    std::cout << Hesap::toplamHesap << \" \";\n    {\n        Hesap h3;\n        std::cout << Hesap::toplamHesap << \" \";\n    }\n    std::cout << Hesap::toplamHesap;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"2 3 2"},
+        .explanation = "h1,h2 ile toplamHesap=2; h3 eklenince 3; h3 kapsam dışına çıkınca tekrar 2.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1982, .topicId = 76,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Sayac {\npublic:\n    static void goster() {\n        std::cout << deger;\n    }\nprivate:\n    int deger = 0;\n};\n\nBu kod derlenmez çünkü static goster() metodu, static OLMAYAN deger üyesine doğrudan erişmeye çalışıyor (örtük this yok). deger tanımını, static yaparak (ve inline ilklendirerek) düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"static inline int deger = 0;"},
+        .explanation = "deger static yapılırsa static goster() metodu ona erişebilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1983, .topicId = 76,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nclass Sayac {\npublic:\n    static inline int toplam = 0;\n    Sayac() { }\n};\nint main() {\n    Sayac a, b, c;\n    std::cout << Sayac::toplam;\n    return 0;\n}\n\nProgramcı toplam'ın 3 olmasını bekliyor ama constructor toplam'ı hiç artırmadığından 0 kalır. Sayac'ın constructor'ını, her nesne oluşturulduğunda toplam'ı artıracak şekilde düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"Sayac() { toplam++; }"},
+        .explanation = "Constructor'da toplam++ eklenmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1984, .topicId = 76,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nclass Sayac {\npublic:\n    static inline int toplam = 0;\n    Sayac() { toplam++ }\n};\n\nProgramcı toplam++ satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"Sayac() { toplam++; }"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1985, .topicId = 76,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, static bir üye kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"Sayac a, b;\n    std::cout << Sayac::toplam;\n    return 0;\n}", "class Sayac {\npublic:\n    static inline int toplam = 0;\n    Sayac() { toplam++; }\n};", "int main() {"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "class tanımı (2), main açılışı (3), nesneler+kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1986, .topicId = 76,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "toplamNesne adlı static bir int üyesi olan Sayac adlı bir sınıf tanımlayın; her constructor çağrısında toplamNesne'yi artırıp main() içinde birkaç nesne oluşturduktan sonra Sayac::toplamNesne'yi yazdırın.",
+        .acceptedAnswers = {"static", "cout"},
+        .explanation = "toplamNesne, her nesne oluşturulduğunda artırılmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 77: Operatör aşırı yükleme
+    questions.push_back(Question{
+        .id = 1987, .topicId = 77,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Operatör aşırı yükleme (operator overloading) neyi ifade eder?",
+        .options = {"+, ==, << gibi operatörlerin kullanıcı tanımlı türler için yeniden tanımlanması", "Bir fonksiyonun birden fazla parametre alması", "Bir sınıfın birden fazla constructor'a sahip olması", "Bir değişkenin türünün değiştirilmesi"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Operatör aşırı yükleme, operatörleri kullanıcı tanımlı türler için yeniden tanımlar.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1988, .topicId = 77,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "class Nokta {\npublic:\n    int x, y;\n    Nokta(int xd, int yd) : x(xd), y(yd) {}\n    Nokta operator+(const Nokta& d) const { return Nokta(x + d.x, y + d.y); }\n};\nNokta a(1, 2), b(3, 4);\nNokta c = a + b;\nstd::cout << c.x << \" \" << c.y;\nEkrana ne yazdırılır?",
+        .options = {"\"4 6\"", "\"1 2\"", "Derleme hatası", "\"3 4\""},
+        .acceptedAnswers = {"a"},
+        .explanation = "x'ler (1+3=4) ve y'ler (2+4=6) ayrı ayrı toplanır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1989, .topicId = 77,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "Bir operatör üye fonksiyon olarak overload edildiğinde, sol taraftaki işlenen neyi ifade eder?",
+        .options = {"Örtük this (çağrılan nesnenin kendisi)", "Her zaman 0", "Sağ taraftaki işlenen", "Bir referans parametresi"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Sol işlenen örtük this'tir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1990, .topicId = 77,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    Nokta(int xd) : x(xd) {}\n    bool operator==(const Nokta& d) const { return x == d.x; }\n};\nNokta a(5), b(5);\nstd::cout << (a == b);\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"1", "0", "Derleme hatası", "5"},
+        .acceptedAnswers = {"a"},
+        .explanation = "a.x == b.x (5==5) true (1) verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1991, .topicId = 77,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "operator+ içinde diger.x kullanmak yerine yanlışlıkla x kullanmak (kendi üyesini iki kez) ne tür bir hataya yol açar?",
+        .options = {"Mantık hatası (toplama yerine ikiye katlama gibi yanlış bir sonuç)", "Derleme hatası", "Çalışma zamanı çökmesi", "Bellek sızıntısı"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Bu, derlenen ama yanlış sonuç veren bir mantık hatasıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1992, .topicId = 77,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "class Kesir {\npublic:\n    int pay, payda;\n    Kesir(int p, int pd) : pay(p), payda(pd) {}\n    Kesir operator+(const Kesir& d) const {\n        return Kesir(pay * d.payda + d.pay * payda, payda * d.payda);\n    }\n};\nKesir a(1, 2), b(1, 3);\nKesir c = a + b;\nstd::cout << c.pay << \"/\" << c.payda;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"5/6\"", "\"2/5\"", "\"1/2\"", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "pay=1*3+1*2=5, payda=2*3=6.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 1993, .topicId = 77,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Nokta {\npublic:\n    int x, y;\n    Nokta(int xd, int yd) : x(xd), y(yd) {}\n    Nokta operator+(const Nokta& d) const { return Nokta(x + d.x, y + d.y); }\n};\nNokta a(1, 1), b(2, 2), c(3, 3);\nNokta sonuc = a + b + c;\nstd::cout << sonuc.x << \" \" << sonuc.y;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .options = {"\"6 6\"", "\"3 3\"", "Derleme hatası", "\"1 1\""},
+        .acceptedAnswers = {"a"},
+        .explanation = "a+b=(3,3), (a+b)+c=(6,6).",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1994, .topicId = 77,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    Nokta(int xd) : x(xd) {}\n    Nokta operator+(const Nokta& d) const { return Nokta(x + x); }\n};\nNokta a(3), b(5);\nNokta c = a + b;\nstd::cout << c.x;\nBu kodda bir MANTIK hatası var; d.x yerine x kullanılmış. Ekran çıktısı ne olur?",
+        .options = {"6", "8", "10", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "operator+ b'yi (d) hiç dikkate almadan x+x=3+3=6 döndürür.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 1995, .topicId = 77,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Operatör aşırı yükleme, kullanıcı tanımlı türler için operatörlerin yeniden tanımlanmasıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1996, .topicId = 77,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "C++'ta operatörler sadece temel türler (int, double) için kullanılabilir, kullanıcı tanımlı türler için overload edilemez.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: kullanıcı tanımlı türler için de overload edilebilir.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 1997, .topicId = 77,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Bir operatör üye fonksiyon olarak overload edildiğinde, sol taraftaki işlenen örtük this'tir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1998, .topicId = 77,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "operator+ içinde diğer nesnenin üyelerine erişmek için diger. ön eki gereksizdir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: diğer nesnenin üyelerine diger. ön ekiyle erişilmelidir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 1999, .topicId = 77,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "operator== genellikle bool döndürür ve iki nesnenin eşitliğini karşılaştırır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2000, .topicId = 77,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Bir operatör overload edildiğinde, orijinal davranışı (örneğin int'ler için +) değişir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: yeni bir tür için overload etmek, temel türler için davranışı değiştirmez.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2001, .topicId = 77,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Kullanıcı tanımlı türler için operatörlerin yeniden tanımlanmasına operatör _____ denir (Türkçe kelime).",
+        .acceptedAnswers = {"aşırı yükleme", "asiri yukleme"},
+        .explanation = "Bu kavrama operatör aşırı yükleme denir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2002, .topicId = 77,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    Nokta(int xd) : x(xd) {}\n    Nokta operator+(const Nokta& d) const { return Nokta(x + d.x); }\n};\nNokta a(3), b(4);\nNokta c = a + b;\nstd::cout << c.x;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"7"},
+        .explanation = "3 + 4 = 7.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2003, .topicId = 77,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Bir operatör üye fonksiyon olarak overload edildiğinde sol taraftaki işlenen _____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"this"},
+        .explanation = "Sol işlenen this'tir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2004, .topicId = 77,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "operator+ içinde diger.x yerine yanlışlıkla x kullanmak, toplama yerine _____ gibi yanlış bir sonuç üretir (Türkçe kelime).",
+        .acceptedAnswers = {"ikiye katlama"},
+        .explanation = "Kendi üyesini iki kez kullanmak ikiye katlama gibi bir sonuç verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2005, .topicId = 77,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    Nokta(int xd) : x(xd) {}\n    bool operator==(const Nokta& d) const { return x == d.x; }\n};\nNokta a(5), b(6);\nstd::cout << (a == b);\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"0"},
+        .explanation = "5 == 6 false (0) verir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2006, .topicId = 77,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Bir operatörü member fonksiyon olarak overload etmek için operatör_____ sözdizimi kullanılır (İngilizce kelime, örn. 'operator+').",
+        .acceptedAnswers = {"operator"},
+        .explanation = "operator anahtar kelimesi kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2007, .topicId = 77,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Nokta {\npublic:\n    int x, y;\n    Nokta(int xd, int yd) : x(xd), y(yd) {}\n    _____\n};\nNokta a(1, 2), b(3, 4);\nNokta c = a + b;\nx ve y'leri ayrı ayrı toplayan operator+ tanımını yazın.",
+        .acceptedAnswers = {"Nokta operator+(const Nokta& d) const { return Nokta(x + d.x, y + d.y); }"},
+        .explanation = "operator+, x ve y'leri ayrı ayrı toplar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2008, .topicId = 77,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    Nokta(int xd) : x(xd) {}\n    bool operator==(const Nokta& d) const {\n        _____\n    }\n};\nNokta a(5), b(5);\nstd::cout << (a == b);\nx'lerin eşit olup olmadığını döndüren satırı yazın.",
+        .acceptedAnswers = {"return x == d.x;"},
+        .explanation = "İki nesnenin x'leri karşılaştırılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2009, .topicId = 77,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "class Nokta {\npublic:\n    int x;\n    Nokta(int xd) : x(xd) {}\n    Nokta operator+(const Nokta& d) const { return Nokta(x + d.x); }\n};\nint main() {\n    Nokta a(10), b(20);\n    Nokta c = a + b;\n    std::cout << c.x;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"30"},
+        .explanation = "10 + 20 = 30.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2010, .topicId = 77,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "class Kesir {\npublic:\n    int pay, payda;\n    Kesir(int p, int pd) : pay(p), payda(pd) {}\n    Kesir operator+(const Kesir& d) const {\n        return Kesir(pay * d.payda + d.pay * payda, payda * d.payda);\n    }\n};\nint main() {\n    Kesir a(1, 4), b(1, 4);\n    Kesir c = a + b;\n    std::cout << c.pay << \"/\" << c.payda;\n    return 0;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"8/16"},
+        .explanation = "pay=1*4+1*4=8, payda=4*4=16.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2011, .topicId = 77,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda mantık hatası var (derleme hatası değil):\n\nclass Nokta {\npublic:\n    int x;\n    Nokta(int xd) : x(xd) {}\n    Nokta operator+(const Nokta& d) const {\n        return Nokta(x + x);\n    }\n};\nint main() {\n    Nokta a(3), b(5);\n    Nokta c = a + b;\n    std::cout << c.x;\n    return 0;\n}\n\nBu kod derlenir ama operator+ içinde d.x yerine yanlışlıkla x kullanılmış (b'nin değeri hiç dikkate alınmıyor); c.x=6 (3+3) olur, 8 (3+5) değil. operator+ içindeki hatalı satırı, d.x kullanarak düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"return Nokta(x + d.x);"},
+        .explanation = "Diğer nesnenin üyesine d.x ile erişilmelidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2012, .topicId = 77,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nclass Nokta {\npublic:\n    int x;\n    Nokta(int xd) : x(xd) {}\n    Nokta operator+(const Nokta& d) { return Nokta(x + d.x); }\n};\nconst Nokta a(3);\nNokta b(4);\nNokta c = a + b;\n\nBu kod derlenmez çünkü operator+ const olarak işaretlenmemiş ama a const bir Nokta'dır; const bir nesne üzerinden const olmayan bir metot çağrılamaz. operator+ tanımını, const eklenmiş haliyle düzeltilmiş olarak yazın.",
+        .acceptedAnswers = {"Nokta operator+(const Nokta& d) const { return Nokta(x + d.x); }"},
+        .explanation = "const bir nesne üzerinden sadece const metotlar çağrılabilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2013, .topicId = 77,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nclass Nokta {\npublic:\n    int x;\n    Nokta(int xd) : x(xd) {}\n    Nokta operator+(const Nokta& d) const { return Nokta(x + d.x) }\n};\n\nProgramcı return Nokta(x + d.x) satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"Nokta operator+(const Nokta& d) const { return Nokta(x + d.x); }"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2014, .topicId = 77,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, operatör aşırı yükleme kullanan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"Nokta c = a + b;\n    std::cout << c.x;\n    return 0;\n}", "class Nokta {\npublic:\n    int x;\n    Nokta(int xd) : x(xd) {}\n    Nokta operator+(const Nokta& d) const { return Nokta(x + d.x); }\n};", "int main() {\n    Nokta a(2), b(3);"},
+        .acceptedAnswers = {"2 3 1"},
+        .explanation = "class tanımı (2), main+nesneler (3), toplama+kapanış (1): sıra 2 3 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2015, .topicId = 77,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "x ve y adlı int üyeleri olan Nokta adlı bir sınıf tanımlayın; iki Nokta'yı toplayan bir operator+ ekleyip main() içinde iki nesneyi toplayıp sonucu yazdırın.",
+        .acceptedAnswers = {"operator+", "cout"},
+        .explanation = "operator+, x ve y'leri ayrı ayrı toplamalıdır.",
+        .baseXp = 40,
+    });
 }
