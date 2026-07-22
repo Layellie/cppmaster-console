@@ -18,14 +18,18 @@ Phases 1-7. Each phase below gets its own
 
 ## Confirmed gaps (verified against current code, not assumed)
 
-- `Application.cpp:161` — "Kod Yazma Alıştırmaları" (menu option 5) is a
-  `showNotYetAvailable(...)` stub. Not implemented at all.
-- ~~"Ayarlar" (menu option 9) stub~~ — **resolved in Phase 8**: a real
-  settings menu now exists (topic-lock toggle, case-sensitivity, WriteCode
-  tolerance, explanation detail, daily review cap, export/import). Renk
-  aç/kapa, sesli uyarı, and varsayılan sınav soru sayısı (exam question
-  counts are now fixed at 20/section + 100/final as of Phase 22, not yet
-  configurable) all remain deferred to Phase 25 (final polish).
+- ~~`Application.cpp:161` — "Kod Yazma Alıştırmaları" (menu option 5) is a
+  `showNotYetAvailable(...)` stub. Not implemented at all.~~ — **resolved
+  in Phase 11** (this bullet itself had gone stale — Phase 11 shipped 25
+  hand-authored code-writing exercises across 3 tiers, reusing
+  `QuizEngine::evaluate`'s WriteCode grading; the `showNotYetAvailable`
+  stub had zero remaining call sites and was removed in Phase 25's final
+  review).
+- ~~"Ayarlar" (menu option 9) stub~~ — **resolved in Phase 8**, deferred
+  fields **resolved in Phase 25**: a real settings menu now exists
+  (topic-lock toggle, case-sensitivity, WriteCode tolerance, explanation
+  detail, daily review cap, export/import, plus Phase 25's color toggle,
+  audio alert toggle, and Quick Test question count).
 - ~~Only topics 1-10 (Section 1) have lesson content; topics 11-100 exist
   only as id/title/section entries.~~ — **resolved in Phase 21**: all 100
   topics now have full lesson content (`src/LessonContentSection2.cpp`
@@ -71,11 +75,26 @@ Phases 1-7. Each phase below gets its own
   `GeneratedQuestionValidator`, `GeneratorRegistry`, `GeneratorScoring`, and
   `ParameterDomain` classes, and logging every attempt's terminal outcome
   to `data/question_generation.log`.
-- No hint system (`ipucu`/`konu`/`ornek`/`gec`/`cikis` in-quiz commands).
-- No topic lock system (70%-completion gate between sections, togglable in
-  settings).
-- No adaptive difficulty (question difficulty shifting based on streaks).
-- No first-launch skill-level selection screen, no ANSI color system.
+- ~~No hint system (`ipucu`/`konu`/`ornek`/`gec`/`cikis` in-quiz commands).~~
+  — **resolved in Phase 10** (this bullet had also gone stale): all 5
+  commands are implemented in `Application::askOneQuestion`'s answer-
+  reading loop, backed by `src/HintProvider.h`/`.cpp`.
+- ~~No topic lock system (70%-completion gate between sections, togglable
+  in settings).~~ — **resolved in Phase 9**: `settings_.topicLockEnabled`
+  gates the completion threshold via `sectionExamIsUnlocked` in
+  `src/TopicLock.h`.
+- ~~No adaptive difficulty (question difficulty shifting based on
+  streaks).~~ — **resolved in Phase 12**: `src/AdaptiveDifficulty.h`'s
+  `selectNextQuestionIndex`/`shouldShowExtraHelp` drive question ordering
+  and extra-help triggers in `Application::runTopicQuiz`.
+- ~~No first-launch skill-level selection screen, no ANSI color system.~~
+  — **resolved in Phase 25**: a one-time skill-level screen (detected via
+  `data/progress.txt` not existing yet) sets a starting XP of 0/120/350
+  for the 3 self-assessed levels; `ConsoleUI` gained
+  `printSuccess`/`printError`/`printHighlight` (ANSI green/red/yellow,
+  gated by both the new `Settings::colorEnabled` toggle and a Windows
+  `ENABLE_VIRTUAL_TERMINAL_PROCESSING` capability check) plus a
+  `playAlertSound` console-bell alert (gated by `Settings::audioAlertEnabled`).
 - ~~No large-scale generation tests (10,000-iteration uniqueness/correctness/
   performance stress tests the spec asked for) — the current suite is
   correctness-focused at small scale, not stress-scale.~~ — **resolved in
@@ -274,17 +293,52 @@ as Phases 1-7.
   topic (`BoolOutputPredictGenerator`, topic 9) alone, proving the
   CrossTopic fallback sustains a fully exhausted topic indefinitely. No
   production code changed — purely additive testing, per the phase's scope.
-- **Phase 25 — Kalan cila:** ilk açılış seviye seçim ekranı, ANSI renk
-  sistemi (Ayarlar'dan kapatılabilir).
+- **Phase 25 — Kalan cila: COMPLETE** (commits `860f74f..349cdcc`,
+  203/203 tests + ctest 100%; new stress suite 2/2 unaffected). **This is
+  the LAST phase in the roadmap.** `Settings` gained `colorEnabled`
+  (default true), `audioAlertEnabled` (default false), and
+  `quickTestQuestionCount` (default 5, replacing a hardcoded constant),
+  with a new explicit backward-compatibility test proving a pre-Phase-25
+  `settings.txt` still loads correctly with the 3 new fields at their
+  defaults. `ConsoleUI` gained ANSI color output
+  (`printSuccess`/`printError`/`printHighlight`, gated by the setting AND
+  a Windows VT-processing capability check so an unsupported terminal
+  never sees garbled escape codes) and a console-bell audio alert
+  (`playAlertSound`, fires on wrong answers only). `Application` wires
+  both into existing correct/wrong/achievement/level-up feedback, adds 3
+  new Ayarlar menu entries, and adds a one-time first-launch skill-level
+  screen (0/120/350 starting XP for 3 self-assessed levels, deliberately
+  never touching topic completion or section-lock state, which the
+  screen states explicitly). Three scoping judgment calls were made
+  explicit in the spec before implementation, since the roadmap only
+  named these items tersely: "varsayılan sınav soru sayısı" targets Quick
+  Test's count rather than the structurally-fixed section/final exam
+  sizes; the audio alert defaults off and fires only on mistakes; the
+  first-launch screen never fabricates progress. A final documentation
+  review additionally caught and fixed 4 stale "Confirmed gaps" bullets
+  above (Kod Yazma Alıştırmaları, hint system, topic lock, adaptive
+  difficulty) that had already been resolved in Phases 9-12 but were
+  never struck through, plus removed the now-dead `showNotYetAvailable`
+  stub those bullets referenced. Manually verified end-to-end: settings
+  menu toggles persist and take effect immediately; a fresh run (no
+  `data/progress.txt`) shows the skill-selection screen exactly once and
+  sets XP/level correctly for each choice, a second run does not repeat
+  it.
 
 ## Status
 
-Phase 24 complete (2026-07-22). The generation system now has a
-10,000-iteration stress test suite confirming uniqueness, correctness, and
-performance at scale, kept separate from the fast default test suite.
-Phase 25 (Kalan cila) starting next. Update this file's phase list as each
-phase completes (mirror `.superpowers/sdd/progress.md`'s per-phase
-headers).
+**Phase 25 complete (2026-07-22). This roadmap is now fully complete —
+all 25 phases done, every "Confirmed gaps" bullet above resolved (the
+4 that had gone stale were caught and fixed in this same final pass).**
+The app now has: a full 100-topic lesson/question bank, hint/topic-lock/
+adaptive-difficulty systems, code-writing exercises, per-section and
+final exams, a 17-generator dynamic question system with a 4-stage
+escalation engine verified at 10,000-iteration scale, and — as of this
+phase — a first-launch skill screen plus color/audio settings closing
+out the original spec's last deferred items. There is no Phase 26; any
+further work on this project is genuinely new scope, not a gap this
+roadmap was tracking, and should start its own brainstorm from scratch
+rather than assume this file's phase-numbering convention continues.
 
 **Recurring gap, now fixed twice (Phase 8's and Phase 9's final reviews
 both flagged this file as stale):** from Phase 10 onward, each phase's plan
