@@ -147,7 +147,14 @@ void Application::ensureDataDirectoryExists() {
 }
 
 void Application::run() {
-    ui_.printLine("CppMaster Console'a hoş geldin! (Foundation sürümü)");
+    // CPPMASTER_VERSION comes from the CMake project() version, so the
+    // banner can't drift from the actual build the way the old hardcoded
+    // "(Foundation sürümü)" phase label did.
+#ifdef CPPMASTER_VERSION
+    ui_.printLine("CppMaster Console'a hoş geldin! (sürüm " CPPMASTER_VERSION ")");
+#else
+    ui_.printLine("CppMaster Console'a hoş geldin!");
+#endif
 
     if (isFirstLaunch_) {
         runFirstLaunchSkillSelection();

@@ -258,6 +258,10 @@ Katkılar memnuniyetle karşılanır — kod, ders içeriği veya soru
 düzeltmeleri. Ayrıntılar için [CONTRIBUTING.md](CONTRIBUTING.md)'ye bakın.
 Güvenlikle ilgili konular için [SECURITY.md](SECURITY.md).
 
+## Sürüm geçmişi
+
+Sürümler arası değişiklikler için [CHANGELOG.md](CHANGELOG.md).
+
 ## Lisans
 
 [MIT](LICENSE) — Copyright (c) 2026 Samet Kaşmer.

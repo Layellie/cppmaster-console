@@ -24,6 +24,12 @@ jobs:
       - name: Run tests (Release)
         run: ctest --test-dir build -C Release --output-on-failure
 
+      # Ship-blocking on purpose: the binary published here is what users
+      # download, so it should clear the stress suite too, not just the
+      # fast unit tests.
+      - name: Run generation stress tests (Release)
+        run: ./build/Release/CppMasterConsoleStressTests.exe
+
       - name: Package
         shell: pwsh
         run: |
@@ -35,8 +41,11 @@ jobs:
         with:
           tag_name: latest
           name: "CppMaster Console (latest build)"
+          # A rolling build, not a curated version: marking it prerelease
+          # keeps it out of the repo's "Latest release" slot, which should
+          # be reserved for real tagged versions. install.ps1 fetches the
+          # `latest` tag's asset URL directly, so it is unaffected.
           prerelease: true
-          make_latest: true
           body: |
             Automatically built from the most recent commit on `master`
             (${{ github.sha }}). Not a stable/tagged version — just the

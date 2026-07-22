@@ -138,6 +138,10 @@ add_library(CppMasterConsoleLib STATIC
 )
 
 target_include_directories(CppMasterConsoleLib PUBLIC src)
+# Single source of truth for the version: the project() call above. The app
+# displays this, so a release can always be traced back to a build.
+target_compile_definitions(CppMasterConsoleLib
+    PUBLIC CPPMASTER_VERSION="${PROJECT_VERSION}")
 apply_strict_warnings(CppMasterConsoleLib)
 
 add_executable(CppMasterConsole src/main.cpp)
