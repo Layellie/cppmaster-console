@@ -1,76 +1,34 @@
 #include <chrono>
 #include <cstdint>
 #include <filesystem>
+#include <memory>
 #include <random>
 #include <string>
 #include <unordered_set>
+#include <vector>
 
 #include "GeneratedQuestionValidator.h"
+#include "GeneratorCatalog.h"
 #include "GeneratorRegistry.h"
 #include "GeneratorScoring.h"
 #include "QuestionGenerationEngine.h"
 #include "TestRunner.h"
-#include "generators/ArithmeticOperatorPredictGenerator.h"
-#include "generators/ArrayElementPredictGenerator.h"
-#include "generators/BoolOutputPredictGenerator.h"
-#include "generators/ClassMemberPredictGenerator.h"
-#include "generators/ForLoopSumPredictGenerator.h"
-#include "generators/FunctionReturnPredictGenerator.h"
-#include "generators/IfElsePredictGenerator.h"
-#include "generators/InheritanceOverridePredictGenerator.h"
-#include "generators/IntArithmeticPredictGenerator.h"
-#include "generators/MapLookupPredictGenerator.h"
-#include "generators/ModOperatorPredictGenerator.h"
-#include "generators/PointerDereferencePredictGenerator.h"
-#include "generators/SortWithLambdaPredictGenerator.h"
-#include "generators/StringConcatPredictGenerator.h"
-#include "generators/TryCatchPredictGenerator.h"
-#include "generators/VectorPushBackPredictGenerator.h"
-#include "generators/WhileLoopCountPredictGenerator.h"
 
 namespace {
 
 constexpr const char* kStressLogPath = "tests/test_data/generation_stress_test.log";
 
 struct RealGeneratorSet {
-    IntArithmeticPredictGenerator intArithmetic;
-    BoolOutputPredictGenerator boolOutput;
-    ArithmeticOperatorPredictGenerator arithmeticOperator;
-    ModOperatorPredictGenerator modOperator;
-    IfElsePredictGenerator ifElse;
-    ForLoopSumPredictGenerator forLoopSum;
-    WhileLoopCountPredictGenerator whileLoopCount;
-    ArrayElementPredictGenerator arrayElement;
-    VectorPushBackPredictGenerator vectorPushBack;
-    StringConcatPredictGenerator stringConcat;
-    FunctionReturnPredictGenerator functionReturn;
-    PointerDereferencePredictGenerator pointerDereference;
-    ClassMemberPredictGenerator classMember;
-    InheritanceOverridePredictGenerator inheritanceOverride;
-    MapLookupPredictGenerator mapLookup;
-    SortWithLambdaPredictGenerator sortWithLambda;
-    TryCatchPredictGenerator tryCatch;
-
+    // Deliberately built from the real makeAllGenerators() catalog rather
+    // than a hand-maintained list: a locally duplicated list would keep
+    // passing while silently ignoring any generator added to the app.
+    std::vector<std::unique_ptr<IQuestionGenerator>> owned = makeAllGenerators();
     GeneratorRegistry registry;
 
     RealGeneratorSet() {
-        registry.registerGenerator(intArithmetic);
-        registry.registerGenerator(boolOutput);
-        registry.registerGenerator(arithmeticOperator);
-        registry.registerGenerator(modOperator);
-        registry.registerGenerator(ifElse);
-        registry.registerGenerator(forLoopSum);
-        registry.registerGenerator(whileLoopCount);
-        registry.registerGenerator(arrayElement);
-        registry.registerGenerator(vectorPushBack);
-        registry.registerGenerator(stringConcat);
-        registry.registerGenerator(functionReturn);
-        registry.registerGenerator(pointerDereference);
-        registry.registerGenerator(classMember);
-        registry.registerGenerator(inheritanceOverride);
-        registry.registerGenerator(mapLookup);
-        registry.registerGenerator(sortWithLambda);
-        registry.registerGenerator(tryCatch);
+        for (const auto& generator : owned) {
+            registry.registerGenerator(*generator);
+        }
     }
 };
 

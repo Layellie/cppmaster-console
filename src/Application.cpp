@@ -71,23 +71,10 @@ Application::Application()
     ensureDataDirectoryExists();
     isFirstLaunch_ = !std::filesystem::exists(kProgressFilePath);
 
-    generatorRegistry_.registerGenerator(intArithmeticGenerator_);
-    generatorRegistry_.registerGenerator(boolOutputGenerator_);
-    generatorRegistry_.registerGenerator(arithmeticOperatorGenerator_);
-    generatorRegistry_.registerGenerator(modOperatorGenerator_);
-    generatorRegistry_.registerGenerator(ifElseGenerator_);
-    generatorRegistry_.registerGenerator(forLoopSumGenerator_);
-    generatorRegistry_.registerGenerator(whileLoopCountGenerator_);
-    generatorRegistry_.registerGenerator(arrayElementGenerator_);
-    generatorRegistry_.registerGenerator(vectorPushBackGenerator_);
-    generatorRegistry_.registerGenerator(stringConcatGenerator_);
-    generatorRegistry_.registerGenerator(functionReturnGenerator_);
-    generatorRegistry_.registerGenerator(pointerDereferenceGenerator_);
-    generatorRegistry_.registerGenerator(classMemberGenerator_);
-    generatorRegistry_.registerGenerator(inheritanceOverrideGenerator_);
-    generatorRegistry_.registerGenerator(mapLookupGenerator_);
-    generatorRegistry_.registerGenerator(sortWithLambdaGenerator_);
-    generatorRegistry_.registerGenerator(tryCatchGenerator_);
+    generators_ = makeAllGenerators();
+    for (const auto& generator : generators_) {
+        generatorRegistry_.registerGenerator(*generator);
+    }
 
     const auto topicCount = static_cast<int>(lessons_.allLessons().size());
     const auto loadResult = progressManager_.load(kProgressFilePath, kProgressBackupPath, topicCount);

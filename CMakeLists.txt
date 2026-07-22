@@ -101,6 +101,8 @@ add_library(CppMasterConsoleLib STATIC
     src/ParameterDomain.h
     src/GeneratedQuestionValidator.h
     src/GeneratedQuestionValidator.cpp
+    src/GeneratorCatalog.h
+    src/GeneratorCatalog.cpp
     src/GeneratorRegistry.h
     src/GeneratorRegistry.cpp
     src/GeneratorScoring.h

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <random>
 #include <string>
 #include <vector>
@@ -8,6 +9,7 @@
 #include "CodeExerciseManager.h"
 #include "ConsoleUI.h"
 #include "GeneratedQuestionValidator.h"
+#include "GeneratorCatalog.h"
 #include "GeneratorRegistry.h"
 #include "GeneratorScoring.h"
 #include "HintProvider.h"
@@ -21,23 +23,6 @@
 #include "Settings.h"
 #include "SettingsManager.h"
 #include "UserProgress.h"
-#include "generators/ArithmeticOperatorPredictGenerator.h"
-#include "generators/ArrayElementPredictGenerator.h"
-#include "generators/BoolOutputPredictGenerator.h"
-#include "generators/ClassMemberPredictGenerator.h"
-#include "generators/ForLoopSumPredictGenerator.h"
-#include "generators/FunctionReturnPredictGenerator.h"
-#include "generators/IfElsePredictGenerator.h"
-#include "generators/InheritanceOverridePredictGenerator.h"
-#include "generators/IntArithmeticPredictGenerator.h"
-#include "generators/MapLookupPredictGenerator.h"
-#include "generators/ModOperatorPredictGenerator.h"
-#include "generators/PointerDereferencePredictGenerator.h"
-#include "generators/SortWithLambdaPredictGenerator.h"
-#include "generators/StringConcatPredictGenerator.h"
-#include "generators/TryCatchPredictGenerator.h"
-#include "generators/VectorPushBackPredictGenerator.h"
-#include "generators/WhileLoopCountPredictGenerator.h"
 
 class Application {
 public:
@@ -103,23 +88,9 @@ private:
     AchievementTracker achievements_;
     CodeExerciseManager codeExercises_;
     QuestionGenerationEngine generationEngine_;
-    IntArithmeticPredictGenerator intArithmeticGenerator_;
-    BoolOutputPredictGenerator boolOutputGenerator_;
-    ArithmeticOperatorPredictGenerator arithmeticOperatorGenerator_;
-    ModOperatorPredictGenerator modOperatorGenerator_;
-    IfElsePredictGenerator ifElseGenerator_;
-    ForLoopSumPredictGenerator forLoopSumGenerator_;
-    WhileLoopCountPredictGenerator whileLoopCountGenerator_;
-    ArrayElementPredictGenerator arrayElementGenerator_;
-    VectorPushBackPredictGenerator vectorPushBackGenerator_;
-    StringConcatPredictGenerator stringConcatGenerator_;
-    FunctionReturnPredictGenerator functionReturnGenerator_;
-    PointerDereferencePredictGenerator pointerDereferenceGenerator_;
-    ClassMemberPredictGenerator classMemberGenerator_;
-    InheritanceOverridePredictGenerator inheritanceOverrideGenerator_;
-    MapLookupPredictGenerator mapLookupGenerator_;
-    SortWithLambdaPredictGenerator sortWithLambdaGenerator_;
-    TryCatchPredictGenerator tryCatchGenerator_;
+    // Owns every generator; GeneratorRegistry below stores non-owning
+    // pointers into these, so this must be declared first and outlive it.
+    std::vector<std::unique_ptr<IQuestionGenerator>> generators_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;
