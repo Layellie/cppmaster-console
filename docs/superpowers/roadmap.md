@@ -259,7 +259,7 @@ as Phases 1-7.
   dispatch — compile/runtime verification rigor (standalone `cl.exe`
   checks, full test suite reruns per commit) was preserved throughout.
 - **Phase 24 — Büyük ölçekli üretim testleri: COMPLETE** (commits
-  `6486c8e..ec34432`; new suite 2/2, existing suite 202/202 + ctest 100%
+  `6486c8e..e7ffe8f`; new suite 2/2, existing suite 202/202 + ctest 100%
   unaffected). A calibration run (10,000 iterations
   against the real 17-generator system, done before writing the spec
   rather than guessing) found that total exhaustion essentially never
