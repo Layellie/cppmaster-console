@@ -293,7 +293,7 @@ as Phases 1-7.
   topic (`BoolOutputPredictGenerator`, topic 9) alone, proving the
   CrossTopic fallback sustains a fully exhausted topic indefinitely. No
   production code changed — purely additive testing, per the phase's scope.
-- **Phase 25 — Kalan cila: COMPLETE** (commits `860f74f..349cdcc`,
+- **Phase 25 — Kalan cila: COMPLETE** (commits `860f74f..25cd26a`,
   203/203 tests + ctest 100%; new stress suite 2/2 unaffected). **This is
   the LAST phase in the roadmap.** `Settings` gained `colorEnabled`
   (default true), `audioAlertEnabled` (default false), and
