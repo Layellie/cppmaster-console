@@ -22,12 +22,27 @@ std::string trim(const std::string& text) {
     return text.substr(first, last - first + 1);
 }
 
+void printColored(const std::string& text, const char* colorCode, bool active) {
+    if (active) {
+        std::cout << "\x1b[" << colorCode << "m" << text << "\x1b[0m\n";
+    } else {
+        std::cout << text << '\n';
+    }
+}
+
 }  // namespace
 
 ConsoleUI::ConsoleUI() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
+
+    const HANDLE outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    DWORD consoleMode = 0;
+    colorSupported_ = outputHandle != INVALID_HANDLE_VALUE && GetConsoleMode(outputHandle, &consoleMode) &&
+                       SetConsoleMode(outputHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+#else
+    colorSupported_ = true;
 #endif
 }
 
@@ -46,6 +61,32 @@ void ConsoleUI::printLine(const std::string& text) const {
 void ConsoleUI::printHeader(const std::string& title) const {
     const std::string separator(40, '=');
     std::cout << separator << '\n' << title << '\n' << separator << '\n';
+}
+
+void ConsoleUI::setColorEnabled(bool enabled) {
+    colorEnabled_ = enabled;
+}
+
+void ConsoleUI::printSuccess(const std::string& text) const {
+    printColored(text, "32", colorEnabled_ && colorSupported_);
+}
+
+void ConsoleUI::printError(const std::string& text) const {
+    printColored(text, "31", colorEnabled_ && colorSupported_);
+}
+
+void ConsoleUI::printHighlight(const std::string& text) const {
+    printColored(text, "33", colorEnabled_ && colorSupported_);
+}
+
+void ConsoleUI::setAudioAlertEnabled(bool enabled) {
+    audioAlertEnabled_ = enabled;
+}
+
+void ConsoleUI::playAlertSound() const {
+    if (audioAlertEnabled_) {
+        std::cout << '\a' << std::flush;
+    }
 }
 
 int ConsoleUI::readMenuChoice(int minValue, int maxValue) {

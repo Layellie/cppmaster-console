@@ -10,6 +10,19 @@ public:
     void printLine(const std::string& text) const;
     void printHeader(const std::string& title) const;
 
+    // Colored output for correct/wrong/celebratory feedback. Falls back to
+    // plain output when color is disabled via setColorEnabled, or when the
+    // terminal doesn't support ANSI escape codes (colorSupported_ is false
+    // if enabling VT processing failed on Windows).
+    void setColorEnabled(bool enabled);
+    void printSuccess(const std::string& text) const;
+    void printError(const std::string& text) const;
+    void printHighlight(const std::string& text) const;
+
+    // Console bell character, only emitted when enabled. No-op otherwise.
+    void setAudioAlertEnabled(bool enabled);
+    void playAlertSound() const;
+
     // Re-prompts on invalid or out-of-range input. On genuine stdin EOF
     // (no more input will ever arrive), returns minValue rather than
     // looping forever — callers with minValue == 0 (an exit/back option)
@@ -23,4 +36,9 @@ public:
     // reached), joining the collected lines with '\n'. Used for WriteCode
     // answers, matching the product spec's multi-line code entry convention.
     std::string readMultilineCode();
+
+private:
+    bool colorEnabled_ = false;
+    bool colorSupported_ = false;
+    bool audioAlertEnabled_ = false;
 };
