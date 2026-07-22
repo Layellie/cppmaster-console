@@ -109,7 +109,7 @@ std::string achievementDescription(AchievementId id) {
         case AchievementId::NeverGiveUp:
             return "Daha önce 5 kez yanlış yaptığın bir soruyu doğru çözdün.";
         case AchievementId::PerfectExam:
-            return "Bir bölüm sınavından %100 aldın.";
+            return "Bir sınavdan %100 aldın.";
     }
     return "";
 }
