@@ -31,6 +31,7 @@ constexpr const char* kAchievementsFilePath = "data/achievements.txt";
 constexpr const char* kAchievementsBackupPath = "data/achievements_corrupted_backup.txt";
 constexpr const char* kGeneratedHistoryFilePath = "data/generated_question_history.txt";
 constexpr const char* kGeneratedHistoryBackupPath = "data/generated_question_history_corrupted_backup.txt";
+constexpr const char* kGenerationLogFilePath = "data/question_generation.log";
 constexpr const char* kSettingsFilePath = "data/settings.txt";
 constexpr const char* kSettingsBackupPath = "data/settings_corrupted_backup.txt";
 constexpr double kExamPassThreshold = 0.7;
@@ -64,8 +65,13 @@ std::uint64_t createSeed() {
 }  // namespace
 
 Application::Application()
-    : progress_(static_cast<int>(lessons_.allLessons().size())), randomEngine_(createSeed()) {
+    : progress_(static_cast<int>(lessons_.allLessons().size())),
+      generationEngine_(kGenerationLogFilePath),
+      randomEngine_(createSeed()) {
     ensureDataDirectoryExists();
+
+    generatorRegistry_.registerGenerator(intArithmeticGenerator_);
+    generatorRegistry_.registerGenerator(boolOutputGenerator_);
 
     const auto topicCount = static_cast<int>(lessons_.allLessons().size());
     const auto loadResult = progressManager_.load(kProgressFilePath, kProgressBackupPath, topicCount);
@@ -691,21 +697,13 @@ void Application::runQuickTest() {
     int askedCount = 0;
 
     for (int index = 0; index < kQuickTestQuestionCount; ++index) {
-        std::uniform_int_distribution<int> generatorChoice(0, 1);
-        const bool tryIntFirst = generatorChoice(randomEngine_) == 0;
+        const auto& allGenerators = generatorRegistry_.allGenerators();
+        std::uniform_int_distribution<std::size_t> topicPickDist(0, allGenerators.size() - 1);
+        const int pickedTopicId = allGenerators[topicPickDist(randomEngine_)]->topicId();
 
-        std::optional<GeneratedQuestion> generated;
-        if (tryIntFirst) {
-            generated = generationEngine_.generateUnique(intArithmeticGenerator_, randomEngine_);
-            if (!generated.has_value()) {
-                generated = generationEngine_.generateUnique(boolOutputGenerator_, randomEngine_);
-            }
-        } else {
-            generated = generationEngine_.generateUnique(boolOutputGenerator_, randomEngine_);
-            if (!generated.has_value()) {
-                generated = generationEngine_.generateUnique(intArithmeticGenerator_, randomEngine_);
-            }
-        }
+        std::optional<GeneratedQuestion> generated = generationEngine_.generateUniqueForTopic(
+            pickedTopicId, generatorRegistry_, generatorScoring_, generatedQuestionValidator_,
+            randomEngine_);
 
         if (!generated.has_value()) {
             ui_.printLine("Bu oturumda başka taze soru üretemedim; testi burada bitiriyorum.");
