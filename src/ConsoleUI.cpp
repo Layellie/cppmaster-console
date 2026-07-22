@@ -30,21 +30,31 @@ void printColored(const std::string& text, const char* colorCode, bool active) {
     }
 }
 
-}  // namespace
-
-ConsoleUI::ConsoleUI() {
+// Windows only renders ANSI escape codes once virtual-terminal processing
+// is switched on, and the call can fail on older consoles — in which case
+// colour output must stay off or the user sees raw escape sequences.
+bool enableAnsiColorSupport() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
 
     const HANDLE outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (outputHandle == INVALID_HANDLE_VALUE) {
+        return false;
+    }
     DWORD consoleMode = 0;
-    colorSupported_ = outputHandle != INVALID_HANDLE_VALUE && GetConsoleMode(outputHandle, &consoleMode) &&
-                       SetConsoleMode(outputHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING);
+    if (GetConsoleMode(outputHandle, &consoleMode) == 0) {
+        return false;
+    }
+    return SetConsoleMode(outputHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0;
 #else
-    colorSupported_ = true;
+    return true;
 #endif
 }
+
+}  // namespace
+
+ConsoleUI::ConsoleUI() : colorSupported_(enableAnsiColorSupport()) {}
 
 void ConsoleUI::clearScreen() const {
 #ifdef _WIN32

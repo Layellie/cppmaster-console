@@ -1,5 +1,6 @@
 #include "QuizEngine.h"
 
+#include <algorithm>
 #include <cctype>
 #include <cstddef>
 
@@ -143,12 +144,9 @@ std::string correctAnswerDisplayFor(const Question& question) {
 
 bool matchesAnyAcceptedCaseInsensitive(const Question& question, const std::string& rawAnswer) {
     const std::string normalizedAnswer = trimAndLower(rawAnswer);
-    for (const std::string& accepted : question.acceptedAnswers) {
-        if (normalizedAnswer == trimAndLower(accepted)) {
-            return true;
-        }
-    }
-    return false;
+    return std::ranges::any_of(question.acceptedAnswers, [&](const std::string& accepted) {
+        return normalizedAnswer == trimAndLower(accepted);
+    });
 }
 
 bool matchesAnyAcceptedCaseSensitiveWhitespaceNormalized(
@@ -194,22 +192,16 @@ bool matchesMatching(const Question& question, const std::string& rawAnswer) {
     if (normalizedAnswer.empty()) {
         return false;
     }
-    for (const std::string& accepted : question.acceptedAnswers) {
-        if (normalizedAnswer == normalizeMatchingPairs(accepted)) {
-            return true;
-        }
-    }
-    return false;
+    return std::ranges::any_of(question.acceptedAnswers, [&](const std::string& accepted) {
+        return normalizedAnswer == normalizeMatchingPairs(accepted);
+    });
 }
 
 bool matchesOrderCode(const Question& question, const std::string& rawAnswer) {
     const std::string normalizedAnswer = extractDigitSequence(rawAnswer);
-    for (const std::string& accepted : question.acceptedAnswers) {
-        if (normalizedAnswer == extractDigitSequence(accepted)) {
-            return true;
-        }
-    }
-    return false;
+    return std::ranges::any_of(question.acceptedAnswers, [&](const std::string& accepted) {
+        return normalizedAnswer == extractDigitSequence(accepted);
+    });
 }
 
 bool matchesWriteCode(

@@ -33,10 +33,13 @@ std::optional<GeneratedQuestion> ModOperatorPredictGenerator::generate(
     // different, commonly-surprising case for %'s sign behavior);
     // ExpandedParameters just widens the ordinary positive-a range.
     const bool useNegativeA = stage == GenerationStage::StructuralVariation;
-    const ParameterDomain aDomain =
-        useNegativeA          ? kNegativeADomain
-        : stage == GenerationStage::Normal ? kPositiveADomain
-                                            : kPositiveADomain.expanded();
+    const ParameterDomain aDomain = [&] {
+        if (useNegativeA) {
+            return kNegativeADomain;
+        }
+        return stage == GenerationStage::Normal ? kPositiveADomain
+                                                : kPositiveADomain.expanded();
+    }();
     const ParameterDomain bDomain =
         stage == GenerationStage::Normal ? kBDomain : kBDomain.expanded();
 

@@ -29,7 +29,7 @@ public:
     [[nodiscard]] int topicId() const noexcept override { return topicId_; }
 
     [[nodiscard]] std::optional<GeneratedQuestion> generate(
-        std::mt19937_64&, GenerationStage) const override {
+        std::mt19937_64& /*randomEngine*/, GenerationStage /*stage*/) const override {
         if (callIndex_ >= sequence_.size()) {
             return sequence_.empty() ? std::nullopt : sequence_.back();
         }
@@ -91,10 +91,11 @@ TEST_CASE(QuestionGenerationEngine_EscalatesToExpandedParametersAfterNormalExhau
     // then a fresh candidate that can only be reached once the engine has
     // escalated to ExpandedParameters.
     std::vector<std::optional<GeneratedQuestion>> sequence;
+    sequence.reserve(21);
     for (int i = 0; i < 20; ++i) {
-        sequence.push_back(makeCandidate("exact-A", "semantic-A"));
+        sequence.emplace_back(makeCandidate("exact-A", "semantic-A"));
     }
-    sequence.push_back(makeCandidate("exact-fresh", "semantic-fresh"));
+    sequence.emplace_back(makeCandidate("exact-fresh", "semantic-fresh"));
     FixedSequenceGenerator escalatingGenerator(1, sequence);
     GeneratorRegistry registry;
     registry.registerGenerator(escalatingGenerator);

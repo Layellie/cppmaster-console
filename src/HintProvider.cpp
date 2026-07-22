@@ -1,8 +1,9 @@
 #include "HintProvider.h"
 
 #include <cctype>
+#include <charconv>
 #include <cstddef>
-#include <stdexcept>
+#include <system_error>
 
 namespace {
 
@@ -84,18 +85,20 @@ std::string computedClueFor(const Question& question) {
         case QuestionType::CompleteLine:
             return "Doğru cevap " + std::to_string(wordCount(answer)) + " kelimeden oluşuyor.";
         case QuestionType::PredictOutput: {
-            try {
-                std::size_t consumedChars = 0;
-                const int value = std::stoi(answer, &consumedChars);
-                if (consumedChars == answer.size()) {
-                    if (value == 0) {
-                        return "Doğru cevap sıfır.";
-                    }
-                    return std::string("Doğru cevap ") + (value > 0 ? "pozitif" : "negatif") +
-                           " bir sayı.";
+            // from_chars rather than stoi: "is this answer a plain integer?"
+            // is a question, not an error, and stoi answers it by throwing —
+            // which meant swallowing an exception in an empty catch block.
+            int value = 0;
+            const auto* const begin = answer.data();
+            const auto* const end = begin + answer.size();
+            const auto parsed = std::from_chars(begin, end, value);
+            const bool isWholeNumber = parsed.ec == std::errc{} && parsed.ptr == end;
+            if (isWholeNumber) {
+                if (value == 0) {
+                    return "Doğru cevap sıfır.";
                 }
-            } catch (const std::exception&) {
-                // Not a plain integer - fall through to the word-count clue below.
+                return std::string("Doğru cevap ") + (value > 0 ? "pozitif" : "negatif") +
+                       " bir sayı.";
             }
             return "Doğru cevap " + std::to_string(wordCount(answer)) + " kelimeden oluşuyor.";
         }

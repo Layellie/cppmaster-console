@@ -51,7 +51,7 @@ TEST_CASE(HintProvider_MultipleChoiceLevel2NamesAWrongOption) {
 TEST_CASE(HintProvider_FillBlankLevel2RevealsWordCount) {
     const Question question = makeQuestion(QuestionType::FillBlank, {"iostream kütüphanesi"});
     const std::string hint = generateHint(question, 2);
-    CHECK(hint.find("2") != std::string::npos);
+    CHECK(hint.find('2') != std::string::npos);
 }
 
 TEST_CASE(HintProvider_PredictOutputLevel2RevealsSignForNumericAnswer) {
@@ -79,5 +79,5 @@ TEST_CASE(HintProvider_OrderCodeLevel2RevealsStepCount) {
     const Question question = makeQuestion(
         QuestionType::OrderCode, {"2 3 1"}, {"cout << yas;", "int yas;", "cin >> yas;"});
     const std::string hint = generateHint(question, 2);
-    CHECK(hint.find("3") != std::string::npos);
+    CHECK(hint.find('3') != std::string::npos);
 }

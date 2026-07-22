@@ -22,12 +22,11 @@
 #     methods deliberately — ConsoleUI models an output device, and making
 #     them static would block the dependency injection needed to test
 #     Application against a fake console.
+# Order matters: clang-tidy applies these left to right, so every negation
+# must come AFTER the wildcard that would otherwise enable it.
 Checks: >
   bugprone-*,
   -bugprone-easily-swappable-parameters,
-  -misc-include-cleaner,
-  -performance-enum-size,
-  -readability-convert-member-functions-to-static,
   cppcoreguidelines-init-variables,
   cppcoreguidelines-prefer-member-initializer,
   cppcoreguidelines-pro-type-member-init,
@@ -36,16 +35,19 @@ Checks: >
   misc-*,
   -misc-non-private-member-variables-in-classes,
   -misc-no-recursion,
+  -misc-include-cleaner,
   modernize-*,
   -modernize-use-trailing-return-type,
   -modernize-avoid-c-arrays,
   performance-*,
+  -performance-enum-size,
   readability-*,
   -readability-magic-numbers,
   -readability-identifier-length,
   -readability-function-cognitive-complexity,
   -readability-braces-around-statements,
-  -readability-uppercase-literal-suffix
+  -readability-uppercase-literal-suffix,
+  -readability-convert-member-functions-to-static
 
 # Warnings become errors in CI so a regression can't be merged unnoticed;
 # see .github/workflows/ci.yml.

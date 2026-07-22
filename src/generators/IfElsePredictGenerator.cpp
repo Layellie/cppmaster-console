@@ -44,7 +44,13 @@ std::optional<GeneratedQuestion> IfElsePredictGenerator::generate(
                   " > 0) {\n    std::cout << \"pozitif\";\n} else if (" + variableName +
                   " < 0) {\n    std::cout << \"negatif\";\n} else {\n    std::cout << \"sifir\";\n}\n"
                   "Yukarıdaki kodun ekran çıktısı nedir?";
-        answer = x > 0 ? "pozitif" : (x < 0 ? "negatif" : "sifir");
+        if (x > 0) {
+            answer = "pozitif";
+        } else if (x < 0) {
+            answer = "negatif";
+        } else {
+            answer = "sifir";
+        }
         explanation = variableName + " = " + std::to_string(x) + " olduğundan çıktı \"" + answer + "\" olur.";
     } else {
         prompt = "int " + variableName + " = " + std::to_string(x) + ";\nif (" + variableName +
