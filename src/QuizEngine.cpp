@@ -166,7 +166,11 @@ std::string letterForOptionNumber(const Question& question, const std::string& n
     if (index >= question.options.size()) {
         return normalizedAnswer;
     }
-    return std::string(1, static_cast<char>('a' + static_cast<int>(index)));
+    const char letter = static_cast<char>('a' + static_cast<int>(index));
+    // NOLINTNEXTLINE(modernize-return-braced-init-list): the braced form is
+    // wrong here — std::string{1, 'b'} selects the initializer_list<char>
+    // constructor and yields the two-character string "\x01b", not "b".
+    return std::string(1, letter);
 }
 
 // Used for MultipleChoice and Scenario only. TrueFalse deliberately keeps
