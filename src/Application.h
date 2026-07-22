@@ -73,7 +73,6 @@ private:
     void showSettingsMenu();
     void exportProgress();
     void importProgress();
-    void showNotYetAvailable(const std::string& featureName);
     void ensureDataDirectoryExists();
 
     ConsoleUI ui_;
