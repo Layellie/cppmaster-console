@@ -35,6 +35,7 @@
 #include "generators/PointerDereferencePredictGenerator.h"
 #include "generators/SortWithLambdaPredictGenerator.h"
 #include "generators/StringConcatPredictGenerator.h"
+#include "generators/TryCatchPredictGenerator.h"
 #include "generators/VectorPushBackPredictGenerator.h"
 #include "generators/WhileLoopCountPredictGenerator.h"
 
@@ -100,6 +101,7 @@ private:
     InheritanceOverridePredictGenerator inheritanceOverrideGenerator_;
     MapLookupPredictGenerator mapLookupGenerator_;
     SortWithLambdaPredictGenerator sortWithLambdaGenerator_;
+    TryCatchPredictGenerator tryCatchGenerator_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;
