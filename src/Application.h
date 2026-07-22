@@ -28,6 +28,7 @@
 #include "generators/ForLoopSumPredictGenerator.h"
 #include "generators/FunctionReturnPredictGenerator.h"
 #include "generators/IfElsePredictGenerator.h"
+#include "generators/InheritanceOverridePredictGenerator.h"
 #include "generators/IntArithmeticPredictGenerator.h"
 #include "generators/ModOperatorPredictGenerator.h"
 #include "generators/PointerDereferencePredictGenerator.h"
@@ -94,6 +95,7 @@ private:
     FunctionReturnPredictGenerator functionReturnGenerator_;
     PointerDereferencePredictGenerator pointerDereferenceGenerator_;
     ClassMemberPredictGenerator classMemberGenerator_;
+    InheritanceOverridePredictGenerator inheritanceOverrideGenerator_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;
