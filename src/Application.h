@@ -24,6 +24,7 @@
 #include "generators/ArithmeticOperatorPredictGenerator.h"
 #include "generators/ArrayElementPredictGenerator.h"
 #include "generators/BoolOutputPredictGenerator.h"
+#include "generators/ClassMemberPredictGenerator.h"
 #include "generators/ForLoopSumPredictGenerator.h"
 #include "generators/FunctionReturnPredictGenerator.h"
 #include "generators/IfElsePredictGenerator.h"
@@ -92,6 +93,7 @@ private:
     StringConcatPredictGenerator stringConcatGenerator_;
     FunctionReturnPredictGenerator functionReturnGenerator_;
     PointerDereferencePredictGenerator pointerDereferenceGenerator_;
+    ClassMemberPredictGenerator classMemberGenerator_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;
