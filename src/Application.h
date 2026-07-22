@@ -21,6 +21,7 @@
 #include "Settings.h"
 #include "SettingsManager.h"
 #include "UserProgress.h"
+#include "generators/ArithmeticOperatorPredictGenerator.h"
 #include "generators/BoolOutputPredictGenerator.h"
 #include "generators/IntArithmeticPredictGenerator.h"
 
@@ -72,6 +73,7 @@ private:
     QuestionGenerationEngine generationEngine_;
     IntArithmeticPredictGenerator intArithmeticGenerator_;
     BoolOutputPredictGenerator boolOutputGenerator_;
+    ArithmeticOperatorPredictGenerator arithmeticOperatorGenerator_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;
