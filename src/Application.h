@@ -29,6 +29,7 @@
 #include "generators/IfElsePredictGenerator.h"
 #include "generators/IntArithmeticPredictGenerator.h"
 #include "generators/ModOperatorPredictGenerator.h"
+#include "generators/PointerDereferencePredictGenerator.h"
 #include "generators/StringConcatPredictGenerator.h"
 #include "generators/VectorPushBackPredictGenerator.h"
 #include "generators/WhileLoopCountPredictGenerator.h"
@@ -90,6 +91,7 @@ private:
     VectorPushBackPredictGenerator vectorPushBackGenerator_;
     StringConcatPredictGenerator stringConcatGenerator_;
     FunctionReturnPredictGenerator functionReturnGenerator_;
+    PointerDereferencePredictGenerator pointerDereferenceGenerator_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;
