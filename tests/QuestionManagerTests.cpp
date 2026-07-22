@@ -2,23 +2,12 @@
 
 #include <unordered_set>
 
+#include "ExamContent.h"
 #include "TestRunner.h"
-
-namespace {
-// A frozen copy of the Section 1 exam's question set, as defined in
-// Application.cpp's kExamQuestionIds. This only catches the catalog dropping
-// an id this list still references (Application.cpp silently skips missing
-// ids otherwise) - it will NOT notice if the real kExamQuestionIds itself is
-// edited, since this copy doesn't track it live.
-constexpr int kExamQuestionIds[] = {
-    1, 2, 3, 4, 5, 6, 19, 20, 33, 35,
-    61, 62, 63, 64, 65, 66, 67, 68, 69, 71,
-};
-}  // namespace
 
 TEST_CASE(QuestionManager_EveryExamQuestionIdResolves) {
     QuestionManager manager;
-    for (const int questionId : kExamQuestionIds) {
+    for (const int questionId : examQuestionIdsForSection(1)) {
         CHECK(manager.findById(questionId).has_value());
     }
 }
