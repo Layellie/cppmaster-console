@@ -22,7 +22,10 @@ public:
         return "FixedSequenceGenerator";
     }
 
-    [[nodiscard]] std::optional<GeneratedQuestion> generate(std::mt19937_64&) const override {
+    [[nodiscard]] int topicId() const noexcept override { return 1; }
+
+    [[nodiscard]] std::optional<GeneratedQuestion> generate(
+        std::mt19937_64&, GenerationStage) const override {
         if (callIndex_ >= sequence_.size()) {
             return sequence_.empty() ? std::nullopt : sequence_.back();
         }

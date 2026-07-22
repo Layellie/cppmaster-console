@@ -5,6 +5,7 @@
 #include <string>
 
 #include "FnvHash.h"
+#include "ParameterDomain.h"
 
 namespace {
 
@@ -12,22 +13,35 @@ constexpr std::array<const char*, 5> kVariableNames = {
     "sayi", "deger", "toplam", "sonuc", "x",
 };
 
+constexpr ParameterDomain kStartDomain{-20, 50};
+constexpr ParameterDomain kOperandDomain{1, 15};
+
 }  // namespace
 
 std::string_view IntArithmeticPredictGenerator::id() const noexcept {
     return "IntArithmeticPredictGenerator";
 }
 
+int IntArithmeticPredictGenerator::topicId() const noexcept {
+    return 6;
+}
+
 std::optional<GeneratedQuestion> IntArithmeticPredictGenerator::generate(
-    std::mt19937_64& randomEngine) const {
+    std::mt19937_64& randomEngine, GenerationStage stage) const {
+    // No second natural code shape exists for this generator, so
+    // StructuralVariation honestly reuses the ExpandedParameters domain
+    // rather than inventing an artificial structural change.
+    const ParameterDomain startDomain =
+        stage == GenerationStage::Normal ? kStartDomain : kStartDomain.expanded();
+    const ParameterDomain operandDomain =
+        stage == GenerationStage::Normal ? kOperandDomain : kOperandDomain.expanded();
+
     std::uniform_int_distribution<std::size_t> nameDist(0, kVariableNames.size() - 1);
-    std::uniform_int_distribution<int> startDist(-20, 50);
-    std::uniform_int_distribution<int> operandDist(1, 15);
     std::uniform_int_distribution<int> opDist(0, 1);
 
     const std::string variableName = kVariableNames[nameDist(randomEngine)];
-    const int start = startDist(randomEngine);
-    const int operand = operandDist(randomEngine);
+    const int start = startDomain.draw(randomEngine);
+    const int operand = operandDomain.draw(randomEngine);
     const bool isAddition = opDist(randomEngine) == 0;
     const char* opSymbol = isAddition ? "+=" : "-=";
     const int answer = isAddition ? start + operand : start - operand;

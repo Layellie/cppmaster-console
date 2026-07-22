@@ -7,7 +7,7 @@ constexpr int kMaxGenerationAttempts = 50;
 std::optional<GeneratedQuestion> QuestionGenerationEngine::generateUnique(
     const IQuestionGenerator& generator, std::mt19937_64& randomEngine) {
     for (int attempt = 0; attempt < kMaxGenerationAttempts; ++attempt) {
-        auto candidate = generator.generate(randomEngine);
+        auto candidate = generator.generate(randomEngine, GenerationStage::Normal);
         if (!candidate.has_value()) {
             continue;
         }
