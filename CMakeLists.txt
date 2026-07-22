@@ -94,6 +94,10 @@ add_library(CppMasterConsoleLib STATIC
     src/ParameterDomain.h
     src/GeneratedQuestionValidator.h
     src/GeneratedQuestionValidator.cpp
+    src/GeneratorRegistry.h
+    src/GeneratorRegistry.cpp
+    src/GeneratorScoring.h
+    src/GeneratorScoring.cpp
 )
 
 target_include_directories(CppMasterConsoleLib PUBLIC src)
@@ -129,6 +133,8 @@ add_executable(CppMasterConsoleTests
     tests/ExamContentTests.cpp
     tests/ParameterDomainTests.cpp
     tests/GeneratedQuestionValidatorTests.cpp
+    tests/GeneratorRegistryTests.cpp
+    tests/GeneratorScoringTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
