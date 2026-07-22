@@ -114,6 +114,8 @@ add_library(CppMasterConsoleLib STATIC
     src/generators/VectorPushBackPredictGenerator.cpp
     src/generators/StringConcatPredictGenerator.h
     src/generators/StringConcatPredictGenerator.cpp
+    src/generators/FunctionReturnPredictGenerator.h
+    src/generators/FunctionReturnPredictGenerator.cpp
 )
 
 target_include_directories(CppMasterConsoleLib PUBLIC src)
@@ -159,6 +161,7 @@ add_executable(CppMasterConsoleTests
     tests/Generators/ArrayElementPredictGeneratorTests.cpp
     tests/Generators/VectorPushBackPredictGeneratorTests.cpp
     tests/Generators/StringConcatPredictGeneratorTests.cpp
+    tests/Generators/FunctionReturnPredictGeneratorTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)

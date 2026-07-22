@@ -80,6 +80,7 @@ Application::Application()
     generatorRegistry_.registerGenerator(arrayElementGenerator_);
     generatorRegistry_.registerGenerator(vectorPushBackGenerator_);
     generatorRegistry_.registerGenerator(stringConcatGenerator_);
+    generatorRegistry_.registerGenerator(functionReturnGenerator_);
 
     const auto topicCount = static_cast<int>(lessons_.allLessons().size());
     const auto loadResult = progressManager_.load(kProgressFilePath, kProgressBackupPath, topicCount);
