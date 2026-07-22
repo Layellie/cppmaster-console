@@ -186,3 +186,17 @@ target_include_directories(CppMasterConsoleTests PRIVATE tests)
 apply_strict_warnings(CppMasterConsoleTests)
 
 add_test(NAME CppMasterConsoleTests COMMAND CppMasterConsoleTests)
+
+# Deliberately not registered via add_test(): this exercises the full
+# 17-generator system over 10,000+ iterations (~10s), which would make the
+# default `ctest` run an order of magnitude slower. Build normally (so it
+# stays compile-verified) and run manually:
+# ./build/Debug/CppMasterConsoleStressTests.exe
+add_executable(CppMasterConsoleStressTests
+    tests/TestRunner.h
+    tests/StressTests/main.cpp
+    tests/StressTests/GenerationStressTests.cpp
+)
+target_link_libraries(CppMasterConsoleStressTests PRIVATE CppMasterConsoleLib)
+target_include_directories(CppMasterConsoleStressTests PRIVATE tests)
+apply_strict_warnings(CppMasterConsoleStressTests)
