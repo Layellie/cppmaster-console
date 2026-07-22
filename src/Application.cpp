@@ -127,6 +127,8 @@ Application::Application()
             "Uyarı: ayarlar dosyası bozuktu; yedeklendi (" + std::string(kSettingsBackupPath) +
             ") ve varsayılanlara sıfırlandı.");
     }
+    ui_.setColorEnabled(settings_.colorEnabled);
+    ui_.setAudioAlertEnabled(settings_.audioAlertEnabled);
 }
 
 void Application::ensureDataDirectoryExists() {
@@ -451,10 +453,11 @@ AnswerResult Application::askOneQuestion(
     }
 
     if (result.correct) {
-        ui_.printLine("Doğru! (+" + std::to_string(result.xpAwarded) + " XP)");
+        ui_.printSuccess("Doğru! (+" + std::to_string(result.xpAwarded) + " XP)");
     } else {
+        ui_.playAlertSound();
         ui_.printLine("");
-        ui_.printLine("Yanlış cevap.");
+        ui_.printError("Yanlış cevap.");
         ui_.printLine("");
         ui_.printLine("Senin cevabın:");
         ui_.printLine(skipped ? "(soru geçildi)" : rawAnswer);
@@ -495,7 +498,7 @@ void Application::awardXpAndCheckLevelUp(int amount) {
     const LevelInfo levelAfter = levelForXp(progress_.totalXp());
     if (levelAfter.level > levelBefore.level) {
         ui_.printLine("");
-        ui_.printLine(
+        ui_.printHighlight(
             "Tebrikler! Yeni seviyeye ulaştın: " + levelAfter.name + " (Seviye " +
             std::to_string(levelAfter.level) + ")");
         ui_.printLine("");
@@ -569,7 +572,7 @@ void Application::checkAchievements(const Question& question, bool correct) {
 
     for (const AchievementId id : newlyUnlocked) {
         ui_.printLine("");
-        ui_.printLine("Yeni başarım kazandın: " + achievementDisplayName(id));
+        ui_.printHighlight("Yeni başarım kazandın: " + achievementDisplayName(id));
         ui_.printLine(achievementDescription(id));
     }
     ui_.printLine("");
@@ -706,7 +709,7 @@ void Application::runQuickTest() {
     ui_.printLine("Sizin için 5 taze soru üretmeye çalışacağım.");
     ui_.printLine("");
 
-    constexpr int kQuickTestQuestionCount = 5;
+    const int kQuickTestQuestionCount = settings_.quickTestQuestionCount;
     int correctCount = 0;
     int sessionXp = 0;
     int askedCount = 0;
@@ -831,7 +834,7 @@ void Application::runSectionExam(int sectionId) {
     if (correctCount == examQuestionCount) {
         if (achievements_.unlock(AchievementId::PerfectExam)) {
             ui_.printLine("");
-            ui_.printLine(
+            ui_.printHighlight(
                 "Yeni başarım kazandın: " + achievementDisplayName(AchievementId::PerfectExam));
             ui_.printLine(achievementDescription(AchievementId::PerfectExam));
             achievements_.saveToFile(kAchievementsFilePath);
@@ -915,7 +918,7 @@ void Application::runFinalExam() {
     if (correctCount == examQuestionCount) {
         if (achievements_.unlock(AchievementId::PerfectExam)) {
             ui_.printLine("");
-            ui_.printLine(
+            ui_.printHighlight(
                 "Yeni başarım kazandın: " + achievementDisplayName(AchievementId::PerfectExam));
             ui_.printLine(achievementDescription(AchievementId::PerfectExam));
             achievements_.saveToFile(kAchievementsFilePath);
@@ -1058,10 +1061,11 @@ void Application::runCodeExercise(const CodeExercise& exercise) {
 
     ui_.printLine("");
     if (result.correct) {
-        ui_.printLine("Doğru! (+" + std::to_string(xpAwarded) + " XP)");
+        ui_.printSuccess("Doğru! (+" + std::to_string(xpAwarded) + " XP)");
         awardXpAndCheckLevelUp(xpAwarded);
     } else {
-        ui_.printLine("Gönderdiğiniz kod beklenen kriterleri karşılamıyor.");
+        ui_.playAlertSound();
+        ui_.printError("Gönderdiğiniz kod beklenen kriterleri karşılamıyor.");
     }
 
     ui_.printLine("");
@@ -1098,11 +1102,20 @@ void Application::showSettingsMenu() {
             std::to_string(settings_.dailyReviewQuestionCap) + ")");
         ui_.printLine("6. İlerlemeyi dışa aktar");
         ui_.printLine("7. İlerlemeyi içe aktar");
+        ui_.printLine(
+            "8. Renkli çıktıyı aç/kapat (şu an: " +
+            std::string(settings_.colorEnabled ? "Açık" : "Kapalı") + ")");
+        ui_.printLine(
+            "9. Sesli uyarıyı aç/kapat (şu an: " +
+            std::string(settings_.audioAlertEnabled ? "Açık" : "Kapalı") + ")");
+        ui_.printLine(
+            "10. Hızlı Test soru sayısını değiştir (şu an: " +
+            std::to_string(settings_.quickTestQuestionCount) + ")");
         ui_.printLine("0. Geri dön");
         ui_.printLine("");
         ui_.printLine("Seçiminiz:");
 
-        const int choice = ui_.readMenuChoice(0, 7);
+        const int choice = ui_.readMenuChoice(0, 10);
         switch (choice) {
             case 1:
                 settings_.topicLockEnabled = !settings_.topicLockEnabled;
@@ -1133,6 +1146,23 @@ void Application::showSettingsMenu() {
             case 7:
                 importProgress();
                 break;
+            case 8:
+                settings_.colorEnabled = !settings_.colorEnabled;
+                ui_.setColorEnabled(settings_.colorEnabled);
+                settingsManager_.save(settings_, kSettingsFilePath);
+                break;
+            case 9:
+                settings_.audioAlertEnabled = !settings_.audioAlertEnabled;
+                ui_.setAudioAlertEnabled(settings_.audioAlertEnabled);
+                settingsManager_.save(settings_, kSettingsFilePath);
+                break;
+            case 10: {
+                ui_.printLine("Yeni Hızlı Test soru sayısını girin (1-20):");
+                const int newCount = ui_.readMenuChoice(1, 20);
+                settings_.quickTestQuestionCount = newCount;
+                settingsManager_.save(settings_, kSettingsFilePath);
+                break;
+            }
             case 0:
                 inSettingsMenu = false;
                 break;
