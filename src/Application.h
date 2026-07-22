@@ -46,6 +46,7 @@ public:
     void run();
 
 private:
+    void runFirstLaunchSkillSelection();
     void showMainMenu();
     void handleChoice(int choice);
     void showTopicBrowser();
@@ -110,4 +111,5 @@ private:
     std::mt19937_64 randomEngine_;
     int nextGeneratedQuestionId_ = 1000;
     bool running_ = true;
+    bool isFirstLaunch_ = false;
 };

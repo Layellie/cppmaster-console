@@ -69,6 +69,7 @@ Application::Application()
       generationEngine_(kGenerationLogFilePath),
       randomEngine_(createSeed()) {
     ensureDataDirectoryExists();
+    isFirstLaunch_ = !std::filesystem::exists(kProgressFilePath);
 
     generatorRegistry_.registerGenerator(intArithmeticGenerator_);
     generatorRegistry_.registerGenerator(boolOutputGenerator_);
@@ -144,11 +145,56 @@ void Application::ensureDataDirectoryExists() {
 void Application::run() {
     ui_.printLine("CppMaster Console'a hoş geldin! (Foundation sürümü)");
 
+    if (isFirstLaunch_) {
+        runFirstLaunchSkillSelection();
+    }
+
     while (running_) {
         showMainMenu();
         const int choice = ui_.readMenuChoice(kMinChoice, kMaxChoice);
         handleChoice(choice);
     }
+}
+
+void Application::runFirstLaunchSkillSelection() {
+    ui_.printLine("");
+    ui_.printHeader("HOŞ GELDİN!");
+    ui_.printLine("Başlamadan önce, C++ deneyimini kısaca öğrenelim.");
+    ui_.printLine("1. Yeni başlıyorum (hiç programlama bilmiyorum)");
+    ui_.printLine("2. Biraz bilgim var (temel kavramlara aşinayım)");
+    ui_.printLine("3. Deneyimliyim (başka bir dilde veya C++'ta tecrübem var)");
+    ui_.printLine("");
+    ui_.printLine("Seçiminiz:");
+    const int choice = ui_.readMenuChoice(1, 3);
+
+    int startingXp = 0;
+    switch (choice) {
+        case 2:
+            startingXp = 120;  // Level 3 ("Koşul Çözücü") threshold
+            break;
+        case 3:
+            startingXp = 350;  // Level 5 ("Dizi Kaşifi") threshold
+            break;
+        default:
+            break;
+    }
+
+    if (startingXp > 0) {
+        progress_.addXp(startingXp);
+        const LevelInfo level = levelForXp(progress_.totalXp());
+        ui_.printLine("");
+        ui_.printLine(
+            "Harika! Başlangıç seviyen: " + level.name + " (Seviye " +
+            std::to_string(level.level) + ")");
+    }
+    ui_.printLine("");
+    ui_.printLine(
+        "Not: Bu seçim yalnızca başlangıç seviyeni ayarlar; tüm konular normal kilit "
+        "durumunda kalır, dilediğin sırayla ilerleyebilirsin.");
+    ui_.printLine("");
+
+    progressManager_.save(
+        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
 }
 
 void Application::showMainMenu() {
