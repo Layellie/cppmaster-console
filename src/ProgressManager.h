@@ -6,7 +6,7 @@
 
 struct ProgressLoadResult {
     UserProgress progress;
-    bool wasCorrupted;
+    bool wasCorrupted = false;
 };
 
 class ProgressManager {

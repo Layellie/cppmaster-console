@@ -1,0 +1,15 @@
+# Test-only relaxations. Inherits everything from the root .clang-tidy and
+# only turns off what the test framework itself makes unprovable.
+InheritParentConfig: true
+
+# - bugprone-unchecked-optional-access: tests consistently write
+#   CHECK(candidate.has_value()) before dereferencing, but CHECK is this
+#   project's own macro, so clang-tidy cannot see that it guarantees the
+#   value and reports every following `->` as unchecked. It produced 222
+#   findings here and zero in src/, where the check is genuinely valuable
+#   and stays enabled.
+# - misc-const-correctness: 185 of its 186 findings were test locals. The
+#   one in src/ was fixed rather than suppressed.
+Checks: >
+  -bugprone-unchecked-optional-access,
+  -misc-const-correctness

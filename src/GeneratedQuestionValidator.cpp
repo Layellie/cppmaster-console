@@ -23,10 +23,7 @@ bool GeneratedQuestionValidator::isValid(const GeneratedQuestion& candidate) con
             return false;
         }
         const std::string& answer = question.acceptedAnswers.front();
-        if (answer.size() != 1 || answer[0] < 'a' || answer[0] > 'd') {
-            return false;
-        }
-        return true;
+        return answer.size() == 1 && answer[0] >= 'a' && answer[0] <= 'd';
     }
 
     if (question.type == QuestionType::TrueFalse) {

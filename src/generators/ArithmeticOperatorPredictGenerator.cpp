@@ -63,8 +63,8 @@ std::optional<GeneratedQuestion> ArithmeticOperatorPredictGenerator::generate(
     std::uniform_int_distribution<int> opDist(0, opChoiceMax);
 
     const std::string variableName = kVariableNames[nameDist(randomEngine)];
-    int a = aDomain.draw(randomEngine);
-    int b = bDomain.draw(randomEngine);
+    const int a = aDomain.draw(randomEngine);
+    int b = bDomain.draw(randomEngine);  // may be nudged off zero below
     const int opIndex = opDist(randomEngine);
     if (opIndex == 3 && b == 0) {
         b = 1;

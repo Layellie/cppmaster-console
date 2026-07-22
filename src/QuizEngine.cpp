@@ -62,7 +62,7 @@ std::string extractDigitSequence(const std::string& text) {
     std::string result;
     std::string currentToken;
     for (const char character : text) {
-        if (std::isdigit(static_cast<unsigned char>(character))) {
+        if (std::isdigit(static_cast<unsigned char>(character)) != 0) {
             currentToken.push_back(character);
         } else if (!currentToken.empty()) {
             if (!result.empty()) {
@@ -181,7 +181,7 @@ std::string normalizeMatchingPairs(const std::string& text) {
     std::string result;
     result.reserve(text.size());
     for (const char character : text) {
-        if (std::isalnum(static_cast<unsigned char>(character))) {
+        if (std::isalnum(static_cast<unsigned char>(character)) != 0) {
             result.push_back(
                 static_cast<char>(std::tolower(static_cast<unsigned char>(character))));
         }

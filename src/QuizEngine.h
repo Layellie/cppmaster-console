@@ -6,8 +6,8 @@
 #include "Settings.h"
 
 struct AnswerResult {
-    bool correct;
-    int xpAwarded;
+    bool correct = false;
+    int xpAwarded = 0;
     std::string correctAnswerDisplay;
     bool exitRequested = false;
 };

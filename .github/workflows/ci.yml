@@ -83,4 +83,8 @@ jobs:
             ! -name 'LessonContentSection*.cpp' \
             ! -name 'QuestionManager.cpp')
           echo "Analysing $(echo "$FILES" | wc -l) files"
-          run-clang-tidy -p build -quiet $FILES
+          # A merge gate, not a report: every enabled check is one the
+          # project has committed to keeping clean, and anything judged
+          # noise is disabled in .clang-tidy with a written reason rather
+          # than tolerated here.
+          run-clang-tidy -p build -quiet -warnings-as-errors='*' $FILES

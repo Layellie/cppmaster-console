@@ -6,7 +6,7 @@
 
 struct SettingsLoadResult {
     Settings settings;
-    bool wasCorrupted;
+    bool wasCorrupted = false;
 };
 
 class SettingsManager {

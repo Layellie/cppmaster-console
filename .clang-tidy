@@ -8,9 +8,26 @@
 #   - modernize-use-trailing-return-type: purely stylistic, and contrary
 #     to how this codebase is written.
 #   - llvmlibc-*, fuchsia-*, altera-*: vendor-specific rules irrelevant here.
+#   - misc-include-cleaner: an include-what-you-use style rule that flags
+#     every transitively-provided symbol. It reported 312 findings, nearly
+#     all of them standard-library symbols reached through headers this
+#     project includes on purpose; acting on them would mean churning
+#     every file's include block for no correctness gain.
+#   - performance-enum-size: suggests narrower underlying types for enums.
+#     These enums are passed around as single values, never packed into
+#     large arrays, so the saving is theoretical while the readability
+#     cost is real.
+#   - readability-convert-member-functions-to-static: fires on ConsoleUI's
+#     output methods, which do not touch members today. They are instance
+#     methods deliberately — ConsoleUI models an output device, and making
+#     them static would block the dependency injection needed to test
+#     Application against a fake console.
 Checks: >
   bugprone-*,
   -bugprone-easily-swappable-parameters,
+  -misc-include-cleaner,
+  -performance-enum-size,
+  -readability-convert-member-functions-to-static,
   cppcoreguidelines-init-variables,
   cppcoreguidelines-prefer-member-initializer,
   cppcoreguidelines-pro-type-member-init,
