@@ -28,6 +28,7 @@
 #include "generators/IfElsePredictGenerator.h"
 #include "generators/IntArithmeticPredictGenerator.h"
 #include "generators/ModOperatorPredictGenerator.h"
+#include "generators/StringConcatPredictGenerator.h"
 #include "generators/VectorPushBackPredictGenerator.h"
 #include "generators/WhileLoopCountPredictGenerator.h"
 
@@ -86,6 +87,7 @@ private:
     WhileLoopCountPredictGenerator whileLoopCountGenerator_;
     ArrayElementPredictGenerator arrayElementGenerator_;
     VectorPushBackPredictGenerator vectorPushBackGenerator_;
+    StringConcatPredictGenerator stringConcatGenerator_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;
