@@ -974,4 +974,733 @@ void appendSection10Questions(std::vector<Question>& questions) {
         .explanation = "std::count ile eşleşme sayısı bulunur.",
         .baseXp = 40,
     });
+
+    // Topic 95: min(), max() ve max_element()
+    questions.push_back(Question{
+        .id = 2509, .topicId = 95,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::max(a, b) ne döndürür?",
+        .options = {"İki DEĞERDEN büyük olanı, doğrudan bir değer olarak", "Bir iterator", "Her zaman a'yı", "Her zaman b'yi"},
+        .acceptedAnswers = {"a"},
+        .explanation = "std::max iki değerden büyük olanı doğrudan döndürür.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2510, .topicId = 95,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::cout << std::max(3, 9);\nEkran çıktısı nedir?",
+        .options = {"3", "9", "Derleme hatası", "12"},
+        .acceptedAnswers = {"b"},
+        .explanation = "9, 3'ten büyük olduğundan 9 döner.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2511, .topicId = 95,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::max_element(first, last) ne döndürür?",
+        .options = {"Aralıktaki en büyük değeri, doğrudan", "Bir bool", "Aralıktaki en büyük elemanı gösteren bir ITERATOR", "Elemanların sayısı"},
+        .acceptedAnswers = {"c"},
+        .explanation = "std::max_element bir iterator döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2512, .topicId = 95,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {4, 9, 2};\nauto it = std::max_element(v.begin(), v.end());\nstd::cout << it;\nBu kod derlenir mi?",
+        .options = {"Evet, çıktı 9'dur", "Evet, çıktı bir adres olur", "Evet, çıktı 0 olur", "Hayır, vector iterator'ı için operator<< tanımlı değildir, derleme hatası oluşur"},
+        .acceptedAnswers = {"d"},
+        .explanation = "Iterator'ı dereference etmeden yazdırmak derleme hatasıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2513, .topicId = 95,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {4, 9, 2};\nauto it = std::max_element(v.begin(), v.end());\nstd::cout << *it;\nEkran çıktısı nedir?",
+        .options = {"9", "4", "2", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Dereference edilen değer en büyük elemandır: 9.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2514, .topicId = 95,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::min(a, b) ile std::min_element(first, last) arasındaki fark nedir?",
+        .options = {"Aralarında fark yoktur", "std::min iki DEĞERİ karşılaştırıp birini döndürür; std::min_element bir ARALIKTAKİ en küçük elemanı gösteren bir ITERATOR döndürür", "std::min_element her zaman std::min'den daha hızlıdır", "std::min sadece int ile çalışır, std::min_element her türle çalışır"},
+        .acceptedAnswers = {"b"},
+        .explanation = "min değer döndürür, min_element iterator döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2515, .topicId = 95,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::vector<int> v = {3, 7, 1, 9, 4};\nauto it = std::min_element(v.begin(), v.end());\nstd::cout << *it;\nEkran çıktısı nedir?",
+        .options = {"9", "3", "1", "4"},
+        .acceptedAnswers = {"c"},
+        .explanation = "En küçük eleman 1'dir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2516, .topicId = 95,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::cout << std::max(std::max(3, 7), std::max(2, 9));\nEkran çıktısı nedir?",
+        .options = {"7", "3", "2", "9"},
+        .acceptedAnswers = {"d"},
+        .explanation = "max(3,7)=7, max(2,9)=9, max(7,9)=9.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2517, .topicId = 95,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::max(a, b), iki değerden büyük olanı doğrudan döndürür.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2518, .topicId = 95,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::max_element, bir aralıktaki en büyük DEĞERİ doğrudan döndürür, iterator değil.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: max_element bir iterator döndürür.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2519, .topicId = 95,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::max_element'in sonucunu * ile dereference etmeden yazdırmaya çalışmak bir derleme hatasıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2520, .topicId = 95,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::min_element, bir aralıktaki en küçük elemanı gösteren bir iterator döndürür.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2521, .topicId = 95,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::max ve std::min, sadece iki argüman alabilir, üç ya da daha fazla değer karşılaştırmak için iç içe (nested) çağrılabilirler.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2522, .topicId = 95,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::max_element, boş bir aralık üzerinde çağrılırsa nullptr döndürür.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: end() döndürür, nullptr değil.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2523, .topicId = 95,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "İki değerden büyük olanı doğrudan döndüren fonksiyon std::_____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"max"},
+        .explanation = "std::max kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2524, .topicId = 95,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::cout << std::min(5, 2);\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "2, 5'ten küçük olduğundan 2 döner.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2525, .topicId = 95,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Bir aralıktaki en büyük elemanı gösteren bir ITERATOR döndüren fonksiyon std::_____ dir (İngilizce iki kelime, alt çizgiyle).",
+        .acceptedAnswers = {"max_element"},
+        .explanation = "std::max_element kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2526, .topicId = 95,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {6, 2, 8};\nauto it = std::max_element(v.begin(), v.end());\nstd::cout << *it;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"8"},
+        .explanation = "En büyük eleman 8'dir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2527, .topicId = 95,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::max_element'in sonucuna gerçek DEĞERE erişmek için _____ operatörü kullanılmalıdır (bir sembol).",
+        .acceptedAnswers = {"*"},
+        .explanation = "Dereference operatörü (*) kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2528, .topicId = 95,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Bir aralıktaki en küçük elemanı gösteren bir iterator döndüren fonksiyon std::_____ dir (İngilizce iki kelime, alt çizgiyle).",
+        .acceptedAnswers = {"min_element"},
+        .explanation = "std::min_element kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2529, .topicId = 95,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {5, 9, 2};\n_____\nstd::cout << *it;\nv'nin en büyük elemanını gösteren bir iterator tanımlayan satırı yazın.",
+        .acceptedAnswers = {"auto it = std::max_element(v.begin(), v.end());"},
+        .explanation = "std::max_element ile bir iterator elde edilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2530, .topicId = 95,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::cout << std::max(4, 8);\n_____\n7 ve 3'ten küçük olanı ekrana yazdıran satırı yazın.",
+        .acceptedAnswers = {"std::cout << std::min(7, 3);"},
+        .explanation = "std::min iki değerden küçük olanı döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2531, .topicId = 95,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {1, 8, 3};\nauto it = std::max_element(v.begin(), v.end());\nstd::cout << *it;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"8"},
+        .explanation = "En büyük eleman 8'dir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2532, .topicId = 95,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::vector<int> v = {7, 2, 9, 4};\nauto en_kucuk = std::min_element(v.begin(), v.end());\nauto en_buyuk = std::max_element(v.begin(), v.end());\nstd::cout << *en_kucuk << \" \" << *en_buyuk;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"2 9"},
+        .explanation = "En küçük 2, en büyük 9'dur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2533, .topicId = 95,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::vector<int> v = {3, 7, 1};\nauto it = std::max_element(v.begin(), v.end());\nstd::cout << it;\n\nBu kod derlenmez çünkü it bir ITERATOR'dır ve vector iterator'ı için operator<< tanımlı değildir; gerçek değere erişmek için * ile dereference edilmelidir. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::cout << *it;"},
+        .explanation = "Iterator dereference edilmelidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2534, .topicId = 95,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::vector<int> v = {3, 7, 1};\nint en_buyuk = std::max_element(v.begin(), v.end());\n\nBu kod derlenmez çünkü std::max_element bir ITERATOR döndürür, bir int DEĞİL; bir int değişkene doğrudan atanamaz. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"int en_buyuk = *std::max_element(v.begin(), v.end());"},
+        .explanation = "Iterator dereference edilip int'e atanmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2535, .topicId = 95,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::vector<int> v = {3, 7, 1}\nauto it = std::max_element(v.begin(), v.end());\n\nProgramcı v tanımının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"std::vector<int> v = {3, 7, 1};"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2536, .topicId = 95,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir vektörün en büyük elemanını bulup yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << *it;\n    return 0;\n}", "std::vector<int> v = {5, 9, 2};\n    auto it = std::max_element(v.begin(), v.end());", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), tanım+bulma (2), yazdır+kapanış (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2537, .topicId = 95,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir int vektörü tanımlayın (en az 3 değer); std::max_element ile en büyük elemanı bulun ve dereference ederek ekrana yazdırın.",
+        .acceptedAnswers = {"max_element", "algorithm"},
+        .explanation = "max_element sonucu dereference edilerek kullanılır.",
+        .baseXp = 40,
+    });
+
+    // Topic 96: accumulate()
+    questions.push_back(Question{
+        .id = 2538, .topicId = 96,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::accumulate(first, last, init) ne yapar?",
+        .options = {"Bir aralığı sıralar", "Bir aralığı init'ten başlayarak TOPLAR", "Bir aralıktaki en büyük elemanı bulur", "Bir aralığı tersine çevirir"},
+        .acceptedAnswers = {"b"},
+        .explanation = "std::accumulate bir aralığı toplar.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2539, .topicId = 96,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::vector<int> v = {1, 2, 3};\nint toplam = std::accumulate(v.begin(), v.end(), 0);\nstd::cout << toplam;\nEkran çıktısı nedir?",
+        .options = {"0", "3", "6", "Derleme hatası"},
+        .acceptedAnswers = {"c"},
+        .explanation = "1+2+3=6.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2540, .topicId = 96,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::accumulate, hangi başlığı gerektirir?",
+        .options = {"<algorithm>", "<memory>", "<fstream>", "<numeric>"},
+        .acceptedAnswers = {"d"},
+        .explanation = "std::accumulate <numeric> başlığında tanımlıdır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2541, .topicId = 96,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::accumulate'in üçüncü argümanının (başlangıç değeri) TÜRÜ neyi etkiler?",
+        .options = {"Toplama işleminin ÇALIŞMA TÜRÜNÜ (ve dolayısıyla ara sonuçların nasıl kırpılacağını)", "Sadece çıktının biçimini, sonucu etkilemez", "Hiçbir şeyi, her zaman double olarak hesaplanır", "Sadece konteynerin boyutunu"},
+        .acceptedAnswers = {"a"},
+        .explanation = "Başlangıç değerinin türü, toplama türünü belirler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2542, .topicId = 96,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<double> v = {1.5, 2.5, 3.0};\nauto toplam = std::accumulate(v.begin(), v.end(), 0);\nstd::cout << toplam;\nEkran çıktısı nedir?",
+        .options = {"7", "6", "7.0", "Derleme hatası"},
+        .acceptedAnswers = {"b"},
+        .explanation = "int başlangıç değeri (0), ara toplamları her adımda int'e kırpar: 6.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2543, .topicId = 96,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<double> v = {1.5, 2.5, 3.0};\nauto toplam = std::accumulate(v.begin(), v.end(), 0.0);\nstd::cout << toplam;\nEkran çıktısı nedir?",
+        .options = {"6", "6.0", "7", "Derleme hatası"},
+        .acceptedAnswers = {"c"},
+        .explanation = "double başlangıç değeri (0.0) doğru toplamı verir: 7.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2544, .topicId = 96,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::vector<double> v = {2.5, 2.5};\nauto toplamYanlis = std::accumulate(v.begin(), v.end(), 0);\nauto toplamDogru = std::accumulate(v.begin(), v.end(), 0.0);\nstd::cout << toplamYanlis << \" \" << toplamDogru;\nEkran çıktısı nedir?",
+        .options = {"5 5", "5 4", "4 4", "4 5"},
+        .acceptedAnswers = {"d"},
+        .explanation = "int başlangıçla: 0+2.5=2(kırpılır); 2+2.5=4(kırpılır). double başlangıçla: 0.0+2.5+2.5=5.0.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2545, .topicId = 96,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::vector<int> v = {1, 2, 3, 4};\nint carpim = std::accumulate(v.begin(), v.end(), 1, std::multiplies<int>());\nstd::cout << carpim;\nEkran çıktısı nedir?",
+        .options = {"24", "10", "4", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "accumulate, dördüncü argüman olarak std::multiplies<int>() ile çarpma yapar: 1*1*2*3*4=24.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2546, .topicId = 96,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::accumulate, bir aralığı başlangıç değerinden başlayarak toplar.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2547, .topicId = 96,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::accumulate'in başlangıç değerinin türü, toplama sonucunu ETKİLEMEZ.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: başlangıç değerinin türü toplama sonucunu doğrudan etkiler.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2548, .topicId = 96,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::accumulate, <numeric> başlığını gerektirir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2549, .topicId = 96,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Bir double listesine int (0 gibi) başlangıç değeri vermek, her zaman doğru sonuç verir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: ara toplamlar int'e kırpılabilir, yanlış sonuç verebilir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2550, .topicId = 96,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::accumulate, dördüncü bir argüman olarak özel bir ikili işlem (örneğin çarpma) kabul edebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2551, .topicId = 96,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::accumulate'in varsayılan işlemi çıkarmadır (subtraction).",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: varsayılan işlem toplamadır (addition).",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2552, .topicId = 96,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir aralığı toplayan STL algoritması std::_____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"accumulate"},
+        .explanation = "std::accumulate kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2553, .topicId = 96,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::vector<int> v = {2, 3, 5};\nint toplam = std::accumulate(v.begin(), v.end(), 0);\nstd::cout << toplam;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"10"},
+        .explanation = "2+3+5=10.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2554, .topicId = 96,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::accumulate'in gerektirdiği başlık dosyası <_____> dir (İngilizce kelime).",
+        .acceptedAnswers = {"numeric"},
+        .explanation = "<numeric> başlığı gerekir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2555, .topicId = 96,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::accumulate'in başlangıç değeri bir double listesi için _____ (İngilizce kelime, 'int' değil) olmalıdır ki sonuç kırpılmasın.",
+        .acceptedAnswers = {"double"},
+        .explanation = "double başlangıç değeri kullanılmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2556, .topicId = 96,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<double> v = {1.0, 1.0, 1.0};\nauto toplam = std::accumulate(v.begin(), v.end(), 0);\nstd::cout << toplam;\nEkran çıktısı _____ olur.",
+        .acceptedAnswers = {"3"},
+        .explanation = "1.0+1.0+1.0=3 (tam sayı değerler olduğundan kırpılma sonucu etkilemez).",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2557, .topicId = 96,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::accumulate'in dördüncü argümanı, varsayılan toplama yerine özel bir _____ belirtir (Türkçe kelime, 'işlem' anlamında).",
+        .acceptedAnswers = {"işlem"},
+        .explanation = "Özel bir ikili işlem belirtilebilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2558, .topicId = 96,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {4, 5, 6};\n_____\nstd::cout << toplam;\nv'nin elemanlarını 0'dan başlayarak toplayan satırı yazın.",
+        .acceptedAnswers = {"int toplam = std::accumulate(v.begin(), v.end(), 0);"},
+        .explanation = "std::accumulate ile toplama yapılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2559, .topicId = 96,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<double> v = {1.1, 2.2};\n_____\nstd::cout << toplam;\nv'nin elemanlarını DOĞRU şekilde (double başlangıç değeriyle) toplayan satırı yazın.",
+        .acceptedAnswers = {"auto toplam = std::accumulate(v.begin(), v.end(), 0.0);"},
+        .explanation = "double başlangıç değeri doğru toplamı sağlar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2560, .topicId = 96,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::vector<int> v = {10, 20, 30};\nint toplam = std::accumulate(v.begin(), v.end(), 0);\nstd::cout << toplam;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"60"},
+        .explanation = "10+20+30=60.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2561, .topicId = 96,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::vector<double> v = {0.5, 0.5, 0.5};\nauto toplamYanlis = std::accumulate(v.begin(), v.end(), 0);\nauto toplamDogru = std::accumulate(v.begin(), v.end(), 0.0);\nstd::cout << toplamYanlis << \" \" << toplamDogru;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"0 1.5"},
+        .explanation = "int başlangıçla her adımda 0.5 kırpılıp 0 kalır, sonuç 0; double başlangıçla doğru toplam 1.5.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2562, .topicId = 96,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::vector<double> v = {1.5, 2.5, 3.0};\nauto toplam = std::accumulate(v.begin(), v.end(), 0);\nstd::cout << toplam;\n// Beklenen: 7 (dogru toplam)\n\nBu kod, DOĞRU toplamı (7) DEĞİL YANLIŞ bir sonucu (6) verir çünkü başlangıç değeri (0) bir int'tir ve ara toplamlar her adımda int'e kırpılır. Hatalı satırı, başlangıç değerini 0.0 yaparak düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"auto toplam = std::accumulate(v.begin(), v.end(), 0.0);"},
+        .explanation = "double başlangıç değeri kırpılmayı önler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2563, .topicId = 96,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::vector<int> v = {1, 2, 3};\nint toplam = accumulate(v.begin(), v.end(), 0);\n\nBu kod derlenmez çünkü accumulate, std:: öneki olmadan çağrılamaz. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"int toplam = std::accumulate(v.begin(), v.end(), 0);"},
+        .explanation = "std::accumulate öneki gereklidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2564, .topicId = 96,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::vector<int> v = {1, 2, 3}\nint toplam = std::accumulate(v.begin(), v.end(), 0);\n\nProgramcı v tanımının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"std::vector<int> v = {1, 2, 3};"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2565, .topicId = 96,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir vektörün elemanlarını toplayıp yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << toplam;\n    return 0;\n}", "std::vector<int> v = {3, 4, 5};\n    int toplam = std::accumulate(v.begin(), v.end(), 0);", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), tanım+toplama (2), yazdır+kapanış (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2566, .topicId = 96,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir double vektörü tanımlayın (en az 3 değer); std::accumulate ile elemanları DOĞRU şekilde (uygun başlangıç değeriyle) toplayın ve ekrana yazdırın.",
+        .acceptedAnswers = {"accumulate", "numeric"},
+        .explanation = "double başlangıç değeriyle doğru toplam elde edilir.",
+        .baseXp = 40,
+    });
+
+    // Topic 97: Dosyaya yazma
+    questions.push_back(Question{
+        .id = 2567, .topicId = 97,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::ofstream ne için kullanılır?",
+        .options = {"Bir dosyayı silmek", "Bir dosyanın adını değiştirmek", "Bir dosyaya YAZMAK", "Bir dosyayı okumak"},
+        .acceptedAnswers = {"c"},
+        .explanation = "std::ofstream dosyaya yazmak için kullanılır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2568, .topicId = 97,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::ofstream dosya(\"ad.txt\");\nDosya zaten VARSA ne olur (VARSAYILAN davranış)?",
+        .options = {"Yeni içerik dosyanın SONUNA eklenir", "Açma başarısız olur, hata verir", "Dosya yeniden adlandırılır", "Dosyanın mevcut içeriği SİLİNİR (truncate)"},
+        .acceptedAnswers = {"d"},
+        .explanation = "Varsayılan olarak dosya truncate edilir (içeriği silinir).",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2569, .topicId = 97,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "Var olan bir dosyanın SONUNA eklemek (dosyayı silmeden) için ne kullanılmalıdır?",
+        .options = {"std::ofstream dosya(\"ad.txt\", std::ios::app);", "std::ofstream dosya(\"ad.txt\"); (varsayılan)", "std::ifstream dosya(\"ad.txt\");", "Bu C++'ta mümkün değildir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "std::ios::app modu sonuna ekleme yapar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2570, .topicId = 97,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Bir dosyaya yazmadan ÖNCE ne kontrol edilmelidir?",
+        .options = {"Dosyanın boyutu", "dosya.is_open() (dosyanın gerçekten açılıp açılamadığı)", "Dosyanın oluşturulma tarihi", "Hiçbir şey, C++ otomatik kontrol eder"},
+        .acceptedAnswers = {"b"},
+        .explanation = "is_open() ile açılıp açılmadığı kontrol edilmelidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2571, .topicId = 97,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::ofstream dosya(\"gecersiz/yol/ad.txt\");\nif (!dosya.is_open()) {\n    dosya << \"veri\";\n}\nBu kod (açma başarısız olduğunda dosyaya yazmaya çalışmak) ne olur?",
+        .options = {"Program çöker", "Bir istisna (exception) fırlatılır", "Yazma SESSİZCE hiçbir şey yapmaz, program normal devam eder", "Derleme hatası oluşur"},
+        .acceptedAnswers = {"c"},
+        .explanation = "Açılamayan bir akışa yazmak sessizce hiçbir şey yapmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2572, .topicId = 97,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::ofstream, hangi başlığı gerektirir?",
+        .options = {"<iostream>", "<sstream>", "<memory>", "<fstream>"},
+        .acceptedAnswers = {"d"},
+        .explanation = "std::ofstream <fstream> başlığında tanımlıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2573, .topicId = 97,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::ofstream dosya1(\"ornek.txt\");\ndosya1 << \"Birinci\";\ndosya1.close();\nstd::ofstream dosya2(\"ornek.txt\");\ndosya2 << \"Ikinci\";\ndosya2.close();\nBu kodlar çalıştırıldıktan sonra ornek.txt dosyasının içeriği nedir?",
+        .options = {"Ikinci", "BirinciIkinci", "Birinci", "Dosya boş kalır"},
+        .acceptedAnswers = {"a"},
+        .explanation = "İkinci açma dosyayı truncate eder; sadece \"Ikinci\" kalır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2574, .topicId = 97,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::ofstream dosya1(\"ornek2.txt\");\ndosya1 << \"Birinci\";\ndosya1.close();\nstd::ofstream dosya2(\"ornek2.txt\", std::ios::app);\ndosya2 << \"Ikinci\";\ndosya2.close();\nBu kodlar çalıştırıldıktan sonra ornek2.txt dosyasının içeriği nedir?",
+        .options = {"Ikinci", "BirinciIkinci", "Birinci", "Dosya boş kalır"},
+        .acceptedAnswers = {"b"},
+        .explanation = "std::ios::app ile ikinci yazma sonuna eklenir; içerik \"BirinciIkinci\" olur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2575, .topicId = 97,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::ofstream, bir dosyaya yazmak için kullanılır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2576, .topicId = 97,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::ofstream ile bir dosya açmak, dosya zaten VARSA içeriğinin SONUNA otomatik olarak ekler.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: varsayılan olarak içerik silinir (truncate).",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2577, .topicId = 97,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Var olan bir dosyanın sonuna eklemek için std::ios::app modu kullanılmalıdır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2578, .topicId = 97,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Bir dosyaya yazmadan önce .is_open() ile kontrol yapmak iyi bir uygulamadır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2579, .topicId = 97,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Açılamayan bir dosyaya yazmaya çalışmak, bir istisna (exception) fırlatır (varsayılan olarak).",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: istisna fırlatmaz, sessizce hiçbir şey yapmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2580, .topicId = 97,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::ofstream, <fstream> başlığını gerektirir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2581, .topicId = 97,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir dosyaya yazmak için kullanılan sınıf std::_____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"ofstream"},
+        .explanation = "std::ofstream kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2582, .topicId = 97,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::ofstream ile bir dosya açmak, dosya zaten varsa içeriğini VARSAYILAN olarak _____ (Türkçe kelime, 'siler' anlamında).",
+        .acceptedAnswers = {"siler"},
+        .explanation = "Varsayılan olarak içerik silinir (truncate).",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2583, .topicId = 97,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Var olan bir dosyanın sonuna eklemek için std::ios::_____ modu kullanılır (İngilizce kelime).",
+        .acceptedAnswers = {"app"},
+        .explanation = "std::ios::app kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2584, .topicId = 97,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Bir dosyanın başarıyla açılıp açılmadığını kontrol eden üye fonksiyon _____ dir (İngilizce, kelimeler birleşik, alt çizgili).",
+        .acceptedAnswers = {"is_open"},
+        .explanation = "is_open() kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2585, .topicId = 97,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "std::ofstream, hangi başlığı gerektirir (İngilizce kelime)?",
+        .acceptedAnswers = {"fstream"},
+        .explanation = "<fstream> başlığı gerekir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2586, .topicId = 97,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Açılamayan bir dosyaya yazmak, bir istisna FIRLATMAZ; yazma sessizce hiçbir şey _____ (Türkçe kelime, 'yapmaz' anlamında).",
+        .acceptedAnswers = {"yapmaz"},
+        .explanation = "Sessizce hiçbir şey yapmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2587, .topicId = 97,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\ndosya << \"veri\";\ndosya.close();\ndosya adlı bir std::ofstream'i \"cikti.txt\" dosyasıyla açan satırı yazın.",
+        .acceptedAnswers = {"std::ofstream dosya(\"cikti.txt\");"},
+        .explanation = "std::ofstream ile dosya açılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2588, .topicId = 97,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::ofstream dosya(\"cikti.txt\");\n_____\ndosya << \"veri\";\ndosya'nın gerçekten açılıp açılmadığını kontrol eden if satırını yazın.",
+        .acceptedAnswers = {"if (dosya.is_open()) {"},
+        .explanation = "is_open() ile kontrol edilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2589, .topicId = 97,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::ofstream dosya(\"test1.txt\");\nstd::cout << dosya.is_open();\nYukarıdaki kodun ekran çıktısı nedir (dosyanın başarıyla açıldığı varsayılarak)?",
+        .acceptedAnswers = {"1"},
+        .explanation = "Başarıyla açıldığında is_open() true (1) döner.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2590, .topicId = 97,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::ofstream dosya1(\"test2.txt\");\ndosya1 << \"A\";\ndosya1.close();\nstd::ofstream dosya2(\"test2.txt\");\ndosya2 << \"B\";\ndosya2.close();\nstd::ifstream okuyucu(\"test2.txt\");\nstd::string icerik;\nstd::getline(okuyucu, icerik);\nstd::cout << icerik;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"B"},
+        .explanation = "İkinci ofstream açması dosyayı truncate eder; sadece \"B\" kalır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2591, .topicId = 97,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::ofstream dosya(\"cikti.txt\");\ndosya << \"veri\";\n\nBu kod ÇALIŞIR ama YANLIŞTIR çünkü dosya.is_open() KONTROL EDİLMEDEN yazılıyor; açma başarısız olursa yazma sessizce hiçbir şey yapmaz ve fark edilmez. Kontrol ekleyerek düzeltilmiş kodu yazın.",
+        .acceptedAnswers = {"if (dosya.is_open()) { dosya << \"veri\"; }"},
+        .explanation = "is_open() kontrolü eklenmelidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2592, .topicId = 97,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::ofstream dosya1(\"gunluk.txt\");\ndosya1 << \"Ilk kayit\";\ndosya1.close();\nstd::ofstream dosya2(\"gunluk.txt\");\ndosya2 << \"Ikinci kayit\";\ndosya2.close();\n// Beklenen: dosyada hem \"Ilk kayit\" hem \"Ikinci kayit\" olsun\n\nBu kod, İKİNCİ açmanın VARSAYILAN olarak dosyayı KIRPMASI (truncate) nedeniyle \"Ilk kayit\"i SİLER; sadece \"Ikinci kayit\" kalır. İkinci açma satırını, std::ios::app kullanarak düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::ofstream dosya2(\"gunluk.txt\", std::ios::app);"},
+        .explanation = "std::ios::app ile içerik silinmez, sonuna eklenir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2593, .topicId = 97,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::ofstream dosya(\"cikti.txt\")\ndosya << \"veri\";\n\nProgramcı dosya tanımının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"std::ofstream dosya(\"cikti.txt\");"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2594, .topicId = 97,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir dosyaya yazan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"dosya.close();\n    return 0;\n}", "std::ofstream dosya(\"cikti.txt\");\n    dosya << \"veri\";", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), tanım+yazma (2), kapanış (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2595, .topicId = 97,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir dosyaya yazan bir program yazın: dosyayı is_open() ile kontrol edin, \"Merhaba\" yazın ve dosyayı kapatın.",
+        .acceptedAnswers = {"ofstream", "is_open"},
+        .explanation = "Dosya açılıp kontrol edildikten sonra yazılır.",
+        .baseXp = 40,
+    });
 }
