@@ -124,6 +124,8 @@ add_library(CppMasterConsoleLib STATIC
     src/generators/InheritanceOverridePredictGenerator.cpp
     src/generators/MapLookupPredictGenerator.h
     src/generators/MapLookupPredictGenerator.cpp
+    src/generators/SortWithLambdaPredictGenerator.h
+    src/generators/SortWithLambdaPredictGenerator.cpp
 )
 
 target_include_directories(CppMasterConsoleLib PUBLIC src)
@@ -174,6 +176,7 @@ add_executable(CppMasterConsoleTests
     tests/Generators/ClassMemberPredictGeneratorTests.cpp
     tests/Generators/InheritanceOverridePredictGeneratorTests.cpp
     tests/Generators/MapLookupPredictGeneratorTests.cpp
+    tests/Generators/SortWithLambdaPredictGeneratorTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
