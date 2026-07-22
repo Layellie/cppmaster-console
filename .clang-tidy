@@ -1,0 +1,57 @@
+# Checks are opt-in rather than "everything minus exclusions", so the set
+# stays readable and every enabled family is here on purpose.
+#
+# Deliberately NOT enabled:
+#   - readability-magic-numbers / cppcoreguidelines-avoid-magic-numbers:
+#     the question and lesson content files are thousands of literal
+#     values by nature; the signal-to-noise ratio would be hopeless.
+#   - modernize-use-trailing-return-type: purely stylistic, and contrary
+#     to how this codebase is written.
+#   - llvmlibc-*, fuchsia-*, altera-*: vendor-specific rules irrelevant here.
+Checks: >
+  bugprone-*,
+  -bugprone-easily-swappable-parameters,
+  cppcoreguidelines-init-variables,
+  cppcoreguidelines-prefer-member-initializer,
+  cppcoreguidelines-pro-type-member-init,
+  cppcoreguidelines-slicing,
+  cppcoreguidelines-special-member-functions,
+  misc-*,
+  -misc-non-private-member-variables-in-classes,
+  -misc-no-recursion,
+  modernize-*,
+  -modernize-use-trailing-return-type,
+  -modernize-avoid-c-arrays,
+  performance-*,
+  readability-*,
+  -readability-magic-numbers,
+  -readability-identifier-length,
+  -readability-function-cognitive-complexity,
+  -readability-braces-around-statements,
+  -readability-uppercase-literal-suffix
+
+# Warnings become errors in CI so a regression can't be merged unnoticed;
+# see .github/workflows/ci.yml.
+WarningsAsErrors: ''
+
+HeaderFilterRegex: '^.*/src/.*\.h$'
+
+CheckOptions:
+  - key: readability-identifier-naming.ClassCase
+    value: CamelCase
+  - key: readability-identifier-naming.StructCase
+    value: CamelCase
+  - key: readability-identifier-naming.FunctionCase
+    value: camelBack
+  - key: readability-identifier-naming.VariableCase
+    value: camelBack
+  - key: readability-identifier-naming.PrivateMemberSuffix
+    value: _
+  - key: readability-identifier-naming.EnumCase
+    value: CamelCase
+  - key: readability-identifier-naming.EnumConstantCase
+    value: CamelCase
+  - key: readability-identifier-naming.GlobalConstantPrefix
+    value: k
+  - key: readability-identifier-naming.GlobalConstantCase
+    value: CamelCase

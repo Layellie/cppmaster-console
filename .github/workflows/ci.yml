@@ -55,3 +55,32 @@ jobs:
       - name: Generation stress tests (Linux)
         if: runner.os == 'Linux'
         run: ./build/CppMasterConsoleStressTests
+
+  static-analysis:
+    name: clang-tidy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install clang-tidy
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang-tidy
+
+      # clang-tidy needs a compile database, which the Makefile generator
+      # can emit but MSVC's cannot — another reason this job is Linux-only.
+      - name: Configure with compile database
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+
+      # The lesson/question content files are thousands of lines of literal
+      # data (push_back after push_back) with no logic to analyse, and they
+      # dominate the runtime, so only the logic sources are checked.
+      - name: Run clang-tidy
+        run: |
+          FILES=$(find src tests -name '*.cpp' \
+            ! -name 'QuestionsSection*.cpp' \
+            ! -name 'LessonContentSection*.cpp' \
+            ! -name 'QuestionManager.cpp')
+          echo "Analysing $(echo "$FILES" | wc -l) files"
+          run-clang-tidy -p build -quiet $FILES
