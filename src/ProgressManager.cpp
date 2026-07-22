@@ -80,6 +80,11 @@ ProgressLoadResult ProgressManager::load(
     int writeCodeCorrect = 0;
     int errorFixCorrect = 0;
     int highestSectionExamPassed = 0;
+    // Old save files predating the topic-lock feature don't have this key;
+    // defaulting to topicCount (fully unlocked) rather than the
+    // fresh-UserProgress default of 1 preserves existing users' access to
+    // topics they could already reach under the old advisory-only lock.
+    int unlockedUpToTopicId = topicCount;
     bool corrupted = false;
 
     std::string line;
@@ -147,6 +152,13 @@ ProgressLoadResult ProgressManager::load(
                 corrupted = true;
                 break;
             }
+        } else if (recordType == "unlocked_up_to") {
+            std::string valueText;
+            lineStream >> valueText;
+            if (!tryParseInt(valueText, unlockedUpToTopicId)) {
+                corrupted = true;
+                break;
+            }
         } else if (recordType == "topic") {
             std::string topicIdText;
             std::string statusText;
@@ -176,6 +188,7 @@ ProgressLoadResult ProgressManager::load(
     progress.setStreakCounters(streakCurrent, streakLongest);
     progress.setTypedCorrectCounters(writeCodeCorrect, errorFixCorrect);
     progress.setHighestSectionExamPassed(highestSectionExamPassed);
+    progress.setUnlockedUpToTopicId(unlockedUpToTopicId);
     return ProgressLoadResult{std::move(progress), false};
 }
 
@@ -193,6 +206,7 @@ void ProgressManager::save(
     file << "writecode_correct " << progress.writeCodeCorrectCount() << '\n';
     file << "errorfix_correct " << progress.errorFixCorrectCount() << '\n';
     file << "highest_section_exam_passed " << progress.highestSectionExamPassed() << '\n';
+    file << "unlocked_up_to " << progress.unlockedUpToTopicId() << '\n';
     for (int topicId = 1; topicId <= topicCount; ++topicId) {
         file << "topic " << topicId << ' ' << statusName(progress.statusOf(topicId)) << '\n';
     }

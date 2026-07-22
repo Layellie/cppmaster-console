@@ -104,3 +104,11 @@ void UserProgress::recordSectionExamPassed(int sectionId) {
 void UserProgress::setHighestSectionExamPassed(int value) {
     highestSectionExamPassed_ = value;
 }
+
+int UserProgress::unlockedUpToTopicId() const {
+    return unlockedUpToTopicId_;
+}
+
+void UserProgress::setUnlockedUpToTopicId(int topicId) {
+    unlockedUpToTopicId_ = topicId;
+}

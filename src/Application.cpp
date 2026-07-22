@@ -168,16 +168,20 @@ void Application::runFirstLaunchSkillSelection() {
     const int choice = ui_.readMenuChoice(1, 3);
 
     int startingXp = 0;
+    int unlockedUpToTopicId = 1;
     switch (choice) {
         case 2:
-            startingXp = 120;  // Level 3 ("Koşul Çözücü") threshold
+            startingXp = 120;          // Level 3 ("Koşul Çözücü") threshold
+            unlockedUpToTopicId = 20;  // Bölüm 1-2 baştan açık
             break;
         case 3:
-            startingXp = 350;  // Level 5 ("Dizi Kaşifi") threshold
+            startingXp = 350;          // Level 5 ("Dizi Kaşifi") threshold
+            unlockedUpToTopicId = 40;  // Bölüm 1-4 baştan açık
             break;
         default:
             break;
     }
+    progress_.setUnlockedUpToTopicId(unlockedUpToTopicId);
 
     if (startingXp > 0) {
         progress_.addXp(startingXp);
@@ -188,9 +192,15 @@ void Application::runFirstLaunchSkillSelection() {
             std::to_string(level.level) + ")");
     }
     ui_.printLine("");
-    ui_.printLine(
-        "Not: Bu seçim yalnızca başlangıç seviyeni ayarlar; tüm konular normal kilit "
-        "durumunda kalır, dilediğin sırayla ilerleyebilirsin.");
+    if (unlockedUpToTopicId > 1) {
+        ui_.printLine(
+            "Seviyene göre ilk " + std::to_string(unlockedUpToTopicId) +
+            " konu baştan açık; sonrasında her konu, bir öncekini tamamladıkça sırayla "
+            "açılacak.");
+    } else {
+        ui_.printLine(
+            "Konular sırayla açılacak: bir konuyu tamamladıkça bir sonraki konu açılır.");
+    }
     ui_.printLine("");
 
     progressManager_.save(
@@ -261,31 +271,47 @@ void Application::handleChoice(int choice) {
 }
 
 void Application::showTopicBrowser() {
-    ui_.printLine("");
-    for (int sectionId = 1; sectionId <= lessons_.sectionCount(); ++sectionId) {
-        std::string sectionHeader =
-            "Bölüm " + std::to_string(sectionId) + ": " + lessons_.sectionTitle(sectionId);
-        if (settings_.topicLockEnabled &&
-            !isSectionRecommended(sectionId, progress_.highestSectionExamPassed())) {
-            sectionHeader += " (henüz önerilmiyor)";
-        }
-        ui_.printLine(sectionHeader);
+    while (true) {
+        ui_.printLine("");
+        int lastPrintedSection = 0;
+        bool reachedLockedTopic = false;
+        for (const Lesson& lesson : lessons_.allLessons()) {
+            const TopicStatus previousStatus = progress_.statusOf(lesson.id - 1);
+            if (!topicIsUnlocked(
+                    settings_.topicLockEnabled, lesson.id, progress_.unlockedUpToTopicId(),
+                    previousStatus)) {
+                reachedLockedTopic = true;
+                break;
+            }
 
-        for (const Lesson& lesson : lessons_.lessonsInSection(sectionId)) {
+            if (lesson.sectionId != lastPrintedSection) {
+                if (lastPrintedSection != 0) {
+                    ui_.printLine("");
+                }
+                ui_.printLine(
+                    "Bölüm " + std::to_string(lesson.sectionId) + ": " +
+                    lessons_.sectionTitle(lesson.sectionId));
+                lastPrintedSection = lesson.sectionId;
+            }
+
             const char marker = statusMarker(progress_.statusOf(lesson.id));
             ui_.printLine(
                 "  [" + std::string(1, marker) + "] " + std::to_string(lesson.id) + ". " +
                 lesson.title);
         }
         ui_.printLine("");
-    }
+        if (reachedLockedTopic) {
+            ui_.printLine("(Devamı, önceki konuları tamamladıkça açılacak.)");
+            ui_.printLine("");
+        }
 
-    ui_.printLine("Görüntülemek istediğiniz konu numarasını girin (0 = ana menüye dön):");
-    const int topicChoice = ui_.readMenuChoice(kMinTopicId, kMaxTopicId);
-    if (topicChoice == 0) {
-        return;
+        ui_.printLine("Görüntülemek istediğiniz konu numarasını girin (0 = ana menüye dön):");
+        const int topicChoice = ui_.readMenuChoice(kMinTopicId, kMaxTopicId);
+        if (topicChoice == 0) {
+            return;
+        }
+        openTopic(topicChoice);
     }
-    openTopic(topicChoice);
 }
 
 void Application::openTopic(int topicId) {
@@ -293,6 +319,15 @@ void Application::openTopic(int topicId) {
     if (!lesson.has_value() || lesson->explanation.empty()) {
         ui_.printLine("");
         ui_.printLine("Bu konu için ders içeriği bu sürümde henüz eklenmedi.");
+        return;
+    }
+
+    const TopicStatus previousStatus = progress_.statusOf(topicId - 1);
+    if (!topicIsUnlocked(
+            settings_.topicLockEnabled, topicId, progress_.unlockedUpToTopicId(), previousStatus)) {
+        ui_.printLine("");
+        ui_.printLine(
+            "Bu konuya henüz erişemezsin. Önce sıradaki önceki konuları tamamlaman gerekiyor.");
         return;
     }
 

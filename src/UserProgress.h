@@ -33,6 +33,14 @@ public:
     void recordSectionExamPassed(int sectionId);
     void setHighestSectionExamPassed(int value);
 
+    // Topics with id <= this are reachable regardless of completion order
+    // (set once at first launch based on the user's self-assessed skill
+    // level); topics beyond it still unlock one at a time as the previous
+    // topic is completed. Defaults to 1 (only the very first topic) for
+    // brand-new progress.
+    [[nodiscard]] int unlockedUpToTopicId() const;
+    void setUnlockedUpToTopicId(int topicId);
+
 private:
     std::unordered_map<int, TopicStatus> statusByTopicId_;
     int totalXp_ = 0;
@@ -43,4 +51,5 @@ private:
     int writeCodeCorrectCount_ = 0;
     int errorFixCorrectCount_ = 0;
     int highestSectionExamPassed_ = 0;
+    int unlockedUpToTopicId_ = 1;
 };
