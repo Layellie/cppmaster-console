@@ -23,9 +23,9 @@ Phases 1-7. Each phase below gets its own
 - ~~"Ayarlar" (menu option 9) stub~~ — **resolved in Phase 8**: a real
   settings menu now exists (topic-lock toggle, case-sensitivity, WriteCode
   tolerance, explanation detail, daily review cap, export/import). Renk
-  aç/kapa and sesli uyarı remain deferred to Phase 25 (no color/sound system
-  exists yet); varsayılan sınav soru sayısı remains deferred to Phase 22
-  (only one fixed exam exists today).
+  aç/kapa, sesli uyarı, and varsayılan sınav soru sayısı (exam question
+  counts are now fixed at 20/section + 100/final as of Phase 22, not yet
+  configurable) all remain deferred to Phase 25 (final polish).
 - ~~Only topics 1-10 (Section 1) have lesson content; topics 11-100 exist
   only as id/title/section entries.~~ — **resolved in Phase 21**: all 100
   topics now have full lesson content (`src/LessonContentSection2.cpp`
@@ -40,9 +40,16 @@ Phases 1-7. Each phase below gets its own
   was a rough estimate in the original spec — but the actual requirement
   ("≥29 per topic × 100 topics") is met exactly for every one of the 100
   topics; this is the correct, expected outcome, not a shortfall.
-- Only one section exam exists (Section 1's fixed 20-question exam); the spec
-  asked for one per section (10 total) plus a 100-question general final exam
-  covering all topics.
+- ~~Only one section exam exists (Section 1's fixed 20-question exam);
+  the spec asked for one per section (10 total) plus a 100-question
+  general final exam covering all topics.~~ — **resolved in Phase 22**:
+  all 10 sections now have a 20-question exam (Section 1's original
+  curated set preserved byte-for-byte; Sections 2-10 computed
+  algorithmically, 2 questions per topic, via
+  `examQuestionIdsForSection` in `src/ExamContent.cpp`), plus a new
+  100-question general final exam (`finalExamQuestionIds`, 1 question
+  per topic across all 100 topics) reachable via a new exam-picker
+  submenu under "6. Seviye Sınavı".
 - Only 2 dynamic generators exist (`IntArithmeticPredictGenerator`,
   `BoolOutputPredictGenerator`); the spec asked for at least 15 across major
   topic areas (arithmetic, mod, if-else, for, while, arrays, vector, string,
@@ -191,8 +198,7 @@ as Phases 1-7.
 - **Phase 19 — Bölüm 8 İçerik Genişletmesi: COMPLETE** (commits `a7794da..5089325`, 95/95 tests + ctest 100%). Topics 71-80 (Section 8: "İleri nesne yönelimli özellikler") now have full lesson content (`src/LessonContentSection8.cpp`) and a 290-question bank (ids 1813-2102, 29 per topic, `src/QuestionsSection8.cpp`) spanning the same 9 of 11 question types as Sections 2-7 (`Scenario`/`Matching` still deliberately unused). A new `QuestionManager_EveryTopicSeventyOneToEightyHasAtLeastTwentyNineQuestions` test was added; `QuestionManager_NoDuplicateQuestionIds` already scanned topics 1-100 and needed no change. A manual end-to-end run additionally confirmed `openTopic`'s content gate passes for topic 74 ("Polimorfizm") with zero `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29 soru).", correct answers award XP, and mid-quiz `cikis` exits cleanly back to the main menu with partial XP saved. Seventh of nine section-by-section content phases (13-21) closing the roadmap's lesson-content and question-bank gaps for topics 11-100.
 - **Phase 20 — Bölüm 9 İçerik Genişletmesi: COMPLETE** (commits `c75308a..4793f79`, 96/96 tests + ctest 100%). Topics 81-90 (Section 9: "STL veri yapıları") now have full lesson content (`src/LessonContentSection9.cpp`) and a 290-question bank (ids 2103-2392, 29 per topic, `src/QuestionsSection9.cpp`) spanning the same 9 of 11 question types as Sections 2-8 (`Scenario`/`Matching` still deliberately unused). A new `QuestionManager_EveryTopicEightyOneToNinetyHasAtLeastTwentyNineQuestions` test was added; `QuestionManager_NoDuplicateQuestionIds` already scanned topics 1-100 and needed no change. A manual end-to-end run additionally confirmed `openTopic`'s content gate passes for topic 84 ("map") with zero `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29 soru).", correct answers award XP, and mid-quiz `cikis` exits cleanly back to the main menu with partial XP saved. Eighth of nine section-by-section content phases (13-21) closing the roadmap's lesson-content and question-bank gaps for topics 11-100.
 - **Phase 21 — Bölüm 10 İçerik Genişletmesi: COMPLETE** (commits `17a4448..b0fc567`, 96/96 tests + ctest 100%). Topics 91-100 (Section 10: "Algoritmalar, dosyalar ve hata yönetimi") now have full lesson content (`src/LessonContentSection10.cpp`) and a 290-question bank (ids 2393-2682, 29 per topic, `src/QuestionsSection10.cpp`) spanning the same 9 of 11 question types as Sections 2-9 (`Scenario`/`Matching` still deliberately unused). A new `QuestionManager_EveryTopicNinetyOneToHundredHasAtLeastTwentyNineQuestions` test was added; `QuestionManager_NoDuplicateQuestionIds` already scanned topics 1-100 and needed no change. Unlike every prior content phase, the "topics without content" test (`LessonManager_TopicsNinetyOneToHundredHaveNoContentYet`) was REMOVED entirely rather than narrowed, since after this phase every topic 1-100 has real content. A manual end-to-end run additionally confirmed `openTopic`'s content gate passes for topic 100 ("unique_ptr") with zero `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29 soru).", correct answers award XP, and mid-quiz `cikis` exits cleanly back to the main menu with partial XP saved. **This is the LAST of nine section-by-section content phases (13-21)** — the full 100-topic bank (lesson content + ≥29 questions per topic) is now complete, closing out the two headline "Confirmed gaps" bullets above.
-- **Phase 22 — Sınavlar:** kalan 9 bölüm sınavı + 100 soruluk genel final
-  sınavı (içerik tamamlandığı için artık mümkün).
+- **Phase 22 — Sınavlar: COMPLETE** (commits `7f3b8f7..ce8816f`, 100/100 tests). Generalized the previously Section-1-only exam mechanism to all 10 sections plus a new 100-question general final exam. New `src/ExamContent.h`/`.cpp` (`examQuestionIdsForSection`, `finalExamQuestionIds`) computes exam question ids algorithmically for Sections 2-10 and the final exam (2 questions/topic for section exams, 1/topic for the final exam, using the fixed per-topic layout established across Phases 13-21: `baseId(topic) = 73 + (topic-11)*29`, offset +3 = first Medium MultipleChoice, offset +12 = first Medium TrueFalse) while preserving Section 1's original curated 20-question exam byte-for-byte. `Application::runSectionExam` gained a `sectionId` parameter; new `runFinalExam`/`showExamMenu` complete the flow, reachable via a new exam-picker submenu under "6. Seviye Sınavı" (main menu structure otherwise unchanged). 4 new `ExamContentTests.cpp` tests confirm every section exam has 20 unique resolvable ids, Sections 2-10 cover every one of their 10 topics exactly twice, and the final exam covers all 100 topics exactly once. `AchievementId::PerfectExam`'s description was generalized ("Bir sınavdan %100 aldın.") to correctly cover both exam kinds; `tests/QuestionManagerTests.cpp`'s stale duplicated exam-id array (flagged by its own comment as a staleness risk) was replaced with a direct call to `examQuestionIdsForSection(1)`. `UserProgress`'s per-section-exam-passed data model (a single "highest" int) was deliberately left unchanged — the final exam does not call `recordSectionExamPassed` since there is no "section 11". A manual end-to-end run confirmed the exam-picker menu lists all 10 sections plus "Genel Final Sınavı", the 70%-completion gate correctly blocks an unearned Section 2 exam, a full Section 2 exam run reports correct/score/XP/pass-fail, and the final exam's "100 soruluk sınav başlıyor." header plus a mid-exam `cikis` exit both work correctly.
 - **Phase 23 — Üretici kütüphanesini genişletme:** en az 15 üretici,
   `GeneratedQuestionValidator`/`GeneratorRegistry`/`GeneratorScoring`/
   `ParameterDomain`, 3 aşamalı üretim algoritması, geliştirici log dosyası.
@@ -203,12 +209,10 @@ as Phases 1-7.
 
 ## Status
 
-Phase 21 complete (2026-07-19) — the ninth and final content-expansion
-phase (Phases 13-21); all 100 topics now have full lesson content and a
-≥29-question bank each. Phase 22 (Sınavlar — remaining section exams + the
-100-question general final exam) starting next. Update this file's
-phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
-per-phase headers).
+Phase 22 complete (2026-07-19). All 10 sections now have an exam plus a
+100-question general final exam. Phase 23 (Üretici kütüphanesini
+genişletme) starting next. Update this file's phase list as each phase
+completes (mirror `.superpowers/sdd/progress.md`'s per-phase headers).
 
 **Recurring gap, now fixed twice (Phase 8's and Phase 9's final reviews
 both flagged this file as stale):** from Phase 10 onward, each phase's plan
