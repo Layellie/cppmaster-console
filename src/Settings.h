@@ -6,4 +6,7 @@ struct Settings {
     bool lenientWriteCodeTolerance = false;
     bool fullExplanationDetail = true;
     int dailyReviewQuestionCap = 20;
+    bool colorEnabled = true;
+    bool audioAlertEnabled = false;
+    int quickTestQuestionCount = 5;
 };
