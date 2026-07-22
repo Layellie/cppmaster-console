@@ -1,7 +1,5 @@
 #include "QuestionManager.h"
 
-#include <algorithm>
-
 #include "QuestionContent.h"
 
 QuestionManager::QuestionManager() {
@@ -637,23 +635,40 @@ QuestionManager::QuestionManager() {
     appendSection8Questions(questions_);
     appendSection9Questions(questions_);
     appendSection10Questions(questions_);
+
+    buildIndexes();
+}
+
+void QuestionManager::buildIndexes() {
+    indexById_.reserve(questions_.size());
+    for (std::size_t index = 0; index < questions_.size(); ++index) {
+        const Question& question = questions_[index];
+        // Duplicate ids would silently shadow each other here; a dedicated
+        // test (QuestionManager_NoDuplicateQuestionIds) guarantees they
+        // don't exist, so first-wins is safe rather than merely convenient.
+        indexById_.emplace(question.id, index);
+        indicesByTopicId_[question.topicId].push_back(index);
+    }
 }
 
 std::vector<Question> QuestionManager::questionsForTopic(int topicId) const {
+    const auto it = indicesByTopicId_.find(topicId);
+    if (it == indicesByTopicId_.end()) {
+        return {};
+    }
+
     std::vector<Question> result;
-    for (const Question& question : questions_) {
-        if (question.topicId == topicId) {
-            result.push_back(question);
-        }
+    result.reserve(it->second.size());
+    for (const std::size_t index : it->second) {
+        result.push_back(questions_[index]);
     }
     return result;
 }
 
 std::optional<Question> QuestionManager::findById(int questionId) const {
-    const auto it = std::ranges::find_if(
-        questions_, [questionId](const Question& question) { return question.id == questionId; });
-    if (it == questions_.end()) {
+    const auto it = indexById_.find(questionId);
+    if (it == indexById_.end()) {
         return std::nullopt;
     }
-    return *it;
+    return questions_[it->second];
 }

@@ -2,9 +2,7 @@
 
 #include "LessonContent.h"
 
-#include <algorithm>
 #include <cstddef>
-#include <iterator>
 #include <utility>
 
 namespace {
@@ -414,6 +412,17 @@ LessonManager::LessonManager() {
     applySection8LessonContent(lessons_);
     applySection9LessonContent(lessons_);
     applySection10LessonContent(lessons_);
+
+    buildIndexes();
+}
+
+void LessonManager::buildIndexes() {
+    indexByTopicId_.reserve(lessons_.size());
+    for (std::size_t index = 0; index < lessons_.size(); ++index) {
+        const Lesson& lesson = lessons_[index];
+        indexByTopicId_.emplace(lesson.id, index);
+        indicesBySectionId_[lesson.sectionId].push_back(index);
+    }
 }
 
 const std::vector<Lesson>& LessonManager::allLessons() const {
@@ -421,22 +430,25 @@ const std::vector<Lesson>& LessonManager::allLessons() const {
 }
 
 std::vector<Lesson> LessonManager::lessonsInSection(int sectionId) const {
+    const auto it = indicesBySectionId_.find(sectionId);
+    if (it == indicesBySectionId_.end()) {
+        return {};
+    }
+
     std::vector<Lesson> result;
-    std::ranges::copy_if(
-        lessons_,
-        std::back_inserter(result),
-        [sectionId](const Lesson& lesson) { return lesson.sectionId == sectionId; });
+    result.reserve(it->second.size());
+    for (const std::size_t index : it->second) {
+        result.push_back(lessons_[index]);
+    }
     return result;
 }
 
 std::optional<Lesson> LessonManager::findById(int topicId) const {
-    const auto it = std::ranges::find_if(
-        lessons_,
-        [topicId](const Lesson& lesson) { return lesson.id == topicId; });
-    if (it == lessons_.end()) {
+    const auto it = indexByTopicId_.find(topicId);
+    if (it == indexByTopicId_.end()) {
         return std::nullopt;
     }
-    return *it;
+    return lessons_[it->second];
 }
 
 std::string LessonManager::sectionTitle(int sectionId) const {

@@ -203,8 +203,7 @@ void Application::runFirstLaunchSkillSelection() {
     }
     ui_.printLine("");
 
-    progressManager_.save(
-        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+    saveProgress();
 }
 
 void Application::showMainMenu() {
@@ -398,8 +397,7 @@ void Application::runTopicQuiz(int topicId) {
         const AnswerResult result = askOneQuestion(question);
         if (result.exitRequested) {
             awardXpAndCheckLevelUp(sessionXp);
-            progressManager_.save(
-                progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+            saveProgress();
             return;
         }
         if (result.correct) {
@@ -434,8 +432,7 @@ void Application::runTopicQuiz(int topicId) {
     }
     ui_.printLine("");
 
-    progressManager_.save(
-        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+    saveProgress();
 }
 
 AnswerResult Application::askOneQuestion(
@@ -573,6 +570,11 @@ AnswerResult Application::askOneQuestion(
     return result;
 }
 
+void Application::saveProgress() {
+    progressManager_.save(
+        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+}
+
 void Application::awardXpAndCheckLevelUp(int amount) {
     const LevelInfo levelBefore = levelForXp(progress_.totalXp());
     progress_.addXp(amount);
@@ -686,8 +688,7 @@ void Application::runMistakeQuestions(const std::vector<MistakeRecord>& mistakes
         const AnswerResult result = askOneQuestion(*question);
         if (result.exitRequested) {
             awardXpAndCheckLevelUp(sessionXp);
-            progressManager_.save(
-                progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+            saveProgress();
             return;
         }
         if (result.correct) {
@@ -697,8 +698,7 @@ void Application::runMistakeQuestions(const std::vector<MistakeRecord>& mistakes
     }
 
     awardXpAndCheckLevelUp(sessionXp);
-    progressManager_.save(
-        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+    saveProgress();
 
     ui_.printLine(
         "Tamamlandı: " + std::to_string(correctCount) + "/" + std::to_string(mistakesToAsk.size()) +
@@ -814,8 +814,7 @@ void Application::runQuickTest() {
         if (result.exitRequested) {
             generationEngine_.saveHistory(kGeneratedHistoryFilePath);
             awardXpAndCheckLevelUp(sessionXp);
-            progressManager_.save(
-                progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+            saveProgress();
             return;
         }
         ++askedCount;
@@ -838,20 +837,26 @@ void Application::runQuickTest() {
     ui_.printLine("");
 
     awardXpAndCheckLevelUp(sessionXp);
-    progressManager_.save(
-        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+    saveProgress();
 }
 
-void Application::runSectionExam(int sectionId) {
+void Application::runExam(const ExamPlan& plan) {
+    const int topicCount = static_cast<int>(plan.gatingTopics.size());
+    if (topicCount == 0 || plan.questionIds.empty()) {
+        // Defensive: every caller passes a non-empty plan today, but an
+        // empty one would otherwise divide by zero when scoring.
+        ui_.printLine("");
+        ui_.printLine("Bu sınav şu anda kullanılamıyor.");
+        return;
+    }
+
     int completedCount = 0;
-    const auto topicsInSection = lessons_.lessonsInSection(sectionId);
-    for (const Lesson& lesson : topicsInSection) {
+    for (const Lesson& lesson : plan.gatingTopics) {
         const TopicStatus status = progress_.statusOf(lesson.id);
         if (status == TopicStatus::Completed || status == TopicStatus::Mastered) {
             ++completedCount;
         }
     }
-    const int topicCount = static_cast<int>(topicsInSection.size());
 
     const double completionRatio =
         static_cast<double>(completedCount) / static_cast<double>(topicCount);
@@ -859,19 +864,17 @@ void Application::runSectionExam(int sectionId) {
     if (!sectionExamIsUnlocked(
             settings_.topicLockEnabled, completionRatio, kSectionCompletionGateThreshold)) {
         ui_.printLine("");
-        ui_.printLine(
-            "Bu bölümün sınavına girebilmek için konuların en az %70'ini tamamlamalısınız.");
+        ui_.printLine(plan.lockedMessage);
         ui_.printLine(
             "Şu an " + std::to_string(completedCount) + "/" + std::to_string(topicCount) +
             " konu tamamlanmış.");
         return;
     }
 
-    const std::vector<int> examQuestionIds = examQuestionIdsForSection(sectionId);
-    const int examQuestionCount = static_cast<int>(examQuestionIds.size());
+    const int examQuestionCount = static_cast<int>(plan.questionIds.size());
 
     ui_.printLine("");
-    ui_.printHeader("BÖLÜM " + std::to_string(sectionId) + " SINAVI");
+    ui_.printHeader(plan.heading);
     ui_.printLine(
         std::to_string(examQuestionCount) + " soruluk sınav başlıyor. Geçme notu: %70.");
     ui_.printLine("");
@@ -879,16 +882,16 @@ void Application::runSectionExam(int sectionId) {
     int correctCount = 0;
     int examXp = 0;
 
-    for (const int questionId : examQuestionIds) {
+    for (const int questionId : plan.questionIds) {
         const auto question = questions_.findById(questionId);
         if (!question.has_value()) {
             continue;
         }
-        const AnswerResult result = askOneQuestion(*question, /*trackMistakes=*/true, /*allowHints=*/false);
+        const AnswerResult result =
+            askOneQuestion(*question, /*trackMistakes=*/true, /*allowHints=*/false);
         if (result.exitRequested) {
             awardXpAndCheckLevelUp(examXp);
-            progressManager_.save(
-                progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+            saveProgress();
             return;
         }
         if (result.correct) {
@@ -908,109 +911,46 @@ void Application::runSectionExam(int sectionId) {
     ui_.printLine(
         std::string("Sonuç: ") + (scoreRatio >= kExamPassThreshold ? "GEÇTİN" : "KALDIN"));
 
-    if (scoreRatio >= kExamPassThreshold) {
-        progress_.recordSectionExamPassed(sectionId);
+    if (scoreRatio >= kExamPassThreshold && plan.sectionIdToRecordOnPass > 0) {
+        progress_.recordSectionExamPassed(plan.sectionIdToRecordOnPass);
     }
 
-    if (correctCount == examQuestionCount) {
-        if (achievements_.unlock(AchievementId::PerfectExam)) {
-            ui_.printLine("");
-            ui_.printHighlight(
-                "Yeni başarım kazandın: " + achievementDisplayName(AchievementId::PerfectExam));
-            ui_.printLine(achievementDescription(AchievementId::PerfectExam));
-            achievements_.saveToFile(kAchievementsFilePath);
-        }
+    if (correctCount == examQuestionCount && achievements_.unlock(AchievementId::PerfectExam)) {
+        ui_.printLine("");
+        ui_.printHighlight(
+            "Yeni başarım kazandın: " + achievementDisplayName(AchievementId::PerfectExam));
+        ui_.printLine(achievementDescription(AchievementId::PerfectExam));
+        achievements_.saveToFile(kAchievementsFilePath);
     }
 
     awardXpAndCheckLevelUp(examXp);
-    progressManager_.save(
-        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+    saveProgress();
 
     ui_.printLine("");
 }
 
+void Application::runSectionExam(int sectionId) {
+    ExamPlan plan;
+    plan.heading = "BÖLÜM " + std::to_string(sectionId) + " SINAVI";
+    plan.lockedMessage =
+        "Bu bölümün sınavına girebilmek için konuların en az %70'ini tamamlamalısınız.";
+    plan.gatingTopics = lessons_.lessonsInSection(sectionId);
+    plan.questionIds = examQuestionIdsForSection(sectionId);
+    plan.sectionIdToRecordOnPass = sectionId;
+    runExam(plan);
+}
+
 void Application::runFinalExam() {
-    int completedCount = 0;
-    const auto allTopics = lessons_.allLessons();
-    for (const Lesson& lesson : allTopics) {
-        const TopicStatus status = progress_.statusOf(lesson.id);
-        if (status == TopicStatus::Completed || status == TopicStatus::Mastered) {
-            ++completedCount;
-        }
-    }
-    const int totalTopicCount = static_cast<int>(allTopics.size());
-
-    const double completionRatio =
-        static_cast<double>(completedCount) / static_cast<double>(totalTopicCount);
-
-    if (!sectionExamIsUnlocked(
-            settings_.topicLockEnabled, completionRatio, kSectionCompletionGateThreshold)) {
-        ui_.printLine("");
-        ui_.printLine(
-            "Genel final sınavına girebilmek için tüm konuların en az %70'ini "
-            "tamamlamalısınız.");
-        ui_.printLine(
-            "Şu an " + std::to_string(completedCount) + "/" + std::to_string(totalTopicCount) +
-            " konu tamamlanmış.");
-        return;
-    }
-
-    const std::vector<int> examQuestionIds = finalExamQuestionIds();
-    const int examQuestionCount = static_cast<int>(examQuestionIds.size());
-
-    ui_.printLine("");
-    ui_.printHeader("GENEL FİNAL SINAVI");
-    ui_.printLine(
-        std::to_string(examQuestionCount) + " soruluk sınav başlıyor. Geçme notu: %70.");
-    ui_.printLine("");
-
-    int correctCount = 0;
-    int examXp = 0;
-
-    for (const int questionId : examQuestionIds) {
-        const auto question = questions_.findById(questionId);
-        if (!question.has_value()) {
-            continue;
-        }
-        const AnswerResult result = askOneQuestion(*question, /*trackMistakes=*/true, /*allowHints=*/false);
-        if (result.exitRequested) {
-            awardXpAndCheckLevelUp(examXp);
-            progressManager_.save(
-                progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
-            return;
-        }
-        if (result.correct) {
-            ++correctCount;
-            examXp += result.xpAwarded;
-        }
-    }
-
-    const double scoreRatio =
-        static_cast<double>(correctCount) / static_cast<double>(examQuestionCount);
-    const int scorePercent = static_cast<int>(scoreRatio * 100.0);
-
-    ui_.printLine(
-        "Doğru: " + std::to_string(correctCount) + "/" + std::to_string(examQuestionCount));
-    ui_.printLine("Başarı: %" + std::to_string(scorePercent));
-    ui_.printLine("Kazanılan XP: " + std::to_string(examXp));
-    ui_.printLine(
-        std::string("Sonuç: ") + (scoreRatio >= kExamPassThreshold ? "GEÇTİN" : "KALDIN"));
-
-    if (correctCount == examQuestionCount) {
-        if (achievements_.unlock(AchievementId::PerfectExam)) {
-            ui_.printLine("");
-            ui_.printHighlight(
-                "Yeni başarım kazandın: " + achievementDisplayName(AchievementId::PerfectExam));
-            ui_.printLine(achievementDescription(AchievementId::PerfectExam));
-            achievements_.saveToFile(kAchievementsFilePath);
-        }
-    }
-
-    awardXpAndCheckLevelUp(examXp);
-    progressManager_.save(
-        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
-
-    ui_.printLine("");
+    ExamPlan plan;
+    plan.heading = "GENEL FİNAL SINAVI";
+    plan.lockedMessage =
+        "Genel final sınavına girebilmek için tüm konuların en az %70'ini tamamlamalısınız.";
+    plan.gatingTopics = lessons_.allLessons();
+    plan.questionIds = finalExamQuestionIds();
+    // Deliberately 0: there is no "section 11" milestone to record for the
+    // general final exam.
+    plan.sectionIdToRecordOnPass = 0;
+    runExam(plan);
 }
 
 void Application::showExamMenu() {
@@ -1157,8 +1097,7 @@ void Application::runCodeExercise(const CodeExercise& exercise) {
     ui_.printLine(exercise.alternativeSolutionNote);
     ui_.printLine("");
 
-    progressManager_.save(
-        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+    saveProgress();
 }
 
 void Application::showSettingsMenu() {

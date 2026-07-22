@@ -57,6 +57,7 @@ private:
         const Question& question, bool trackMistakes = true, bool allowHints = true);
     void checkAchievements(const Question& question, bool correct);
     void awardXpAndCheckLevelUp(int amount);
+    void saveProgress();
     void resetProgress();
     void showMistakeReview();
     void runMistakeQuestions(const std::vector<MistakeRecord>& mistakesToAsk);
@@ -64,6 +65,19 @@ private:
     void runDailyReview();
     void runQuickTest();
     void showAchievements();
+    // Section exams and the general final exam differ only in which topics
+    // gate them, which questions they ask, their heading, and whether
+    // passing records a section milestone — everything else (the gate
+    // check, the ask loop, scoring, the perfect-score achievement) is
+    // identical, so both funnel through runExam.
+    struct ExamPlan {
+        std::string heading;
+        std::string lockedMessage;
+        std::vector<Lesson> gatingTopics;
+        std::vector<int> questionIds;
+        int sectionIdToRecordOnPass = 0;  // 0 = don't record (final exam)
+    };
+    void runExam(const ExamPlan& plan);
     void runSectionExam(int sectionId);
     void runFinalExam();
     void showExamMenu();
