@@ -24,9 +24,11 @@ std::string genericTipFor(QuestionType type) {
             return "Hatanın hangi satırda olduğunu bulduktan sonra o satırı nasıl düzelteceğini düşün.";
         case QuestionType::OrderCode:
             return "Bir C++ programının genel akışını (tanımlama, işlem, çıktı) hatırla.";
-        case QuestionType::WriteCode:
         case QuestionType::Scenario:
+            return "Senaryoda asıl ihtiyacın ne olduğunu belirle, seçenekleri ona göre ele.";
         case QuestionType::Matching:
+            return "Önce kesin bildiğin eşleşmeleri yerleştir, kalanları elemeyle bul.";
+        case QuestionType::WriteCode:
             return "Sorunun ne istediğini tekrar dikkatlice oku.";
     }
     return "Sorunun ne istediğini tekrar dikkatlice oku.";
@@ -105,9 +107,13 @@ std::string computedClueFor(const Question& question) {
         case QuestionType::OrderCode:
             return "Sıralaman gereken toplam adım sayısı: " +
                    std::to_string(question.options.size()) + ".";
-        case QuestionType::WriteCode:
         case QuestionType::Scenario:
+            return answer.empty() ? "Sorunun ne istediğini tekrar dikkatlice oku."
+                                  : std::string("Doğru seçenek '") + answer.front() + "' şıkkı.";
         case QuestionType::Matching:
+            return "Eşleştirmen gereken toplam madde sayısı: " +
+                   std::to_string(question.options.size()) + ".";
+        case QuestionType::WriteCode:
             return "Sorunun ne istediğini tekrar dikkatlice oku.";
     }
     return "Sorunun ne istediğini tekrar dikkatlice oku.";

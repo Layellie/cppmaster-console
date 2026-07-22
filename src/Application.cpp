@@ -441,11 +441,21 @@ AnswerResult Application::askOneQuestion(
     const Question& question, bool trackMistakes, bool allowHints) {
     ui_.printLine(question.prompt);
 
-    if (question.type == QuestionType::MultipleChoice) {
+    if (question.type == QuestionType::MultipleChoice ||
+        question.type == QuestionType::Scenario) {
         for (std::size_t index = 0; index < question.options.size(); ++index) {
             ui_.printLine(
                 std::string(1, optionLetter(index)) + ") " + question.options[index]);
         }
+    } else if (question.type == QuestionType::Matching) {
+        // Options hold the numbered left column; the prompt itself lists
+        // the lettered right column, so the learner replies with pairs.
+        for (std::size_t index = 0; index < question.options.size(); ++index) {
+            ui_.printLine(
+                std::to_string(static_cast<int>(index) + 1) + ". " + question.options[index]);
+        }
+        ui_.printLine("");
+        ui_.printLine("Eşleştirmeleri \"1-c, 2-a, 3-b\" biçiminde yaz.");
     } else if (question.type == QuestionType::TrueFalse) {
         ui_.printLine("1. Doğru");
         ui_.printLine("2. Yanlış");

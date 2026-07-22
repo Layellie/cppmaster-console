@@ -137,3 +137,52 @@ TEST_CASE(QuizEngine_AnswerResultExitRequestedDefaultsToFalse) {
     const AnswerResult result{true, 10, "x"};
     CHECK(!result.exitRequested);
 }
+
+TEST_CASE(QuizEngine_Scenario_BehavesLikeMultipleChoice) {
+    QuizEngine engine;
+    Question question = makeQuestion(QuestionType::Scenario, {"c"});
+    question.options = {"vector kullan", "dizi kullan", "map kullan", "set kullan"};
+
+    CHECK(engine.evaluate(question, "c").correct);
+    CHECK(engine.evaluate(question, "C").correct);
+    CHECK(engine.evaluate(question, " c ").correct);
+    CHECK(!engine.evaluate(question, "a").correct);
+
+    // Scenario carries options, so the reveal names the option rather than
+    // showing a bare letter.
+    CHECK(engine.correctAnswerDisplay(question).find("map kullan") != std::string::npos);
+}
+
+TEST_CASE(QuizEngine_Matching_IgnoresPunctuationAndSpacingButNotOrder) {
+    QuizEngine engine;
+    Question question = makeQuestion(QuestionType::Matching, {"1-c, 2-a, 3-b"});
+    question.options = {"vector", "int", "bool"};
+
+    // Same pairs, different punctuation/spacing/case: all accepted.
+    CHECK(engine.evaluate(question, "1-c, 2-a, 3-b").correct);
+    CHECK(engine.evaluate(question, "1c2a3b").correct);
+    CHECK(engine.evaluate(question, "1 - C ; 2 - A ; 3 - B").correct);
+
+    // Wrong pairing rejected.
+    CHECK(!engine.evaluate(question, "1-a, 2-c, 3-b").correct);
+    // Reordered pairs are a different answer, not an equivalent one.
+    CHECK(!engine.evaluate(question, "2-a, 1-c, 3-b").correct);
+    // Empty input must never count as a match.
+    CHECK(!engine.evaluate(question, "").correct);
+    CHECK(!engine.evaluate(question, "   ").correct);
+}
+
+TEST_CASE(QuizEngine_ScenarioAndMatchingWereSilentlyAlwaysWrongBefore) {
+    // Both types existed in the enum but fell through evaluate()'s default
+    // branch, so a question of either type could never be answered
+    // correctly. These assertions are the regression guard for that.
+    QuizEngine engine;
+
+    Question scenario = makeQuestion(QuestionType::Scenario, {"a"});
+    scenario.options = {"evet", "hayır", "belki", "bilmiyorum"};
+    CHECK(engine.evaluate(scenario, "a").correct);
+
+    Question matching = makeQuestion(QuestionType::Matching, {"1-a"});
+    matching.options = {"int"};
+    CHECK(engine.evaluate(matching, "1-a").correct);
+}

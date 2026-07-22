@@ -130,6 +130,9 @@ std::string trueFalseDisplay(const Question& question) {
 std::string correctAnswerDisplayFor(const Question& question) {
     switch (question.type) {
         case QuestionType::MultipleChoice:
+        // Scenario carries the same lettered options, so it gets the same
+        // "b) <option text>" display rather than a bare letter.
+        case QuestionType::Scenario:
             return multipleChoiceDisplay(question);
         case QuestionType::TrueFalse:
             return trueFalseDisplay(question);
@@ -160,6 +163,39 @@ bool matchesAnyAcceptedCaseSensitiveWhitespaceNormalized(
             normalizedAccepted = lowerAscii(normalizedAccepted);
         }
         if (normalizedAnswer == normalizedAccepted) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Matching answers pair a numbered left-hand item with a lettered
+// right-hand one, e.g. "1-c, 2-a, 3-b". Learners write these many
+// different ways ("1c 2a 3b", "1 - C; 2 - A"), and none of that
+// punctuation carries meaning, so everything except the alphanumerics is
+// dropped and the rest is lowercased before comparing. Order is preserved
+// deliberately: the pairs are read in the order the left column is
+// presented, so "1-c,2-a" and "2-a,1-c" are not treated as the same
+// answer.
+std::string normalizeMatchingPairs(const std::string& text) {
+    std::string result;
+    result.reserve(text.size());
+    for (const char character : text) {
+        if (std::isalnum(static_cast<unsigned char>(character))) {
+            result.push_back(
+                static_cast<char>(std::tolower(static_cast<unsigned char>(character))));
+        }
+    }
+    return result;
+}
+
+bool matchesMatching(const Question& question, const std::string& rawAnswer) {
+    const std::string normalizedAnswer = normalizeMatchingPairs(rawAnswer);
+    if (normalizedAnswer.empty()) {
+        return false;
+    }
+    for (const std::string& accepted : question.acceptedAnswers) {
+        if (normalizedAnswer == normalizeMatchingPairs(accepted)) {
             return true;
         }
     }
@@ -207,6 +243,7 @@ std::string computeCorrectAnswerDisplay(const Question& question) {
         case QuestionType::MultipleChoice:
         case QuestionType::TrueFalse:
         case QuestionType::FillBlank:
+        case QuestionType::Scenario:
             return correctAnswerDisplayFor(question);
         case QuestionType::WriteCode:
             return writeCodeRequirementsDisplay(question);
@@ -215,10 +252,8 @@ std::string computeCorrectAnswerDisplay(const Question& question) {
         case QuestionType::FindError:
         case QuestionType::FixCode:
         case QuestionType::OrderCode:
-            return question.acceptedAnswers.empty() ? "" : question.acceptedAnswers.front();
-        case QuestionType::Scenario:
         case QuestionType::Matching:
-            return "";
+            return question.acceptedAnswers.empty() ? "" : question.acceptedAnswers.front();
     }
     return "";
 }
@@ -233,7 +268,13 @@ AnswerResult QuizEngine::evaluate(
         case QuestionType::MultipleChoice:
         case QuestionType::TrueFalse:
         case QuestionType::FillBlank:
+        // Scenario is a situational multiple-choice question: the prompt
+        // sets up a real-world case, but the answer is still a letter.
+        case QuestionType::Scenario:
             isCorrect = matchesAnyAcceptedCaseInsensitive(question, rawAnswer);
+            break;
+        case QuestionType::Matching:
+            isCorrect = matchesMatching(question, rawAnswer);
             break;
         case QuestionType::CompleteLine:
         case QuestionType::PredictOutput:

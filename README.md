@@ -5,14 +5,14 @@
 [![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
 
 C++ öğrenmek için terminal tabanlı, Türkçe bir alıştırma ve sınav
-uygulaması. 100 konuluk tam bir müfredat, 2.682 elle yazılmış soru,
+uygulaması. 100 konuluk tam bir müfredat, 2.689 elle yazılmış soru,
 ipucu / konu kilidi / adaptif zorluk sistemleri, kod yazma alıştırmaları,
 bölüm sınavları, genel bir final sınavı ve 17 üreticiden oluşan,
 aynı soruyu iki kez sormayan dinamik bir soru üretim sistemi içerir.
 
 > **In English:** CppMaster Console is a terminal-based C++ practice app
 > with a **Turkish-language interface**. It covers a 100-topic curriculum
-> with 2,682 hand-written questions, per-section and final exams,
+> with 2,689 hand-written questions, per-section and final exams,
 > code-writing exercises, an XP / level / achievement system, sequential
 > topic unlocking, and a dynamic question generator (17 generators, a
 > 4-stage escalation strategy) that never asks the same question twice.
@@ -80,7 +80,7 @@ kullanılabilir; her ipucu kazanılacak XP'yi %25 azaltır.
 
 - **Konular:** 100 konu, 10 bölüm, hepsinde tam ders içeriği (açıklama,
   sözdizimi, örnek kod, satır satır açıklama, yaygın hatalar).
-- **Sorular:** 2.682 elle yazılmış soru (11 soru tipinden 9'u
+- **Sorular:** 2.689 elle yazılmış soru (11 soru tipinin tamamı
   kullanılıyor), artı "Hızlı Test" modunda gerçek zamanlı üretilen ve
   hiç tekrar etmeyen sorular (17 üretici, 4 aşamalı üretim algoritması:
   Normal → Genişletilmiş Parametreler → Yapısal Varyasyon → Çapraz Konu).
