@@ -1,0 +1,45 @@
+name: Build and release
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure (Release)
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build (Release)
+        run: cmake --build build --config Release
+
+      - name: Run tests (Release)
+        run: ctest --test-dir build -C Release --output-on-failure
+
+      - name: Package
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item build/Release/CppMasterConsole.exe dist/CppMasterConsole.exe
+
+      - name: Update "latest" release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: "CppMaster Console (latest build)"
+          prerelease: true
+          make_latest: true
+          body: |
+            Automatically built from the most recent commit on `master`
+            (${{ github.sha }}). Not a stable/tagged version — just the
+            newest working build, used by `install.ps1`'s one-line
+            install command.
+          files: dist/CppMasterConsole.exe
