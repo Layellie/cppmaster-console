@@ -76,9 +76,16 @@ Phases 1-7. Each phase below gets its own
   settings).
 - No adaptive difficulty (question difficulty shifting based on streaks).
 - No first-launch skill-level selection screen, no ANSI color system.
-- No large-scale generation tests (10,000-iteration uniqueness/correctness/
+- ~~No large-scale generation tests (10,000-iteration uniqueness/correctness/
   performance stress tests the spec asked for) — the current suite is
-  correctness-focused at small scale, not stress-scale.
+  correctness-focused at small scale, not stress-scale.~~ — **resolved in
+  Phase 24**: a new `CppMasterConsoleStressTests` executable runs 10,000
+  mixed-topic iterations plus 500 single-topic exhaustion iterations
+  against the real 17-generator system, asserting 100% success, global
+  `exactHash` uniqueness, and independent `GeneratedQuestionValidator`
+  agreement on every result. Kept out of the default `ctest` suite
+  (~13s vs ~0.6s) since it's a manually-run stress tool, not an inner-loop
+  test.
 
 ## Phase order (decided by the controller, not yet individually brainstormed)
 
@@ -251,18 +258,33 @@ as Phases 1-7.
   self-reviewed directly by the controller rather than via subagent
   dispatch — compile/runtime verification rigor (standalone `cl.exe`
   checks, full test suite reruns per commit) was preserved throughout.
-- **Phase 24 — Büyük ölçekli üretim testleri:** 10.000 iterasyonluk
-  benzersizlik/doğruluk/performans testleri.
+- **Phase 24 — Büyük ölçekli üretim testleri: COMPLETE** (commits
+  `6486c8e..ec34432`; new suite 2/2, existing suite 202/202 + ctest 100%
+  unaffected). A calibration run (10,000 iterations
+  against the real 17-generator system, done before writing the spec
+  rather than guessing) found that total exhaustion essentially never
+  happens once `ArrayElementPredictGenerator` (a practically inexhaustible
+  ~5×10^11-combination domain) is reachable via CrossTopic fallback, and
+  that the ~10s runtime is dominated by the developer log's per-exhaustion
+  file writes. New `tests/StressTests/GenerationStressTests.cpp` (own
+  executable, `CppMasterConsoleStressTests`, deliberately not registered
+  via `add_test()`) runs 10,000 mixed-topic iterations (100% success,
+  0 duplicate `exactHash` values, 0 independent-validator disagreements,
+  under a 30s budget) plus 500 iterations hammering a single small-domain
+  topic (`BoolOutputPredictGenerator`, topic 9) alone, proving the
+  CrossTopic fallback sustains a fully exhausted topic indefinitely. No
+  production code changed — purely additive testing, per the phase's scope.
 - **Phase 25 — Kalan cila:** ilk açılış seviye seçim ekranı, ANSI renk
   sistemi (Ayarlar'dan kapatılabilir).
 
 ## Status
 
-Phase 23 complete (2026-07-22). The dynamic generator library now has 17
-generators (up from 2) and a fully rewritten 4-stage escalation engine.
-Phase 24 (Büyük ölçekli üretim testleri) starting next. Update this file's
-phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
-per-phase headers).
+Phase 24 complete (2026-07-22). The generation system now has a
+10,000-iteration stress test suite confirming uniqueness, correctness, and
+performance at scale, kept separate from the fast default test suite.
+Phase 25 (Kalan cila) starting next. Update this file's phase list as each
+phase completes (mirror `.superpowers/sdd/progress.md`'s per-phase
+headers).
 
 **Recurring gap, now fixed twice (Phase 8's and Phase 9's final reviews
 both flagged this file as stale):** from Phase 10 onward, each phase's plan
