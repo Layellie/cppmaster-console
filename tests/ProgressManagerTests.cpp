@@ -35,6 +35,8 @@ TEST_CASE(ProgressManager_SaveThenLoadRoundTripsAllFields) {
     progress.setStatus(3, TopicStatus::Completed);
     progress.recordSectionExamPassed(1);
     progress.setUnlockedUpToTopicId(4);
+    progress.markCodeExerciseCompleted(2);
+    progress.markCodeExerciseCompleted(7);
 
     ProgressManager manager;
     manager.save(progress, path, kTopicCount);
@@ -49,6 +51,10 @@ TEST_CASE(ProgressManager_SaveThenLoadRoundTripsAllFields) {
     CHECK(result.progress.statusOf(3) == TopicStatus::Completed);
     CHECK(result.progress.highestSectionExamPassed() == 1);
     CHECK(result.progress.unlockedUpToTopicId() == 4);
+    CHECK(result.progress.isCodeExerciseCompleted(2));
+    CHECK(result.progress.isCodeExerciseCompleted(7));
+    CHECK(!result.progress.isCodeExerciseCompleted(3));
+    CHECK(result.progress.completedCodeExerciseIds().size() == 2);
 
     std::filesystem::remove(path);
 }

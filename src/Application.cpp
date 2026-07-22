@@ -301,6 +301,10 @@ void Application::showTopicBrowser() {
             ui_.printLine("(Devamı, önceki konuları tamamladıkça açılacak.)");
             ui_.printLine("");
         }
+        // The markers were previously unexplained — a user had no way to
+        // learn what [-] or [*] meant.
+        ui_.printLine("[ ] başlanmadı   [-] öğreniliyor   [+] tamamlandı   [*] ustalaşıldı");
+        ui_.printLine("");
 
         ui_.printLine("Görüntülemek istediğin konu numarasını gir (0 = ana menüye dön):");
         const int topicChoice = ui_.readMenuChoice(kMinTopicId, kMaxTopicId);
@@ -1027,9 +1031,21 @@ void Application::runCodeExerciseTier(const std::string& tier) {
     while (inTierMenu) {
         ui_.printLine("");
         ui_.printHeader(tier + " Alıştırmaları");
+        int completedInTier = 0;
         for (const CodeExercise& exercise : exercises) {
-            ui_.printLine(std::to_string(exercise.id) + ". " + exercise.title);
+            const bool done = progress_.isCodeExerciseCompleted(exercise.id);
+            if (done) {
+                ++completedInTier;
+            }
+            ui_.printLine(
+                std::string("  [") + (done ? '+' : ' ') + "] " + std::to_string(exercise.id) +
+                ". " + exercise.title);
         }
+        ui_.printLine("");
+        ui_.printLine(
+            "Tamamlanan: " + std::to_string(completedInTier) + "/" +
+            std::to_string(exercises.size()));
+        ui_.printLine("");
         ui_.printLine("0. Geri dön");
         ui_.printLine("");
         ui_.printLine("Alıştırma numarasını gir:");
@@ -1093,6 +1109,7 @@ void Application::runCodeExercise(const CodeExercise& exercise) {
     ui_.printLine("");
     if (result.correct) {
         ui_.printSuccess("Doğru! (+" + std::to_string(xpAwarded) + " XP)");
+        progress_.markCodeExerciseCompleted(exercise.id);
         awardXpAndCheckLevelUp(xpAwarded);
     } else {
         ui_.playAlertSound();

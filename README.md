@@ -97,7 +97,7 @@ kullanılabilir; her ipucu kazanılacak XP'yi %25 azaltır.
 - **Adaptif zorluk:** Art arda doğru cevaplar daha zor sorulara atlar; art
   arda yanlışlar otomatik ekstra yardım gösterir.
 - **Kod Yazma Alıştırmaları:** 3 seviyede (Başlangıç/Orta/İleri) 25 elle
-  yazılmış kod alıştırması.
+  yazılmış kod alıştırması; tamamladıkların listede işaretlenir.
 - **XP/Seviye/Başarımlar:** 10 seviyelik XP sistemi, açılabilir başarımlar,
   yanlış-tekrar ve günlük tekrar akışları.
 - **Kişiselleştirme:** Renkli çıktı (doğru/yanlış/başarım geri bildirimi),

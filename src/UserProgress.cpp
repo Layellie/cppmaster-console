@@ -112,3 +112,15 @@ int UserProgress::unlockedUpToTopicId() const {
 void UserProgress::setUnlockedUpToTopicId(int topicId) {
     unlockedUpToTopicId_ = topicId;
 }
+
+bool UserProgress::isCodeExerciseCompleted(int exerciseId) const {
+    return completedCodeExerciseIds_.find(exerciseId) != completedCodeExerciseIds_.end();
+}
+
+void UserProgress::markCodeExerciseCompleted(int exerciseId) {
+    completedCodeExerciseIds_.insert(exerciseId);
+}
+
+const std::unordered_set<int>& UserProgress::completedCodeExerciseIds() const {
+    return completedCodeExerciseIds_;
+}

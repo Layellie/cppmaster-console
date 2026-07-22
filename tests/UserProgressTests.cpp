@@ -58,6 +58,18 @@ TEST_CASE(UserProgress_UnlockedUpToTopicIdDefaultsToOneThenSettable) {
     CHECK(progress.unlockedUpToTopicId() == 20);
 }
 
+TEST_CASE(UserProgress_CodeExerciseCompletionIsTrackedAndIdempotent) {
+    UserProgress progress(5);
+    CHECK(!progress.isCodeExerciseCompleted(3));
+    progress.markCodeExerciseCompleted(3);
+    CHECK(progress.isCodeExerciseCompleted(3));
+    CHECK(!progress.isCodeExerciseCompleted(4));
+
+    // Re-completing an exercise must not double-count it.
+    progress.markCodeExerciseCompleted(3);
+    CHECK(progress.completedCodeExerciseIds().size() == 1);
+}
+
 TEST_CASE(UserProgress_RecordSectionExamPassedOnlyIncreases) {
     UserProgress progress(5);
     CHECK(progress.highestSectionExamPassed() == 0);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <unordered_set>
 
 #include "Enums.h"
 
@@ -41,8 +42,16 @@ public:
     [[nodiscard]] int unlockedUpToTopicId() const;
     void setUnlockedUpToTopicId(int topicId);
 
+    // Code-writing exercises are tracked separately from topics: they have
+    // their own id space and are simply done-or-not, with no partial
+    // "learning" state.
+    [[nodiscard]] bool isCodeExerciseCompleted(int exerciseId) const;
+    void markCodeExerciseCompleted(int exerciseId);
+    [[nodiscard]] const std::unordered_set<int>& completedCodeExerciseIds() const;
+
 private:
     std::unordered_map<int, TopicStatus> statusByTopicId_;
+    std::unordered_set<int> completedCodeExerciseIds_;
     int totalXp_ = 0;
     int totalQuestionsAnswered_ = 0;
     int totalCorrectAnswers_ = 0;

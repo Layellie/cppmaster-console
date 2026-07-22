@@ -1,5 +1,6 @@
 #include "ProgressManager.h"
 
+#include <algorithm>
 #include <cstddef>
 #include <filesystem>
 #include <fstream>
@@ -7,6 +8,7 @@
 #include <stdexcept>
 #include <system_error>
 #include <utility>
+#include <vector>
 
 namespace {
 
@@ -159,6 +161,15 @@ ProgressLoadResult ProgressManager::load(
                 corrupted = true;
                 break;
             }
+        } else if (recordType == "exercise_done") {
+            std::string valueText;
+            lineStream >> valueText;
+            int exerciseId = 0;
+            if (!tryParseInt(valueText, exerciseId)) {
+                corrupted = true;
+                break;
+            }
+            progress.markCodeExerciseCompleted(exerciseId);
         } else if (recordType == "topic") {
             std::string topicIdText;
             std::string statusText;
@@ -207,6 +218,14 @@ void ProgressManager::save(
     file << "errorfix_correct " << progress.errorFixCorrectCount() << '\n';
     file << "highest_section_exam_passed " << progress.highestSectionExamPassed() << '\n';
     file << "unlocked_up_to " << progress.unlockedUpToTopicId() << '\n';
+    // Sorted so the file is stable across runs (the set's iteration order
+    // isn't), which keeps diffs and manual inspection sane.
+    std::vector<int> completedExercises(
+        progress.completedCodeExerciseIds().begin(), progress.completedCodeExerciseIds().end());
+    std::sort(completedExercises.begin(), completedExercises.end());
+    for (const int exerciseId : completedExercises) {
+        file << "exercise_done " << exerciseId << '\n';
+    }
     for (int topicId = 1; topicId <= topicCount; ++topicId) {
         file << "topic " << topicId << ' ' << statusName(progress.statusOf(topicId)) << '\n';
     }
