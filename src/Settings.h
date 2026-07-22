@@ -8,5 +8,9 @@ struct Settings {
     int dailyReviewQuestionCap = 20;
     bool colorEnabled = true;
     bool audioAlertEnabled = false;
-    int quickTestQuestionCount = 5;
+    int quickTestQuestionCount = 10;
+    // Topics hold up to 31 questions. Asking a subset is what makes a
+    // retake ask different ones, so this stays well below the pool size —
+    // raise it for longer sessions, at the cost of that variety.
+    int topicQuizQuestionCount = 15;
 };

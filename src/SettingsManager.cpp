@@ -57,6 +57,7 @@ SettingsLoadResult SettingsManager::load(
     bool colorEnabled = settings.colorEnabled;
     bool audioAlert = settings.audioAlertEnabled;
     int quickTestCount = settings.quickTestQuestionCount;
+    int topicQuizCount = settings.topicQuizQuestionCount;
     bool corrupted = false;
 
     std::string line;
@@ -110,6 +111,11 @@ SettingsLoadResult SettingsManager::load(
                 corrupted = true;
                 break;
             }
+        } else if (recordType == "topic_quiz_count") {
+            if (!tryParseInt(valueText, topicQuizCount)) {
+                corrupted = true;
+                break;
+            }
         } else {
             corrupted = true;
             break;
@@ -131,6 +137,7 @@ SettingsLoadResult SettingsManager::load(
     settings.colorEnabled = colorEnabled;
     settings.audioAlertEnabled = audioAlert;
     settings.quickTestQuestionCount = quickTestCount;
+    settings.topicQuizQuestionCount = topicQuizCount;
     return SettingsLoadResult{settings, false};
 }
 
@@ -147,4 +154,5 @@ void SettingsManager::save(const Settings& settings, const std::string& filePath
     file << "color_enabled " << (settings.colorEnabled ? 1 : 0) << '\n';
     file << "audio_alert " << (settings.audioAlertEnabled ? 1 : 0) << '\n';
     file << "quick_test_count " << settings.quickTestQuestionCount << '\n';
+    file << "topic_quiz_count " << settings.topicQuizQuestionCount << '\n';
 }

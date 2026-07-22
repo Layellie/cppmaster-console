@@ -20,7 +20,8 @@ TEST_CASE(SettingsManager_MissingFileLoadsDefaultsNotCorrupted) {
     CHECK(result.settings.dailyReviewQuestionCap == 20);
     CHECK(result.settings.colorEnabled == true);
     CHECK(result.settings.audioAlertEnabled == false);
-    CHECK(result.settings.quickTestQuestionCount == 5);
+    CHECK(result.settings.quickTestQuestionCount == 10);
+    CHECK(result.settings.topicQuizQuestionCount == 15);
 }
 
 TEST_CASE(SettingsManager_SaveThenLoadRoundTripsAllFields) {
@@ -36,6 +37,7 @@ TEST_CASE(SettingsManager_SaveThenLoadRoundTripsAllFields) {
     settings.colorEnabled = false;
     settings.audioAlertEnabled = true;
     settings.quickTestQuestionCount = 12;
+    settings.topicQuizQuestionCount = 22;
 
     SettingsManager manager;
     manager.save(settings, path);
@@ -50,6 +52,7 @@ TEST_CASE(SettingsManager_SaveThenLoadRoundTripsAllFields) {
     CHECK(result.settings.colorEnabled == false);
     CHECK(result.settings.audioAlertEnabled == true);
     CHECK(result.settings.quickTestQuestionCount == 12);
+    CHECK(result.settings.topicQuizQuestionCount == 22);
 
     std::filesystem::remove(path);
 }
@@ -57,7 +60,7 @@ TEST_CASE(SettingsManager_SaveThenLoadRoundTripsAllFields) {
 TEST_CASE(SettingsManager_OldFormatFileWithoutNewFieldsLoadsNewFieldDefaults) {
     // Simulates a settings.txt written by a pre-Phase-25 build: only the
     // original 5 keys are present. Loading it must not be treated as
-    // corrupted, and the 3 new fields must come out at their defaults.
+    // corrupted, and every field added since must come out at its default.
     const std::string path = "tests/test_data/settings_old_format.txt";
     const std::string backup = "tests/test_data/settings_old_format_backup.txt";
     {
@@ -76,7 +79,8 @@ TEST_CASE(SettingsManager_OldFormatFileWithoutNewFieldsLoadsNewFieldDefaults) {
     CHECK(result.settings.dailyReviewQuestionCap == 15);
     CHECK(result.settings.colorEnabled == true);
     CHECK(result.settings.audioAlertEnabled == false);
-    CHECK(result.settings.quickTestQuestionCount == 5);
+    CHECK(result.settings.quickTestQuestionCount == 10);
+    CHECK(result.settings.topicQuizQuestionCount == 15);
 
     std::filesystem::remove(path);
 }

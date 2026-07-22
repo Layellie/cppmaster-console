@@ -34,10 +34,6 @@ constexpr const char* kGeneratedHistoryBackupPath = "data/generated_question_his
 constexpr const char* kGenerationLogFilePath = "data/question_generation.log";
 constexpr const char* kSettingsFilePath = "data/settings.txt";
 constexpr const char* kSettingsBackupPath = "data/settings_corrupted_backup.txt";
-// A topic quiz asks at most this many questions. Topics hold up to 31, and
-// asking all of them made every retake identical; a capped random sample
-// gives a different session each time and a more sensible sitting length.
-constexpr int kTopicQuizQuestionCount = 10;
 constexpr double kExamPassThreshold = 0.7;
 constexpr double kSectionCompletionGateThreshold = 0.7;
 
@@ -367,7 +363,8 @@ void Application::showLessonContent(const Lesson& lesson) {
 
 std::vector<Question> Application::selectQuizQuestions(int topicId) {
     auto pool = questions_.questionsForTopic(topicId);
-    if (pool.size() <= static_cast<std::size_t>(kTopicQuizQuestionCount)) {
+    const auto quizSize = static_cast<std::size_t>(settings_.topicQuizQuestionCount);
+    if (pool.size() <= quizSize) {
         // Small topic: every question is asked anyway, but shuffling still
         // means a retake doesn't replay in the identical order.
         std::shuffle(pool.begin(), pool.end(), randomEngine_);
@@ -383,7 +380,7 @@ std::vector<Question> Application::selectQuizQuestions(int topicId) {
     std::stable_partition(pool.begin(), pool.end(), [this](const Question& question) {
         return mistakes_.hasMistake(question.id);
     });
-    pool.resize(static_cast<std::size_t>(kTopicQuizQuestionCount));
+    pool.resize(quizSize);
     return pool;
 }
 
@@ -1194,11 +1191,14 @@ void Application::showSettingsMenu() {
         ui_.printLine(
             "10. Hızlı Test soru sayısını değiştir (şu an: " +
             std::to_string(settings_.quickTestQuestionCount) + ")");
+        ui_.printLine(
+            "11. Konu testi soru sayısını değiştir (şu an: " +
+            std::to_string(settings_.topicQuizQuestionCount) + ")");
         ui_.printLine("0. Geri dön");
         ui_.printLine("");
         ui_.printLine("Seçimin:");
 
-        const int choice = ui_.readMenuChoice(0, 10);
+        const int choice = ui_.readMenuChoice(0, 11);
         switch (choice) {
             case 1:
                 settings_.topicLockEnabled = !settings_.topicLockEnabled;
@@ -1243,6 +1243,16 @@ void Application::showSettingsMenu() {
                 ui_.printLine("Yeni Hızlı Test soru sayısını gir (1-20):");
                 const int newCount = ui_.readMenuChoice(1, 20);
                 settings_.quickTestQuestionCount = newCount;
+                settingsManager_.save(settings_, kSettingsFilePath);
+                break;
+            }
+            case 11: {
+                // Capped at 30 because a topic holds at most 31 questions;
+                // asking nearly all of them is what made retakes repetitive
+                // in the first place, so the ceiling stays just below.
+                ui_.printLine("Yeni konu testi soru sayısını gir (5-30):");
+                const int newCount = ui_.readMenuChoice(5, 30);
+                settings_.topicQuizQuestionCount = newCount;
                 settingsManager_.save(settings_, kSettingsFilePath);
                 break;
             }

@@ -111,7 +111,8 @@ costs 25% of the XP the question would award.
 - **XP / levels / achievements:** a 10-level XP system, unlockable
   achievements, mistake-review and daily-review flows.
 - **Personalisation:** coloured output, an audible alert, and the Quick Test
-  question count — all configurable in Settings.
+  question count and the topic-quiz question count — all configurable in
+  Settings.
 - **Persistence:** progress, mistake records, achievements, generated-question
   history and settings are stored in a `data/` folder (not tracked by git).
 
@@ -375,7 +376,8 @@ kullanılabilir; her ipucu kazanılacak XP'yi %25 azaltır.
 - **XP/Seviye/Başarımlar:** 10 seviyelik XP sistemi, açılabilir başarımlar,
   yanlış-tekrar ve günlük tekrar akışları.
 - **Kişiselleştirme:** Renkli çıktı (doğru/yanlış/başarım geri bildirimi),
-  sesli uyarı, Hızlı Test soru sayısı — hepsi Ayarlar'dan değiştirilebilir.
+  sesli uyarı, Hızlı Test ve konu testi soru sayıları — hepsi Ayarlar'dan
+  değiştirilebilir.
 - **Kalıcı veri:** İlerleme, yanlış kayıtları, başarımlar, üretilen soru
   geçmişi ve ayarlar `data/` klasöründe saklanır (git'e dahil değil).
 
