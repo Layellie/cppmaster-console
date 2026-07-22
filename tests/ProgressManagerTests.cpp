@@ -34,6 +34,7 @@ TEST_CASE(ProgressManager_SaveThenLoadRoundTripsAllFields) {
     progress.recordTypedCorrectAnswer(QuestionType::WriteCode);
     progress.setStatus(3, TopicStatus::Completed);
     progress.recordSectionExamPassed(1);
+    progress.setUnlockedUpToTopicId(4);
 
     ProgressManager manager;
     manager.save(progress, path, kTopicCount);
@@ -47,6 +48,37 @@ TEST_CASE(ProgressManager_SaveThenLoadRoundTripsAllFields) {
     CHECK(result.progress.writeCodeCorrectCount() == 1);
     CHECK(result.progress.statusOf(3) == TopicStatus::Completed);
     CHECK(result.progress.highestSectionExamPassed() == 1);
+    CHECK(result.progress.unlockedUpToTopicId() == 4);
+
+    std::filesystem::remove(path);
+}
+
+TEST_CASE(ProgressManager_OldFormatFileWithoutUnlockedUpToDefaultsToFullyUnlocked) {
+    // Simulates a progress.txt written before the topic-lock feature
+    // existed: no "unlocked_up_to" line at all. It must load as not
+    // corrupted, and default to topicCount (fully unlocked) rather than
+    // the fresh-UserProgress default of 1 — an existing user should never
+    // be retroactively locked out of topics they could already reach.
+    const std::string path = "tests/test_data/progress_old_format.txt";
+    const std::string backup = "tests/test_data/progress_old_format_backup.txt";
+    {
+        std::ofstream file(path, std::ios::trunc);
+        file << "xp 200\n";
+        file << "answered 10\n";
+        file << "correct 8\n";
+        file << "streak_current 2\n";
+        file << "streak_longest 5\n";
+        file << "writecode_correct 1\n";
+        file << "errorfix_correct 0\n";
+        file << "highest_section_exam_passed 2\n";
+        file << "topic 3 Completed\n";
+    }
+
+    ProgressManager manager;
+    const ProgressLoadResult result = manager.load(path, backup, kTopicCount);
+    CHECK(!result.wasCorrupted);
+    CHECK(result.progress.totalXp() == 200);
+    CHECK(result.progress.unlockedUpToTopicId() == kTopicCount);
 
     std::filesystem::remove(path);
 }

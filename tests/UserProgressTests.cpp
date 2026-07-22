@@ -51,6 +51,13 @@ TEST_CASE(UserProgress_RecordAnswerCounters) {
     CHECK(progress.totalCorrectAnswers() == 2);
 }
 
+TEST_CASE(UserProgress_UnlockedUpToTopicIdDefaultsToOneThenSettable) {
+    UserProgress progress(5);
+    CHECK(progress.unlockedUpToTopicId() == 1);
+    progress.setUnlockedUpToTopicId(20);
+    CHECK(progress.unlockedUpToTopicId() == 20);
+}
+
 TEST_CASE(UserProgress_RecordSectionExamPassedOnlyIncreases) {
     UserProgress progress(5);
     CHECK(progress.highestSectionExamPassed() == 0);
