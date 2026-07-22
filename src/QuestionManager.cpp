@@ -612,7 +612,7 @@ QuestionManager::QuestionManager() {
     questions_.push_back(Question{
         .id = 71, .topicId = 6,
         .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
-        .prompt = "Kullanıcıdan bir tam sayı okuyup ekrana yazdıran bir program yazın. (Kodunuzu birden fazla satırda yazabilirsiniz.)",
+        .prompt = "Kullanıcıdan bir tam sayı okuyup ekrana yazdıran bir program yazın. (Kodunu birden fazla satırda yazabilirsin.)",
         .acceptedAnswers = {"cin", ">>", "cout", "<<"},
         .explanation = "Program bir tam sayıyı cin >> ile okumalı ve cout << ile ekrana yazdırmalıdır.",
         .baseXp = 40,

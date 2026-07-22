@@ -95,7 +95,7 @@ Application::Application()
     if (loadResult.wasCorrupted) {
         ui_.printLine(
             "Uyarı: ilerleme dosyası bozuktu; yedeklendi (" + std::string(kProgressBackupPath) +
-            ") ve ilerlemeniz sıfırlandı.");
+            ") ve ilerlemen sıfırlandı.");
     }
 
     const bool mistakesCorrupted = mistakes_.loadFromFile(kMistakesFilePath, kMistakesBackupPath);
@@ -136,9 +136,13 @@ void Application::ensureDataDirectoryExists() {
     std::error_code errorCode;
     std::filesystem::create_directories("data", errorCode);
     if (errorCode) {
+        // Stale message alert: this used to say saving "isn't active in
+        // this version anyway", which stopped being true once persistence
+        // landed — it would have reassured the user while their progress
+        // silently failed to save.
         ui_.printLine(
             "Uyarı: data/ klasörü oluşturulamadı (" + errorCode.message() +
-            "). İlerleme kaydetme özelliği bu sürümde zaten aktif değil.");
+            "). İlerlemen bu oturumda kaydedilemeyecek.");
     }
 }
 
@@ -164,7 +168,7 @@ void Application::runFirstLaunchSkillSelection() {
     ui_.printLine("2. Biraz bilgim var (temel kavramlara aşinayım)");
     ui_.printLine("3. Deneyimliyim (başka bir dilde veya C++'ta tecrübem var)");
     ui_.printLine("");
-    ui_.printLine("Seçiminiz:");
+    ui_.printLine("Seçimin:");
     const int choice = ui_.readMenuChoice(1, 3);
 
     int startingXp = 0;
@@ -225,7 +229,7 @@ void Application::showMainMenu() {
     ui_.printLine("10. İlerlemeyi Sıfırla");
     ui_.printLine("0. Çıkış");
     ui_.printLine("");
-    ui_.printLine("Seçiminiz:");
+    ui_.printLine("Seçimin:");
 }
 
 void Application::handleChoice(int choice) {
@@ -304,7 +308,7 @@ void Application::showTopicBrowser() {
             ui_.printLine("");
         }
 
-        ui_.printLine("Görüntülemek istediğiniz konu numarasını girin (0 = ana menüye dön):");
+        ui_.printLine("Görüntülemek istediğin konu numarasını gir (0 = ana menüye dön):");
         const int topicChoice = ui_.readMenuChoice(kMinTopicId, kMaxTopicId);
         if (topicChoice == 0) {
             return;
@@ -461,11 +465,11 @@ AnswerResult Application::askOneQuestion(
 
     if (question.type == QuestionType::WriteCode) {
         ui_.printLine(
-            "Kodunuzu birden fazla satır halinde girebilirsiniz. Bitirmek için BITIR yazıp Enter'a basın.");
+            "Kodunu birden fazla satır halinde girebilirsin. Bitirmek için BITIR yazıp Enter'a bas.");
         rawAnswer = ui_.readMultilineCode();
     } else {
         while (true) {
-            rawAnswer = ui_.readLine("Cevabınız: ");
+            rawAnswer = ui_.readLine("Cevabın: ");
             if (rawAnswer == "cikis") {
                 exitRequested = true;
                 break;
@@ -590,8 +594,8 @@ void Application::awardXpAndCheckLevelUp(int amount) {
 
 void Application::resetProgress() {
     ui_.printLine("");
-    ui_.printLine("İlerlemenizi sıfırlamak istediğinizden emin misiniz? (evet/hayır):");
-    const std::string confirmation = ui_.readLine("Cevabınız: ");
+    ui_.printLine("İlerlemeni sıfırlamak istediğinden emin misin? (evet/hayır):");
+    const std::string confirmation = ui_.readLine("Cevabın: ");
     if (confirmation != "evet") {
         ui_.printLine("İptal edildi.");
         return;
@@ -606,7 +610,7 @@ void Application::resetProgress() {
     mistakes_.saveToFile(kMistakesFilePath);
     achievements_.saveToFile(kAchievementsFilePath);
 
-    ui_.printLine("İlerlemeniz sıfırlandı.");
+    ui_.printLine("İlerlemen sıfırlandı.");
 }
 
 void Application::checkAchievements(const Question& question, bool correct) {
@@ -666,12 +670,12 @@ void Application::showMistakeReview() {
     const auto mistakes = mistakes_.allMistakesOldestFirst();
     if (mistakes.empty()) {
         ui_.printLine("");
-        ui_.printLine("Henüz kaydedilmiş bir yanlışınız yok!");
+        ui_.printLine("Henüz kaydedilmiş bir yanlışın yok!");
         return;
     }
 
     ui_.printLine("");
-    ui_.printLine("Kayıtlı yanlışlarınız (" + std::to_string(mistakes.size()) + " soru):");
+    ui_.printLine("Kayıtlı yanlışların (" + std::to_string(mistakes.size()) + " soru):");
     ui_.printLine("");
     runMistakeQuestions(mistakes);
 }
@@ -769,7 +773,7 @@ void Application::runDailyReview() {
     auto mistakes = mistakes_.allMistakesOldestFirst();
     if (mistakes.empty()) {
         ui_.printLine("");
-        ui_.printLine("Henüz tekrar edilecek bir yanlışınız yok! Önce birkaç konu testi çözmelisiniz.");
+        ui_.printLine("Henüz tekrar edilecek bir yanlışın yok! Önce birkaç konu testi çözmelisin.");
         return;
     }
 
@@ -787,10 +791,15 @@ void Application::runDailyReview() {
 void Application::runQuickTest() {
     ui_.printLine("");
     ui_.printHeader("HIZLI TEST");
-    ui_.printLine("Sizin için 5 taze soru üretmeye çalışacağım.");
-    ui_.printLine("");
 
     const int kQuickTestQuestionCount = settings_.quickTestQuestionCount;
+    // Read from settings, not hardcoded: the count became configurable
+    // (1-20) but this line still promised "5" regardless.
+    ui_.printLine(
+        "Senin için " + std::to_string(kQuickTestQuestionCount) +
+        " taze soru üretmeye çalışacağım.");
+    ui_.printLine("");
+
     int correctCount = 0;
     int sessionXp = 0;
     int askedCount = 0;
@@ -841,7 +850,7 @@ void Application::runQuickTest() {
 }
 
 void Application::runExam(const ExamPlan& plan) {
-    const int topicCount = static_cast<int>(plan.gatingTopics.size());
+    const int topicCount = static_cast<int>(plan.gatingTopicIds.size());
     if (topicCount == 0 || plan.questionIds.empty()) {
         // Defensive: every caller passes a non-empty plan today, but an
         // empty one would otherwise divide by zero when scoring.
@@ -851,8 +860,8 @@ void Application::runExam(const ExamPlan& plan) {
     }
 
     int completedCount = 0;
-    for (const Lesson& lesson : plan.gatingTopics) {
-        const TopicStatus status = progress_.statusOf(lesson.id);
+    for (const int topicId : plan.gatingTopicIds) {
+        const TopicStatus status = progress_.statusOf(topicId);
         if (status == TopicStatus::Completed || status == TopicStatus::Mastered) {
             ++completedCount;
         }
@@ -933,8 +942,10 @@ void Application::runSectionExam(int sectionId) {
     ExamPlan plan;
     plan.heading = "BÖLÜM " + std::to_string(sectionId) + " SINAVI";
     plan.lockedMessage =
-        "Bu bölümün sınavına girebilmek için konuların en az %70'ini tamamlamalısınız.";
-    plan.gatingTopics = lessons_.lessonsInSection(sectionId);
+        "Bu bölümün sınavına girebilmek için konuların en az %70'ini tamamlamalısın.";
+    for (const Lesson& lesson : lessons_.lessonsInSection(sectionId)) {
+        plan.gatingTopicIds.push_back(lesson.id);
+    }
     plan.questionIds = examQuestionIdsForSection(sectionId);
     plan.sectionIdToRecordOnPass = sectionId;
     runExam(plan);
@@ -944,8 +955,13 @@ void Application::runFinalExam() {
     ExamPlan plan;
     plan.heading = "GENEL FİNAL SINAVI";
     plan.lockedMessage =
-        "Genel final sınavına girebilmek için tüm konuların en az %70'ini tamamlamalısınız.";
-    plan.gatingTopics = lessons_.allLessons();
+        "Genel final sınavına girebilmek için tüm konuların en az %70'ini tamamlamalısın.";
+    // allLessons() returns a reference, so this reads ids without copying
+    // the lessons themselves.
+    plan.gatingTopicIds.reserve(lessons_.allLessons().size());
+    for (const Lesson& lesson : lessons_.allLessons()) {
+        plan.gatingTopicIds.push_back(lesson.id);
+    }
     plan.questionIds = finalExamQuestionIds();
     // Deliberately 0: there is no "section 11" milestone to record for the
     // general final exam.
@@ -955,7 +971,7 @@ void Application::runFinalExam() {
 
 void Application::showExamMenu() {
     ui_.printLine("");
-    ui_.printLine("Hangi sınava girmek istiyorsunuz?");
+    ui_.printLine("Hangi sınava girmek istiyorsun?");
     for (int sectionId = 1; sectionId <= lessons_.sectionCount(); ++sectionId) {
         ui_.printLine(
             std::to_string(sectionId) + ". Bölüm " + std::to_string(sectionId) + " Sınavı: " +
@@ -985,7 +1001,7 @@ void Application::runCodeExercises() {
         ui_.printLine("3. İleri");
         ui_.printLine("0. Geri dön");
         ui_.printLine("");
-        ui_.printLine("Seçiminiz:");
+        ui_.printLine("Seçimin:");
 
         const int tierChoice = ui_.readMenuChoice(0, 3);
         std::string tier;
@@ -1022,7 +1038,7 @@ void Application::runCodeExerciseTier(const std::string& tier) {
         }
         ui_.printLine("0. Geri dön");
         ui_.printLine("");
-        ui_.printLine("Alıştırma numarasını girin:");
+        ui_.printLine("Alıştırma numarasını gir:");
 
         const int choice = ui_.readMenuChoice(0, 100);
         if (choice == 0) {
@@ -1051,9 +1067,9 @@ void Application::runCodeExercise(const CodeExercise& exercise) {
     ui_.printLine("");
 
     int hintLevelUsed = 0;
-    ui_.printLine("Başlamadan önce ipucu görmek ister misiniz? (E/H)");
+    ui_.printLine("Başlamadan önce ipucu görmek ister misin? (E/H)");
     while (true) {
-        const std::string wantsHint = ui_.readLine("Cevabınız: ");
+        const std::string wantsHint = ui_.readLine("Cevabın: ");
         if (wantsHint != "E" && wantsHint != "e") {
             break;
         }
@@ -1063,11 +1079,11 @@ void Application::runCodeExercise(const CodeExercise& exercise) {
         } else if (!exercise.hints.empty()) {
             ui_.printLine(exercise.hints.back());
         }
-        ui_.printLine("Başka bir ipucu görmek ister misiniz? (E/H)");
+        ui_.printLine("Başka bir ipucu görmek ister misin? (E/H)");
     }
 
     ui_.printLine(
-        "Kodunuzu birden fazla satır halinde girebilirsiniz. Bitirmek için BITIR yazıp Enter'a basın.");
+        "Kodunu birden fazla satır halinde girebilirsin. Bitirmek için BITIR yazıp Enter'a bas.");
     const std::string submittedCode = ui_.readMultilineCode();
 
     const Question question = toWriteCodeQuestion(exercise);
@@ -1086,7 +1102,7 @@ void Application::runCodeExercise(const CodeExercise& exercise) {
         awardXpAndCheckLevelUp(xpAwarded);
     } else {
         ui_.playAlertSound();
-        ui_.printError("Gönderdiğiniz kod beklenen kriterleri karşılamıyor.");
+        ui_.printError("Gönderdiğin kod beklenen kriterleri karşılamıyor.");
     }
 
     ui_.printLine("");
@@ -1133,7 +1149,7 @@ void Application::showSettingsMenu() {
             std::to_string(settings_.quickTestQuestionCount) + ")");
         ui_.printLine("0. Geri dön");
         ui_.printLine("");
-        ui_.printLine("Seçiminiz:");
+        ui_.printLine("Seçimin:");
 
         const int choice = ui_.readMenuChoice(0, 10);
         switch (choice) {
@@ -1154,7 +1170,7 @@ void Application::showSettingsMenu() {
                 settingsManager_.save(settings_, kSettingsFilePath);
                 break;
             case 5: {
-                ui_.printLine("Yeni günlük soru hedefini girin (1-100):");
+                ui_.printLine("Yeni günlük soru hedefini gir (1-100):");
                 const int newCap = ui_.readMenuChoice(1, 100);
                 settings_.dailyReviewQuestionCap = newCap;
                 settingsManager_.save(settings_, kSettingsFilePath);
@@ -1177,7 +1193,7 @@ void Application::showSettingsMenu() {
                 settingsManager_.save(settings_, kSettingsFilePath);
                 break;
             case 10: {
-                ui_.printLine("Yeni Hızlı Test soru sayısını girin (1-20):");
+                ui_.printLine("Yeni Hızlı Test soru sayısını gir (1-20):");
                 const int newCount = ui_.readMenuChoice(1, 20);
                 settings_.quickTestQuestionCount = newCount;
                 settingsManager_.save(settings_, kSettingsFilePath);
@@ -1193,7 +1209,7 @@ void Application::showSettingsMenu() {
 }
 
 void Application::exportProgress() {
-    const std::string targetDirectory = ui_.readLine("Hedef klasör yolunu girin: ");
+    const std::string targetDirectory = ui_.readLine("Hedef klasör yolunu gir: ");
     std::error_code errorCode;
     std::filesystem::create_directories(targetDirectory, errorCode);
     if (errorCode) {
@@ -1222,7 +1238,7 @@ void Application::exportProgress() {
 }
 
 void Application::importProgress() {
-    const std::string sourceDirectory = ui_.readLine("İçe aktarılacak klasör yolunu girin: ");
+    const std::string sourceDirectory = ui_.readLine("İçe aktarılacak klasör yolunu gir: ");
     const std::string fileNames[] = {
         "progress.txt",
         "mistakes.txt",
@@ -1246,6 +1262,6 @@ void Application::importProgress() {
     }
     ui_.printLine(
         std::to_string(copiedCount) +
-        " dosya içe aktarıldı. Değişikliklerin etkili olması için uygulamayı yeniden başlatın.");
+        " dosya içe aktarıldı. Değişikliklerin etkili olması için uygulamayı yeniden başlat.");
 }
 

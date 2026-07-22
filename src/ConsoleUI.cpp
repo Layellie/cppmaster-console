@@ -114,7 +114,7 @@ int ConsoleUI::readMenuChoice(int minValue, int maxValue) {
         }
 
         std::cout << "Geçersiz seçim. Lütfen " << minValue << " ile " << maxValue
-                   << " arasında bir sayı girin: ";
+                   << " arasında bir sayı gir: ";
     }
 }
 
