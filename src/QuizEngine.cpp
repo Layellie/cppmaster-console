@@ -166,11 +166,15 @@ std::string letterForOptionNumber(const Question& question, const std::string& n
     if (index >= question.options.size()) {
         return normalizedAnswer;
     }
-    const char letter = static_cast<char>('a' + static_cast<int>(index));
-    // NOLINTNEXTLINE(modernize-return-braced-init-list): the braced form is
-    // wrong here — std::string{1, 'b'} selects the initializer_list<char>
-    // constructor and yields the two-character string "\x01b", not "b".
-    return std::string(1, letter);
+    // Built a character at a time rather than with std::string(1, letter):
+    // that form draws a "use a braced initializer list" suggestion, and
+    // taking it would be a bug — std::string{1, 'b'} selects the
+    // initializer_list<char> constructor and yields the two-character
+    // string "\x01b" instead of "b". Sidestepping the construct entirely
+    // is clearer than suppressing the warning on top of it.
+    std::string letter;
+    letter.push_back(static_cast<char>('a' + static_cast<int>(index)));
+    return letter;
 }
 
 // Used for MultipleChoice and Scenario only. TrueFalse deliberately keeps
