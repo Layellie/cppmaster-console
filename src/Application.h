@@ -27,6 +27,7 @@
 #include "generators/IfElsePredictGenerator.h"
 #include "generators/IntArithmeticPredictGenerator.h"
 #include "generators/ModOperatorPredictGenerator.h"
+#include "generators/WhileLoopCountPredictGenerator.h"
 
 class Application {
 public:
@@ -80,6 +81,7 @@ private:
     ModOperatorPredictGenerator modOperatorGenerator_;
     IfElsePredictGenerator ifElseGenerator_;
     ForLoopSumPredictGenerator forLoopSumGenerator_;
+    WhileLoopCountPredictGenerator whileLoopCountGenerator_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;
