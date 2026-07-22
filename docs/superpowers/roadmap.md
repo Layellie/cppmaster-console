@@ -50,16 +50,27 @@ Phases 1-7. Each phase below gets its own
   100-question general final exam (`finalExamQuestionIds`, 1 question
   per topic across all 100 topics) reachable via a new exam-picker
   submenu under "6. Seviye Sınavı".
-- Only 2 dynamic generators exist (`IntArithmeticPredictGenerator`,
+- ~~Only 2 dynamic generators exist (`IntArithmeticPredictGenerator`,
   `BoolOutputPredictGenerator`); the spec asked for at least 15 across major
   topic areas (arithmetic, mod, if-else, for, while, arrays, vector, string,
-  functions, pointer, class, inheritance, map, sort+lambda, try-catch).
-- The generation engine is a single flat 50-attempt retry loop; the spec
+  functions, pointer, class, inheritance, map, sort+lambda, try-catch).~~ —
+  **resolved in Phase 23**: 15 new generators were added (topics 11, 12, 18,
+  22, 23, 31, 34, 37, 43, 52, 64, 69, 84, 91, 99), bringing the total to 17
+  registered generators, all wired into `Application`'s constructor and
+  exercised by `runQuickTest`.
+- ~~The generation engine is a single flat 50-attempt retry loop; the spec
   asked for a 3-stage escalation (Normal → ExpandedParameters →
   StructuralVariation, then CrossTopic fallback) plus dedicated
   `GeneratedQuestionValidator`, `GeneratorRegistry`, `GeneratorScoring`,
   `ParameterDomain` classes and a developer log
-  (`data/question_generation.log`).
+  (`data/question_generation.log`).~~ — **resolved in Phase 23**:
+  `QuestionGenerationEngine::generateUniqueForTopic` now implements the
+  full 4-stage escalation (20 attempts/stage against the topic's own
+  generator(s), then a CrossTopic fallback tried against every other
+  generator ordered by `GeneratorScoring::successRate`), backed by new
+  `GeneratedQuestionValidator`, `GeneratorRegistry`, `GeneratorScoring`, and
+  `ParameterDomain` classes, and logging every attempt's terminal outcome
+  to `data/question_generation.log`.
 - No hint system (`ipucu`/`konu`/`ornek`/`gec`/`cikis` in-quiz commands).
 - No topic lock system (70%-completion gate between sections, togglable in
   settings).
@@ -199,9 +210,47 @@ as Phases 1-7.
 - **Phase 20 — Bölüm 9 İçerik Genişletmesi: COMPLETE** (commits `c75308a..4793f79`, 96/96 tests + ctest 100%). Topics 81-90 (Section 9: "STL veri yapıları") now have full lesson content (`src/LessonContentSection9.cpp`) and a 290-question bank (ids 2103-2392, 29 per topic, `src/QuestionsSection9.cpp`) spanning the same 9 of 11 question types as Sections 2-8 (`Scenario`/`Matching` still deliberately unused). A new `QuestionManager_EveryTopicEightyOneToNinetyHasAtLeastTwentyNineQuestions` test was added; `QuestionManager_NoDuplicateQuestionIds` already scanned topics 1-100 and needed no change. A manual end-to-end run additionally confirmed `openTopic`'s content gate passes for topic 84 ("map") with zero `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29 soru).", correct answers award XP, and mid-quiz `cikis` exits cleanly back to the main menu with partial XP saved. Eighth of nine section-by-section content phases (13-21) closing the roadmap's lesson-content and question-bank gaps for topics 11-100.
 - **Phase 21 — Bölüm 10 İçerik Genişletmesi: COMPLETE** (commits `17a4448..b0fc567`, 96/96 tests + ctest 100%). Topics 91-100 (Section 10: "Algoritmalar, dosyalar ve hata yönetimi") now have full lesson content (`src/LessonContentSection10.cpp`) and a 290-question bank (ids 2393-2682, 29 per topic, `src/QuestionsSection10.cpp`) spanning the same 9 of 11 question types as Sections 2-9 (`Scenario`/`Matching` still deliberately unused). A new `QuestionManager_EveryTopicNinetyOneToHundredHasAtLeastTwentyNineQuestions` test was added; `QuestionManager_NoDuplicateQuestionIds` already scanned topics 1-100 and needed no change. Unlike every prior content phase, the "topics without content" test (`LessonManager_TopicsNinetyOneToHundredHaveNoContentYet`) was REMOVED entirely rather than narrowed, since after this phase every topic 1-100 has real content. A manual end-to-end run additionally confirmed `openTopic`'s content gate passes for topic 100 ("unique_ptr") with zero `Application.cpp` changes, the quiz reports "Konu testi başlıyor (29 soru).", correct answers award XP, and mid-quiz `cikis` exits cleanly back to the main menu with partial XP saved. **This is the LAST of nine section-by-section content phases (13-21)** — the full 100-topic bank (lesson content + ≥29 questions per topic) is now complete, closing out the two headline "Confirmed gaps" bullets above.
 - **Phase 22 — Sınavlar: COMPLETE** (commits `7f3b8f7..7c34595`, 100/100 tests). Generalized the previously Section-1-only exam mechanism to all 10 sections plus a new 100-question general final exam. New `src/ExamContent.h`/`.cpp` (`examQuestionIdsForSection`, `finalExamQuestionIds`) computes exam question ids algorithmically for Sections 2-10 and the final exam (2 questions/topic for section exams, 1/topic for the final exam, using the fixed per-topic layout established across Phases 13-21: `baseId(topic) = 73 + (topic-11)*29`, offset +3 = first Medium MultipleChoice, offset +12 = first Medium TrueFalse) while preserving Section 1's original curated 20-question exam byte-for-byte. `Application::runSectionExam` gained a `sectionId` parameter; new `runFinalExam`/`showExamMenu` complete the flow, reachable via a new exam-picker submenu under "6. Seviye Sınavı" (main menu structure otherwise unchanged). 4 new `ExamContentTests.cpp` tests confirm every section exam has 20 unique resolvable ids, Sections 2-10 cover every one of their 10 topics exactly twice, and the final exam covers all 100 topics exactly once. `AchievementId::PerfectExam`'s description was generalized ("Bir sınavdan %100 aldın.") to correctly cover both exam kinds; `tests/QuestionManagerTests.cpp`'s stale duplicated exam-id array (flagged by its own comment as a staleness risk) was replaced with a direct call to `examQuestionIdsForSection(1)`. `UserProgress`'s per-section-exam-passed data model (a single "highest" int) was deliberately left unchanged — the final exam does not call `recordSectionExamPassed` since there is no "section 11". A manual end-to-end run confirmed the exam-picker menu lists all 10 sections plus "Genel Final Sınavı", the 70%-completion gate correctly blocks an unearned Section 2 exam, a full Section 2 exam run reports correct/score/XP/pass-fail, and the final exam's "100 soruluk sınav başlıyor." header plus a mid-exam `cikis` exit both work correctly.
-- **Phase 23 — Üretici kütüphanesini genişletme:** en az 15 üretici,
-  `GeneratedQuestionValidator`/`GeneratorRegistry`/`GeneratorScoring`/
-  `ParameterDomain`, 3 aşamalı üretim algoritması, geliştirici log dosyası.
+- **Phase 23 — Üretici kütüphanesini genişletme: COMPLETE** (commits
+  `48d7e9f..c2724cd`, 202/202 tests + ctest 100%). Rewrote `IQuestionGenerator`
+  to require `topicId()` and a `GenerationStage` parameter (`Normal` /
+  `ExpandedParameters` / `StructuralVariation`); added `ParameterDomain`
+  (`draw`/`expanded`), `GeneratedQuestionValidator` (real content checks per
+  question type), `GeneratorRegistry` (non-owning, `generatorsForTopic`/
+  `allGenerators`), and `GeneratorScoring` (per-generator success-rate
+  tracking with a neutral prior). `QuestionGenerationEngine::generateUniqueForTopic`
+  replaces the old flat-retry `generateUnique`, implementing the full 4-stage
+  escalation (own-topic Normal → ExpandedParameters → StructuralVariation,
+  20 attempts each, then a CrossTopic fallback ordered by success rate) and
+  logging every attempt's terminal outcome to `data/question_generation.log`
+  (path injected via constructor so tests can redirect it). 15 new
+  generators were added one per commit — `ArithmeticOperatorPredictGenerator`
+  (11), `ModOperatorPredictGenerator` (12), `IfElsePredictGenerator` (18),
+  `ForLoopSumPredictGenerator` (22), `WhileLoopCountPredictGenerator` (23),
+  `ArrayElementPredictGenerator` (31), `VectorPushBackPredictGenerator` (34),
+  `StringConcatPredictGenerator` (37), `FunctionReturnPredictGenerator` (43),
+  `PointerDereferencePredictGenerator` (52), `ClassMemberPredictGenerator`
+  (64), `InheritanceOverridePredictGenerator` (69), `MapLookupPredictGenerator`
+  (84), `SortWithLambdaPredictGenerator` (91), `TryCatchPredictGenerator` (99)
+  — each with its own `tests/Generators/*Tests.cpp` file, bringing the total
+  to 17 registered generators (up from 2). Two real correctness risks were
+  caught and fixed before committing: `WhileLoopCountPredictGenerator`'s
+  divisor is clamped away from 0 and 1 (division-by-zero and infinite-loop
+  risks once `ParameterDomain::expanded()` widens the domain), and
+  `InheritanceOverridePredictGenerator`'s non-virtual-method-hiding answer
+  was verified against a standalone MSVC compile before being assumed
+  correct. A standalone 200-iteration integration harness (registry + engine
+  + scoring + validator, outside the test suite) confirmed all 17 generators
+  successfully produce valid questions and that the engine's cross-topic
+  fallback correctly engages when a small-domain generator (`BoolOutputPredictGenerator`)
+  exhausts its own uniqueness space. Deviated from the original Task 4/Task 6
+  split: since removing the old `generateUnique` broke existing call sites
+  immediately, Task 4 absorbed the minimal `Application.cpp` wiring needed
+  to keep the build green, rather than leaving it fully separate for Task 6.
+  Due to a multi-day subagent weekly-quota outage discovered mid-Phase 21
+  (see that phase's ledger entry), all of Phase 23 was implemented and
+  self-reviewed directly by the controller rather than via subagent
+  dispatch — compile/runtime verification rigor (standalone `cl.exe`
+  checks, full test suite reruns per commit) was preserved throughout.
 - **Phase 24 — Büyük ölçekli üretim testleri:** 10.000 iterasyonluk
   benzersizlik/doğruluk/performans testleri.
 - **Phase 25 — Kalan cila:** ilk açılış seviye seçim ekranı, ANSI renk
@@ -209,10 +258,11 @@ as Phases 1-7.
 
 ## Status
 
-Phase 22 complete (2026-07-19). All 10 sections now have an exam plus a
-100-question general final exam. Phase 23 (Üretici kütüphanesini
-genişletme) starting next. Update this file's phase list as each phase
-completes (mirror `.superpowers/sdd/progress.md`'s per-phase headers).
+Phase 23 complete (2026-07-22). The dynamic generator library now has 17
+generators (up from 2) and a fully rewritten 4-stage escalation engine.
+Phase 24 (Büyük ölçekli üretim testleri) starting next. Update this file's
+phase list as each phase completes (mirror `.superpowers/sdd/progress.md`'s
+per-phase headers).
 
 **Recurring gap, now fixed twice (Phase 8's and Phase 9's final reviews
 both flagged this file as stale):** from Phase 10 onward, each phase's plan
