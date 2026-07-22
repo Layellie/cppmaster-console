@@ -102,6 +102,8 @@ add_library(CppMasterConsoleLib STATIC
     src/generators/ArithmeticOperatorPredictGenerator.cpp
     src/generators/ModOperatorPredictGenerator.h
     src/generators/ModOperatorPredictGenerator.cpp
+    src/generators/IfElsePredictGenerator.h
+    src/generators/IfElsePredictGenerator.cpp
 )
 
 target_include_directories(CppMasterConsoleLib PUBLIC src)
@@ -141,6 +143,7 @@ add_executable(CppMasterConsoleTests
     tests/GeneratorScoringTests.cpp
     tests/Generators/ArithmeticOperatorPredictGeneratorTests.cpp
     tests/Generators/ModOperatorPredictGeneratorTests.cpp
+    tests/Generators/IfElsePredictGeneratorTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)

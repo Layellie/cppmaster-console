@@ -23,6 +23,7 @@
 #include "UserProgress.h"
 #include "generators/ArithmeticOperatorPredictGenerator.h"
 #include "generators/BoolOutputPredictGenerator.h"
+#include "generators/IfElsePredictGenerator.h"
 #include "generators/IntArithmeticPredictGenerator.h"
 #include "generators/ModOperatorPredictGenerator.h"
 
@@ -76,6 +77,7 @@ private:
     BoolOutputPredictGenerator boolOutputGenerator_;
     ArithmeticOperatorPredictGenerator arithmeticOperatorGenerator_;
     ModOperatorPredictGenerator modOperatorGenerator_;
+    IfElsePredictGenerator ifElseGenerator_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;

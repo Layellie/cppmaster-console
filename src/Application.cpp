@@ -74,6 +74,7 @@ Application::Application()
     generatorRegistry_.registerGenerator(boolOutputGenerator_);
     generatorRegistry_.registerGenerator(arithmeticOperatorGenerator_);
     generatorRegistry_.registerGenerator(modOperatorGenerator_);
+    generatorRegistry_.registerGenerator(ifElseGenerator_);
 
     const auto topicCount = static_cast<int>(lessons_.allLessons().size());
     const auto loadResult = progressManager_.load(kProgressFilePath, kProgressBackupPath, topicCount);
