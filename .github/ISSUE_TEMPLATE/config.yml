@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Soru sor / Ask a question
+    url: https://github.com/Layellie/cppmaster-console/discussions
+    about: >
+      Hata bildirimi değil de genel bir sorunuz veya öneriniz varsa
+      Discussions'ı kullanın. / For general questions or ideas rather
+      than bug reports, use Discussions.

@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch: {}
+
+# A newer push to the same branch/PR makes an in-flight run obsolete.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-test:
+    name: ${{ matrix.name }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      # Don't cancel the Linux job just because Windows failed (or vice
+      # versa) — a portability break is exactly what we want to see in
+      # full.
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows (MSVC)
+            os: windows-latest
+            preset_args: ""
+          - name: Linux (GCC)
+            os: ubuntu-latest
+            preset_args: "-DCMAKE_CXX_COMPILER=g++"
+          - name: Linux (Clang)
+            os: ubuntu-latest
+            preset_args: "-DCMAKE_CXX_COMPILER=clang++"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure
+        run: cmake -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.preset_args }}
+
+      - name: Build
+        run: cmake --build build --config Release
+
+      - name: Test
+        run: ctest --test-dir build -C Release --output-on-failure
+
+      # The stress suite is deliberately outside ctest (it takes ~10-15s,
+      # too slow for the inner dev loop) but it's exactly the kind of
+      # thing CI should carry, so run it explicitly here.
+      - name: Generation stress tests (Windows)
+        if: runner.os == 'Windows'
+        run: ./build/Release/CppMasterConsoleStressTests.exe
+
+      - name: Generation stress tests (Linux)
+        if: runner.os == 'Linux'
+        run: ./build/CppMasterConsoleStressTests

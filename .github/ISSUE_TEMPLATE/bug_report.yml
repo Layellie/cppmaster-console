@@ -1,0 +1,62 @@
+name: Hata bildirimi / Bug report
+description: Beklenmedik bir davranış bildirin / Report unexpected behavior
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: Ne oldu? / What happened?
+      description: Beklediğiniz ile gerçekleşen arasındaki farkı yazın.
+      placeholder: |
+        Beklenen: ...
+        Gerçekleşen: ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Yeniden üretme adımları / Steps to reproduce
+      placeholder: |
+        1. Uygulamayı başlat
+        2. Menüden "..." seç
+        3. ...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Sürüm / Version
+      description: >
+        Ana menüde görünen sürüm, ya da kaynaktan derlediyseniz commit
+        hash'i (`git rev-parse --short HEAD`).
+    validations:
+      required: false
+
+  - type: dropdown
+    id: install-method
+    attributes:
+      label: Nasıl kurdunuz? / How did you install it?
+      options:
+        - install.ps1 (tek satırlık komut / one-line command)
+        - Kaynaktan derledim / Built from source
+        - Diğer / Other
+    validations:
+      required: true
+
+  - type: input
+    id: os
+    attributes:
+      label: İşletim sistemi / Operating system
+      placeholder: "Windows 11 24H2 / Ubuntu 24.04 / ..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Ek bilgi / Additional context
+      description: Ekran görüntüsü, hata mesajı, konsol çıktısı vb.
+    validations:
+      required: false

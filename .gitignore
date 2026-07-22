@@ -1,6 +1,26 @@
-cmake-build-*/
-.idea/
+# Build output
 build/
-*.log
+cmake-build-*/
+out/
+dist/
+CMakeUserPresets.json
+
+# Runtime data (per-user progress, settings, generated-question history)
 data/
 tests/test_data/
+*.log
+
+# Editors / IDEs
+.idea/
+.vs/
+.vscode/
+*.user
+*.suo
+
+# AI tooling scratch state
+.claude/
+.superpowers/
+
+# OS noise
+Thumbs.db
+.DS_Store

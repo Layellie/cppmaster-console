@@ -1,0 +1,43 @@
+name: İçerik hatası / Content issue
+description: Yanlış bir soru, cevap veya ders içeriği bildirin / Report an incorrect question, answer, or lesson
+labels: ["content"]
+body:
+  - type: markdown
+    attributes:
+      value: >
+        Yanlış bir cevap anahtarı veya hatalı bir ders açıklaması mı
+        buldunuz? Bu şablon onun için. / Found a wrong answer key or an
+        incorrect lesson explanation? This template is for that.
+
+  - type: input
+    id: topic
+    attributes:
+      label: Konu numarası / Topic number
+      placeholder: "Örn. 22 (for döngüsü)"
+    validations:
+      required: true
+
+  - type: input
+    id: question-id
+    attributes:
+      label: Soru id'si / Question id
+      description: Biliyorsanız yazın; ders içeriği hatasıysa boş bırakın.
+    validations:
+      required: false
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Hata nedir? / What is wrong?
+      description: >
+        Mümkünse neden yanlış olduğunu açıklayın — örneğin ilgili C++
+        standardı davranışı veya derleyici çıktısı.
+    validations:
+      required: true
+
+  - type: textarea
+    id: correction
+    attributes:
+      label: Doğrusu ne olmalı? / What should it be?
+    validations:
+      required: true

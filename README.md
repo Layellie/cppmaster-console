@@ -1,10 +1,24 @@
 # CppMaster Console
 
+[![CI](https://github.com/Layellie/cppmaster-console/actions/workflows/ci.yml/badge.svg)](https://github.com/Layellie/cppmaster-console/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![C++20](https://img.shields.io/badge/C%2B%2B-20-blue.svg)](https://en.cppreference.com/w/cpp/20)
+
 C++ öğrenmek için terminal tabanlı, Türkçe bir alıştırma ve sınav
 uygulaması. 100 konuluk tam bir müfredat, 2600'den fazla soru, hint/kilit/
 adaptif-zorluk sistemleri, kod yazma alıştırmaları, bölüm sınavları, bir
 genel final sınavı ve 17 üreticili, tekrarsız bir dinamik soru üretim
 sistemi içerir.
+
+> **In English:** CppMaster Console is a terminal-based app for learning
+> C++, with a **Turkish-language interface**. It covers a 100-topic
+> curriculum with 2600+ hand-written questions, per-section and final
+> exams, code-writing exercises, an XP/level/achievement system, a
+> sequential topic-unlock system, and a dynamic question generator (17
+> generators, 4-stage escalation) that never repeats a question. Built
+> with C++20 and CMake, no third-party dependencies. See
+> [Building from source](#geliştirici-olarak-derleme) — the build/test
+> commands are language-independent.
 
 ## Hızlı kurulum (Windows)
 
@@ -146,3 +160,13 @@ ayarı, ANSI renk desteği için `ENABLE_VIRTUAL_TERMINAL_PROCESSING`,
 Linux/macOS uyumluluğu ise kod incelemesiyle değerlendirildi ama bu
 geliştirme ortamında böyle bir derleyici/işletim sistemi bulunmadığı için
 gerçek bir derlemeyle doğrulanmadı.
+
+## Katkıda bulunma
+
+Katkılar memnuniyetle karşılanır — kod, ders içeriği veya soru
+düzeltmeleri. Ayrıntılar için [CONTRIBUTING.md](CONTRIBUTING.md)'ye bakın.
+Güvenlikle ilgili konular için [SECURITY.md](SECURITY.md).
+
+## Lisans
+
+[MIT](LICENSE) — Copyright (c) 2026 Samet Kaşmer.
