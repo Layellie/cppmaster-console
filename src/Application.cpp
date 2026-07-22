@@ -12,6 +12,7 @@
 #include <system_error>
 
 #include "AdaptiveDifficulty.h"
+#include "ExamContent.h"
 #include "LevelSystem.h"
 #include "TopicLock.h"
 
@@ -32,14 +33,7 @@ constexpr const char* kGeneratedHistoryFilePath = "data/generated_question_histo
 constexpr const char* kGeneratedHistoryBackupPath = "data/generated_question_history_corrupted_backup.txt";
 constexpr const char* kSettingsFilePath = "data/settings.txt";
 constexpr const char* kSettingsBackupPath = "data/settings_corrupted_backup.txt";
-constexpr int kExamQuestionIds[] = {
-    1, 2, 3, 4, 5, 6, 19, 20, 33, 35,
-    61, 62, 63, 64, 65, 66, 67, 68, 69, 71,
-};
-constexpr int kExamQuestionCount = 20;
 constexpr double kExamPassThreshold = 0.7;
-constexpr int kExamSectionId = 1;
-constexpr int kExamSectionTopicCount = 10;
 constexpr double kSectionCompletionGateThreshold = 0.7;
 
 char statusMarker(TopicStatus status) {
@@ -174,7 +168,7 @@ void Application::handleChoice(int choice) {
             runCodeExercises();
             break;
         case 6:
-            runSectionExam();
+            showExamMenu();
             break;
         case 7:
             showStatistics();
@@ -751,17 +745,19 @@ void Application::runQuickTest() {
         progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
 }
 
-void Application::runSectionExam() {
+void Application::runSectionExam(int sectionId) {
     int completedCount = 0;
-    for (const Lesson& lesson : lessons_.lessonsInSection(kExamSectionId)) {
+    const auto topicsInSection = lessons_.lessonsInSection(sectionId);
+    for (const Lesson& lesson : topicsInSection) {
         const TopicStatus status = progress_.statusOf(lesson.id);
         if (status == TopicStatus::Completed || status == TopicStatus::Mastered) {
             ++completedCount;
         }
     }
+    const int topicCount = static_cast<int>(topicsInSection.size());
 
     const double completionRatio =
-        static_cast<double>(completedCount) / static_cast<double>(kExamSectionTopicCount);
+        static_cast<double>(completedCount) / static_cast<double>(topicCount);
 
     if (!sectionExamIsUnlocked(
             settings_.topicLockEnabled, completionRatio, kSectionCompletionGateThreshold)) {
@@ -769,20 +765,24 @@ void Application::runSectionExam() {
         ui_.printLine(
             "Bu bölümün sınavına girebilmek için konuların en az %70'ini tamamlamalısınız.");
         ui_.printLine(
-            "Şu an " + std::to_string(completedCount) + "/" + std::to_string(kExamSectionTopicCount) +
+            "Şu an " + std::to_string(completedCount) + "/" + std::to_string(topicCount) +
             " konu tamamlanmış.");
         return;
     }
 
+    const std::vector<int> examQuestionIds = examQuestionIdsForSection(sectionId);
+    const int examQuestionCount = static_cast<int>(examQuestionIds.size());
+
     ui_.printLine("");
-    ui_.printHeader("BÖLÜM 1 SINAVI");
-    ui_.printLine("20 soruluk sınav başlıyor. Geçme notu: %70.");
+    ui_.printHeader("BÖLÜM " + std::to_string(sectionId) + " SINAVI");
+    ui_.printLine(
+        std::to_string(examQuestionCount) + " soruluk sınav başlıyor. Geçme notu: %70.");
     ui_.printLine("");
 
     int correctCount = 0;
     int examXp = 0;
 
-    for (const int questionId : kExamQuestionIds) {
+    for (const int questionId : examQuestionIds) {
         const auto question = questions_.findById(questionId);
         if (!question.has_value()) {
             continue;
@@ -801,21 +801,21 @@ void Application::runSectionExam() {
     }
 
     const double scoreRatio =
-        static_cast<double>(correctCount) / static_cast<double>(kExamQuestionCount);
+        static_cast<double>(correctCount) / static_cast<double>(examQuestionCount);
     const int scorePercent = static_cast<int>(scoreRatio * 100.0);
 
     ui_.printLine(
-        "Doğru: " + std::to_string(correctCount) + "/" + std::to_string(kExamQuestionCount));
+        "Doğru: " + std::to_string(correctCount) + "/" + std::to_string(examQuestionCount));
     ui_.printLine("Başarı: %" + std::to_string(scorePercent));
     ui_.printLine("Kazanılan XP: " + std::to_string(examXp));
     ui_.printLine(
         std::string("Sonuç: ") + (scoreRatio >= kExamPassThreshold ? "GEÇTİN" : "KALDIN"));
 
     if (scoreRatio >= kExamPassThreshold) {
-        progress_.recordSectionExamPassed(kExamSectionId);
+        progress_.recordSectionExamPassed(sectionId);
     }
 
-    if (correctCount == kExamQuestionCount) {
+    if (correctCount == examQuestionCount) {
         if (achievements_.unlock(AchievementId::PerfectExam)) {
             ui_.printLine("");
             ui_.printLine(
@@ -830,6 +830,112 @@ void Application::runSectionExam() {
         progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
 
     ui_.printLine("");
+}
+
+void Application::runFinalExam() {
+    int completedCount = 0;
+    const auto allTopics = lessons_.allLessons();
+    for (const Lesson& lesson : allTopics) {
+        const TopicStatus status = progress_.statusOf(lesson.id);
+        if (status == TopicStatus::Completed || status == TopicStatus::Mastered) {
+            ++completedCount;
+        }
+    }
+    const int totalTopicCount = static_cast<int>(allTopics.size());
+
+    const double completionRatio =
+        static_cast<double>(completedCount) / static_cast<double>(totalTopicCount);
+
+    if (!sectionExamIsUnlocked(
+            settings_.topicLockEnabled, completionRatio, kSectionCompletionGateThreshold)) {
+        ui_.printLine("");
+        ui_.printLine(
+            "Genel final sınavına girebilmek için tüm konuların en az %70'ini "
+            "tamamlamalısınız.");
+        ui_.printLine(
+            "Şu an " + std::to_string(completedCount) + "/" + std::to_string(totalTopicCount) +
+            " konu tamamlanmış.");
+        return;
+    }
+
+    const std::vector<int> examQuestionIds = finalExamQuestionIds();
+    const int examQuestionCount = static_cast<int>(examQuestionIds.size());
+
+    ui_.printLine("");
+    ui_.printHeader("GENEL FİNAL SINAVI");
+    ui_.printLine(
+        std::to_string(examQuestionCount) + " soruluk sınav başlıyor. Geçme notu: %70.");
+    ui_.printLine("");
+
+    int correctCount = 0;
+    int examXp = 0;
+
+    for (const int questionId : examQuestionIds) {
+        const auto question = questions_.findById(questionId);
+        if (!question.has_value()) {
+            continue;
+        }
+        const AnswerResult result = askOneQuestion(*question, /*trackMistakes=*/true, /*allowHints=*/false);
+        if (result.exitRequested) {
+            awardXpAndCheckLevelUp(examXp);
+            progressManager_.save(
+                progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+            return;
+        }
+        if (result.correct) {
+            ++correctCount;
+            examXp += result.xpAwarded;
+        }
+    }
+
+    const double scoreRatio =
+        static_cast<double>(correctCount) / static_cast<double>(examQuestionCount);
+    const int scorePercent = static_cast<int>(scoreRatio * 100.0);
+
+    ui_.printLine(
+        "Doğru: " + std::to_string(correctCount) + "/" + std::to_string(examQuestionCount));
+    ui_.printLine("Başarı: %" + std::to_string(scorePercent));
+    ui_.printLine("Kazanılan XP: " + std::to_string(examXp));
+    ui_.printLine(
+        std::string("Sonuç: ") + (scoreRatio >= kExamPassThreshold ? "GEÇTİN" : "KALDIN"));
+
+    if (correctCount == examQuestionCount) {
+        if (achievements_.unlock(AchievementId::PerfectExam)) {
+            ui_.printLine("");
+            ui_.printLine(
+                "Yeni başarım kazandın: " + achievementDisplayName(AchievementId::PerfectExam));
+            ui_.printLine(achievementDescription(AchievementId::PerfectExam));
+            achievements_.saveToFile(kAchievementsFilePath);
+        }
+    }
+
+    awardXpAndCheckLevelUp(examXp);
+    progressManager_.save(
+        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+
+    ui_.printLine("");
+}
+
+void Application::showExamMenu() {
+    ui_.printLine("");
+    ui_.printLine("Hangi sınava girmek istiyorsunuz?");
+    for (int sectionId = 1; sectionId <= lessons_.sectionCount(); ++sectionId) {
+        ui_.printLine(
+            std::to_string(sectionId) + ". Bölüm " + std::to_string(sectionId) + " Sınavı: " +
+            lessons_.sectionTitle(sectionId));
+    }
+    const int finalExamChoice = lessons_.sectionCount() + 1;
+    ui_.printLine(std::to_string(finalExamChoice) + ". Genel Final Sınavı");
+    ui_.printLine("0. Geri dön");
+    const int choice = ui_.readMenuChoice(0, finalExamChoice);
+    if (choice == 0) {
+        return;
+    }
+    if (choice == finalExamChoice) {
+        runFinalExam();
+        return;
+    }
+    runSectionExam(choice);
 }
 
 void Application::runCodeExercises() {

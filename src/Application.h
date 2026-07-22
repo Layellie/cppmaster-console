@@ -45,7 +45,9 @@ private:
     void runDailyReview();
     void runQuickTest();
     void showAchievements();
-    void runSectionExam();
+    void runSectionExam(int sectionId);
+    void runFinalExam();
+    void showExamMenu();
     void runCodeExercises();
     void runCodeExerciseTier(const std::string& tier);
     void runCodeExercise(const CodeExercise& exercise);
