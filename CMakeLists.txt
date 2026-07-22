@@ -108,6 +108,8 @@ add_library(CppMasterConsoleLib STATIC
     src/generators/ForLoopSumPredictGenerator.cpp
     src/generators/WhileLoopCountPredictGenerator.h
     src/generators/WhileLoopCountPredictGenerator.cpp
+    src/generators/ArrayElementPredictGenerator.h
+    src/generators/ArrayElementPredictGenerator.cpp
 )
 
 target_include_directories(CppMasterConsoleLib PUBLIC src)
@@ -150,6 +152,7 @@ add_executable(CppMasterConsoleTests
     tests/Generators/IfElsePredictGeneratorTests.cpp
     tests/Generators/ForLoopSumPredictGeneratorTests.cpp
     tests/Generators/WhileLoopCountPredictGeneratorTests.cpp
+    tests/Generators/ArrayElementPredictGeneratorTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)

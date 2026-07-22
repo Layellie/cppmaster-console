@@ -22,6 +22,7 @@
 #include "SettingsManager.h"
 #include "UserProgress.h"
 #include "generators/ArithmeticOperatorPredictGenerator.h"
+#include "generators/ArrayElementPredictGenerator.h"
 #include "generators/BoolOutputPredictGenerator.h"
 #include "generators/ForLoopSumPredictGenerator.h"
 #include "generators/IfElsePredictGenerator.h"
@@ -82,6 +83,7 @@ private:
     IfElsePredictGenerator ifElseGenerator_;
     ForLoopSumPredictGenerator forLoopSumGenerator_;
     WhileLoopCountPredictGenerator whileLoopCountGenerator_;
+    ArrayElementPredictGenerator arrayElementGenerator_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;
