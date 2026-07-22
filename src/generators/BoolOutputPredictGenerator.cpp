@@ -18,8 +18,14 @@ std::string_view BoolOutputPredictGenerator::id() const noexcept {
     return "BoolOutputPredictGenerator";
 }
 
+int BoolOutputPredictGenerator::topicId() const noexcept {
+    return 9;
+}
+
 std::optional<GeneratedQuestion> BoolOutputPredictGenerator::generate(
-    std::mt19937_64& randomEngine) const {
+    std::mt19937_64& randomEngine, GenerationStage /*stage*/) const {
+    // A bool has no numeric range to expand, so every stage draws the
+    // same way - there is nothing to widen or restructure.
     std::uniform_int_distribution<std::size_t> nameDist(0, kVariableNames.size() - 1);
     std::uniform_int_distribution<int> valueDist(0, 1);
 

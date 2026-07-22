@@ -91,6 +91,7 @@ add_library(CppMasterConsoleLib STATIC
     src/CodeExerciseManager.cpp
     src/ExamContent.h
     src/ExamContent.cpp
+    src/ParameterDomain.h
 )
 
 target_include_directories(CppMasterConsoleLib PUBLIC src)
@@ -124,6 +125,7 @@ add_executable(CppMasterConsoleTests
     tests/CodeExerciseTests.cpp
     tests/AdaptiveDifficultyTests.cpp
     tests/ExamContentTests.cpp
+    tests/ParameterDomainTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
