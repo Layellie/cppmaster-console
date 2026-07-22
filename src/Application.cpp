@@ -86,6 +86,7 @@ Application::Application()
     generatorRegistry_.registerGenerator(inheritanceOverrideGenerator_);
     generatorRegistry_.registerGenerator(mapLookupGenerator_);
     generatorRegistry_.registerGenerator(sortWithLambdaGenerator_);
+    generatorRegistry_.registerGenerator(tryCatchGenerator_);
 
     const auto topicCount = static_cast<int>(lessons_.allLessons().size());
     const auto loadResult = progressManager_.load(kProgressFilePath, kProgressBackupPath, topicCount);
