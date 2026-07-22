@@ -1275,8 +1275,3 @@ void Application::importProgress() {
         " dosya içe aktarıldı. Değişikliklerin etkili olması için uygulamayı yeniden başlatın.");
 }
 
-void Application::showNotYetAvailable(const std::string& featureName) {
-    ui_.printLine("");
-    ui_.printLine(
-        "\"" + featureName + "\" bu sürümde henüz eklenmedi. Sonraki aşamada gelecek.");
-}
