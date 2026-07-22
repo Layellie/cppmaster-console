@@ -24,6 +24,7 @@
 #include "generators/ArithmeticOperatorPredictGenerator.h"
 #include "generators/BoolOutputPredictGenerator.h"
 #include "generators/IntArithmeticPredictGenerator.h"
+#include "generators/ModOperatorPredictGenerator.h"
 
 class Application {
 public:
@@ -74,6 +75,7 @@ private:
     IntArithmeticPredictGenerator intArithmeticGenerator_;
     BoolOutputPredictGenerator boolOutputGenerator_;
     ArithmeticOperatorPredictGenerator arithmeticOperatorGenerator_;
+    ModOperatorPredictGenerator modOperatorGenerator_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;
