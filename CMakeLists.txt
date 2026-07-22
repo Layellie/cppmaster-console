@@ -110,6 +110,8 @@ add_library(CppMasterConsoleLib STATIC
     src/generators/WhileLoopCountPredictGenerator.cpp
     src/generators/ArrayElementPredictGenerator.h
     src/generators/ArrayElementPredictGenerator.cpp
+    src/generators/VectorPushBackPredictGenerator.h
+    src/generators/VectorPushBackPredictGenerator.cpp
 )
 
 target_include_directories(CppMasterConsoleLib PUBLIC src)
@@ -153,6 +155,7 @@ add_executable(CppMasterConsoleTests
     tests/Generators/ForLoopSumPredictGeneratorTests.cpp
     tests/Generators/WhileLoopCountPredictGeneratorTests.cpp
     tests/Generators/ArrayElementPredictGeneratorTests.cpp
+    tests/Generators/VectorPushBackPredictGeneratorTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
