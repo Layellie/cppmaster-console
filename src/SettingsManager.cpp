@@ -54,6 +54,9 @@ SettingsLoadResult SettingsManager::load(
     bool lenientWriteCode = settings.lenientWriteCodeTolerance;
     bool fullExplanation = settings.fullExplanationDetail;
     int dailyCap = settings.dailyReviewQuestionCap;
+    bool colorEnabled = settings.colorEnabled;
+    bool audioAlert = settings.audioAlertEnabled;
+    int quickTestCount = settings.quickTestQuestionCount;
     bool corrupted = false;
 
     std::string line;
@@ -92,6 +95,21 @@ SettingsLoadResult SettingsManager::load(
                 corrupted = true;
                 break;
             }
+        } else if (recordType == "color_enabled") {
+            if (!tryParseBool(valueText, colorEnabled)) {
+                corrupted = true;
+                break;
+            }
+        } else if (recordType == "audio_alert") {
+            if (!tryParseBool(valueText, audioAlert)) {
+                corrupted = true;
+                break;
+            }
+        } else if (recordType == "quick_test_count") {
+            if (!tryParseInt(valueText, quickTestCount)) {
+                corrupted = true;
+                break;
+            }
         } else {
             corrupted = true;
             break;
@@ -110,6 +128,9 @@ SettingsLoadResult SettingsManager::load(
     settings.lenientWriteCodeTolerance = lenientWriteCode;
     settings.fullExplanationDetail = fullExplanation;
     settings.dailyReviewQuestionCap = dailyCap;
+    settings.colorEnabled = colorEnabled;
+    settings.audioAlertEnabled = audioAlert;
+    settings.quickTestQuestionCount = quickTestCount;
     return SettingsLoadResult{settings, false};
 }
 
@@ -123,4 +144,7 @@ void SettingsManager::save(const Settings& settings, const std::string& filePath
     file << "lenient_writecode " << (settings.lenientWriteCodeTolerance ? 1 : 0) << '\n';
     file << "full_explanation " << (settings.fullExplanationDetail ? 1 : 0) << '\n';
     file << "daily_cap " << settings.dailyReviewQuestionCap << '\n';
+    file << "color_enabled " << (settings.colorEnabled ? 1 : 0) << '\n';
+    file << "audio_alert " << (settings.audioAlertEnabled ? 1 : 0) << '\n';
+    file << "quick_test_count " << settings.quickTestQuestionCount << '\n';
 }
