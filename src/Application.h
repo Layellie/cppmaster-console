@@ -30,6 +30,7 @@
 #include "generators/IfElsePredictGenerator.h"
 #include "generators/InheritanceOverridePredictGenerator.h"
 #include "generators/IntArithmeticPredictGenerator.h"
+#include "generators/MapLookupPredictGenerator.h"
 #include "generators/ModOperatorPredictGenerator.h"
 #include "generators/PointerDereferencePredictGenerator.h"
 #include "generators/StringConcatPredictGenerator.h"
@@ -96,6 +97,7 @@ private:
     PointerDereferencePredictGenerator pointerDereferenceGenerator_;
     ClassMemberPredictGenerator classMemberGenerator_;
     InheritanceOverridePredictGenerator inheritanceOverrideGenerator_;
+    MapLookupPredictGenerator mapLookupGenerator_;
     GeneratorRegistry generatorRegistry_;
     GeneratorScoring generatorScoring_;
     GeneratedQuestionValidator generatedQuestionValidator_;
