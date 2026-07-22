@@ -1703,4 +1703,733 @@ void appendSection10Questions(std::vector<Question>& questions) {
         .explanation = "Dosya açılıp kontrol edildikten sonra yazılır.",
         .baseXp = 40,
     });
+
+    // Topic 98: Dosyadan okuma
+    questions.push_back(Question{
+        .id = 2596, .topicId = 98,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::ifstream ne için kullanılır?",
+        .options = {"Bir dosyayı silmek", "Bir dosyaya yazmak", "Bir dosyanın adını değiştirmek", "Bir dosyadan okumak"},
+        .acceptedAnswers = {"d"},
+        .explanation = "std::ifstream dosyadan okumak için kullanılır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2597, .topicId = 98,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::getline(dosya, satir) ne yapar?",
+        .options = {"Dosyadan TAM BİR SATIRI (boşluklar dahil) satir'e okur", "Dosyadan sadece bir karakter okur", "Dosyanın tamamını siler", "Dosyaya bir satır yazar"},
+        .acceptedAnswers = {"a"},
+        .explanation = "std::getline tam bir satırı okur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2598, .topicId = 98,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "dosya >> degisken ifadesi ne okur?",
+        .options = {"Dosyanın tamamını", "Sadece bir sonraki BOŞLUKLA AYRILMIŞ TOKEN'ı", "Tam bir satırı (boşluklar dahil)", "Dosyanın son satırını"},
+        .acceptedAnswers = {"b"},
+        .explanation = ">> operatörü boşlukla ayrılmış bir token okur.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2599, .topicId = 98,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Dosyanın SONUNA (EOF) ulaşıldıktan sonra okumaya devam etmeye çalışmak ne yapar?",
+        .options = {"Program çöker", "Bir istisna (exception) fırlatılır", "Akış BAŞARISIZ (fail) duruma girer (istisna fırlatmadan)", "Otomatik olarak dosyanın başına döner"},
+        .acceptedAnswers = {"c"},
+        .explanation = "EOF sonrası okuma akışı fail durumuna sokar, istisna fırlatmaz.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2600, .topicId = 98,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::ifstream'in başarıyla açılıp açılmadığını kontrol etmek için ne kullanılır?",
+        .options = {".size()", ".length()", ".exists()", ".is_open()"},
+        .acceptedAnswers = {"d"},
+        .explanation = ".is_open() ile kontrol edilir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2601, .topicId = 98,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::ifstream, hangi başlığı gerektirir?",
+        .options = {"<fstream>", "<iostream>", "<sstream>", "<memory>"},
+        .acceptedAnswers = {"a"},
+        .explanation = "std::ifstream <fstream> başlığında tanımlıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2602, .topicId = 98,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "Var olmayan bir dosya için std::ifstream dosya(\"olmayan.txt\");\nBu kod derlenir mi ve is_open() ne döner?",
+        .options = {"Derleme hatası oluşur", "Derlenir; is_open() false döner", "Derlenir; is_open() true döner", "Derlenir ama çalışma zamanında çöker"},
+        .acceptedAnswers = {"b"},
+        .explanation = "Var olmayan bir dosya açma başarısız olur; is_open() false döner, çökme/istisna olmaz.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2603, .topicId = 98,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::ifstream dosya(\"veri.txt\");\nstd::string satir1, satir2;\nstd::getline(dosya, satir1);\nstd::getline(dosya, satir2);\nBu kod, dosyanın kaç SATIRINI okur (dosyada en az 2 satır olduğu varsayılarak)?",
+        .options = {"Sadece 1 satır", "Dosyanın tamamını tek seferde", "İki AYRI satırı sırayla", "Derleme hatası"},
+        .acceptedAnswers = {"c"},
+        .explanation = "Her getline çağrısı bir sonraki satırı okur.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2604, .topicId = 98,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::ifstream, bir dosyadan okumak için kullanılır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2605, .topicId = 98,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::getline, sadece boşlukla ayrılmış tek bir kelime okur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: getline tam bir satırı okur.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2606, .topicId = 98,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Dosyanın sonuna ulaşıldıktan sonra okumaya devam etmek bir istisna fırlatır.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: istisna fırlatmaz, akışı fail durumuna sokar.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2607, .topicId = 98,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::ifstream'in başarıyla açılıp açılmadığı .is_open() ile kontrol edilebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2608, .topicId = 98,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "dosya >> degisken, tam bir satırı (boşluklar dahil) okur.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: >> sadece bir token okur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2609, .topicId = 98,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Var olmayan bir dosya için std::ifstream açmak derleme hatası vermez, sadece is_open() false döner.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2610, .topicId = 98,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir dosyadan okumak için kullanılan sınıf std::_____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"ifstream"},
+        .explanation = "std::ifstream kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2611, .topicId = 98,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "Tam bir satırı okuyan fonksiyon std::_____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"getline"},
+        .explanation = "std::getline kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2612, .topicId = 98,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "std::ifstream, hangi başlığı gerektirir (İngilizce kelime)?",
+        .acceptedAnswers = {"fstream"},
+        .explanation = "<fstream> başlığı gerekir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2613, .topicId = 98,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Dosyanın sonuna ulaşıldıktan sonra okuma, akışı _____ (Türkçe kelime, 'başarısız' anlamında) duruma sokar.",
+        .acceptedAnswers = {"başarısız"},
+        .explanation = "Akış başarısız (fail) durumuna girer.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2614, .topicId = 98,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "dosya >> degisken, sadece boşlukla ayrılmış bir _____ okur (İngilizce kelime).",
+        .acceptedAnswers = {"token"},
+        .explanation = "Bir token okunur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2615, .topicId = 98,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Bir dosyanın başarıyla açılıp açılmadığını kontrol eden üye fonksiyon _____ dir (İngilizce, kelimeler birleşik, alt çizgili).",
+        .acceptedAnswers = {"is_open"},
+        .explanation = "is_open() kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2616, .topicId = 98,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\nstd::string satir;\nstd::getline(dosya, satir);\ndosya adlı bir std::ifstream'i \"veri.txt\" dosyasıyla açan satırı yazın.",
+        .acceptedAnswers = {"std::ifstream dosya(\"veri.txt\");"},
+        .explanation = "std::ifstream ile dosya açılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2617, .topicId = 98,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::ifstream dosya(\"veri.txt\");\nstd::string satir;\n_____\ndosyadan tam bir satırı satir'e okuyan satırı yazın.",
+        .acceptedAnswers = {"std::getline(dosya, satir);"},
+        .explanation = "std::getline ile satır okunur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2618, .topicId = 98,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::ofstream yazici(\"gecici.txt\");\nyazici << \"Merhaba\";\nyazici.close();\nstd::ifstream okuyucu(\"gecici.txt\");\nstd::string satir;\nstd::getline(okuyucu, satir);\nstd::cout << satir;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"Merhaba"},
+        .explanation = "Yazılan içerik geri okunur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2619, .topicId = 98,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::ofstream yazici(\"gecici2.txt\");\nyazici << \"Bir\\nIki\";\nyazici.close();\nstd::ifstream okuyucu(\"gecici2.txt\");\nstd::string s1, s2;\nstd::getline(okuyucu, s1);\nstd::getline(okuyucu, s2);\nstd::cout << s1 << \" \" << s2;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"Bir Iki"},
+        .explanation = "İki ayrı satır sırayla okunur: Bir, Iki.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2620, .topicId = 98,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::ifstream dosya(\"veri.txt\");\nstd::string satir;\ngetline(dosya, satir);\n\nBu kod derlenmez çünkü getline, std:: öneki olmadan çağrılamaz. Hatalı satırı düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::getline(dosya, satir);"},
+        .explanation = "std::getline öneki gereklidir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2621, .topicId = 98,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::ifstream dosya(\"veri.txt\");\ndosya << \"yeni veri\";\n\nBu kod derlenmez çünkü std::ifstream sadece OKUMA yapabilir; << operatörü (yazma) bir std::ofstream ya da std::fstream gerektirir. Hatalı satırı, dosyadan okuyacak şekilde düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::string satir; std::getline(dosya, satir);"},
+        .explanation = "ifstream sadece okuma yapabilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2622, .topicId = 98,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::ifstream dosya(\"veri.txt\")\nstd::string satir;\nstd::getline(dosya, satir);\n\nProgramcı dosya tanımının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"std::ifstream dosya(\"veri.txt\");"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2623, .topicId = 98,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir dosyadan okuyup yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << satir;\n    return 0;\n}", "std::ifstream dosya(\"veri.txt\");\n    std::string satir;\n    std::getline(dosya, satir);", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), tanım+okuma (2), yazdır+kapanış (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2624, .topicId = 98,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir dosyadan okuyan bir program yazın: dosyayı is_open() ile kontrol edin, bir satırı getline ile okuyun ve ekrana yazdırın.",
+        .acceptedAnswers = {"ifstream", "getline"},
+        .explanation = "Dosya kontrol edilip okunmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 99: try-catch
+    questions.push_back(Question{
+        .id = 2625, .topicId = 99,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "throw ifadesi ne yapar?",
+        .options = {"Bir istisna (exception) fırlatır", "Bir döngüyü sonlandırır", "Bir dosyayı kapatır", "Bir değişkeni siler"},
+        .acceptedAnswers = {"a"},
+        .explanation = "throw bir istisna fırlatır.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2626, .topicId = 99,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "try {\n    throw std::runtime_error(\"hata\");\n} catch (const std::exception& e) {\n    std::cout << e.what();\n}\nEkran çıktısı nedir?",
+        .options = {"throw", "hata", "Derleme hatası", "Program çöker"},
+        .acceptedAnswers = {"b"},
+        .explanation = "e.what() \"hata\" mesajını döndürür.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2627, .topicId = 99,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "İstisnaları neden REFERANS (const&) ile yakalamak tercih edilir?",
+        .options = {"Daha az bellek kullanır", "Daha hızlı çalışır", "OBJECT SLICING'i önler", "Zorunludur, değer ile yakalamak derleme hatasıdır"},
+        .acceptedAnswers = {"c"},
+        .explanation = "Referans ile yakalamak slicing'i önler.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2628, .topicId = 99,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "try {\n    // hata olusturmayan kod\n} catch (...) {\n    std::cout << \"hata\";\n}\nstd::cout << \"devam\";\nHiçbir istisna fırlatılmazsa çıktı nedir?",
+        .options = {"hata", "hatadevam", "Derleme hatası", "devam"},
+        .acceptedAnswers = {"d"},
+        .explanation = "İstisna fırlatılmadığından catch bloğu çalışmaz, sadece \"devam\" yazdırılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2629, .topicId = 99,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "Birden fazla catch bloğu (aralarında taban/türetilmiş sınıf ilişkisi olmadığında), hangi sırayla denenir?",
+        .options = {"YAZILDIKLARI sırayla, ilk eşleşen çalışır", "En spesifikten en genele doğru, yazım sırasından bağımsız", "Rastgele", "Sadece SON catch bloğu denenir"},
+        .acceptedAnswers = {"a"},
+        .explanation = "catch blokları yazıldıkları sırayla denenir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2630, .topicId = 99,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "catch(...) bloğu ne yakalar?",
+        .options = {"Sadece std::exception türevlerini", "HER TÜRLÜ istisnayı", "Sadece int türündeki istisnaları", "Hiçbir şeyi, sözdizimi hatasıdır"},
+        .acceptedAnswers = {"b"},
+        .explanation = "catch(...) her türlü istisnayı yakalar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2631, .topicId = 99,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "Yakalanmayan (uncaught) bir istisna ne olur?",
+        .options = {"Sessizce yok sayılır", "Otomatik olarak main()'e dönüştürülür", "Çağrı yığınında yukarı doğru yayılır (main'e kadar ulaşırsa program sonlanır)", "Bir uyarı (warning) olarak loglanır ama program devam eder"},
+        .acceptedAnswers = {"c"},
+        .explanation = "Yakalanmayan istisna çağrı yığınında yukarı yayılır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2632, .topicId = 99,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "try {\n    throw 5;\n} catch (const std::string& e) {\n    std::cout << \"string yakalandi\";\n} catch (int e) {\n    std::cout << \"int yakalandi: \" << e;\n}\nEkran çıktısı nedir?",
+        .options = {"string yakalandi", "Derleme hatası", "Program çöker (yakalanmayan istisna)", "int yakalandi: 5"},
+        .acceptedAnswers = {"d"},
+        .explanation = "throw 5 bir int'tir; ilk catch (std::string) eşleşmez, ikinci catch (int) eşleşir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2633, .topicId = 99,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "throw, bir istisna fırlatır.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2634, .topicId = 99,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "catch(...) bloğu sadece std::exception türevi istisnaları yakalar.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: catch(...) her türlü istisnayı yakalar.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2635, .topicId = 99,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "İstisnaları değer olarak (referans olmadan) yakalamak object slicing'e yol açabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2636, .topicId = 99,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "Birden fazla catch bloğu varsa, yazıldıkları sırayla denenir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2637, .topicId = 99,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Genel bir catch(...) bloğu, daha spesifik bir catch bloğundan ÖNCE yazılırsa, bu bir DERLEME HATASIDIR.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru: sonraki bloğu ulaşılamaz (unreachable) kıldığından derleyici bunu hata olarak bildirir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2638, .topicId = 99,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "Yakalanmayan bir istisna, sessizce yok sayılır ve program normal devam eder.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: çağrı yığınında yukarı yayılır, main'e ulaşırsa program sonlanır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2639, .topicId = 99,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Bir istisna fırlatmak için kullanılan anahtar kelime _____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"throw"},
+        .explanation = "throw kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2640, .topicId = 99,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "İstisnayı yakalamak için kullanılan blok _____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"catch"},
+        .explanation = "catch kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2641, .topicId = 99,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "İstisna nesnesinin açıklama mesajını döndüren üye fonksiyon _____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"what"},
+        .explanation = "what() kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2642, .topicId = 99,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "İstisnaları slicing'den korumak için (const&) ile _____ edilmelidir (Türkçe kelime, 'yakalanmalı' anlamında).",
+        .acceptedAnswers = {"yakalanmalı"},
+        .explanation = "Referans ile yakalanmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2643, .topicId = 99,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Her türlü istisnayı yakalayan catch bloğu catch(_____) şeklinde yazılır (üç nokta).",
+        .acceptedAnswers = {"..."},
+        .explanation = "catch(...) her türlü istisnayı yakalar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2644, .topicId = 99,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "Yakalanmayan bir istisna, çağrı yığınında _____ doğru yayılır (Türkçe kelime).",
+        .acceptedAnswers = {"yukarı"},
+        .explanation = "Çağrı yığınında yukarı doğru yayılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2645, .topicId = 99,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "try {\n_____\n} catch (const std::exception& e) {\n    std::cout << \"yakalandi: \" << e.what();\n}\ntry bloğu içinde \"sorun\" mesajıyla bir std::runtime_error fırlatan satırı yazın.",
+        .acceptedAnswers = {"throw std::runtime_error(\"sorun\");"},
+        .explanation = "throw ile istisna fırlatılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2646, .topicId = 99,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "try {\n    throw std::runtime_error(\"hata\");\n} _____ {\n    std::cout << e.what();\n}\nistisnayı const std::exception& olarak yakalayan catch satırını yazın.",
+        .acceptedAnswers = {"catch (const std::exception& e)"},
+        .explanation = "İstisna referans ile yakalanır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2647, .topicId = 99,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "try {\n    throw std::runtime_error(\"tamam\");\n} catch (const std::exception& e) {\n    std::cout << e.what();\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"tamam"},
+        .explanation = "e.what() \"tamam\" mesajını döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2648, .topicId = 99,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "try {\n    throw 3.14;\n} catch (int e) {\n    std::cout << \"int\";\n} catch (double e) {\n    std::cout << \"double: \" << e;\n}\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"double: 3.14"},
+        .explanation = "throw 3.14 bir double'dır; ilk catch (int) eşleşmez, ikinci catch (double) eşleşir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2649, .topicId = 99,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\ntry {\n    throw std::runtime_error(\"sorun\");\n} catch (std::exception e) {\n    std::cout << e.what();\n}\n\nBu kod TEKNİK OLARAK derlenir ama YANLIŞTIR çünkü istisna DEĞER olarak (referans olmadan) yakalanıyor; bu OBJECT SLICING riski taşır. Hatalı catch satırını, referans kullanarak düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"catch (const std::exception& e) {"},
+        .explanation = "Referans ile yakalamak slicing'i önler.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2650, .topicId = 99,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\ntry {\n    throw std::runtime_error(\"ozel hata\");\n} catch (...) {\n    std::cout << \"genel\";\n} catch (const std::exception& e) {\n    std::cout << \"ozel: \" << e.what();\n}\n\nBu kod derlenmez çünkü genel catch(...) bloğu, daha SPESIFIK bir catch'ten ÖNCE yazılamaz (derleyici bunu ulaşılamaz kod olarak algılayıp hata verir); catch(...) bloğu HER ZAMAN EN SONA yazılmalıdır. Hatalı sırayı, catch(...) bloğunu en sona alarak düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"catch (const std::exception& e) { std::cout << \"ozel: \" << e.what(); } catch (...) { std::cout << \"genel\"; }"},
+        .explanation = "catch(...) her zaman en sona yazılmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2651, .topicId = 99,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\ntry {\n    throw std::runtime_error(\"hata\")\n} catch (const std::exception& e) {\n    std::cout << e.what();\n}\n\nProgramcı throw satırının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"throw std::runtime_error(\"hata\");"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2652, .topicId = 99,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir istisna fırlatıp yakalayan geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"} catch (const std::exception& e) {\n        std::cout << e.what();\n    }\n    return 0;\n}", "try {\n        throw std::runtime_error(\"deneme\");", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), try+throw (2), catch+kapanış (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2653, .topicId = 99,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir try/catch bloğu yazın: try içinde bir std::runtime_error fırlatın, catch (const std::exception&) ile yakalayıp e.what()'i ekrana yazdırın.",
+        .acceptedAnswers = {"try", "catch", "what"},
+        .explanation = "İstisna referans ile yakalanmalıdır.",
+        .baseXp = 40,
+    });
+
+    // Topic 100: unique_ptr
+    questions.push_back(Question{
+        .id = 2654, .topicId = 100,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::unique_ptr<T>'nin temel özelliği nedir?",
+        .options = {"Birden fazla pointer aynı nesneyi paylaşabilir", "Otomatik olarak kopyalanabilir", "Bellek yönetimini elle yapmayı gerektirir", "Dinamik bir nesneyi TEK BAŞINA (exclusive) sahiplenir"},
+        .acceptedAnswers = {"d"},
+        .explanation = "unique_ptr, tek başına (exclusive) sahiplik sağlar.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2655, .topicId = 100,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::unique_ptr<int> p = std::make_unique<int>(10);\nstd::cout << *p;\nEkran çıktısı nedir?",
+        .options = {"10", "0", "Bir adres", "Derleme hatası"},
+        .acceptedAnswers = {"a"},
+        .explanation = "*p, sahip olunan değere (10) erişir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2656, .topicId = 100,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Easy,
+        .prompt = "std::unique_ptr<int> p1 = std::make_unique<int>(5);\nstd::unique_ptr<int> p2 = p1;\nBu kod derlenir mi?",
+        .options = {"Evet, p2 p1'in bir kopyasını alır", "Hayır, unique_ptr kopyalanamaz (kopya oluşturucusu silinmiştir), derleme hatası oluşur", "Evet ama p1 boş kalır", "Evet, ikisi de aynı nesneyi paylaşır"},
+        .acceptedAnswers = {"b"},
+        .explanation = "unique_ptr kopyalanamaz.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2657, .topicId = 100,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::unique_ptr<int> p1 = std::make_unique<int>(5);\nstd::unique_ptr<int> p2 = std::move(p1);\nstd::cout << (p1 == nullptr);\nEkran çıktısı nedir?",
+        .options = {"0", "5", "1", "Derleme hatası"},
+        .acceptedAnswers = {"c"},
+        .explanation = "std::move sonrası p1 nullptr olur; p1 == nullptr true (1).",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2658, .topicId = 100,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::unique_ptr, kapsam dışına çıktığında ne olur?",
+        .options = {"Hiçbir şey, elle delete çağrılmalıdır", "Bellek sızıntısı (memory leak) oluşur", "Program çöker", "Sahip olduğu nesne OTOMATİK OLARAK silinir (RAII)"},
+        .acceptedAnswers = {"d"},
+        .explanation = "unique_ptr RAII ile otomatik temizlik yapar.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2659, .topicId = 100,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Medium,
+        .prompt = "std::unique_ptr, hangi başlığı gerektirir?",
+        .options = {"<memory>", "<fstream>", "<numeric>", "<algorithm>"},
+        .acceptedAnswers = {"a"},
+        .explanation = "std::unique_ptr <memory> başlığında tanımlıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2660, .topicId = 100,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::unique_ptr<int> p1 = std::make_unique<int>(7);\nint* ham = p1.get();\nstd::cout << *ham;\nBu kod derlenir mi ve çıktısı nedir?",
+        .options = {"Hayır, derleme hatası", "Evet, çıktı 7'dir", "Evet, çıktı bir adres olur", "Evet ama çalışma zamanı hatası verir"},
+        .acceptedAnswers = {"b"},
+        .explanation = ".get(), sahipliği devretmeden ham pointer'ı döndürür; *ham aynı nesneye (7) erişir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2661, .topicId = 100,
+        .type = QuestionType::MultipleChoice, .difficulty = Difficulty::Hard,
+        .prompt = "std::unique_ptr<int> yarat() {\n    return std::make_unique<int>(99);\n}\nint main() {\n    std::unique_ptr<int> p = yarat();\n    std::cout << *p;\n    return 0;\n}\nBu kod derlenir mi ve çıktısı nedir?",
+        .options = {"Hayır, unique_ptr fonksiyondan döndürülemez", "Evet ama çalışma zamanı hatası verir", "Evet, derlenir; çıktı 99'dur", "Derleme hatası, kopya oluşturucusu silinmiştir"},
+        .acceptedAnswers = {"c"},
+        .explanation = "unique_ptr, taşıma semantiği sayesinde bir fonksiyondan değer olarak döndürülebilir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2662, .topicId = 100,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::unique_ptr, dinamik bir nesneyi tek başına (exclusive) sahiplenir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2663, .topicId = 100,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::VeryEasy,
+        .prompt = "std::unique_ptr kopyalanabilir.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: unique_ptr kopyalanamaz.",
+        .baseXp = 5,
+    });
+    questions.push_back(Question{
+        .id = 2664, .topicId = 100,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::unique_ptr, std::move ile taşınabilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2665, .topicId = 100,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Easy,
+        .prompt = "std::unique_ptr, kapsam dışına çıktığında sahip olduğu nesneyi otomatik olarak siler.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2666, .topicId = 100,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = ".get(), unique_ptr'ın sahipliğini ham pointer'a DEVREDER.",
+        .acceptedAnswers = {"2"},
+        .explanation = "Yanlış: .get() sahipliği devretmez, sadece ham pointer'ı döndürür.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2667, .topicId = 100,
+        .type = QuestionType::TrueFalse, .difficulty = Difficulty::Medium,
+        .prompt = "std::unique_ptr, bir fonksiyondan değer olarak (by value) döndürülebilir.",
+        .acceptedAnswers = {"1"},
+        .explanation = "Doğru.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2668, .topicId = 100,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::VeryEasy,
+        .prompt = "Dinamik bir nesneyi tek başına sahiplenen akıllı işaretçi std::_____ dir (İngilizce iki kelime, alt çizgiyle).",
+        .acceptedAnswers = {"unique_ptr"},
+        .explanation = "std::unique_ptr kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2669, .topicId = 100,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "unique_ptr oluşturmanın önerilen yolu std::_____ fonksiyonudur (İngilizce iki kelime, alt çizgiyle).",
+        .acceptedAnswers = {"make_unique"},
+        .explanation = "std::make_unique kullanılır.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2670, .topicId = 100,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Easy,
+        .prompt = "unique_ptr, hangi başlığı gerektirir (İngilizce kelime)?",
+        .acceptedAnswers = {"memory"},
+        .explanation = "<memory> başlığı gerekir.",
+        .baseXp = 10,
+    });
+    questions.push_back(Question{
+        .id = 2671, .topicId = 100,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "unique_ptr'ın sahipliğini bir başka unique_ptr'a aktarmak için std::_____ kullanılır (İngilizce kelime).",
+        .acceptedAnswers = {"move"},
+        .explanation = "std::move kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2672, .topicId = 100,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "unique_ptr'ın sahip olduğu ham pointer'ı, sahipliği devretmeden döndüren üye fonksiyon _____ dir (İngilizce kelime).",
+        .acceptedAnswers = {"get"},
+        .explanation = "get() kullanılır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2673, .topicId = 100,
+        .type = QuestionType::FillBlank, .difficulty = Difficulty::Medium,
+        .prompt = "unique_ptr'ın kapsam dışına çıktığında sahip olduğu nesneyi otomatik silmesi prensibine _____ denir (İngilizce kısaltma, üç harf).",
+        .acceptedAnswers = {"RAII"},
+        .explanation = "Bu prensibe RAII denir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2674, .topicId = 100,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "_____\nstd::cout << *p;\np adlı bir unique_ptr<int>'i 15 değeriyle oluşturan satırı yazın.",
+        .acceptedAnswers = {"std::unique_ptr<int> p = std::make_unique<int>(15);"},
+        .explanation = "std::make_unique ile oluşturulur.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2675, .topicId = 100,
+        .type = QuestionType::CompleteLine, .difficulty = Difficulty::Medium,
+        .prompt = "std::unique_ptr<int> p1 = std::make_unique<int>(20);\n_____\nstd::cout << *p2;\nsahipliği p1'den p2'ye taşıyan satırı yazın.",
+        .acceptedAnswers = {"std::unique_ptr<int> p2 = std::move(p1);"},
+        .explanation = "std::move ile sahiplik taşınır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2676, .topicId = 100,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Medium,
+        .prompt = "std::unique_ptr<int> p = std::make_unique<int>(33);\nstd::cout << *p;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"33"},
+        .explanation = "*p, sahip olunan değere (33) erişir.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2677, .topicId = 100,
+        .type = QuestionType::PredictOutput, .difficulty = Difficulty::Hard,
+        .prompt = "std::unique_ptr<int> p1 = std::make_unique<int>(8);\nstd::unique_ptr<int> p2 = std::move(p1);\n*p2 = 100;\nstd::cout << (p1 == nullptr) << \" \" << *p2;\nYukarıdaki kodun ekran çıktısı nedir?",
+        .acceptedAnswers = {"1 100"},
+        .explanation = "p1 taşındıktan sonra nullptr olur (1); p2 üzerinden değer 100 olarak değiştirilmiştir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2678, .topicId = 100,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nstd::unique_ptr<int> p1 = std::make_unique<int>(5);\nstd::unique_ptr<int> p2 = p1;\n\nBu kod derlenmez çünkü unique_ptr KOPYALANAMAZ (kopya oluşturucusu silinmiştir). Hatalı satırı, std::move kullanarak düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"std::unique_ptr<int> p2 = std::move(p1);"},
+        .explanation = "std::move ile taşıma yapılmalıdır.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2679, .topicId = 100,
+        .type = QuestionType::FindError, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodda bir hata var:\n\nvoid fonksiyon(std::unique_ptr<int> p) { std::cout << *p; }\nint main() {\n    std::unique_ptr<int> p1 = std::make_unique<int>(9);\n    fonksiyon(p1);\n    return 0;\n}\n\nBu kod derlenmez çünkü fonksiyon, unique_ptr'ı DEĞER olarak alıyor ve p1'i fonksiyona geçirmek bir KOPYALAMA gerektiriyor (unique_ptr kopyalanamaz). Hatalı çağrı satırını, std::move kullanarak düzeltilmiş haliyle yazın.",
+        .acceptedAnswers = {"fonksiyon(std::move(p1));"},
+        .explanation = "std::move ile fonksiyona taşınmalıdır.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2680, .topicId = 100,
+        .type = QuestionType::FixCode, .difficulty = Difficulty::Hard,
+        .prompt = "Aşağıdaki kodu düzeltin:\n\nstd::unique_ptr<int> p = std::make_unique<int>(5)\nstd::cout << *p;\n\nProgramcı p tanımının sonuna noktalı virgül koymayı unutmuş. Düzeltilmiş satırı yazın.",
+        .acceptedAnswers = {"std::unique_ptr<int> p = std::make_unique<int>(5);"},
+        .explanation = "Her ifade noktalı virgülle bitmelidir.",
+        .baseXp = 30,
+    });
+    questions.push_back(Question{
+        .id = 2681, .topicId = 100,
+        .type = QuestionType::OrderCode, .difficulty = Difficulty::Medium,
+        .prompt = "Aşağıdaki satırları, bir unique_ptr oluşturup değerini yazdıran geçerli bir program oluşturacak şekilde sıralayın (numaraları boşlukla ayırarak yazın):",
+        .options = {"std::cout << *p;\n    return 0;\n}", "std::unique_ptr<int> p = std::make_unique<int>(42);", "int main() {"},
+        .acceptedAnswers = {"3 2 1"},
+        .explanation = "main açılışı (3), tanım (2), yazdır+kapanış (1): sıra 3 2 1.",
+        .baseXp = 20,
+    });
+    questions.push_back(Question{
+        .id = 2682, .topicId = 100,
+        .type = QuestionType::WriteCode, .difficulty = Difficulty::Hard,
+        .prompt = "Bir unique_ptr<int> oluşturun (std::make_unique ile); değerini yazdırın, sonra std::move ile başka bir unique_ptr'a taşıyın ve yeni pointer'ın değerini de yazdırın.",
+        .acceptedAnswers = {"unique_ptr", "make_unique", "move"},
+        .explanation = "unique_ptr, std::move ile taşınarak kullanılır.",
+        .baseXp = 40,
+    });
 }
