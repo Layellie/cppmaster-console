@@ -7,6 +7,9 @@
 #include "AchievementTracker.h"
 #include "CodeExerciseManager.h"
 #include "ConsoleUI.h"
+#include "GeneratedQuestionValidator.h"
+#include "GeneratorRegistry.h"
+#include "GeneratorScoring.h"
 #include "HintProvider.h"
 #include "LessonManager.h"
 #include "LevelSystem.h"
@@ -69,6 +72,9 @@ private:
     QuestionGenerationEngine generationEngine_;
     IntArithmeticPredictGenerator intArithmeticGenerator_;
     BoolOutputPredictGenerator boolOutputGenerator_;
+    GeneratorRegistry generatorRegistry_;
+    GeneratorScoring generatorScoring_;
+    GeneratedQuestionValidator generatedQuestionValidator_;
     Settings settings_;
     SettingsManager settingsManager_;
     std::mt19937_64 randomEngine_;
