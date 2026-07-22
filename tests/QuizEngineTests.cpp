@@ -186,3 +186,72 @@ TEST_CASE(QuizEngine_ScenarioAndMatchingWereSilentlyAlwaysWrongBefore) {
     matching.options = {"int"};
     CHECK(engine.evaluate(matching, "1-a").correct);
 }
+
+TEST_CASE(QuizEngine_MultipleChoice_AcceptsOptionNumberAsWellAsLetter) {
+    QuizEngine engine;
+    Question question = makeQuestion(QuestionType::MultipleChoice, {"b"});
+    question.options = {"cin", "cout", "endl", "return"};
+
+    // The letter it was authored with.
+    CHECK(engine.evaluate(question, "b").correct);
+    CHECK(engine.evaluate(question, "B").correct);
+    // The option's position, which is what many learners type.
+    CHECK(engine.evaluate(question, "2").correct);
+    CHECK(engine.evaluate(question, " 2 ").correct);
+
+    // Still wrong when it is the wrong option, in either notation.
+    CHECK(!engine.evaluate(question, "a").correct);
+    CHECK(!engine.evaluate(question, "1").correct);
+    CHECK(!engine.evaluate(question, "3").correct);
+    // Out of range digits must not be silently mapped onto some option.
+    CHECK(!engine.evaluate(question, "5").correct);
+    CHECK(!engine.evaluate(question, "0").correct);
+}
+
+TEST_CASE(QuizEngine_Scenario_AlsoAcceptsOptionNumber) {
+    QuizEngine engine;
+    Question question = makeQuestion(QuestionType::Scenario, {"c"});
+    question.options = {"vector", "dizi", "map", "set"};
+    CHECK(engine.evaluate(question, "c").correct);
+    CHECK(engine.evaluate(question, "3").correct);
+    CHECK(!engine.evaluate(question, "2").correct);
+}
+
+TEST_CASE(QuizEngine_TrueFalseDigitsKeepTheirOwnMeaning) {
+    // TrueFalse is authored with "1"/"2" as the answers themselves, so the
+    // option-number shortcut must not reinterpret them as letters.
+    QuizEngine engine;
+    const Question question = makeQuestion(QuestionType::TrueFalse, {"2"});
+    CHECK(engine.evaluate(question, "2").correct);
+    CHECK(!engine.evaluate(question, "1").correct);
+}
+
+TEST_CASE(QuizEngine_OrderCode_AcceptsDigitsWithOrWithoutSeparators) {
+    QuizEngine engine;
+    Question question = makeQuestion(QuestionType::OrderCode, {"3 2 1 4"});
+    question.options = {"a", "b", "c", "d"};
+
+    CHECK(engine.evaluate(question, "3 2 1 4").correct);
+    // The same order typed without separators, which reads identically
+    // while every step number is a single digit.
+    CHECK(engine.evaluate(question, "3214").correct);
+    CHECK(engine.evaluate(question, "3-2-1-4").correct);
+    CHECK(engine.evaluate(question, "3,2,1,4").correct);
+    CHECK(engine.evaluate(question, " 3 2 1 4 ").correct);
+
+    // A genuinely different order is still wrong.
+    CHECK(!engine.evaluate(question, "1234").correct);
+    CHECK(!engine.evaluate(question, "3241").correct);
+    CHECK(!engine.evaluate(question, "").correct);
+}
+
+TEST_CASE(QuizEngine_OrderCode_MultiDigitStepsStillNeedSeparators) {
+    // Guards the collapse rule above: once a step number is two digits,
+    // "1 12" and "11 2" are different answers that would both flatten to
+    // "112", so the loose comparison must not apply.
+    QuizEngine engine;
+    const Question question = makeQuestion(QuestionType::OrderCode, {"1 12 3"});
+
+    CHECK(engine.evaluate(question, "1 12 3").correct);
+    CHECK(!engine.evaluate(question, "11 2 3").correct);
+}

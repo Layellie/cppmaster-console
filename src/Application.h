@@ -37,6 +37,10 @@ private:
     void showTopicBrowser();
     void openTopic(int topicId);
     void showLessonContent(const Lesson& lesson);
+    // Picks the questions a single topic-quiz session asks. Kept separate
+    // from runTopicQuiz so the selection policy (sampling, mistake
+    // priority) is readable on its own.
+    [[nodiscard]] std::vector<Question> selectQuizQuestions(int topicId);
     void runTopicQuiz(int topicId);
     AnswerResult askOneQuestion(
         const Question& question, bool trackMistakes = true, bool allowHints = true);

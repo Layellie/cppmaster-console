@@ -149,6 +149,37 @@ bool matchesAnyAcceptedCaseInsensitive(const Question& question, const std::stri
     });
 }
 
+// Lettered questions are authored with "a".."d", but learners routinely
+// answer with the option's position instead ("2" for B) — the two notations
+// mean the same thing and the screen shows both a letter and an ordered
+// list. Digits outside the option range are left alone so they simply stay
+// wrong rather than being mapped onto some unrelated option.
+std::string letterForOptionNumber(const Question& question, const std::string& normalizedAnswer) {
+    if (normalizedAnswer.size() != 1) {
+        return normalizedAnswer;
+    }
+    const char character = normalizedAnswer.front();
+    if (character < '1' || character > '9') {
+        return normalizedAnswer;
+    }
+    const auto index = static_cast<std::size_t>(character - '1');
+    if (index >= question.options.size()) {
+        return normalizedAnswer;
+    }
+    return std::string(1, static_cast<char>('a' + static_cast<int>(index)));
+}
+
+// Used for MultipleChoice and Scenario only. TrueFalse deliberately keeps
+// the plain comparison: its accepted answers *are* "1" and "2", so treating
+// those digits as option numbers would change their meaning.
+bool matchesLetteredChoice(const Question& question, const std::string& rawAnswer) {
+    const std::string normalizedAnswer =
+        letterForOptionNumber(question, trimAndLower(rawAnswer));
+    return std::ranges::any_of(question.acceptedAnswers, [&](const std::string& accepted) {
+        return normalizedAnswer == trimAndLower(accepted);
+    });
+}
+
 bool matchesAnyAcceptedCaseSensitiveWhitespaceNormalized(
     const Question& question, const std::string& rawAnswer, bool strictCaseSensitivity) {
     std::string normalizedAnswer = collapseWhitespace(rawAnswer);
@@ -197,10 +228,51 @@ bool matchesMatching(const Question& question, const std::string& rawAnswer) {
     });
 }
 
+// True when a tokenised sequence is entirely single-digit steps, e.g.
+// "3 2 1 4". Only then can separators be dropped without ambiguity: with a
+// two-digit step, "1 12" and "11 2" would both flatten to "112".
+bool allStepsAreSingleDigit(const std::string& tokenized) {
+    std::size_t runLength = 0;
+    for (const char character : tokenized) {
+        if (character == ' ') {
+            runLength = 0;
+            continue;
+        }
+        ++runLength;
+        if (runLength > 1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+std::string withoutSeparators(const std::string& tokenized) {
+    std::string result;
+    result.reserve(tokenized.size());
+    for (const char character : tokenized) {
+        if (character != ' ') {
+            result.push_back(character);
+        }
+    }
+    return result;
+}
+
 bool matchesOrderCode(const Question& question, const std::string& rawAnswer) {
     const std::string normalizedAnswer = extractDigitSequence(rawAnswer);
+    if (normalizedAnswer.empty()) {
+        return false;
+    }
     return std::ranges::any_of(question.acceptedAnswers, [&](const std::string& accepted) {
-        return normalizedAnswer == extractDigitSequence(accepted);
+        const std::string normalizedAccepted = extractDigitSequence(accepted);
+        if (normalizedAnswer == normalizedAccepted) {
+            return true;
+        }
+        // "3214" should be accepted for "3 2 1 4" — the separators carry no
+        // meaning while every step is a single digit.
+        if (allStepsAreSingleDigit(normalizedAccepted)) {
+            return withoutSeparators(normalizedAnswer) == withoutSeparators(normalizedAccepted);
+        }
+        return false;
     });
 }
 
@@ -257,12 +329,14 @@ AnswerResult QuizEngine::evaluate(
     bool isCorrect = false;
 
     switch (question.type) {
-        case QuestionType::MultipleChoice:
-        case QuestionType::TrueFalse:
-        case QuestionType::FillBlank:
         // Scenario is a situational multiple-choice question: the prompt
         // sets up a real-world case, but the answer is still a letter.
+        case QuestionType::MultipleChoice:
         case QuestionType::Scenario:
+            isCorrect = matchesLetteredChoice(question, rawAnswer);
+            break;
+        case QuestionType::TrueFalse:
+        case QuestionType::FillBlank:
             isCorrect = matchesAnyAcceptedCaseInsensitive(question, rawAnswer);
             break;
         case QuestionType::Matching:

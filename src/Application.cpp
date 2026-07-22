@@ -34,6 +34,10 @@ constexpr const char* kGeneratedHistoryBackupPath = "data/generated_question_his
 constexpr const char* kGenerationLogFilePath = "data/question_generation.log";
 constexpr const char* kSettingsFilePath = "data/settings.txt";
 constexpr const char* kSettingsBackupPath = "data/settings_corrupted_backup.txt";
+// A topic quiz asks at most this many questions. Topics hold up to 31, and
+// asking all of them made every retake identical; a capped random sample
+// gives a different session each time and a more sensible sitting length.
+constexpr int kTopicQuizQuestionCount = 10;
 constexpr double kExamPassThreshold = 0.7;
 constexpr double kSectionCompletionGateThreshold = 0.7;
 
@@ -361,8 +365,30 @@ void Application::showLessonContent(const Lesson& lesson) {
     }
 }
 
+std::vector<Question> Application::selectQuizQuestions(int topicId) {
+    auto pool = questions_.questionsForTopic(topicId);
+    if (pool.size() <= static_cast<std::size_t>(kTopicQuizQuestionCount)) {
+        // Small topic: every question is asked anyway, but shuffling still
+        // means a retake doesn't replay in the identical order.
+        std::shuffle(pool.begin(), pool.end(), randomEngine_);
+        return pool;
+    }
+
+    // Larger topics used to ask all ~29 questions, so retaking one replayed
+    // exactly the same set. Draw a fresh random sample instead, but pull
+    // questions the learner has previously got wrong to the front first, so
+    // variety doesn't come at the cost of dropping the ones they most need
+    // to see again.
+    std::shuffle(pool.begin(), pool.end(), randomEngine_);
+    std::stable_partition(pool.begin(), pool.end(), [this](const Question& question) {
+        return mistakes_.hasMistake(question.id);
+    });
+    pool.resize(static_cast<std::size_t>(kTopicQuizQuestionCount));
+    return pool;
+}
+
 void Application::runTopicQuiz(int topicId) {
-    auto remaining = questions_.questionsForTopic(topicId);
+    auto remaining = selectQuizQuestions(topicId);
     std::stable_sort(remaining.begin(), remaining.end(), [](const Question& a, const Question& b) {
         return a.difficulty < b.difficulty;
     });
