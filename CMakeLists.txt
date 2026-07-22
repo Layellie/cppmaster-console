@@ -120,6 +120,8 @@ add_library(CppMasterConsoleLib STATIC
     src/generators/PointerDereferencePredictGenerator.cpp
     src/generators/ClassMemberPredictGenerator.h
     src/generators/ClassMemberPredictGenerator.cpp
+    src/generators/InheritanceOverridePredictGenerator.h
+    src/generators/InheritanceOverridePredictGenerator.cpp
 )
 
 target_include_directories(CppMasterConsoleLib PUBLIC src)
@@ -168,6 +170,7 @@ add_executable(CppMasterConsoleTests
     tests/Generators/FunctionReturnPredictGeneratorTests.cpp
     tests/Generators/PointerDereferencePredictGeneratorTests.cpp
     tests/Generators/ClassMemberPredictGeneratorTests.cpp
+    tests/Generators/InheritanceOverridePredictGeneratorTests.cpp
 )
 target_link_libraries(CppMasterConsoleTests PRIVATE CppMasterConsoleLib)
 target_include_directories(CppMasterConsoleTests PRIVATE tests)
