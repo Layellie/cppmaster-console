@@ -9,6 +9,13 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# Static CRT linking so CppMasterConsole.exe runs standalone on a machine
+# without the Visual C++ Redistributable installed (needed for the
+# download-and-run distribution path — see install.ps1).
+if (MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 function(apply_strict_warnings target)
     if (MSVC)
         target_compile_options(${target} PRIVATE /W4 /permissive-)
