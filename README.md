@@ -1,3 +1,5 @@
+![CppMaster Console — terminal-based C++ learning app with a 100-topic curriculum and 2,689 questions](docs/banner.png)
+
 # CppMaster Console
 
 [![CI](https://github.com/Layellie/cppmaster-console/actions/workflows/ci.yml/badge.svg)](https://github.com/Layellie/cppmaster-console/actions/workflows/ci.yml)
