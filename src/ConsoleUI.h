@@ -2,6 +2,16 @@
 
 #include <string>
 
+// Palette shared with the project banner, so the running app and the
+// README image look like the same product.
+enum class TextColor {
+    Green,   // menu numbers, prompts, correct answers
+    Red,     // wrong answers
+    Yellow,  // XP, achievements
+    Blue,    // level names
+    Dim,     // separators and secondary text
+};
+
 class ConsoleUI {
 public:
     ConsoleUI();
@@ -9,6 +19,14 @@ public:
     void clearScreen() const;
     void printLine(const std::string& text) const;
     void printHeader(const std::string& title) const;
+
+    // Wraps `text` in the escape codes for `color`, or returns it unchanged
+    // when colour is off. Returning a string rather than printing lets
+    // callers colour one part of a line — "Toplam XP: " plus a yellow value.
+    [[nodiscard]] std::string colorize(const std::string& text, TextColor color) const;
+
+    // Renders "N. Label" with the number in green, matching the banner.
+    void printMenuItem(int number, const std::string& label) const;
 
     // Colored output for correct/wrong/celebratory feedback. Falls back to
     // plain output when color is disabled via setColorEnabled, or when the

@@ -91,7 +91,7 @@ TEST_CASE(AdaptiveDifficulty_RepetitionAvoidanceNeverLeavesTheChosenDifficulty) 
         makeDetailedQuestion(9, Difficulty::Easy, QuestionType::FillBlank, "cout");
 
     const std::size_t chosen = selectNextQuestionIndex(remaining, 0, 0, &previous);
-    CHECK(chosen == 0 || chosen == 1);
+    CHECK(chosen <= 1);
     CHECK(remaining[chosen].difficulty == Difficulty::Easy);
 }
 

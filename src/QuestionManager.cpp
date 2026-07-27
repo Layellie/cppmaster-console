@@ -3,7 +3,7 @@
 #include "QuestionContent.h"
 
 QuestionManager::QuestionManager() {
-    questions_.reserve(2689);
+    questions_.reserve(2908);
 
     // Topic 1: cout
     questions_.push_back(Question{
@@ -636,6 +636,7 @@ QuestionManager::QuestionManager() {
     appendSection9Questions(questions_);
     appendSection10Questions(questions_);
     appendScenarioAndMatchingQuestions(questions_);
+    appendSection1Questions(questions_);
 
     buildIndexes();
 }

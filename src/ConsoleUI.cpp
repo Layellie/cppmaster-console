@@ -9,6 +9,8 @@
 #ifdef _WIN32
 #define NOMINMAX
 #include <windows.h>
+#else
+#include <unistd.h>
 #endif
 
 namespace {
@@ -30,9 +32,32 @@ void printColored(const std::string& text, const char* colorCode, bool active) {
     }
 }
 
-// Windows only renders ANSI escape codes once virtual-terminal processing
-// is switched on, and the call can fail on older consoles — in which case
-// colour output must stay off or the user sees raw escape sequences.
+const char* escapeCodeFor(TextColor color) {
+    switch (color) {
+        case TextColor::Green:
+            return "32";
+        case TextColor::Red:
+            return "31";
+        case TextColor::Yellow:
+            return "33";
+        case TextColor::Blue:
+            // Bright blue: plain blue is close to unreadable on the dark
+            // backgrounds these terminals default to.
+            return "94";
+        case TextColor::Dim:
+            return "90";
+    }
+    return "0";
+}
+
+// Colour is only safe when stdout is a terminal that can render it.
+// Redirected output (a pipe or a file) must stay plain, or the user opening
+// that file finds raw escape sequences in it.
+//
+// Windows additionally needs virtual-terminal processing switched on before
+// it renders escape codes at all, and that call can fail on older consoles.
+// It also happens to fail for a pipe, which is why the redirect case was
+// handled there — POSIX needs an explicit isatty check to match.
 bool enableAnsiColorSupport() {
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
@@ -48,7 +73,7 @@ bool enableAnsiColorSupport() {
     }
     return SetConsoleMode(outputHandle, consoleMode | ENABLE_VIRTUAL_TERMINAL_PROCESSING) != 0;
 #else
-    return true;
+    return isatty(STDOUT_FILENO) != 0;
 #endif
 }
 
@@ -70,7 +95,19 @@ void ConsoleUI::printLine(const std::string& text) const {
 
 void ConsoleUI::printHeader(const std::string& title) const {
     const std::string separator(40, '=');
-    std::cout << separator << '\n' << title << '\n' << separator << '\n';
+    const std::string rule = colorize(separator, TextColor::Green);
+    std::cout << rule << '\n' << title << '\n' << rule << '\n';
+}
+
+std::string ConsoleUI::colorize(const std::string& text, TextColor color) const {
+    if (!colorEnabled_ || !colorSupported_) {
+        return text;
+    }
+    return std::string("\x1b[") + escapeCodeFor(color) + "m" + text + "\x1b[0m";
+}
+
+void ConsoleUI::printMenuItem(int number, const std::string& label) const {
+    printLine(colorize(std::to_string(number) + ".", TextColor::Green) + " " + label);
 }
 
 void ConsoleUI::setColorEnabled(bool enabled) {

@@ -1,0 +1,101 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2560 1280" width="2560" height="1280" role="img"
+     aria-label="CppMaster Console — terminal-based C++ learning app with a 100-topic curriculum and 2,908 questions">
+  <!-- Source of truth for docs/banner.png. Kept as SVG so the numbers below
+       are a one-line edit next time the question bank grows, rather than an
+       image nobody can update. See docs/banner.md for how to regenerate the
+       PNG after editing this file. -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#05070a"/>
+      <stop offset="55%" stop-color="#080d12"/>
+      <stop offset="100%" stop-color="#04080b"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#22c55e" stop-opacity="0.10"/>
+      <stop offset="60%" stop-color="#22c55e" stop-opacity="0"/>
+    </linearGradient>
+    <style>
+      .sans  { font-family: "Segoe UI", Inter, Helvetica, Arial, sans-serif; }
+      .mono  { font-family: "Cascadia Code", "JetBrains Mono", Consolas, "Courier New", monospace; }
+      .green { fill: #4ade80; }
+      .dim   { fill: #64748b; }
+      .white { fill: #f8fafc; }
+      .gray  { fill: #cbd5e1; }
+      .yellow{ fill: #facc15; }
+      .blue  { fill: #60a5fa; }
+    </style>
+  </defs>
+
+  <rect width="2560" height="1280" fill="url(#bg)"/>
+  <rect width="2560" height="1280" fill="url(#glow)"/>
+
+  <!-- ── Left column ───────────────────────────────────────────────── -->
+  <text class="mono green" x="140" y="232" font-size="30" letter-spacing="7.5">TERMINAL C++ LEARNING APP</text>
+
+  <text class="sans white" x="140" y="400" font-size="118" font-weight="700">CppMaster</text>
+  <text class="sans green" x="140" y="530" font-size="118" font-weight="700">Console</text>
+  <rect x="610" y="440" width="36" height="86" class="green" fill="#4ade80"/>
+
+  <text class="mono" x="140" y="622" font-size="30" fill="#1f6f43" letter-spacing="2">========================================</text>
+
+  <text class="sans gray" x="140" y="722" font-size="46">A full <tspan class="white" font-weight="700">100-topic</tspan> C++ curriculum in your terminal —</text>
+  <text class="sans gray" x="140" y="784" font-size="46">exams, adaptive difficulty and a generator that</text>
+  <text class="sans gray" x="140" y="846" font-size="46">never repeats a question.</text>
+
+  <!-- Stats. Update these three numbers together with the README text. -->
+  <text class="sans green" x="140" y="1010" font-size="76" font-weight="700">100</text>
+  <text class="sans dim"   x="140" y="1064" font-size="26" letter-spacing="3.5">TOPICS</text>
+
+  <text class="sans green" x="330" y="1010" font-size="76" font-weight="700">2.908</text>
+  <text class="sans dim"   x="330" y="1064" font-size="26" letter-spacing="3.5">QUESTIONS</text>
+
+  <text class="sans green" x="640" y="1010" font-size="76" font-weight="700">C++20</text>
+  <text class="sans dim"   x="640" y="1064" font-size="26" letter-spacing="3.5">NO DEPS</text>
+
+  <!-- ── Terminal mock-up ──────────────────────────────────────────── -->
+  <rect x="1300" y="212" width="1120" height="856" rx="20" fill="#0b1016" stroke="#1e293b" stroke-width="2"/>
+  <rect x="1300" y="212" width="1120" height="72" rx="20" fill="#111823"/>
+  <rect x="1300" y="264" width="1120" height="20" fill="#111823"/>
+  <circle cx="1340" cy="248" r="11" fill="#ef4444"/>
+  <circle cx="1378" cy="248" r="11" fill="#facc15"/>
+  <circle cx="1416" cy="248" r="11" fill="#4ade80"/>
+  <text class="mono dim" x="1462" y="257" font-size="26">CppMasterConsole.exe</text>
+
+  <text class="mono dim"   x="1348" y="360" font-size="25">========================================</text>
+  <text class="mono white" x="1348" y="410" font-size="28" letter-spacing="2">CPPMASTER CONSOLE</text>
+  <text class="mono dim"   x="1348" y="452" font-size="25">========================================</text>
+
+  <text class="mono dim" x="1348" y="524" font-size="27">Toplam XP: <tspan class="yellow">75</tspan></text>
+  <text class="mono dim" x="1348" y="570" font-size="27">Seviye: <tspan class="blue">Değişken Ustası (Seviye 2)</tspan></text>
+
+  <text class="mono green" x="1348" y="646" font-size="27">1.</text>
+  <text class="mono gray"  x="1392" y="646" font-size="27">Konuları Öğren</text>
+  <text class="mono green" x="1852" y="646" font-size="27">6.</text>
+  <text class="mono gray"  x="1896" y="646" font-size="27">Seviye Sınavı</text>
+
+  <text class="mono green" x="1348" y="696" font-size="27">2.</text>
+  <text class="mono gray"  x="1392" y="696" font-size="27">Hızlı Test</text>
+  <text class="mono green" x="1852" y="696" font-size="27">7.</text>
+  <text class="mono gray"  x="1896" y="696" font-size="27">İstatistiklerim</text>
+
+  <text class="mono green" x="1348" y="746" font-size="27">3.</text>
+  <text class="mono gray"  x="1392" y="746" font-size="27">Günlük Tekrar</text>
+  <text class="mono green" x="1852" y="746" font-size="27">8.</text>
+  <text class="mono gray"  x="1896" y="746" font-size="27">Başarımlar</text>
+
+  <text class="mono green" x="1348" y="796" font-size="27">4.</text>
+  <text class="mono gray"  x="1392" y="796" font-size="27">Hatalarımı Çöz</text>
+  <text class="mono green" x="1852" y="796" font-size="27">9.</text>
+  <text class="mono gray"  x="1896" y="796" font-size="27">Ayarlar</text>
+
+  <text class="mono green" x="1348" y="846" font-size="27">5.</text>
+  <text class="mono gray"  x="1392" y="846" font-size="27">Kod Yazma</text>
+  <text class="mono dim"   x="1852" y="846" font-size="27">0.</text>
+  <text class="mono dim"   x="1896" y="846" font-size="27">Çıkış</text>
+
+  <text class="mono green"  x="1348" y="932" font-size="27">√ Doğru! <tspan class="dim">+10 XP</tspan></text>
+  <text class="mono yellow" x="1712" y="932" font-size="27">★ Başarım açıldı</text>
+
+  <text class="mono green" x="1348" y="1000" font-size="27">&gt;</text>
+  <rect x="1386" y="978" width="18" height="30" fill="#4ade80"/>
+</svg>

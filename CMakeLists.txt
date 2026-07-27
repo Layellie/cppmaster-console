@@ -65,8 +65,10 @@ add_library(CppMasterConsoleLib STATIC
     src/QuestionsSection9.cpp
     src/QuestionsSection10.cpp
     src/QuestionsScenarioMatching.cpp
+    src/QuestionsSection1.cpp
     src/QuizEngine.h
     src/QuizEngine.cpp
+    src/QuizSelection.h
     src/LevelSystem.h
     src/TopicLock.h
     src/AchievementTracker.h
@@ -160,7 +162,9 @@ add_executable(CppMasterConsoleTests
     tests/LevelSystemTests.cpp
     tests/TopicLockTests.cpp
     tests/UserProgressTests.cpp
+    tests/ConsoleUITests.cpp
     tests/QuizEngineTests.cpp
+    tests/QuizSelectionTests.cpp
     tests/ProgressManagerTests.cpp
     tests/MistakeTrackerTests.cpp
     tests/AchievementTrackerTests.cpp

@@ -20,6 +20,7 @@
 #include "QuestionGenerationEngine.h"
 #include "QuestionManager.h"
 #include "QuizEngine.h"
+#include "QuizSelection.h"
 #include "Settings.h"
 #include "SettingsManager.h"
 #include "UserProgress.h"

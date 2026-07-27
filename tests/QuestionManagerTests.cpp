@@ -26,6 +26,20 @@ TEST_CASE(QuestionManager_NoDuplicateQuestionIds) {
     CHECK(!foundDuplicate);
 }
 
+TEST_CASE(QuestionManager_EveryTopicOneToTenHasAtLeastTwentyNineQuestions) {
+    // Section 1 shipped with only 6-9 questions per topic while every later
+    // section had 29. Since topics unlock in order, this is the material a
+    // learner sees most, and the small pool made retakes repetitive.
+    QuestionManager manager;
+    for (int topicId = 1; topicId <= 10; ++topicId) {
+        const auto questions = manager.questionsForTopic(topicId);
+        CHECK(questions.size() >= 29);
+        for (const Question& question : questions) {
+            CHECK(question.topicId == topicId);
+        }
+    }
+}
+
 TEST_CASE(QuestionManager_EveryTopicElevenToTwentyHasAtLeastTwentyNineQuestions) {
     QuestionManager manager;
     for (int topicId = 11; topicId <= 20; ++topicId) {

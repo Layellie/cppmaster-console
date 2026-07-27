@@ -1,4 +1,4 @@
-![CppMaster Console — terminal-based C++ learning app with a 100-topic curriculum and 2,689 questions](docs/banner.png)
+![CppMaster Console — terminal-based C++ learning app with a 100-topic curriculum and 2,908 questions](docs/banner.png)
 
 # CppMaster Console
 
@@ -21,7 +21,7 @@
 # English
 
 A terminal-based app for learning C++, with a **Turkish-language
-interface**. It covers a full 100-topic curriculum, 2,689 hand-written
+interface**. It covers a full 100-topic curriculum, 2,908 hand-written
 questions, hint / topic-lock / adaptive-difficulty systems, code-writing
 exercises, per-section exams, a general final exam, and a dynamic question
 generator built from 17 generators that never asks the same question twice.
@@ -89,7 +89,7 @@ costs 25% of the XP the question would award.
 - **Topics:** 100 topics across 10 sections, each with full lesson content
   (explanation, syntax, example code, line-by-line commentary, common
   mistakes).
-- **Questions:** 2,689 hand-written questions covering all 11 question
+- **Questions:** 2,908 hand-written questions covering all 11 question
   types, plus questions generated in real time in "Hızlı Test" (Quick Test)
   mode that never repeat — 17 generators driven by a 4-stage escalation
   algorithm (Normal → Expanded Parameters → Structural Variation → Cross
@@ -291,7 +291,7 @@ See [CHANGELOG.md](CHANGELOG.md) for changes between versions.
 # Türkçe
 
 C++ öğrenmek için terminal tabanlı, Türkçe bir alıştırma ve sınav
-uygulaması. 100 konuluk tam bir müfredat, 2.689 elle yazılmış soru,
+uygulaması. 100 konuluk tam bir müfredat, 2.908 elle yazılmış soru,
 ipucu / konu kilidi / adaptif zorluk sistemleri, kod yazma alıştırmaları,
 bölüm sınavları, genel bir final sınavı ve 17 üreticiden oluşan, aynı
 soruyu iki kez sormayan dinamik bir soru üretim sistemi içerir.
@@ -357,7 +357,7 @@ kullanılabilir; her ipucu kazanılacak XP'yi %25 azaltır.
 
 - **Konular:** 100 konu, 10 bölüm, hepsinde tam ders içeriği (açıklama,
   sözdizimi, örnek kod, satır satır açıklama, yaygın hatalar).
-- **Sorular:** 2.689 elle yazılmış soru (11 soru tipinin tamamı
+- **Sorular:** 2.908 elle yazılmış soru (11 soru tipinin tamamı
   kullanılıyor), artı "Hızlı Test" modunda gerçek zamanlı üretilen ve
   hiç tekrar etmeyen sorular (17 üretici, 4 aşamalı üretim algoritması:
   Normal → Genişletilmiş Parametreler → Yapısal Varyasyon → Çapraz Konu).

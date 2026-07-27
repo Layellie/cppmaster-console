@@ -19,3 +19,8 @@ void appendSection10Questions(std::vector<Question>& questions);
 // topics: a scenario question asks which of several tools fits a situation,
 // which is only interesting once the learner has met more than one of them.
 void appendScenarioAndMatchingQuestions(std::vector<Question>& questions);
+
+// Section 1 expansion (topics 1-10), ids 2690+. Separate from the original
+// Section 1 questions, which predate the per-section files and still live in
+// QuestionManager.cpp.
+void appendSection1Questions(std::vector<Question>& questions);

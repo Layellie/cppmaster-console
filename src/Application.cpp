@@ -207,21 +207,23 @@ void Application::runFirstLaunchSkillSelection() {
 void Application::showMainMenu() {
     ui_.printHeader("CPPMASTER CONSOLE");
     ui_.printLine("");
-    ui_.printLine("Toplam XP: " + std::to_string(progress_.totalXp()));
+    ui_.printLine("Toplam XP: " + ui_.colorize(std::to_string(progress_.totalXp()), TextColor::Yellow));
     const LevelInfo level = levelForXp(progress_.totalXp());
-    ui_.printLine("Seviye: " + level.name + " (Seviye " + std::to_string(level.level) + ")");
+    ui_.printLine(
+        "Seviye: " +
+        ui_.colorize(level.name + " (Seviye " + std::to_string(level.level) + ")", TextColor::Blue));
     ui_.printLine("");
-    ui_.printLine("1. Konuları Öğren");
-    ui_.printLine("2. Hızlı Test");
-    ui_.printLine("3. Günlük Tekrar");
-    ui_.printLine("4. Hatalarımı Çöz");
-    ui_.printLine("5. Kod Yazma Alıştırmaları");
-    ui_.printLine("6. Seviye Sınavı");
-    ui_.printLine("7. İstatistiklerim");
-    ui_.printLine("8. Başarımlar");
-    ui_.printLine("9. Ayarlar");
-    ui_.printLine("10. İlerlemeyi Sıfırla");
-    ui_.printLine("0. Çıkış");
+    ui_.printMenuItem(1, "Konuları Öğren");
+    ui_.printMenuItem(2, "Hızlı Test");
+    ui_.printMenuItem(3, "Günlük Tekrar");
+    ui_.printMenuItem(4, "Hatalarımı Çöz");
+    ui_.printMenuItem(5, "Kod Yazma Alıştırmaları");
+    ui_.printMenuItem(6, "Seviye Sınavı");
+    ui_.printMenuItem(7, "İstatistiklerim");
+    ui_.printMenuItem(8, "Başarımlar");
+    ui_.printMenuItem(9, "Ayarlar");
+    ui_.printMenuItem(10, "İlerlemeyi Sıfırla");
+    ui_.printMenuItem(0, "Çıkış");
     ui_.printLine("");
     ui_.printLine("Seçimin:");
 }
@@ -363,25 +365,13 @@ void Application::showLessonContent(const Lesson& lesson) {
 
 std::vector<Question> Application::selectQuizQuestions(int topicId) {
     auto pool = questions_.questionsForTopic(topicId);
-    const auto quizSize = static_cast<std::size_t>(settings_.topicQuizQuestionCount);
-    if (pool.size() <= quizSize) {
-        // Small topic: every question is asked anyway, but shuffling still
-        // means a retake doesn't replay in the identical order.
-        std::shuffle(pool.begin(), pool.end(), randomEngine_);
-        return pool;
-    }
-
-    // Larger topics used to ask all ~29 questions, so retaking one replayed
-    // exactly the same set. Draw a fresh random sample instead, but pull
-    // questions the learner has previously got wrong to the front first, so
-    // variety doesn't come at the cost of dropping the ones they most need
-    // to see again.
+    // Shuffled here because Application owns the random engine; the policy
+    // for *which* of them to keep lives in selectQuizQuestionsFrom, which is
+    // pure and unit-tested.
     std::shuffle(pool.begin(), pool.end(), randomEngine_);
-    std::stable_partition(pool.begin(), pool.end(), [this](const Question& question) {
-        return mistakes_.hasMistake(question.id);
-    });
-    pool.resize(quizSize);
-    return pool;
+    return selectQuizQuestionsFrom(
+        pool, static_cast<std::size_t>(settings_.topicQuizQuestionCount),
+        [this](const Question& question) { return mistakes_.hasMistake(question.id); });
 }
 
 void Application::runTopicQuiz(int topicId) {
@@ -778,10 +768,14 @@ void Application::showStatistics() {
         totalAnswered == 0 ? 0.0
                            : static_cast<double>(totalCorrect) / static_cast<double>(totalAnswered);
 
-    ui_.printLine("Toplam XP: " + std::to_string(progress_.totalXp()));
+    ui_.printLine(
+        "Toplam XP: " + ui_.colorize(std::to_string(progress_.totalXp()), TextColor::Yellow));
     ui_.printLine("Toplam çözülen soru: " + std::to_string(totalAnswered));
-    ui_.printLine("Toplam doğru cevap: " + std::to_string(totalCorrect));
-    ui_.printLine("Toplam yanlış cevap: " + std::to_string(totalAnswered - totalCorrect));
+    ui_.printLine(
+        "Toplam doğru cevap: " + ui_.colorize(std::to_string(totalCorrect), TextColor::Green));
+    ui_.printLine(
+        "Toplam yanlış cevap: " +
+        ui_.colorize(std::to_string(totalAnswered - totalCorrect), TextColor::Red));
     ui_.printLine("Genel başarı oranı: %" + std::to_string(static_cast<int>(successRatio * 100.0)));
     ui_.printLine("");
     ui_.printLine("Tamamlanan konu sayısı: " + std::to_string(completed));
@@ -952,11 +946,15 @@ void Application::runExam(const ExamPlan& plan) {
     ui_.printLine(
         "Doğru: " + std::to_string(correctCount) + "/" + std::to_string(examQuestionCount));
     ui_.printLine("Başarı: %" + std::to_string(scorePercent));
-    ui_.printLine("Kazanılan XP: " + std::to_string(examXp));
-    ui_.printLine(
-        std::string("Sonuç: ") + (scoreRatio >= kExamPassThreshold ? "GEÇTİN" : "KALDIN"));
+    ui_.printLine("Kazanılan XP: " + ui_.colorize(std::to_string(examXp), TextColor::Yellow));
+    const bool passed = scoreRatio >= kExamPassThreshold;
+    if (passed) {
+        ui_.printSuccess("Sonuç: GEÇTİN");
+    } else {
+        ui_.printError("Sonuç: KALDIN");
+    }
 
-    if (scoreRatio >= kExamPassThreshold && plan.sectionIdToRecordOnPass > 0) {
+    if (passed && plan.sectionIdToRecordOnPass > 0) {
         progress_.recordSectionExamPassed(plan.sectionIdToRecordOnPass);
     }
 
