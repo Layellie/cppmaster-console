@@ -255,3 +255,26 @@ TEST_CASE(QuizEngine_OrderCode_MultiDigitStepsStillNeedSeparators) {
     CHECK(engine.evaluate(question, "1 12 3").correct);
     CHECK(!engine.evaluate(question, "11 2 3").correct);
 }
+
+TEST_CASE(QuizEngine_TrueFalse_AcceptsLetterAsWellAsDigit) {
+    // Shown as "1. Doğru / 2. Yanlış", so A means Doğru (1) and B means
+    // Yanlış (2). Learners type either, and both should be accepted.
+    QuizEngine engine;
+    const Question dogru = makeQuestion(QuestionType::TrueFalse, {"1"});
+    CHECK(engine.evaluate(dogru, "1").correct);
+    CHECK(engine.evaluate(dogru, "a").correct);
+    CHECK(engine.evaluate(dogru, "A").correct);
+    CHECK(engine.evaluate(dogru, " a ").correct);
+    CHECK(!engine.evaluate(dogru, "2").correct);
+    CHECK(!engine.evaluate(dogru, "b").correct);
+
+    const Question yanlis = makeQuestion(QuestionType::TrueFalse, {"2"});
+    CHECK(engine.evaluate(yanlis, "2").correct);
+    CHECK(engine.evaluate(yanlis, "b").correct);
+    CHECK(engine.evaluate(yanlis, "B").correct);
+    CHECK(!engine.evaluate(yanlis, "1").correct);
+    CHECK(!engine.evaluate(yanlis, "a").correct);
+
+    // Only A and B map; there is no third option to reach with C.
+    CHECK(!engine.evaluate(dogru, "c").correct);
+}

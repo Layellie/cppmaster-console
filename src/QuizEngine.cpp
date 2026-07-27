@@ -188,6 +188,22 @@ bool matchesLetteredChoice(const Question& question, const std::string& rawAnswe
     });
 }
 
+// The mirror of the MultipleChoice case: a TrueFalse question is shown as
+// "1. Doğru / 2. Yanlış", so "a" is the first option (Doğru, stored as "1")
+// and "b" the second (Yanlış, "2"). Learners type either notation, so map
+// a lone a/b onto its digit before comparing; everything else is left as-is.
+bool matchesTrueFalse(const Question& question, const std::string& rawAnswer) {
+    std::string normalizedAnswer = trimAndLower(rawAnswer);
+    if (normalizedAnswer == "a") {
+        normalizedAnswer = "1";
+    } else if (normalizedAnswer == "b") {
+        normalizedAnswer = "2";
+    }
+    return std::ranges::any_of(question.acceptedAnswers, [&](const std::string& accepted) {
+        return normalizedAnswer == trimAndLower(accepted);
+    });
+}
+
 bool matchesAnyAcceptedCaseSensitiveWhitespaceNormalized(
     const Question& question, const std::string& rawAnswer, bool strictCaseSensitivity) {
     std::string normalizedAnswer = collapseWhitespace(rawAnswer);
@@ -344,6 +360,8 @@ AnswerResult QuizEngine::evaluate(
             isCorrect = matchesLetteredChoice(question, rawAnswer);
             break;
         case QuestionType::TrueFalse:
+            isCorrect = matchesTrueFalse(question, rawAnswer);
+            break;
         case QuestionType::FillBlank:
             isCorrect = matchesAnyAcceptedCaseInsensitive(question, rawAnswer);
             break;

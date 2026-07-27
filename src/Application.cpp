@@ -400,10 +400,15 @@ void Application::runTopicQuiz(int topicId) {
     int sessionXp = 0;
     int correctStreak = 0;
     int wrongStreak = 0;
+    // Fed back into the selector so two questions about the same fact don't
+    // land back to back; empty until the first question has been asked.
+    std::optional<Question> lastAsked;
 
     while (!remaining.empty()) {
-        const std::size_t nextIndex = selectNextQuestionIndex(remaining, correctStreak, wrongStreak);
+        const std::size_t nextIndex = selectNextQuestionIndex(
+            remaining, correctStreak, wrongStreak, lastAsked ? &*lastAsked : nullptr);
         const Question question = remaining[nextIndex];
+        lastAsked = question;
 
         if (shouldShowExtraHelp(wrongStreak)) {
             if (lesson.has_value() && !lesson->explanation.empty()) {
