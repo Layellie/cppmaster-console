@@ -40,10 +40,19 @@ const char* escapeCodeFor(TextColor color) {
             return "31";
         case TextColor::Yellow:
             return "33";
-        case TextColor::Blue:
-            // Bright blue: plain blue is close to unreadable on the dark
-            // backgrounds these terminals default to.
-            return "94";
+        case TextColor::Magenta:
+            // Deliberately not blue. Plain blue (34) is unreadable on the
+            // dark backgrounds terminals default to, and the bright slot
+            // (94) is the one custom colour schemes repaint most often — on
+            // this project's own development machine the scheme maps 34 to
+            // red and 94 to yellow, so "level name" and "mastered" came out
+            // colliding with two other meanings. Magenta survives that.
+            return "95";
+        case TextColor::Cyan:
+            return "96";
+        case TextColor::Heading:
+            // Bold bright white — a title, not a colour accent.
+            return "1;97";
         case TextColor::Dim:
             return "90";
     }
@@ -93,10 +102,12 @@ void ConsoleUI::printLine(const std::string& text) const {
     std::cout << text << '\n';
 }
 
-void ConsoleUI::printHeader(const std::string& title) const {
-    const std::string separator(40, '=');
+void ConsoleUI::printHeader(const std::string& title, std::size_t ruleWidth) const {
+    const std::string separator(ruleWidth, '=');
     const std::string rule = colorize(separator, TextColor::Green);
-    std::cout << rule << '\n' << title << '\n' << rule << '\n';
+    std::cout << rule << '\n'
+              << colorize(title, TextColor::Heading) << '\n'
+              << rule << '\n';
 }
 
 std::string ConsoleUI::colorize(const std::string& text, TextColor color) const {

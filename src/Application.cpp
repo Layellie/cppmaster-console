@@ -10,10 +10,12 @@
 #include <random>
 #include <string>
 #include <system_error>
+#include <vector>
 
 #include "AdaptiveDifficulty.h"
 #include "ExamContent.h"
 #include "LevelSystem.h"
+#include "TextLayout.h"
 #include "TopicLock.h"
 
 namespace {
@@ -49,6 +51,130 @@ char statusMarker(TopicStatus status) {
             return '*';
     }
     return ' ';
+}
+
+TextColor colorForStatus(TopicStatus status) {
+    switch (status) {
+        case TopicStatus::NotStarted:
+            return TextColor::Dim;
+        case TopicStatus::Learning:
+            return TextColor::Yellow;
+        case TopicStatus::Completed:
+            return TextColor::Green;
+        case TopicStatus::Mastered:
+            return TextColor::Magenta;
+    }
+    return TextColor::Dim;
+}
+
+// The "[+]" style badge in front of a topic, coloured by its status.
+// The topic list and the legend below it both go through here, so the two
+// can never disagree about what a marker looks like or what colour it is.
+std::string statusBadge(const ConsoleUI& ui, TopicStatus status) {
+    std::string badge = "[";
+    badge.push_back(statusMarker(status));
+    badge += "]";
+    return ui.colorize(badge, colorForStatus(status));
+}
+
+std::string legendEntry(const ConsoleUI& ui, TopicStatus status, const std::string& label) {
+    return statusBadge(ui, status) + " " + ui.colorize(label, TextColor::Dim);
+}
+
+// Traffic-light for the overall success rate: a 40% pass rate should not
+// read the same as a 95% one.
+TextColor colorForSuccessPercent(int percent) {
+    if (percent >= 70) {
+        return TextColor::Green;
+    }
+    if (percent >= 40) {
+        return TextColor::Yellow;
+    }
+    return TextColor::Red;
+}
+
+// The "(şu an: X)" suffix in the settings menu. The label recedes and the
+// value carries the colour, so the current state of every toggle is
+// scannable down the column instead of buried in a sentence.
+std::string settingState(const ConsoleUI& ui, const std::string& value, TextColor valueColor) {
+    return ui.colorize(" (şu an: ", TextColor::Dim) + ui.colorize(value, valueColor) +
+           ui.colorize(")", TextColor::Dim);
+}
+
+std::string toggleState(const ConsoleUI& ui, bool on, const char* onText, const char* offText) {
+    return settingState(ui, on ? onText : offText, on ? TextColor::Green : TextColor::Dim);
+}
+
+struct MenuEntry {
+    int number;
+    std::string label;
+};
+
+struct MenuLayout {
+    std::vector<std::string> lines;  // ready to print; may contain escape codes
+    std::size_t width = 0;           // widest line, in terminal columns
+};
+
+// Lays the main menu out side by side instead of as one 11-item list, so the
+// XP line, every option and the prompt stay on screen together.
+//
+// Widths are measured on the plain text: the escape codes around a number
+// cost bytes but occupy no columns, so padding against the coloured string
+// would indent every column by the length of an escape sequence.
+MenuLayout layOutMenuColumns(
+    const ConsoleUI& ui, const std::vector<std::vector<MenuEntry>>& columns) {
+    constexpr std::size_t kColumnGap = 3;
+
+    std::vector<std::size_t> numberWidths;
+    std::vector<std::size_t> columnWidths;
+    std::size_t rowCount = 0;
+    for (const std::vector<MenuEntry>& column : columns) {
+        std::size_t numberWidth = 1;
+        std::size_t labelWidth = 0;
+        for (const MenuEntry& entry : column) {
+            numberWidth = std::max(numberWidth, std::to_string(entry.number).size());
+            labelWidth = std::max(labelWidth, displayWidth(entry.label));
+        }
+        numberWidths.push_back(numberWidth);
+        // "NN" + ". " + label
+        columnWidths.push_back(numberWidth + 2 + labelWidth);
+        rowCount = std::max(rowCount, column.size());
+    }
+
+    // Where each column starts, so a short column (9/10/0) leaves a clean gap
+    // rather than pulling the next one left on its empty rows.
+    std::vector<std::size_t> columnStarts;
+    std::size_t offset = 0;
+    for (const std::size_t width : columnWidths) {
+        columnStarts.push_back(offset);
+        offset += width + kColumnGap;
+    }
+
+    MenuLayout layout;
+    for (std::size_t row = 0; row < rowCount; ++row) {
+        std::string line;
+        std::size_t cursor = 0;  // columns already consumed by `line`
+        for (std::size_t column = 0; column < columns.size(); ++column) {
+            if (row >= columns[column].size()) {
+                continue;
+            }
+            const MenuEntry& entry = columns[column][row];
+
+            // Right-aligned so the dots line up when "10." meets "9.".
+            std::string number = std::to_string(entry.number);
+            if (number.size() < numberWidths[column]) {
+                number.insert(0, numberWidths[column] - number.size(), ' ');
+            }
+
+            line += std::string(columnStarts[column] - cursor, ' ');
+            line += ui.colorize(number + ".", TextColor::Green) + " " + entry.label;
+            cursor = columnStarts[column] + numberWidths[column] + 2 + displayWidth(entry.label);
+        }
+        // No trailing padding: it would only invite the terminal to wrap.
+        layout.width = std::max(layout.width, cursor);
+        layout.lines.push_back(line);
+    }
+    return layout;
 }
 
 char optionLetter(std::size_t index) {
@@ -205,27 +331,35 @@ void Application::runFirstLaunchSkillSelection() {
 }
 
 void Application::showMainMenu() {
-    ui_.printHeader("CPPMASTER CONSOLE");
+    const std::vector<std::vector<MenuEntry>> columns = {
+        {{1, "Konuları Öğren"},
+         {2, "Hızlı Test"},
+         {3, "Günlük Tekrar"},
+         {4, "Hatalarımı Çöz"}},
+        {{5, "Kod Yazma Alıştırmaları"},
+         {6, "Seviye Sınavı"},
+         {7, "İstatistiklerim"},
+         {8, "Başarımlar"}},
+        {{9, "Ayarlar"}, {10, "İlerlemeyi Sıfırla"}, {0, "Çıkış"}},
+    };
+    const MenuLayout menu = layOutMenuColumns(ui_, columns);
+
+    // Widen the rules to the menu so the title bar doesn't end mid-way
+    // across the options, but never shrink below the width every other
+    // screen uses.
+    ui_.printHeader("CPPMASTER CONSOLE", std::max<std::size_t>(40, menu.width));
     ui_.printLine("");
     ui_.printLine("Toplam XP: " + ui_.colorize(std::to_string(progress_.totalXp()), TextColor::Yellow));
     const LevelInfo level = levelForXp(progress_.totalXp());
     ui_.printLine(
         "Seviye: " +
-        ui_.colorize(level.name + " (Seviye " + std::to_string(level.level) + ")", TextColor::Blue));
+        ui_.colorize(level.name + " (Seviye " + std::to_string(level.level) + ")", TextColor::Magenta));
     ui_.printLine("");
-    ui_.printMenuItem(1, "Konuları Öğren");
-    ui_.printMenuItem(2, "Hızlı Test");
-    ui_.printMenuItem(3, "Günlük Tekrar");
-    ui_.printMenuItem(4, "Hatalarımı Çöz");
-    ui_.printMenuItem(5, "Kod Yazma Alıştırmaları");
-    ui_.printMenuItem(6, "Seviye Sınavı");
-    ui_.printMenuItem(7, "İstatistiklerim");
-    ui_.printMenuItem(8, "Başarımlar");
-    ui_.printMenuItem(9, "Ayarlar");
-    ui_.printMenuItem(10, "İlerlemeyi Sıfırla");
-    ui_.printMenuItem(0, "Çıkış");
+    for (const std::string& line : menu.lines) {
+        ui_.printLine(line);
+    }
     ui_.printLine("");
-    ui_.printLine("Seçimin:");
+    ui_.printLine(ui_.colorize("Seçimin:", TextColor::Green));
 }
 
 void Application::handleChoice(int choice) {
@@ -287,28 +421,39 @@ void Application::showTopicBrowser() {
                 if (lastPrintedSection != 0) {
                     ui_.printLine("");
                 }
-                ui_.printLine(
+                ui_.printLine(ui_.colorize(
                     "Bölüm " + std::to_string(lesson.sectionId) + ": " +
-                    lessons_.sectionTitle(lesson.sectionId));
+                        lessons_.sectionTitle(lesson.sectionId),
+                    TextColor::Cyan));
                 lastPrintedSection = lesson.sectionId;
             }
 
-            const char marker = statusMarker(progress_.statusOf(lesson.id));
+            const TopicStatus status = progress_.statusOf(lesson.id);
             ui_.printLine(
-                "  [" + std::string(1, marker) + "] " + std::to_string(lesson.id) + ". " +
+                "  " + statusBadge(ui_, status) + " " +
+                ui_.colorize(std::to_string(lesson.id) + ".", TextColor::Green) + " " +
                 lesson.title);
         }
         ui_.printLine("");
         if (reachedLockedTopic) {
-            ui_.printLine("(Devamı, önceki konuları tamamladıkça açılacak.)");
+            ui_.printLine(ui_.colorize(
+                "(Devamı, önceki konuları tamamladıkça açılacak.)", TextColor::Dim));
             ui_.printLine("");
         }
         // The markers were previously unexplained — a user had no way to
-        // learn what [-] or [*] meant.
-        ui_.printLine("[ ] başlanmadı   [-] öğreniliyor   [+] tamamlandı   [*] ustalaşıldı");
+        // learn what [-] or [*] meant. Each entry is built from the same
+        // badge helper the list above uses, so the colours match by
+        // construction rather than by someone remembering to update both.
+        ui_.printLine(
+            legendEntry(ui_, TopicStatus::NotStarted, "başlanmadı") + "   " +
+            legendEntry(ui_, TopicStatus::Learning, "öğreniliyor") + "   " +
+            legendEntry(ui_, TopicStatus::Completed, "tamamlandı") + "   " +
+            legendEntry(ui_, TopicStatus::Mastered, "ustalaşıldı"));
         ui_.printLine("");
 
-        ui_.printLine("Görüntülemek istediğin konu numarasını gir (0 = ana menüye dön):");
+        ui_.printLine(
+            "Görüntülemek istediğin konu numarasını gir " +
+            ui_.colorize("(0 = ana menüye dön)", TextColor::Dim) + ":");
         const int topicChoice = ui_.readMenuChoice(kMinTopicId, kMaxTopicId);
         if (topicChoice == 0) {
             return;
@@ -436,19 +581,24 @@ void Application::runTopicQuiz(int topicId) {
                             : static_cast<double>(correctCount) / static_cast<double>(totalQuestions);
     const int successPercent = static_cast<int>(successRatio * 100.0);
 
+    const bool passed = successRatio >= kPassThreshold;
     ui_.printLine(
-        "Sonuç: " + std::to_string(correctCount) + "/" + std::to_string(totalQuestions) +
-        " doğru (%" + std::to_string(successPercent) + "), kazanılan XP: " +
-        std::to_string(sessionXp));
+        "Sonuç: " +
+        ui_.colorize(
+            std::to_string(correctCount) + "/" + std::to_string(totalQuestions) + " doğru (%" +
+                std::to_string(successPercent) + ")",
+            passed ? TextColor::Green : TextColor::Yellow) +
+        ", kazanılan XP: " + ui_.colorize(std::to_string(sessionXp), TextColor::Yellow));
 
     awardXpAndCheckLevelUp(sessionXp);
 
-    if (successRatio >= kPassThreshold) {
+    if (passed) {
         progress_.setStatus(topicId, TopicStatus::Completed);
-        ui_.printLine("Bu konu tamamlandı olarak işaretlendi.");
+        ui_.printSuccess("Bu konu tamamlandı olarak işaretlendi.");
     } else {
         progress_.setStatus(topicId, TopicStatus::Learning);
-        ui_.printLine("Bu konuyu öğrenmeye devam ediyorsun; tekrar denemek için tekrar açabilirsin.");
+        ui_.printHighlight(
+            "Bu konuyu öğrenmeye devam ediyorsun; tekrar denemek için tekrar açabilirsin.");
     }
     ui_.printLine("");
 
@@ -459,28 +609,32 @@ AnswerResult Application::askOneQuestion(
     const Question& question, bool trackMistakes, bool allowHints) {
     ui_.printLine(question.prompt);
 
+    // Whatever the learner is expected to type — a letter or a number — is
+    // green, the same signal the menus use.
     if (question.type == QuestionType::MultipleChoice ||
         question.type == QuestionType::Scenario) {
         for (std::size_t index = 0; index < question.options.size(); ++index) {
+            std::string marker;
+            marker.push_back(optionLetter(index));
+            marker += ")";
             ui_.printLine(
-                std::string(1, optionLetter(index)) + ") " + question.options[index]);
+                ui_.colorize(marker, TextColor::Green) + " " + question.options[index]);
         }
     } else if (question.type == QuestionType::Matching) {
         // Options hold the numbered left column; the prompt itself lists
         // the lettered right column, so the learner replies with pairs.
         for (std::size_t index = 0; index < question.options.size(); ++index) {
-            ui_.printLine(
-                std::to_string(static_cast<int>(index) + 1) + ". " + question.options[index]);
+            ui_.printMenuItem(static_cast<int>(index) + 1, question.options[index]);
         }
         ui_.printLine("");
-        ui_.printLine("Eşleştirmeleri \"1-c, 2-a, 3-b\" biçiminde yaz.");
+        ui_.printLine(
+            ui_.colorize("Eşleştirmeleri \"1-c, 2-a, 3-b\" biçiminde yaz.", TextColor::Dim));
     } else if (question.type == QuestionType::TrueFalse) {
-        ui_.printLine("1. Doğru");
-        ui_.printLine("2. Yanlış");
+        ui_.printMenuItem(1, "Doğru");
+        ui_.printMenuItem(2, "Yanlış");
     } else if (question.type == QuestionType::OrderCode) {
         for (std::size_t index = 0; index < question.options.size(); ++index) {
-            ui_.printLine(
-                std::to_string(static_cast<int>(index) + 1) + ". " + question.options[index]);
+            ui_.printMenuItem(static_cast<int>(index) + 1, question.options[index]);
         }
     }
 
@@ -776,14 +930,32 @@ void Application::showStatistics() {
     ui_.printLine(
         "Toplam yanlış cevap: " +
         ui_.colorize(std::to_string(totalAnswered - totalCorrect), TextColor::Red));
-    ui_.printLine("Genel başarı oranı: %" + std::to_string(static_cast<int>(successRatio * 100.0)));
+    const int successPercent = static_cast<int>(successRatio * 100.0);
+    const TextColor successColor = colorForSuccessPercent(successPercent);
+    ui_.printLine(
+        "Genel başarı oranı: " + ui_.colorize("%" + std::to_string(successPercent), successColor));
     ui_.printLine("");
-    ui_.printLine("Tamamlanan konu sayısı: " + std::to_string(completed));
-    ui_.printLine("Ustalaşılan konu sayısı: " + std::to_string(mastered));
-    ui_.printLine("Öğrenilmekte olan konu sayısı: " + std::to_string(learning));
-    ui_.printLine("Başlanmamış konu sayısı: " + std::to_string(notStarted));
+    // Same colours as the topic list markers, so a glance at either screen
+    // means the same thing.
+    ui_.printLine(
+        "Tamamlanan konu sayısı: " +
+        ui_.colorize(std::to_string(completed), colorForStatus(TopicStatus::Completed)));
+    ui_.printLine(
+        "Ustalaşılan konu sayısı: " +
+        ui_.colorize(std::to_string(mastered), colorForStatus(TopicStatus::Mastered)));
+    ui_.printLine(
+        "Öğrenilmekte olan konu sayısı: " +
+        ui_.colorize(std::to_string(learning), colorForStatus(TopicStatus::Learning)));
+    ui_.printLine(
+        "Başlanmamış konu sayısı: " +
+        ui_.colorize(std::to_string(notStarted), colorForStatus(TopicStatus::NotStarted)));
     ui_.printLine("");
-    ui_.printLine("Kayıtlı yanlış sayısı: " + std::to_string(mistakes_.allMistakesOldestFirst().size()));
+    const std::size_t mistakeCount = mistakes_.allMistakesOldestFirst().size();
+    ui_.printLine(
+        "Kayıtlı yanlış sayısı: " +
+        ui_.colorize(
+            std::to_string(mistakeCount),
+            mistakeCount == 0 ? TextColor::Green : TextColor::Red));
     ui_.printLine("");
 }
 
@@ -791,10 +963,20 @@ void Application::showAchievements() {
     ui_.printLine("");
     ui_.printHeader("BAŞARIMLAR");
     for (const AchievementId id : allAchievementIds()) {
-        const char marker = achievements_.isUnlocked(id) ? '+' : ' ';
-        ui_.printLine(
-            "[" + std::string(1, marker) + "] " + achievementDisplayName(id) + " - " +
-            achievementDescription(id));
+        const bool unlocked = achievements_.isUnlocked(id);
+        // Unlocked ones are the reward, so they get the colour and the
+        // locked ones recede instead of competing for attention.
+        const std::string badge =
+            ui_.colorize(unlocked ? "[+]" : "[ ]", unlocked ? TextColor::Yellow : TextColor::Dim);
+        const std::string name = unlocked
+                                     ? achievementDisplayName(id)
+                                     : ui_.colorize(achievementDisplayName(id), TextColor::Dim);
+        std::string line = badge;
+        line += " ";
+        line += name;
+        line += " ";
+        line += ui_.colorize("- " + achievementDescription(id), TextColor::Dim);
+        ui_.printLine(line);
     }
     ui_.printLine("");
 }
@@ -1007,13 +1189,13 @@ void Application::showExamMenu() {
     ui_.printLine("");
     ui_.printLine("Hangi sınava girmek istiyorsun?");
     for (int sectionId = 1; sectionId <= lessons_.sectionCount(); ++sectionId) {
-        ui_.printLine(
-            std::to_string(sectionId) + ". Bölüm " + std::to_string(sectionId) + " Sınavı: " +
-            lessons_.sectionTitle(sectionId));
+        ui_.printMenuItem(
+            sectionId, "Bölüm " + std::to_string(sectionId) + " Sınavı: " +
+                           ui_.colorize(lessons_.sectionTitle(sectionId), TextColor::Cyan));
     }
     const int finalExamChoice = lessons_.sectionCount() + 1;
-    ui_.printLine(std::to_string(finalExamChoice) + ". Genel Final Sınavı");
-    ui_.printLine("0. Geri dön");
+    ui_.printMenuItem(finalExamChoice, ui_.colorize("Genel Final Sınavı", TextColor::Yellow));
+    ui_.printMenuItem(0, "Geri dön");
     const int choice = ui_.readMenuChoice(0, finalExamChoice);
     if (choice == 0) {
         return;
@@ -1168,38 +1350,41 @@ void Application::showSettingsMenu() {
     while (inSettingsMenu) {
         ui_.printLine("");
         ui_.printHeader("AYARLAR");
-        ui_.printLine(
-            "1. Konu kilidini aç/kapat (şu an: " +
-            std::string(settings_.topicLockEnabled ? "Açık" : "Kapalı") + ")");
-        ui_.printLine(
-            "2. Büyük-küçük harf duyarlılığını aç/kapat (şu an: " +
-            std::string(settings_.strictCaseSensitivity ? "Açık" : "Kapalı") + ")");
-        ui_.printLine(
-            "3. Kod cevabı toleransını aç/kapat (şu an: " +
-            std::string(settings_.lenientWriteCodeTolerance ? "Esnek" : "Sıkı") + ")");
-        ui_.printLine(
-            "4. Açıklama detay seviyesini değiştir (şu an: " +
-            std::string(settings_.fullExplanationDetail ? "Tam" : "Kısa") + ")");
-        ui_.printLine(
-            "5. Günlük soru hedefini değiştir (şu an: " +
-            std::to_string(settings_.dailyReviewQuestionCap) + ")");
-        ui_.printLine("6. İlerlemeyi dışa aktar");
-        ui_.printLine("7. İlerlemeyi içe aktar");
-        ui_.printLine(
-            "8. Renkli çıktıyı aç/kapat (şu an: " +
-            std::string(settings_.colorEnabled ? "Açık" : "Kapalı") + ")");
-        ui_.printLine(
-            "9. Sesli uyarıyı aç/kapat (şu an: " +
-            std::string(settings_.audioAlertEnabled ? "Açık" : "Kapalı") + ")");
-        ui_.printLine(
-            "10. Hızlı Test soru sayısını değiştir (şu an: " +
-            std::to_string(settings_.quickTestQuestionCount) + ")");
-        ui_.printLine(
-            "11. Konu testi soru sayısını değiştir (şu an: " +
-            std::to_string(settings_.topicQuizQuestionCount) + ")");
-        ui_.printLine("0. Geri dön");
+        ui_.printMenuItem(
+            1, "Konu kilidini aç/kapat" +
+                   toggleState(ui_, settings_.topicLockEnabled, "Açık", "Kapalı"));
+        ui_.printMenuItem(
+            2, "Büyük-küçük harf duyarlılığını aç/kapat" +
+                   toggleState(ui_, settings_.strictCaseSensitivity, "Açık", "Kapalı"));
+        ui_.printMenuItem(
+            3, "Kod cevabı toleransını aç/kapat" +
+                   toggleState(ui_, settings_.lenientWriteCodeTolerance, "Esnek", "Sıkı"));
+        ui_.printMenuItem(
+            4, "Açıklama detay seviyesini değiştir" +
+                   toggleState(ui_, settings_.fullExplanationDetail, "Tam", "Kısa"));
+        ui_.printMenuItem(
+            5, "Günlük soru hedefini değiştir" +
+                   settingState(
+                       ui_, std::to_string(settings_.dailyReviewQuestionCap), TextColor::Yellow));
+        ui_.printMenuItem(6, "İlerlemeyi dışa aktar");
+        ui_.printMenuItem(7, "İlerlemeyi içe aktar");
+        ui_.printMenuItem(
+            8, "Renkli çıktıyı aç/kapat" +
+                   toggleState(ui_, settings_.colorEnabled, "Açık", "Kapalı"));
+        ui_.printMenuItem(
+            9, "Sesli uyarıyı aç/kapat" +
+                   toggleState(ui_, settings_.audioAlertEnabled, "Açık", "Kapalı"));
+        ui_.printMenuItem(
+            10, "Hızlı Test soru sayısını değiştir" +
+                    settingState(
+                        ui_, std::to_string(settings_.quickTestQuestionCount), TextColor::Yellow));
+        ui_.printMenuItem(
+            11, "Konu testi soru sayısını değiştir" +
+                    settingState(
+                        ui_, std::to_string(settings_.topicQuizQuestionCount), TextColor::Yellow));
+        ui_.printMenuItem(0, "Geri dön");
         ui_.printLine("");
-        ui_.printLine("Seçimin:");
+        ui_.printLine(ui_.colorize("Seçimin:", TextColor::Green));
 
         const int choice = ui_.readMenuChoice(0, 11);
         switch (choice) {

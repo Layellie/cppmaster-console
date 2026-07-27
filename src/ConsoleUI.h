@@ -1,15 +1,19 @@
 #pragma once
 
+#include <cstddef>
 #include <string>
 
 // Palette shared with the project banner, so the running app and the
-// README image look like the same product.
+// README image look like the same product. Each entry has one job; reusing
+// a colour for an unrelated meaning is what makes a terminal UI noisy.
 enum class TextColor {
-    Green,   // menu numbers, prompts, correct answers
-    Red,     // wrong answers
-    Yellow,  // XP, achievements
-    Blue,    // level names
-    Dim,     // separators and secondary text
+    Green,    // menu numbers, prompts, correct answers, completed topics
+    Red,      // wrong answers
+    Yellow,   // XP, achievements, topics still being learned
+    Magenta,  // level names, mastered topics
+    Cyan,     // section headings in the topic list
+    Heading,  // bold screen titles
+    Dim,      // separators, hints, not-started topics
 };
 
 class ConsoleUI {
@@ -18,7 +22,11 @@ public:
 
     void clearScreen() const;
     void printLine(const std::string& text) const;
-    void printHeader(const std::string& title) const;
+
+    // `ruleWidth` lets a screen widen the ==== rules to match content that is
+    // wider than the default — the column menu would otherwise sit under a
+    // header noticeably narrower than itself.
+    void printHeader(const std::string& title, std::size_t ruleWidth = 40) const;
 
     // Wraps `text` in the escape codes for `color`, or returns it unchanged
     // when colour is off. Returning a string rather than printing lets

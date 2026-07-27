@@ -163,6 +163,7 @@ add_executable(CppMasterConsoleTests
     tests/TopicLockTests.cpp
     tests/UserProgressTests.cpp
     tests/ConsoleUITests.cpp
+    tests/TextLayoutTests.cpp
     tests/QuizEngineTests.cpp
     tests/QuizSelectionTests.cpp
     tests/ProgressManagerTests.cpp

@@ -17,7 +17,7 @@ TEST_CASE(ConsoleUI_ColorizeLeavesTextUntouchedWhenColorIsDisabled) {
     const std::string text = "Toplam XP: 75";
     CHECK(ui.colorize(text, TextColor::Green) == text);
     CHECK(ui.colorize(text, TextColor::Yellow) == text);
-    CHECK(ui.colorize(text, TextColor::Blue) == text);
+    CHECK(ui.colorize(text, TextColor::Magenta) == text);
     CHECK(ui.colorize("", TextColor::Red).empty());
 }
 
