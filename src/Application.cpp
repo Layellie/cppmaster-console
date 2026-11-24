@@ -483,8 +483,8 @@ void Application::showTopicBrowser() {
 }
 
 void Application::openTopic(int topicId) {
-    const auto lesson = lessons_.findById(topicId);
-    if (!lesson.has_value() || lesson->explanation.empty()) {
+    const Lesson* const lesson = lessons_.findPtrById(topicId);
+    if (lesson == nullptr || lesson->explanation.empty()) {
         ui_.printLine("");
         ui_.printLine("Bu konu için ders içeriği bu sürümde henüz eklenmedi.");
         return;
@@ -529,11 +529,20 @@ void Application::showLessonContent(const Lesson& lesson) {
 }
 
 std::vector<Question> Application::selectQuizQuestions(int topicId) {
-    auto pool = questions_.questionsForTopic(topicId);
+    const auto view = questions_.questionViewForTopic(topicId);
+    std::vector<std::size_t> shuffledIndices(view.size());
+    for (std::size_t i = 0; i < view.size(); ++i) {
+        shuffledIndices[i] = i;
+    }
     // Shuffled here because Application owns the random engine; the policy
     // for *which* of them to keep lives in selectQuizQuestionsFrom, which is
     // pure and unit-tested.
-    std::shuffle(pool.begin(), pool.end(), randomEngine_);
+    std::shuffle(shuffledIndices.begin(), shuffledIndices.end(), randomEngine_);
+    std::vector<Question> pool;
+    pool.reserve(view.size());
+    for (const std::size_t index : shuffledIndices) {
+        pool.push_back(view[index]);
+    }
     return selectQuizQuestionsFrom(
         pool, static_cast<std::size_t>(settings_.topicQuizQuestionCount),
         [this](const Question& question) { return mistakes_.hasMistake(question.id); });
@@ -549,7 +558,7 @@ void Application::runTopicQuiz(int topicId) {
     ui_.printLine("Konu testi başlıyor (" + std::to_string(totalQuestions) + " soru).");
     ui_.printLine("");
 
-    const auto lesson = lessons_.findById(topicId);
+    const Lesson* const lesson = lessons_.findPtrById(topicId);
 
     int correctCount = 0;
     int sessionXp = 0;
@@ -566,7 +575,7 @@ void Application::runTopicQuiz(int topicId) {
         lastAsked = question;
 
         if (shouldShowExtraHelp(wrongStreak)) {
-            if (lesson.has_value() && !lesson->explanation.empty()) {
+            if (lesson != nullptr && !lesson->explanation.empty()) {
                 ui_.printLine("");
                 ui_.printLine("Bu konuyu tekrar hatırlayalım:");
                 ui_.printLine(lesson->explanation);
@@ -698,8 +707,8 @@ AnswerResult Application::askOneQuestion(
                     ui_.printLine("Sınav sırasında bu komut kullanılamaz.");
                     continue;
                 }
-                const auto lesson = lessons_.findById(question.topicId);
-                if (lesson.has_value() && !lesson->explanation.empty()) {
+                const Lesson* const lesson = lessons_.findPtrById(question.topicId);
+                if (lesson != nullptr && !lesson->explanation.empty()) {
                     ui_.printLine(lesson->explanation);
                 } else {
                     ui_.printLine("Bu konu için ders içeriği bu sürümde henüz eklenmedi.");
@@ -711,8 +720,8 @@ AnswerResult Application::askOneQuestion(
                     ui_.printLine("Sınav sırasında bu komut kullanılamaz.");
                     continue;
                 }
-                const auto lesson = lessons_.findById(question.topicId);
-                if (lesson.has_value() && !lesson->exampleCode.empty()) {
+                const Lesson* const lesson = lessons_.findPtrById(question.topicId);
+                if (lesson != nullptr && !lesson->exampleCode.empty()) {
                     ui_.printLine(lesson->exampleCode);
                 } else {
                     ui_.printLine("Bu konu için örnek bu sürümde henüz eklenmedi.");
@@ -898,8 +907,8 @@ void Application::runMistakeQuestions(const std::vector<MistakeRecord>& mistakes
     int sessionXp = 0;
 
     for (const MistakeRecord& mistake : mistakesToAsk) {
-        const auto question = questions_.findById(mistake.questionId);
-        if (!question.has_value()) {
+        const Question* const question = questions_.findPtrById(mistake.questionId);
+        if (question == nullptr) {
             continue;
         }
         const AnswerResult result = askOneQuestion(*question);
@@ -1147,8 +1156,8 @@ void Application::runExam(const ExamPlan& plan) {
     int examXp = 0;
 
     for (const int questionId : plan.questionIds) {
-        const auto question = questions_.findById(questionId);
-        if (!question.has_value()) {
+        const Question* const question = questions_.findPtrById(questionId);
+        if (question == nullptr) {
             continue;
         }
         const AnswerResult result =
@@ -1204,7 +1213,9 @@ void Application::runSectionExam(int sectionId) {
     plan.heading = "BÖLÜM " + std::to_string(sectionId) + " SINAVI";
     plan.lockedMessage =
         "Bu bölümün sınavına girebilmek için konuların en az %70'ini tamamlamalısın.";
-    for (const Lesson& lesson : lessons_.lessonsInSection(sectionId)) {
+    const auto sectionLessons = lessons_.lessonsViewInSection(sectionId);
+    plan.gatingTopicIds.reserve(sectionLessons.size());
+    for (const Lesson& lesson : sectionLessons) {
         plan.gatingTopicIds.push_back(lesson.id);
     }
     plan.questionIds = examQuestionIdsForSection(sectionId);

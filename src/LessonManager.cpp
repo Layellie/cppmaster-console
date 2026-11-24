@@ -421,7 +421,10 @@ void LessonManager::buildIndexes() {
     for (std::size_t index = 0; index < lessons_.size(); ++index) {
         const Lesson& lesson = lessons_[index];
         indexByTopicId_.emplace(lesson.id, index);
-        indicesBySectionId_[lesson.sectionId].push_back(index);
+        auto [it, inserted] = rangeBySectionId_.emplace(lesson.sectionId, SectionRange{index, 1});
+        if (!inserted) {
+            ++it->second.count;
+        }
     }
 }
 
@@ -429,26 +432,33 @@ const std::vector<Lesson>& LessonManager::allLessons() const {
     return lessons_;
 }
 
-std::vector<Lesson> LessonManager::lessonsInSection(int sectionId) const {
-    const auto it = indicesBySectionId_.find(sectionId);
-    if (it == indicesBySectionId_.end()) {
+std::span<const Lesson> LessonManager::lessonsViewInSection(int sectionId) const noexcept {
+    const auto it = rangeBySectionId_.find(sectionId);
+    if (it == rangeBySectionId_.end()) {
         return {};
     }
+    return std::span<const Lesson>(lessons_.data() + it->second.offset, it->second.count);
+}
 
-    std::vector<Lesson> result;
-    result.reserve(it->second.size());
-    for (const std::size_t index : it->second) {
-        result.push_back(lessons_[index]);
+std::vector<Lesson> LessonManager::lessonsInSection(int sectionId) const {
+    const std::span<const Lesson> view = lessonsViewInSection(sectionId);
+    return {view.begin(), view.end()};
+}
+
+const Lesson* LessonManager::findPtrById(int topicId) const noexcept {
+    const auto it = indexByTopicId_.find(topicId);
+    if (it == indexByTopicId_.end()) {
+        return nullptr;
     }
-    return result;
+    return &lessons_[it->second];
 }
 
 std::optional<Lesson> LessonManager::findById(int topicId) const {
-    const auto it = indexByTopicId_.find(topicId);
-    if (it == indexByTopicId_.end()) {
+    const Lesson* lesson = findPtrById(topicId);
+    if (lesson == nullptr) {
         return std::nullopt;
     }
-    return lessons_[it->second];
+    return *lesson;
 }
 
 std::string LessonManager::sectionTitle(int sectionId) const {
