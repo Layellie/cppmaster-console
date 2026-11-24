@@ -141,3 +141,54 @@ TEST_CASE(ProgressManager_SaveOverwritesAtomicallyWithoutLeavingTempFile) {
 
     std::filesystem::remove(path);
 }
+
+TEST_CASE(ProgressManager_WhitespaceOnlyLinesAreIgnored) {
+    const std::string path = "tests/test_data/progress_whitespace.txt";
+    const std::string backup = "tests/test_data/progress_whitespace_backup.txt";
+    {
+        std::ofstream file(path, std::ios::trunc);
+        file << "xp 40\n";
+        file << "   \t  \n";
+        file << "\r\n";
+        file << "answered 2\n";
+        file << "correct 1\n";
+    }
+
+    ProgressManager manager;
+    const ProgressLoadResult result = manager.load(path, backup, kTopicCount);
+    CHECK(!result.wasCorrupted);
+    CHECK(result.progress.totalXp() == 40);
+    CHECK(result.progress.totalQuestionsAnswered() == 2);
+    CHECK(result.progress.totalCorrectAnswers() == 1);
+
+    std::filesystem::remove(path);
+    std::filesystem::remove(backup);
+}
+
+TEST_CASE(ProgressManager_NegativeOrInconsistentCountersAreTreatedAsCorrupted) {
+    const std::string path = "tests/test_data/progress_inconsistent.txt";
+    const std::string backup = "tests/test_data/progress_inconsistent_backup.txt";
+    ProgressManager manager;
+
+    std::filesystem::remove(backup);
+    {
+        std::ofstream file(path, std::ios::trunc);
+        file << "xp -10\n";
+    }
+    const ProgressLoadResult negResult = manager.load(path, backup, kTopicCount);
+    CHECK(negResult.wasCorrupted);
+    CHECK(std::filesystem::exists(backup));
+
+    std::filesystem::remove(backup);
+    {
+        std::ofstream file(path, std::ios::trunc);
+        file << "answered 3\n";
+        file << "correct 5\n";
+    }
+    const ProgressLoadResult inconsistentResult = manager.load(path, backup, kTopicCount);
+    CHECK(inconsistentResult.wasCorrupted);
+    CHECK(std::filesystem::exists(backup));
+
+    std::filesystem::remove(path);
+    std::filesystem::remove(backup);
+}

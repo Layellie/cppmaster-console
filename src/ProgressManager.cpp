@@ -1,9 +1,11 @@
 #include "ProgressManager.h"
 
 #include <algorithm>
+#include <array>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
+#include <string_view>
 #include <system_error>
 #include <utility>
 #include <vector>
@@ -73,75 +75,37 @@ ProgressLoadResult ProgressManager::load(
     int unlockedUpToTopicId = topicCount;
     bool corrupted = false;
 
+    struct IntFieldBinding {
+        std::string_view key;
+        int* target;
+    };
+
+    const std::array<IntFieldBinding, 9> intFields = {{
+        {"xp", &xp},
+        {"answered", &answered},
+        {"correct", &correct},
+        {"streak_current", &streakCurrent},
+        {"streak_longest", &streakLongest},
+        {"writecode_correct", &writeCodeCorrect},
+        {"errorfix_correct", &errorFixCorrect},
+        {"highest_section_exam_passed", &highestSectionExamPassed},
+        {"unlocked_up_to", &unlockedUpToTopicId},
+    }};
+
     std::string line;
     while (std::getline(file, line)) {
-        if (line.empty()) {
-            continue;
-        }
         std::istringstream lineStream(line);
         std::string recordType;
-        lineStream >> recordType;
+        if (!(lineStream >> recordType)) {
+            continue;
+        }
 
-        if (recordType == "xp") {
+        const auto fieldIt = std::ranges::find_if(
+            intFields, [&](const IntFieldBinding& field) { return field.key == recordType; });
+        if (fieldIt != intFields.end()) {
             std::string valueText;
             lineStream >> valueText;
-            if (!tryParseInt(valueText, xp)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "answered") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, answered)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "correct") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, correct)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "streak_current") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, streakCurrent)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "streak_longest") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, streakLongest)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "writecode_correct") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, writeCodeCorrect)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "errorfix_correct") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, errorFixCorrect)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "highest_section_exam_passed") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, highestSectionExamPassed)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "unlocked_up_to") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, unlockedUpToTopicId)) {
+            if (!tryParseInt(valueText, *fieldIt->target)) {
                 corrupted = true;
                 break;
             }
@@ -171,7 +135,12 @@ ProgressLoadResult ProgressManager::load(
         }
     }
 
-    if (corrupted) {
+    const bool countersInvalid = xp < 0 || answered < 0 || correct < 0 || correct > answered ||
+                                 streakCurrent < 0 || streakLongest < 0 ||
+                                 streakCurrent > streakLongest || writeCodeCorrect < 0 ||
+                                 errorFixCorrect < 0 || highestSectionExamPassed < 0 ||
+                                 unlockedUpToTopicId < 0;
+    if (corrupted || countersInvalid) {
         std::error_code errorCode;
         std::filesystem::copy_file(
             filePath, backupPath, std::filesystem::copy_options::overwrite_existing, errorCode);

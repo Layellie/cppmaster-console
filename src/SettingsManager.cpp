@@ -1,8 +1,11 @@
 #include "SettingsManager.h"
 
+#include <algorithm>
+#include <array>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
+#include <string_view>
 #include <system_error>
 
 #include "AtomicFileWrite.h"
@@ -44,66 +47,61 @@ SettingsLoadResult SettingsManager::load(
     int topicQuizCount = settings.topicQuizQuestionCount;
     bool corrupted = false;
 
+    struct BoolFieldBinding {
+        std::string_view key;
+        bool* target;
+    };
+    struct IntFieldBinding {
+        std::string_view key;
+        int* target;
+    };
+
+    const std::array<BoolFieldBinding, 6> boolFields = {{
+        {"topic_lock", &topicLock},
+        {"strict_case", &strictCase},
+        {"lenient_writecode", &lenientWriteCode},
+        {"full_explanation", &fullExplanation},
+        {"color_enabled", &colorEnabled},
+        {"audio_alert", &audioAlert},
+    }};
+    const std::array<IntFieldBinding, 3> intFields = {{
+        {"daily_cap", &dailyCap},
+        {"quick_test_count", &quickTestCount},
+        {"topic_quiz_count", &topicQuizCount},
+    }};
+
     std::string line;
     while (std::getline(file, line)) {
-        if (line.empty()) {
-            continue;
-        }
         std::istringstream lineStream(line);
         std::string recordType;
-        lineStream >> recordType;
+        if (!(lineStream >> recordType)) {
+            continue;
+        }
         std::string valueText;
         lineStream >> valueText;
 
-        if (recordType == "topic_lock") {
-            if (!tryParseBool(valueText, topicLock)) {
+        const auto boolIt = std::ranges::find_if(
+            boolFields, [&](const BoolFieldBinding& field) { return field.key == recordType; });
+        if (boolIt != boolFields.end()) {
+            if (!tryParseBool(valueText, *boolIt->target)) {
                 corrupted = true;
                 break;
             }
-        } else if (recordType == "strict_case") {
-            if (!tryParseBool(valueText, strictCase)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "lenient_writecode") {
-            if (!tryParseBool(valueText, lenientWriteCode)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "full_explanation") {
-            if (!tryParseBool(valueText, fullExplanation)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "daily_cap") {
-            if (!tryParseInt(valueText, dailyCap)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "color_enabled") {
-            if (!tryParseBool(valueText, colorEnabled)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "audio_alert") {
-            if (!tryParseBool(valueText, audioAlert)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "quick_test_count") {
-            if (!tryParseInt(valueText, quickTestCount)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "topic_quiz_count") {
-            if (!tryParseInt(valueText, topicQuizCount)) {
-                corrupted = true;
-                break;
-            }
-        } else {
-            corrupted = true;
-            break;
+            continue;
         }
+
+        const auto intIt = std::ranges::find_if(
+            intFields, [&](const IntFieldBinding& field) { return field.key == recordType; });
+        if (intIt != intFields.end()) {
+            if (!tryParseInt(valueText, *intIt->target)) {
+                corrupted = true;
+                break;
+            }
+            continue;
+        }
+
+        corrupted = true;
+        break;
     }
 
     if (corrupted) {

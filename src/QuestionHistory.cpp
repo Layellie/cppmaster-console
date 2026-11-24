@@ -34,12 +34,11 @@ bool QuestionHistory::loadFromFile(const std::string& filePath, const std::strin
 
     std::string line;
     while (std::getline(file, line)) {
-        if (line.empty()) {
-            continue;
-        }
         std::istringstream lineStream(line);
         std::string recordType;
-        lineStream >> recordType;
+        if (!(lineStream >> recordType)) {
+            continue;
+        }
 
         std::string valueText;
         lineStream >> valueText;

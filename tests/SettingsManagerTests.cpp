@@ -113,3 +113,23 @@ TEST_CASE(SettingsManager_SaveReturnsFalseOnUnwritablePath) {
     CHECK(!std::filesystem::exists(path));
     CHECK(!std::filesystem::exists(path + ".tmp"));
 }
+
+TEST_CASE(SettingsManager_WhitespaceOnlyLinesAreIgnored) {
+    const std::string path = "tests/test_data/settings_whitespace.txt";
+    const std::string backup = "tests/test_data/settings_whitespace_backup.txt";
+    {
+        std::ofstream file(path, std::ios::trunc);
+        file << "topic_lock 0\n";
+        file << "   \t  \n";
+        file << "daily_cap 12\n";
+    }
+
+    SettingsManager manager;
+    const SettingsLoadResult result = manager.load(path, backup);
+    CHECK(!result.wasCorrupted);
+    CHECK(!result.settings.topicLockEnabled);
+    CHECK(result.settings.dailyReviewQuestionCap == 12);
+
+    std::filesystem::remove(path);
+    std::filesystem::remove(backup);
+}
