@@ -100,3 +100,28 @@ TEST_CASE(SortWithLambdaPredictGenerator_SemanticSignatureExcludesVariableNameOn
     CHECK(candidate->exactSignature.find("var=") != std::string::npos);
     CHECK(candidate->semanticSignature.find("var=") == std::string::npos);
 }
+
+TEST_CASE(SortWithLambdaPredictGenerator_DistanceShapeHasNoAmbiguousTies) {
+    SortWithLambdaPredictGenerator generator;
+    std::mt19937_64 engine{12345ULL};
+    for (int iteration = 0; iteration < 500; ++iteration) {
+        const auto candidate = generator.generate(engine, GenerationStage::StructuralVariation);
+        CHECK(candidate.has_value());
+
+        const std::string marker = "pivot=";
+        const std::size_t start = candidate->exactSignature.find(marker) + marker.size();
+        const int pivot = std::stoi(candidate->exactSignature.substr(start));
+        const std::vector<int> values = parseValues(candidate->exactSignature);
+
+        bool hasAmbiguousTie = false;
+        for (std::size_t i = 0; i < values.size(); ++i) {
+            for (std::size_t j = i + 1; j < values.size(); ++j) {
+                if (values[i] != values[j] &&
+                    std::abs(values[i] - pivot) == std::abs(values[j] - pivot)) {
+                    hasAmbiguousTie = true;
+                }
+            }
+        }
+        CHECK(!hasAmbiguousTie);
+    }
+}

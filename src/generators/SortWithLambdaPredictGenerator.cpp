@@ -56,28 +56,48 @@ std::optional<GeneratedQuestion> SortWithLambdaPredictGenerator::generate(
         count = 1;
     }
 
-    std::vector<int> values(static_cast<std::size_t>(count));
-    for (int& value : values) {
-        value = valueDomain.draw(randomEngine);
+    const bool distanceShape = stage == GenerationStage::StructuralVariation;
+    const int pivot = distanceShape ? kPivotDomain.draw(randomEngine) : 0;
+
+    std::vector<int> values;
+    values.reserve(static_cast<std::size_t>(count));
+    for (int i = 0; i < count; ++i) {
+        int drawn = 0;
+        bool accepted = false;
+        for (int retry = 0; retry < 32; ++retry) {
+            drawn = valueDomain.draw(randomEngine);
+            if (!distanceShape) {
+                accepted = true;
+                break;
+            }
+            const int distance = std::abs(drawn - pivot);
+            const bool collides = std::ranges::any_of(values, [&](int existing) {
+                return existing != drawn && std::abs(existing - pivot) == distance;
+            });
+            if (!collides) {
+                accepted = true;
+                break;
+            }
+        }
+        if (!accepted) {
+            return std::nullopt;
+        }
+        values.push_back(drawn);
     }
     const std::string initializerList = joinValues(values, ", ");
-
-    const bool distanceShape = stage == GenerationStage::StructuralVariation;
 
     std::vector<int> sorted = values;
     std::string comparatorText;
     std::string pivotLine;
-    int pivot = 0;
     if (distanceShape) {
-        pivot = kPivotDomain.draw(randomEngine);
-        std::sort(sorted.begin(), sorted.end(), [pivot](int a, int b) {
+        std::ranges::sort(sorted, [pivot](int a, int b) {
             return std::abs(a - pivot) < std::abs(b - pivot);
         });
         pivotLine = "int pivot = " + std::to_string(pivot) + ";\n";
         comparatorText = "[pivot](int a, int b) { return std::abs(a - pivot) < std::abs(b - "
                           "pivot); }";
     } else {
-        std::sort(sorted.begin(), sorted.end(), [](int a, int b) { return a > b; });
+        std::ranges::sort(sorted, [](int a, int b) { return a > b; });
         comparatorText = "[](int a, int b) { return a > b; }";
     }
     const std::string answer = joinValues(sorted, " ");
