@@ -110,3 +110,9 @@ TEST_CASE(QuizSelection_ReturnsNoDuplicates) {
     }
     CHECK(ids.size() == selected.size());
 }
+
+TEST_CASE(QuizSelection_ZeroQuizSizeReturnsEmpty) {
+    const auto pool = makePool(10);
+    const auto selected = selectQuizQuestionsFrom(pool, 0, [](const Question&) { return true; });
+    CHECK(selected.empty());
+}

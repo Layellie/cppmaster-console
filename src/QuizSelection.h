@@ -27,6 +27,9 @@
 [[nodiscard]] inline std::vector<Question> selectQuizQuestionsFrom(
     const std::vector<Question>& pool, std::size_t quizSize,
     const std::function<bool(const Question&)>& wasAnsweredWrongBefore) {
+    if (quizSize == 0) {
+        return {};
+    }
     if (pool.size() <= quizSize) {
         return pool;
     }
