@@ -15,7 +15,7 @@
 #include "AdaptiveDifficulty.h"
 #include "ExamContent.h"
 #include "LevelSystem.h"
-#include "TextLayout.h"
+#include "MenuFormatting.h"
 #include "TopicLock.h"
 
 namespace {
@@ -24,161 +24,8 @@ constexpr int kMinChoice = 0;
 constexpr int kMaxChoice = 10;
 constexpr int kMinTopicId = 0;
 constexpr double kPassThreshold = 0.7;
-constexpr const char* kProgressFilePath = "data/progress.txt";
-constexpr const char* kProgressBackupPath = "data/progress_corrupted_backup.txt";
-constexpr const char* kMistakesFilePath = "data/mistakes.txt";
-constexpr const char* kMistakesBackupPath = "data/mistakes_corrupted_backup.txt";
-constexpr const char* kAchievementsFilePath = "data/achievements.txt";
-constexpr const char* kAchievementsBackupPath = "data/achievements_corrupted_backup.txt";
-constexpr const char* kGeneratedHistoryFilePath = "data/generated_question_history.txt";
-constexpr const char* kGeneratedHistoryBackupPath = "data/generated_question_history_corrupted_backup.txt";
-constexpr const char* kGenerationLogFilePath = "data/question_generation.log";
-constexpr const char* kSettingsFilePath = "data/settings.txt";
-constexpr const char* kSettingsBackupPath = "data/settings_corrupted_backup.txt";
 constexpr double kExamPassThreshold = 0.7;
 constexpr double kSectionCompletionGateThreshold = 0.7;
-
-char statusMarker(TopicStatus status) {
-    switch (status) {
-        case TopicStatus::NotStarted:
-            return ' ';
-        case TopicStatus::Learning:
-            return '-';
-        case TopicStatus::Completed:
-            return '+';
-        case TopicStatus::Mastered:
-            return '*';
-    }
-    return ' ';
-}
-
-TextColor colorForStatus(TopicStatus status) {
-    switch (status) {
-        case TopicStatus::NotStarted:
-            return TextColor::Dim;
-        case TopicStatus::Learning:
-            return TextColor::Yellow;
-        case TopicStatus::Completed:
-            return TextColor::Green;
-        case TopicStatus::Mastered:
-            return TextColor::Magenta;
-    }
-    return TextColor::Dim;
-}
-
-// The "[+]" style badge in front of a topic, coloured by its status.
-// The topic list and the legend below it both go through here, so the two
-// can never disagree about what a marker looks like or what colour it is.
-std::string statusBadge(const ConsoleUI& ui, TopicStatus status) {
-    std::string badge = "[";
-    badge.push_back(statusMarker(status));
-    badge += "]";
-    return ui.colorize(badge, colorForStatus(status));
-}
-
-std::string legendEntry(const ConsoleUI& ui, TopicStatus status, const std::string& label) {
-    return statusBadge(ui, status) + " " + ui.colorize(label, TextColor::Dim);
-}
-
-// Traffic-light for the overall success rate: a 40% pass rate should not
-// read the same as a 95% one.
-TextColor colorForSuccessPercent(int percent) {
-    if (percent >= 70) {
-        return TextColor::Green;
-    }
-    if (percent >= 40) {
-        return TextColor::Yellow;
-    }
-    return TextColor::Red;
-}
-
-// The "(şu an: X)" suffix in the settings menu. The label recedes and the
-// value carries the colour, so the current state of every toggle is
-// scannable down the column instead of buried in a sentence.
-std::string settingState(const ConsoleUI& ui, const std::string& value, TextColor valueColor) {
-    return ui.colorize(" (şu an: ", TextColor::Dim) + ui.colorize(value, valueColor) +
-           ui.colorize(")", TextColor::Dim);
-}
-
-std::string toggleState(const ConsoleUI& ui, bool on, const char* onText, const char* offText) {
-    return settingState(ui, on ? onText : offText, on ? TextColor::Green : TextColor::Dim);
-}
-
-struct MenuEntry {
-    int number;
-    std::string label;
-};
-
-struct MenuLayout {
-    std::vector<std::string> lines;  // ready to print; may contain escape codes
-    std::size_t width = 0;           // widest line, in terminal columns
-};
-
-// Lays the main menu out side by side instead of as one 11-item list, so the
-// XP line, every option and the prompt stay on screen together.
-//
-// Widths are measured on the plain text: the escape codes around a number
-// cost bytes but occupy no columns, so padding against the coloured string
-// would indent every column by the length of an escape sequence.
-MenuLayout layOutMenuColumns(
-    const ConsoleUI& ui, const std::vector<std::vector<MenuEntry>>& columns) {
-    constexpr std::size_t kColumnGap = 3;
-
-    std::vector<std::size_t> numberWidths;
-    std::vector<std::size_t> columnWidths;
-    numberWidths.reserve(columns.size());
-    columnWidths.reserve(columns.size());
-    std::size_t rowCount = 0;
-    for (const std::vector<MenuEntry>& column : columns) {
-        std::size_t numberWidth = 1;
-        std::size_t labelWidth = 0;
-        for (const MenuEntry& entry : column) {
-            numberWidth = std::max(numberWidth, std::to_string(entry.number).size());
-            labelWidth = std::max(labelWidth, displayWidth(entry.label));
-        }
-        numberWidths.push_back(numberWidth);
-        // "NN" + ". " + label
-        columnWidths.push_back(numberWidth + 2 + labelWidth);
-        rowCount = std::max(rowCount, column.size());
-    }
-
-    // Where each column starts, so a short column (9/10/0) leaves a clean gap
-    // rather than pulling the next one left on its empty rows.
-    std::vector<std::size_t> columnStarts;
-    columnStarts.reserve(columnWidths.size());
-    std::size_t offset = 0;
-    for (const std::size_t width : columnWidths) {
-        columnStarts.push_back(offset);
-        offset += width + kColumnGap;
-    }
-
-    MenuLayout layout;
-    layout.lines.reserve(rowCount);
-    for (std::size_t row = 0; row < rowCount; ++row) {
-        std::string line;
-        std::size_t cursor = 0;  // columns already consumed by `line`
-        for (std::size_t column = 0; column < columns.size(); ++column) {
-            if (row >= columns[column].size()) {
-                continue;
-            }
-            const MenuEntry& entry = columns[column][row];
-
-            // Right-aligned so the dots line up when "10." meets "9.".
-            std::string number = std::to_string(entry.number);
-            if (number.size() < numberWidths[column]) {
-                number.insert(0, numberWidths[column] - number.size(), ' ');
-            }
-
-            line += std::string(columnStarts[column] - cursor, ' ');
-            line += ui.colorize(number + ".", TextColor::Green) + " " + entry.label;
-            cursor = columnStarts[column] + numberWidths[column] + 2 + displayWidth(entry.label);
-        }
-        // No trailing padding: it would only invite the terminal to wrap.
-        layout.width = std::max(layout.width, cursor);
-        layout.lines.push_back(std::move(line));
-    }
-    return layout;
-}
 
 char optionLetter(std::size_t index) {
     return static_cast<char>('A' + index);
@@ -262,18 +109,30 @@ Application::Application()
     ui_.setAudioAlertEnabled(settings_.audioAlertEnabled);
 }
 
+AppContext Application::makeContext() noexcept {
+    return AppContext{
+        .ui = ui_,
+        .lessons = lessons_,
+        .questions = questions_,
+        .quizEngine = quizEngine_,
+        .progress = progress_,
+        .progressManager = progressManager_,
+        .mistakes = mistakes_,
+        .achievements = achievements_,
+        .codeExercises = codeExercises_,
+        .generationEngine = generationEngine_,
+        .generatorRegistry = generatorRegistry_,
+        .generatorScoring = generatorScoring_,
+        .generatedQuestionValidator = generatedQuestionValidator_,
+        .settings = settings_,
+        .settingsManager = settingsManager_,
+        .randomEngine = randomEngine_,
+        .nextGeneratedQuestionId = nextGeneratedQuestionId_,
+    };
+}
+
 void Application::ensureDataDirectoryExists() {
-    std::error_code errorCode;
-    std::filesystem::create_directories("data", errorCode);
-    if (errorCode) {
-        // Stale message alert: this used to say saving "isn't active in
-        // this version anyway", which stopped being true once persistence
-        // landed — it would have reassured the user while their progress
-        // silently failed to save.
-        ui_.printLine(
-            "Uyarı: data/ klasörü oluşturulamadı (" + errorCode.message() +
-            "). İlerlemen bu oturumda kaydedilemeyecek.");
-    }
+    ::ensureDataDirectoryExists(ui_);
 }
 
 void Application::run() {
@@ -790,23 +649,13 @@ AnswerResult Application::askOneQuestion(
 }
 
 void Application::saveProgress() {
-    if (!progressManager_.save(
-            progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()))) {
-        ui_.printError("Uyarı: ilerleme dosyası kaydedilemedi.");
-    }
+    AppContext context = makeContext();
+    ::saveProgress(context);
 }
 
 void Application::awardXpAndCheckLevelUp(int amount) {
-    const LevelInfo levelBefore = levelForXp(progress_.totalXp());
-    progress_.addXp(amount);
-    const LevelInfo levelAfter = levelForXp(progress_.totalXp());
-    if (levelAfter.level > levelBefore.level) {
-        ui_.printLine("");
-        ui_.printHighlight(
-            "Tebrikler! Yeni seviyeye ulaştın: " + levelAfter.name + " (Seviye " +
-            std::to_string(levelAfter.level) + ")");
-        ui_.printLine("");
-    }
+    AppContext context = makeContext();
+    ::awardXpAndCheckLevelUp(context, amount);
 }
 
 void Application::resetProgress() {
@@ -936,94 +785,11 @@ void Application::runMistakeQuestions(const std::vector<MistakeRecord>& mistakes
 }
 
 void Application::showStatistics() {
-    ui_.printLine("");
-    ui_.printHeader("İSTATİSTİKLERİM");
-
-    const int topicCount = static_cast<int>(lessons_.allLessons().size());
-    int notStarted = 0;
-    int learning = 0;
-    int completed = 0;
-    int mastered = 0;
-    for (int topicId = 1; topicId <= topicCount; ++topicId) {
-        switch (progress_.statusOf(topicId)) {
-            case TopicStatus::NotStarted:
-                ++notStarted;
-                break;
-            case TopicStatus::Learning:
-                ++learning;
-                break;
-            case TopicStatus::Completed:
-                ++completed;
-                break;
-            case TopicStatus::Mastered:
-                ++mastered;
-                break;
-        }
-    }
-
-    const int totalAnswered = progress_.totalQuestionsAnswered();
-    const int totalCorrect = progress_.totalCorrectAnswers();
-    const double successRatio =
-        totalAnswered == 0 ? 0.0
-                           : static_cast<double>(totalCorrect) / static_cast<double>(totalAnswered);
-
-    ui_.printLine(
-        "Toplam XP: " + ui_.colorize(std::to_string(progress_.totalXp()), TextColor::Yellow));
-    ui_.printLine("Toplam çözülen soru: " + std::to_string(totalAnswered));
-    ui_.printLine(
-        "Toplam doğru cevap: " + ui_.colorize(std::to_string(totalCorrect), TextColor::Green));
-    ui_.printLine(
-        "Toplam yanlış cevap: " +
-        ui_.colorize(std::to_string(totalAnswered - totalCorrect), TextColor::Red));
-    const int successPercent = static_cast<int>(successRatio * 100.0);
-    const TextColor successColor = colorForSuccessPercent(successPercent);
-    ui_.printLine(
-        "Genel başarı oranı: " + ui_.colorize("%" + std::to_string(successPercent), successColor));
-    ui_.printLine("");
-    // Same colours as the topic list markers, so a glance at either screen
-    // means the same thing.
-    ui_.printLine(
-        "Tamamlanan konu sayısı: " +
-        ui_.colorize(std::to_string(completed), colorForStatus(TopicStatus::Completed)));
-    ui_.printLine(
-        "Ustalaşılan konu sayısı: " +
-        ui_.colorize(std::to_string(mastered), colorForStatus(TopicStatus::Mastered)));
-    ui_.printLine(
-        "Öğrenilmekte olan konu sayısı: " +
-        ui_.colorize(std::to_string(learning), colorForStatus(TopicStatus::Learning)));
-    ui_.printLine(
-        "Başlanmamış konu sayısı: " +
-        ui_.colorize(std::to_string(notStarted), colorForStatus(TopicStatus::NotStarted)));
-    ui_.printLine("");
-    const std::size_t mistakeCount = mistakes_.count();
-    ui_.printLine(
-        "Kayıtlı yanlış sayısı: " +
-        ui_.colorize(
-            std::to_string(mistakeCount),
-            mistakeCount == 0 ? TextColor::Green : TextColor::Red));
-    ui_.printLine("");
+    showStatisticsScreen(makeContext());
 }
 
 void Application::showAchievements() {
-    ui_.printLine("");
-    ui_.printHeader("BAŞARIMLAR");
-    for (const AchievementId id : allAchievementIds()) {
-        const bool unlocked = achievements_.isUnlocked(id);
-        // Unlocked ones are the reward, so they get the colour and the
-        // locked ones recede instead of competing for attention.
-        const std::string badge =
-            ui_.colorize(unlocked ? "[+]" : "[ ]", unlocked ? TextColor::Yellow : TextColor::Dim);
-        const std::string name = unlocked
-                                     ? achievementDisplayName(id)
-                                     : ui_.colorize(achievementDisplayName(id), TextColor::Dim);
-        std::string line = badge;
-        line += " ";
-        line += name;
-        line += " ";
-        line += ui_.colorize("- " + achievementDescription(id), TextColor::Dim);
-        ui_.printLine(line);
-    }
-    ui_.printLine("");
+    showAchievementsScreen(makeContext());
 }
 
 void Application::runDailyReview() {

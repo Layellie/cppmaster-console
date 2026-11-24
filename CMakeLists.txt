@@ -94,6 +94,10 @@ add_library(CppMasterConsoleLib STATIC
     src/generators/IntArithmeticPredictGenerator.cpp
     src/generators/BoolOutputPredictGenerator.h
     src/generators/BoolOutputPredictGenerator.cpp
+    src/AppContext.h
+    src/AppContext.cpp
+    src/MenuFormatting.h
+    src/MenuFormatting.cpp
     src/Application.h
     src/Application.cpp
     src/HintProvider.h

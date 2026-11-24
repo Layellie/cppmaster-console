@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "AchievementTracker.h"
+#include "AppContext.h"
 #include "CodeExerciseManager.h"
 #include "ConsoleUI.h"
 #include "GeneratedQuestionValidator.h"
@@ -32,6 +33,7 @@ public:
     void run();
 
 private:
+    [[nodiscard]] AppContext makeContext() noexcept;
     void runFirstLaunchSkillSelection();
     void showMainMenu();
     void handleChoice(int choice);
