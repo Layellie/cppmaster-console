@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "AdaptiveDifficulty.h"
+#include "CodeExerciseSession.h"
 #include "ExamContent.h"
 #include "LevelSystem.h"
 #include "MenuFormatting.h"
@@ -1021,154 +1022,8 @@ void Application::showExamMenu() {
 }
 
 void Application::runCodeExercises() {
-    bool inCodeExercisesMenu = true;
-    while (inCodeExercisesMenu) {
-        ui_.printLine("");
-        ui_.printHeader("KOD YAZMA ALIŞTIRMALARI");
-        ui_.printLine("1. Başlangıç");
-        ui_.printLine("2. Orta");
-        ui_.printLine("3. İleri");
-        ui_.printLine("0. Geri dön");
-        ui_.printLine("");
-        ui_.printLine("Seçimin:");
-
-        const int tierChoice = ui_.readMenuChoice(0, 3);
-        if (ui_.isInputClosed()) {
-            break;
-        }
-        std::string tier;
-        switch (tierChoice) {
-            case 1:
-                tier = "Başlangıç";
-                break;
-            case 2:
-                tier = "Orta";
-                break;
-            case 3:
-                tier = "İleri";
-                break;
-            case 0:
-                inCodeExercisesMenu = false;
-                break;
-            default:
-                break;
-        }
-        if (!tier.empty()) {
-            runCodeExerciseTier(tier);
-        }
-    }
-}
-
-void Application::runCodeExerciseTier(const std::string& tier) {
-    const auto exercises = codeExercises_.exercisesForTier(tier);
-    bool inTierMenu = true;
-    while (inTierMenu) {
-        ui_.printLine("");
-        ui_.printHeader(tier + " Alıştırmaları");
-        int completedInTier = 0;
-        for (const CodeExercise& exercise : exercises) {
-            const bool done = progress_.isCodeExerciseCompleted(exercise.id);
-            if (done) {
-                ++completedInTier;
-            }
-            ui_.printLine(
-                std::string("  [") + (done ? '+' : ' ') + "] " + std::to_string(exercise.id) +
-                ". " + exercise.title);
-        }
-        ui_.printLine("");
-        ui_.printLine(
-            "Tamamlanan: " + std::to_string(completedInTier) + "/" +
-            std::to_string(exercises.size()));
-        ui_.printLine("");
-        ui_.printLine("0. Geri dön");
-        ui_.printLine("");
-        ui_.printLine("Alıştırma numarasını gir:");
-
-        int maxExerciseId = 0;
-        for (const CodeExercise& allExercise : codeExercises_.allExercises()) {
-            maxExerciseId = std::max(maxExerciseId, allExercise.id);
-        }
-        const int choice = ui_.readMenuChoice(0, maxExerciseId);
-        if (ui_.isInputClosed() || choice == 0) {
-            inTierMenu = false;
-            continue;
-        }
-        const auto exercise = codeExercises_.findById(choice);
-        if (!exercise.has_value() || exercise->tier != tier) {
-            ui_.printLine("Geçersiz alıştırma numarası.");
-            continue;
-        }
-        runCodeExercise(*exercise);
-    }
-}
-
-void Application::runCodeExercise(const CodeExercise& exercise) {
-    ui_.printLine("");
-    ui_.printHeader(std::to_string(exercise.id) + ". " + exercise.title);
-    ui_.printLine(exercise.description);
-    ui_.printLine("");
-    ui_.printLine("Beklenen davranış:");
-    ui_.printLine(exercise.expectedBehavior);
-    ui_.printLine("");
-    ui_.printLine("Örnek giriş: " + exercise.sampleInput);
-    ui_.printLine("Örnek çıktı: " + exercise.sampleOutput);
-    ui_.printLine("");
-
-    int hintLevelUsed = 0;
-    ui_.printLine("Başlamadan önce ipucu görmek ister misin? (E/H)");
-    while (true) {
-        const std::string wantsHint = ui_.readLine("Cevabın: ");
-        if (ui_.isInputClosed()) {
-            return;
-        }
-        if (wantsHint != "E" && wantsHint != "e") {
-            break;
-        }
-        if (hintLevelUsed < static_cast<int>(exercise.hints.size())) {
-            ui_.printLine(exercise.hints[static_cast<std::size_t>(hintLevelUsed)]);
-            ++hintLevelUsed;
-        } else if (!exercise.hints.empty()) {
-            ui_.printLine(exercise.hints.back());
-        }
-        ui_.printLine("Başka bir ipucu görmek ister misin? (E/H)");
-    }
-
-    ui_.printLine(
-        "Kodunu birden fazla satır halinde girebilirsin. Bitirmek için BITIR yazıp Enter'a bas.");
-    const std::string submittedCode = ui_.readMultilineCode();
-    if (ui_.isInputClosed() && submittedCode.empty()) {
-        return;
-    }
-
-    const Question question = toWriteCodeQuestion(exercise);
-    const AnswerResult result = quizEngine_.evaluate(question, submittedCode, settings_);
-
-    int xpAwarded = result.xpAwarded;
-    if (result.correct && hintLevelUsed > 0) {
-        const int cappedHintLevel = hintLevelUsed < 3 ? hintLevelUsed : 3;
-        const double multiplier = 1.0 - (0.25 * static_cast<double>(cappedHintLevel));
-        xpAwarded = static_cast<int>(static_cast<double>(xpAwarded) * multiplier);
-    }
-
-    ui_.printLine("");
-    if (result.correct) {
-        ui_.printSuccess("Doğru! (+" + std::to_string(xpAwarded) + " XP)");
-        progress_.markCodeExerciseCompleted(exercise.id);
-        awardXpAndCheckLevelUp(xpAwarded);
-    } else {
-        ui_.playAlertSound();
-        ui_.printError("Gönderdiğin kod beklenen kriterleri karşılamıyor.");
-    }
-
-    ui_.printLine("");
-    ui_.printLine("Örnek çözüm:");
-    ui_.printLine(exercise.sampleSolution);
-    ui_.printLine("");
-    ui_.printLine("Alternatif çözüm notu:");
-    ui_.printLine(exercise.alternativeSolutionNote);
-    ui_.printLine("");
-
-    saveProgress();
+    AppContext context = makeContext();
+    runCodeExercisesSession(context);
 }
 
 void Application::showSettingsMenu() {

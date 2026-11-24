@@ -78,8 +78,6 @@ private:
     void runFinalExam();
     void showExamMenu();
     void runCodeExercises();
-    void runCodeExerciseTier(const std::string& tier);
-    void runCodeExercise(const CodeExercise& exercise);
     void showSettingsMenu();
     void ensureDataDirectoryExists();
 

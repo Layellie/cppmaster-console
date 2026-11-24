@@ -100,6 +100,8 @@ add_library(CppMasterConsoleLib STATIC
     src/MenuFormatting.cpp
     src/SettingsScreen.h
     src/SettingsScreen.cpp
+    src/CodeExerciseSession.h
+    src/CodeExerciseSession.cpp
     src/Application.h
     src/Application.cpp
     src/HintProvider.h
