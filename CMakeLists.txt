@@ -98,6 +98,8 @@ add_library(CppMasterConsoleLib STATIC
     src/AppContext.cpp
     src/MenuFormatting.h
     src/MenuFormatting.cpp
+    src/SettingsScreen.h
+    src/SettingsScreen.cpp
     src/Application.h
     src/Application.cpp
     src/HintProvider.h

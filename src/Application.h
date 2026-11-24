@@ -81,8 +81,6 @@ private:
     void runCodeExerciseTier(const std::string& tier);
     void runCodeExercise(const CodeExercise& exercise);
     void showSettingsMenu();
-    void exportProgress();
-    void importProgress();
     void ensureDataDirectoryExists();
 
     ConsoleUI ui_;
