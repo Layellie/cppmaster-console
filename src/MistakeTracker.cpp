@@ -1,49 +1,26 @@
 #include "MistakeTracker.h"
 
 #include <algorithm>
-#include <cstddef>
+#include <cstdint>
 #include <ctime>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
 #include <system_error>
 #include <utility>
 
+#include "AtomicFileWrite.h"
+#include "ParseUtil.h"
+
 namespace {
 
-bool tryParseInt(const std::string& text, int& outValue) {
-    if (text.empty()) {
-        return false;
-    }
-    try {
-        std::size_t consumedChars = 0;
-        const int value = std::stoi(text, &consumedChars);
-        if (consumedChars != text.size()) {
-            return false;
-        }
-        outValue = value;
-        return true;
-    } catch (const std::exception&) {
-        return false;
-    }
-}
-
 bool tryParseEpochSeconds(const std::string& text, std::chrono::system_clock::time_point& outTime) {
-    if (text.empty()) {
+    std::int64_t seconds = 0;
+    if (!tryParseInt64(text, seconds)) {
         return false;
     }
-    try {
-        std::size_t consumedChars = 0;
-        const long long seconds = std::stoll(text, &consumedChars);
-        if (consumedChars != text.size()) {
-            return false;
-        }
-        outTime = std::chrono::system_clock::from_time_t(static_cast<std::time_t>(seconds));
-        return true;
-    } catch (const std::exception&) {
-        return false;
-    }
+    outTime = std::chrono::system_clock::from_time_t(static_cast<std::time_t>(seconds));
+    return true;
 }
 
 }  // namespace
@@ -74,7 +51,11 @@ void MistakeTracker::recordCorrectRetry(int questionId) {
 }
 
 bool MistakeTracker::hasMistake(int questionId) const {
-    return recordsByQuestionId_.find(questionId) != recordsByQuestionId_.end();
+    return recordsByQuestionId_.contains(questionId);
+}
+
+std::size_t MistakeTracker::count() const noexcept {
+    return recordsByQuestionId_.size();
 }
 
 std::optional<MistakeRecord> MistakeTracker::findMistake(int questionId) const {
@@ -108,12 +89,11 @@ bool MistakeTracker::loadFromFile(const std::string& filePath, const std::string
 
     std::string line;
     while (std::getline(file, line)) {
-        if (line.empty()) {
-            continue;
-        }
         std::istringstream lineStream(line);
         std::string recordType;
-        lineStream >> recordType;
+        if (!(lineStream >> recordType)) {
+            continue;
+        }
 
         if (recordType != "mistake") {
             corrupted = true;
@@ -152,16 +132,14 @@ bool MistakeTracker::loadFromFile(const std::string& filePath, const std::string
     return false;
 }
 
-void MistakeTracker::saveToFile(const std::string& filePath) const {
-    std::ofstream file(filePath, std::ios::trunc);
-    if (!file.is_open()) {
-        return;
-    }
+bool MistakeTracker::saveToFile(const std::string& filePath) const {
+    std::ostringstream buffer;
     for (const auto& entry : recordsByQuestionId_) {
         const MistakeRecord& record = entry.second;
-        file << "mistake " << record.questionId << ' '
-             << std::chrono::system_clock::to_time_t(record.firstWrongAt) << ' '
-             << std::chrono::system_clock::to_time_t(record.lastWrongAt) << ' '
-             << record.wrongCount << ' ' << record.correctAfterWrongCount << '\n';
+        buffer << "mistake " << record.questionId << ' '
+               << std::chrono::system_clock::to_time_t(record.firstWrongAt) << ' '
+               << std::chrono::system_clock::to_time_t(record.lastWrongAt) << ' '
+               << record.wrongCount << ' ' << record.correctAfterWrongCount << '\n';
     }
+    return atomicWriteTextFile(filePath, buffer.str());
 }

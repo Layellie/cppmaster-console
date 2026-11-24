@@ -1,5 +1,6 @@
 #include "generators/ForLoopSumPredictGenerator.h"
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <string>
@@ -33,10 +34,7 @@ std::optional<GeneratedQuestion> ForLoopSumPredictGenerator::generate(
 
     std::uniform_int_distribution<std::size_t> nameDist(0, kVariableNames.size() - 1);
     const std::string variableName = kVariableNames[nameDist(randomEngine)];
-    int n = nDomain.draw(randomEngine);
-    if (n < 1) {
-        n = 1;
-    }
+    const int n = std::max(1, nDomain.draw(randomEngine));
 
     int sum = 0;
     std::string prompt;

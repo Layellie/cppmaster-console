@@ -1,30 +1,17 @@
 #include "SettingsManager.h"
 
-#include <cstddef>
+#include <algorithm>
+#include <array>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
+#include <string_view>
 #include <system_error>
 
-namespace {
+#include "AtomicFileWrite.h"
+#include "ParseUtil.h"
 
-bool tryParseInt(const std::string& text, int& outValue) {
-    if (text.empty()) {
-        return false;
-    }
-    try {
-        std::size_t consumedChars = 0;
-        const int value = std::stoi(text, &consumedChars);
-        if (consumedChars != text.size()) {
-            return false;
-        }
-        outValue = value;
-        return true;
-    } catch (const std::exception&) {
-        return false;
-    }
-}
+namespace {
 
 bool tryParseBool(const std::string& text, bool& outValue) {
     if (text == "1") {
@@ -60,66 +47,71 @@ SettingsLoadResult SettingsManager::load(
     int topicQuizCount = settings.topicQuizQuestionCount;
     bool corrupted = false;
 
+    struct BoolFieldBinding {
+        std::string_view key;
+        bool* target;
+    };
+    struct IntFieldBinding {
+        std::string_view key;
+        int* target;
+    };
+
+    const std::array<BoolFieldBinding, 6> boolFields = {{
+        {"topic_lock", &topicLock},
+        {"strict_case", &strictCase},
+        {"lenient_writecode", &lenientWriteCode},
+        {"full_explanation", &fullExplanation},
+        {"color_enabled", &colorEnabled},
+        {"audio_alert", &audioAlert},
+    }};
+    const std::array<IntFieldBinding, 3> intFields = {{
+        {"daily_cap", &dailyCap},
+        {"quick_test_count", &quickTestCount},
+        {"topic_quiz_count", &topicQuizCount},
+    }};
+
     std::string line;
     while (std::getline(file, line)) {
-        if (line.empty()) {
-            continue;
-        }
         std::istringstream lineStream(line);
         std::string recordType;
-        lineStream >> recordType;
+        if (!(lineStream >> recordType)) {
+            continue;
+        }
         std::string valueText;
         lineStream >> valueText;
 
-        if (recordType == "topic_lock") {
-            if (!tryParseBool(valueText, topicLock)) {
-                corrupted = true;
+        bool* matchedBoolTarget = nullptr;
+        for (const BoolFieldBinding& field : boolFields) {
+            if (field.key == recordType) {
+                matchedBoolTarget = field.target;
                 break;
             }
-        } else if (recordType == "strict_case") {
-            if (!tryParseBool(valueText, strictCase)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "lenient_writecode") {
-            if (!tryParseBool(valueText, lenientWriteCode)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "full_explanation") {
-            if (!tryParseBool(valueText, fullExplanation)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "daily_cap") {
-            if (!tryParseInt(valueText, dailyCap)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "color_enabled") {
-            if (!tryParseBool(valueText, colorEnabled)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "audio_alert") {
-            if (!tryParseBool(valueText, audioAlert)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "quick_test_count") {
-            if (!tryParseInt(valueText, quickTestCount)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "topic_quiz_count") {
-            if (!tryParseInt(valueText, topicQuizCount)) {
-                corrupted = true;
-                break;
-            }
-        } else {
-            corrupted = true;
-            break;
         }
+        if (matchedBoolTarget != nullptr) {
+            if (!tryParseBool(valueText, *matchedBoolTarget)) {
+                corrupted = true;
+                break;
+            }
+            continue;
+        }
+
+        int* matchedIntTarget = nullptr;
+        for (const IntFieldBinding& field : intFields) {
+            if (field.key == recordType) {
+                matchedIntTarget = field.target;
+                break;
+            }
+        }
+        if (matchedIntTarget != nullptr) {
+            if (!tryParseInt(valueText, *matchedIntTarget)) {
+                corrupted = true;
+                break;
+            }
+            continue;
+        }
+
+        corrupted = true;
+        break;
     }
 
     if (corrupted) {
@@ -141,18 +133,16 @@ SettingsLoadResult SettingsManager::load(
     return SettingsLoadResult{settings, false};
 }
 
-void SettingsManager::save(const Settings& settings, const std::string& filePath) const {
-    std::ofstream file(filePath, std::ios::trunc);
-    if (!file.is_open()) {
-        return;
-    }
-    file << "topic_lock " << (settings.topicLockEnabled ? 1 : 0) << '\n';
-    file << "strict_case " << (settings.strictCaseSensitivity ? 1 : 0) << '\n';
-    file << "lenient_writecode " << (settings.lenientWriteCodeTolerance ? 1 : 0) << '\n';
-    file << "full_explanation " << (settings.fullExplanationDetail ? 1 : 0) << '\n';
-    file << "daily_cap " << settings.dailyReviewQuestionCap << '\n';
-    file << "color_enabled " << (settings.colorEnabled ? 1 : 0) << '\n';
-    file << "audio_alert " << (settings.audioAlertEnabled ? 1 : 0) << '\n';
-    file << "quick_test_count " << settings.quickTestQuestionCount << '\n';
-    file << "topic_quiz_count " << settings.topicQuizQuestionCount << '\n';
+bool SettingsManager::save(const Settings& settings, const std::string& filePath) const {
+    std::ostringstream buffer;
+    buffer << "topic_lock " << (settings.topicLockEnabled ? 1 : 0) << '\n';
+    buffer << "strict_case " << (settings.strictCaseSensitivity ? 1 : 0) << '\n';
+    buffer << "lenient_writecode " << (settings.lenientWriteCodeTolerance ? 1 : 0) << '\n';
+    buffer << "full_explanation " << (settings.fullExplanationDetail ? 1 : 0) << '\n';
+    buffer << "daily_cap " << settings.dailyReviewQuestionCap << '\n';
+    buffer << "color_enabled " << (settings.colorEnabled ? 1 : 0) << '\n';
+    buffer << "audio_alert " << (settings.audioAlertEnabled ? 1 : 0) << '\n';
+    buffer << "quick_test_count " << settings.quickTestQuestionCount << '\n';
+    buffer << "topic_quiz_count " << settings.topicQuizQuestionCount << '\n';
+    return atomicWriteTextFile(filePath, buffer.str());
 }

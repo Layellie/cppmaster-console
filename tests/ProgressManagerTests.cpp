@@ -39,7 +39,7 @@ TEST_CASE(ProgressManager_SaveThenLoadRoundTripsAllFields) {
     progress.markCodeExerciseCompleted(7);
 
     ProgressManager manager;
-    manager.save(progress, path, kTopicCount);
+    CHECK(manager.save(progress, path, kTopicCount));
 
     const ProgressLoadResult result = manager.load(path, backup, kTopicCount);
     CHECK(!result.wasCorrupted);
@@ -102,6 +102,91 @@ TEST_CASE(ProgressManager_CorruptedFileIsBackedUpAndResets) {
     const ProgressLoadResult result = manager.load(path, backup, kTopicCount);
     CHECK(result.wasCorrupted);
     CHECK(result.progress.totalXp() == 0);
+    CHECK(std::filesystem::exists(backup));
+
+    std::filesystem::remove(path);
+    std::filesystem::remove(backup);
+}
+
+TEST_CASE(ProgressManager_SaveReturnsFalseOnUnwritablePath) {
+    const std::string path = "tests/test_data/nonexistent_subdir_for_test/progress.txt";
+    UserProgress progress(kTopicCount);
+    ProgressManager manager;
+
+    CHECK(!manager.save(progress, path, kTopicCount));
+    CHECK(!std::filesystem::exists(path));
+    CHECK(!std::filesystem::exists(path + ".tmp"));
+}
+
+TEST_CASE(ProgressManager_SaveOverwritesAtomicallyWithoutLeavingTempFile) {
+    const std::string path = "tests/test_data/progress_atomic_overwrite.txt";
+    const std::string backup = "tests/test_data/progress_atomic_overwrite_backup.txt";
+    std::filesystem::remove(path);
+    std::filesystem::remove(path + ".tmp");
+
+    ProgressManager manager;
+    UserProgress first(kTopicCount);
+    first.addXp(50);
+    CHECK(manager.save(first, path, kTopicCount));
+    CHECK(!std::filesystem::exists(path + ".tmp"));
+
+    UserProgress second(kTopicCount);
+    second.addXp(250);
+    CHECK(manager.save(second, path, kTopicCount));
+    CHECK(!std::filesystem::exists(path + ".tmp"));
+
+    const ProgressLoadResult loaded = manager.load(path, backup, kTopicCount);
+    CHECK(!loaded.wasCorrupted);
+    CHECK(loaded.progress.totalXp() == 250);
+
+    std::filesystem::remove(path);
+}
+
+TEST_CASE(ProgressManager_WhitespaceOnlyLinesAreIgnored) {
+    const std::string path = "tests/test_data/progress_whitespace.txt";
+    const std::string backup = "tests/test_data/progress_whitespace_backup.txt";
+    {
+        std::ofstream file(path, std::ios::trunc);
+        file << "xp 40\n";
+        file << "   \t  \n";
+        file << "\r\n";
+        file << "answered 2\n";
+        file << "correct 1\n";
+    }
+
+    ProgressManager manager;
+    const ProgressLoadResult result = manager.load(path, backup, kTopicCount);
+    CHECK(!result.wasCorrupted);
+    CHECK(result.progress.totalXp() == 40);
+    CHECK(result.progress.totalQuestionsAnswered() == 2);
+    CHECK(result.progress.totalCorrectAnswers() == 1);
+
+    std::filesystem::remove(path);
+    std::filesystem::remove(backup);
+}
+
+TEST_CASE(ProgressManager_NegativeOrInconsistentCountersAreTreatedAsCorrupted) {
+    const std::string path = "tests/test_data/progress_inconsistent.txt";
+    const std::string backup = "tests/test_data/progress_inconsistent_backup.txt";
+    ProgressManager manager;
+
+    std::filesystem::remove(backup);
+    {
+        std::ofstream file(path, std::ios::trunc);
+        file << "xp -10\n";
+    }
+    const ProgressLoadResult negResult = manager.load(path, backup, kTopicCount);
+    CHECK(negResult.wasCorrupted);
+    CHECK(std::filesystem::exists(backup));
+
+    std::filesystem::remove(backup);
+    {
+        std::ofstream file(path, std::ios::trunc);
+        file << "answered 3\n";
+        file << "correct 5\n";
+    }
+    const ProgressLoadResult inconsistentResult = manager.load(path, backup, kTopicCount);
+    CHECK(inconsistentResult.wasCorrupted);
     CHECK(std::filesystem::exists(backup));
 
     std::filesystem::remove(path);

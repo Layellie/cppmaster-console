@@ -1,33 +1,19 @@
 #include "ProgressManager.h"
 
 #include <algorithm>
-#include <cstddef>
+#include <array>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
+#include <string_view>
 #include <system_error>
 #include <utility>
 #include <vector>
 
-namespace {
+#include "AtomicFileWrite.h"
+#include "ParseUtil.h"
 
-bool tryParseInt(const std::string& text, int& outValue) {
-    if (text.empty()) {
-        return false;
-    }
-    try {
-        std::size_t consumedChars = 0;
-        const int value = std::stoi(text, &consumedChars);
-        if (consumedChars != text.size()) {
-            return false;
-        }
-        outValue = value;
-        return true;
-    } catch (const std::exception&) {
-        return false;
-    }
-}
+namespace {
 
 bool parseStatusName(const std::string& name, TopicStatus& outStatus) {
     if (name == "NotStarted") {
@@ -89,75 +75,42 @@ ProgressLoadResult ProgressManager::load(
     int unlockedUpToTopicId = topicCount;
     bool corrupted = false;
 
+    struct IntFieldBinding {
+        std::string_view key;
+        int* target;
+    };
+
+    const std::array<IntFieldBinding, 9> intFields = {{
+        {"xp", &xp},
+        {"answered", &answered},
+        {"correct", &correct},
+        {"streak_current", &streakCurrent},
+        {"streak_longest", &streakLongest},
+        {"writecode_correct", &writeCodeCorrect},
+        {"errorfix_correct", &errorFixCorrect},
+        {"highest_section_exam_passed", &highestSectionExamPassed},
+        {"unlocked_up_to", &unlockedUpToTopicId},
+    }};
+
     std::string line;
     while (std::getline(file, line)) {
-        if (line.empty()) {
-            continue;
-        }
         std::istringstream lineStream(line);
         std::string recordType;
-        lineStream >> recordType;
+        if (!(lineStream >> recordType)) {
+            continue;
+        }
 
-        if (recordType == "xp") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, xp)) {
-                corrupted = true;
+        int* matchedTarget = nullptr;
+        for (const IntFieldBinding& field : intFields) {
+            if (field.key == recordType) {
+                matchedTarget = field.target;
                 break;
             }
-        } else if (recordType == "answered") {
+        }
+        if (matchedTarget != nullptr) {
             std::string valueText;
             lineStream >> valueText;
-            if (!tryParseInt(valueText, answered)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "correct") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, correct)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "streak_current") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, streakCurrent)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "streak_longest") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, streakLongest)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "writecode_correct") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, writeCodeCorrect)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "errorfix_correct") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, errorFixCorrect)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "highest_section_exam_passed") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, highestSectionExamPassed)) {
-                corrupted = true;
-                break;
-            }
-        } else if (recordType == "unlocked_up_to") {
-            std::string valueText;
-            lineStream >> valueText;
-            if (!tryParseInt(valueText, unlockedUpToTopicId)) {
+            if (!tryParseInt(valueText, *matchedTarget)) {
                 corrupted = true;
                 break;
             }
@@ -187,7 +140,12 @@ ProgressLoadResult ProgressManager::load(
         }
     }
 
-    if (corrupted) {
+    const bool countersInvalid = xp < 0 || answered < 0 || correct < 0 || correct > answered ||
+                                 streakCurrent < 0 || streakLongest < 0 ||
+                                 streakCurrent > streakLongest || writeCodeCorrect < 0 ||
+                                 errorFixCorrect < 0 || highestSectionExamPassed < 0 ||
+                                 unlockedUpToTopicId < 0;
+    if (corrupted || countersInvalid) {
         std::error_code errorCode;
         std::filesystem::copy_file(
             filePath, backupPath, std::filesystem::copy_options::overwrite_existing, errorCode);
@@ -203,30 +161,28 @@ ProgressLoadResult ProgressManager::load(
     return ProgressLoadResult{std::move(progress), false};
 }
 
-void ProgressManager::save(
+bool ProgressManager::save(
     const UserProgress& progress, const std::string& filePath, int topicCount) const {
-    std::ofstream file(filePath, std::ios::trunc);
-    if (!file.is_open()) {
-        return;
-    }
-    file << "xp " << progress.totalXp() << '\n';
-    file << "answered " << progress.totalQuestionsAnswered() << '\n';
-    file << "correct " << progress.totalCorrectAnswers() << '\n';
-    file << "streak_current " << progress.currentStreak() << '\n';
-    file << "streak_longest " << progress.longestStreak() << '\n';
-    file << "writecode_correct " << progress.writeCodeCorrectCount() << '\n';
-    file << "errorfix_correct " << progress.errorFixCorrectCount() << '\n';
-    file << "highest_section_exam_passed " << progress.highestSectionExamPassed() << '\n';
-    file << "unlocked_up_to " << progress.unlockedUpToTopicId() << '\n';
+    std::ostringstream buffer;
+    buffer << "xp " << progress.totalXp() << '\n';
+    buffer << "answered " << progress.totalQuestionsAnswered() << '\n';
+    buffer << "correct " << progress.totalCorrectAnswers() << '\n';
+    buffer << "streak_current " << progress.currentStreak() << '\n';
+    buffer << "streak_longest " << progress.longestStreak() << '\n';
+    buffer << "writecode_correct " << progress.writeCodeCorrectCount() << '\n';
+    buffer << "errorfix_correct " << progress.errorFixCorrectCount() << '\n';
+    buffer << "highest_section_exam_passed " << progress.highestSectionExamPassed() << '\n';
+    buffer << "unlocked_up_to " << progress.unlockedUpToTopicId() << '\n';
     // Sorted so the file is stable across runs (the set's iteration order
     // isn't), which keeps diffs and manual inspection sane.
     std::vector<int> completedExercises(
         progress.completedCodeExerciseIds().begin(), progress.completedCodeExerciseIds().end());
-    std::sort(completedExercises.begin(), completedExercises.end());
+    std::ranges::sort(completedExercises);
     for (const int exerciseId : completedExercises) {
-        file << "exercise_done " << exerciseId << '\n';
+        buffer << "exercise_done " << exerciseId << '\n';
     }
     for (int topicId = 1; topicId <= topicCount; ++topicId) {
-        file << "topic " << topicId << ' ' << statusName(progress.statusOf(topicId)) << '\n';
+        buffer << "topic " << topicId << ' ' << statusName(progress.statusOf(topicId)) << '\n';
     }
+    return atomicWriteTextFile(filePath, buffer.str());
 }

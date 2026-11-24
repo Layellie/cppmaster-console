@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstddef>
 #include <functional>
+#include <utility>
 #include <vector>
 
 #include "Question.h"
@@ -27,6 +28,9 @@
 [[nodiscard]] inline std::vector<Question> selectQuizQuestionsFrom(
     const std::vector<Question>& pool, std::size_t quizSize,
     const std::function<bool(const Question&)>& wasAnsweredWrongBefore) {
+    if (quizSize == 0) {
+        return {};
+    }
     if (pool.size() <= quizSize) {
         return pool;
     }
@@ -50,14 +54,14 @@
     std::vector<Question> selected;
     selected.reserve(quizSize);
     for (std::size_t i = 0; i < mistakes.size() && selected.size() < mistakeBudget; ++i) {
-        selected.push_back(mistakes[i]);
+        selected.push_back(std::move(mistakes[i]));
     }
     const std::size_t usedMistakes = selected.size();
     for (std::size_t i = 0; i < fresh.size() && selected.size() < quizSize; ++i) {
-        selected.push_back(fresh[i]);
+        selected.push_back(std::move(fresh[i]));
     }
     for (std::size_t i = usedMistakes; i < mistakes.size() && selected.size() < quizSize; ++i) {
-        selected.push_back(mistakes[i]);
+        selected.push_back(std::move(mistakes[i]));
     }
 
     return selected;

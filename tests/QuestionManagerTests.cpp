@@ -152,3 +152,19 @@ TEST_CASE(QuestionManager_QuestionsForTopicReturnsOnlyMatchingTopic) {
         CHECK(question.topicId == 1);
     }
 }
+
+TEST_CASE(QuestionManager_ZeroCopyViewsMatchCopyingAccessors) {
+    QuestionManager manager;
+    const auto view = manager.questionViewForTopic(1);
+    const auto copied = manager.questionsForTopic(1);
+    CHECK(view.size() == copied.size());
+    for (std::size_t i = 0; i < view.size(); ++i) {
+        CHECK(view[i].id == copied[i].id);
+    }
+    CHECK(manager.questionViewForTopic(999).empty());
+
+    const Question* const found = manager.findPtrById(1);
+    CHECK(found != nullptr);
+    CHECK(found->id == 1);
+    CHECK(manager.findPtrById(999999) == nullptr);
+}

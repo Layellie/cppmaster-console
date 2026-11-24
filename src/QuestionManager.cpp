@@ -1,5 +1,7 @@
 #include "QuestionManager.h"
 
+#include <algorithm>
+
 #include "QuestionContent.h"
 
 QuestionManager::QuestionManager() {
@@ -642,6 +644,10 @@ QuestionManager::QuestionManager() {
 }
 
 void QuestionManager::buildIndexes() {
+    // Group questions contiguously by topicId while preserving authored order
+    // within each topic, so questionViewForTopic can return a zero-copy span.
+    std::ranges::stable_sort(questions_, {}, &Question::topicId);
+
     indexById_.reserve(questions_.size());
     for (std::size_t index = 0; index < questions_.size(); ++index) {
         const Question& question = questions_[index];
@@ -649,28 +655,38 @@ void QuestionManager::buildIndexes() {
         // test (QuestionManager_NoDuplicateQuestionIds) guarantees they
         // don't exist, so first-wins is safe rather than merely convenient.
         indexById_.emplace(question.id, index);
-        indicesByTopicId_[question.topicId].push_back(index);
+        auto [it, inserted] = rangeByTopicId_.emplace(question.topicId, TopicRange{index, 1});
+        if (!inserted) {
+            ++it->second.count;
+        }
     }
+}
+
+std::span<const Question> QuestionManager::questionViewForTopic(int topicId) const noexcept {
+    const auto it = rangeByTopicId_.find(topicId);
+    if (it == rangeByTopicId_.end()) {
+        return {};
+    }
+    return {questions_.data() + it->second.offset, it->second.count};
 }
 
 std::vector<Question> QuestionManager::questionsForTopic(int topicId) const {
-    const auto it = indicesByTopicId_.find(topicId);
-    if (it == indicesByTopicId_.end()) {
-        return {};
-    }
+    const std::span<const Question> view = questionViewForTopic(topicId);
+    return {view.begin(), view.end()};
+}
 
-    std::vector<Question> result;
-    result.reserve(it->second.size());
-    for (const std::size_t index : it->second) {
-        result.push_back(questions_[index]);
+const Question* QuestionManager::findPtrById(int questionId) const noexcept {
+    const auto it = indexById_.find(questionId);
+    if (it == indexById_.end()) {
+        return nullptr;
     }
-    return result;
+    return &questions_[it->second];
 }
 
 std::optional<Question> QuestionManager::findById(int questionId) const {
-    const auto it = indexById_.find(questionId);
-    if (it == indexById_.end()) {
+    const Question* question = findPtrById(questionId);
+    if (question == nullptr) {
         return std::nullopt;
     }
-    return questions_[it->second];
+    return *question;
 }

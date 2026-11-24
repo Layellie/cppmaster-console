@@ -18,7 +18,7 @@ endif()
 
 function(apply_strict_warnings target)
     if (MSVC)
-        target_compile_options(${target} PRIVATE /W4 /permissive-)
+        target_compile_options(${target} PRIVATE /W4 /permissive- /utf-8)
     else()
         target_compile_options(
             ${target}
@@ -73,6 +73,9 @@ add_library(CppMasterConsoleLib STATIC
     src/TopicLock.h
     src/AchievementTracker.h
     src/AchievementTracker.cpp
+    src/AtomicFileWrite.h
+    src/AtomicFileWrite.cpp
+    src/ParseUtil.h
     src/ProgressManager.h
     src/ProgressManager.cpp
     src/Settings.h
@@ -91,6 +94,18 @@ add_library(CppMasterConsoleLib STATIC
     src/generators/IntArithmeticPredictGenerator.cpp
     src/generators/BoolOutputPredictGenerator.h
     src/generators/BoolOutputPredictGenerator.cpp
+    src/AppContext.h
+    src/AppContext.cpp
+    src/MenuFormatting.h
+    src/MenuFormatting.cpp
+    src/SettingsScreen.h
+    src/SettingsScreen.cpp
+    src/CodeExerciseSession.h
+    src/CodeExerciseSession.cpp
+    src/QuizSession.h
+    src/QuizSession.cpp
+    src/ExamSession.h
+    src/ExamSession.cpp
     src/Application.h
     src/Application.cpp
     src/HintProvider.h

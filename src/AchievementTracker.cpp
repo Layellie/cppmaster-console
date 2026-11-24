@@ -6,6 +6,8 @@
 #include <system_error>
 #include <utility>
 
+#include "AtomicFileWrite.h"
+
 namespace {
 
 bool parseAchievementName(const std::string& name, AchievementId& outId) {
@@ -120,7 +122,7 @@ bool AchievementTracker::unlock(AchievementId id) {
 }
 
 bool AchievementTracker::isUnlocked(AchievementId id) const {
-    return unlockedIds_.find(static_cast<int>(id)) != unlockedIds_.end();
+    return unlockedIds_.contains(static_cast<int>(id));
 }
 
 std::vector<AchievementId> AchievementTracker::allUnlocked() const {
@@ -143,12 +145,11 @@ bool AchievementTracker::loadFromFile(const std::string& filePath, const std::st
 
     std::string line;
     while (std::getline(file, line)) {
-        if (line.empty()) {
-            continue;
-        }
         std::istringstream lineStream(line);
         std::string recordType;
-        lineStream >> recordType;
+        if (!(lineStream >> recordType)) {
+            continue;
+        }
 
         if (recordType != "achievement") {
             corrupted = true;
@@ -178,12 +179,11 @@ bool AchievementTracker::loadFromFile(const std::string& filePath, const std::st
     return false;
 }
 
-void AchievementTracker::saveToFile(const std::string& filePath) const {
-    std::ofstream file(filePath, std::ios::trunc);
-    if (!file.is_open()) {
-        return;
-    }
+bool AchievementTracker::saveToFile(const std::string& filePath) const {
+    std::ostringstream buffer;
     for (const int id : unlockedIds_) {
-        file << "achievement " << achievementSerializedName(static_cast<AchievementId>(id)) << '\n';
+        buffer << "achievement " << achievementSerializedName(static_cast<AchievementId>(id))
+               << '\n';
     }
+    return atomicWriteTextFile(filePath, buffer.str());
 }

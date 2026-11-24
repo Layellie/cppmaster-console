@@ -1,40 +1,20 @@
 #include "QuestionHistory.h"
 
-#include <cstddef>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
 #include <system_error>
 #include <utility>
 
-namespace {
-
-bool tryParseUint64(const std::string& text, std::uint64_t& outValue) {
-    if (text.empty()) {
-        return false;
-    }
-    try {
-        std::size_t consumedChars = 0;
-        const unsigned long long value = std::stoull(text, &consumedChars);
-        if (consumedChars != text.size()) {
-            return false;
-        }
-        outValue = static_cast<std::uint64_t>(value);
-        return true;
-    } catch (const std::exception&) {
-        return false;
-    }
-}
-
-}  // namespace
+#include "AtomicFileWrite.h"
+#include "ParseUtil.h"
 
 bool QuestionHistory::hasSeenExact(std::uint64_t exactHash) const {
-    return seenExactHashes_.find(exactHash) != seenExactHashes_.end();
+    return seenExactHashes_.contains(exactHash);
 }
 
 bool QuestionHistory::hasSeenSemantic(std::uint64_t semanticHash) const {
-    return seenSemanticHashes_.find(semanticHash) != seenSemanticHashes_.end();
+    return seenSemanticHashes_.contains(semanticHash);
 }
 
 void QuestionHistory::record(const GeneratedQuestion& generated) {
@@ -54,12 +34,11 @@ bool QuestionHistory::loadFromFile(const std::string& filePath, const std::strin
 
     std::string line;
     while (std::getline(file, line)) {
-        if (line.empty()) {
-            continue;
-        }
         std::istringstream lineStream(line);
         std::string recordType;
-        lineStream >> recordType;
+        if (!(lineStream >> recordType)) {
+            continue;
+        }
 
         std::string valueText;
         lineStream >> valueText;
@@ -97,15 +76,13 @@ bool QuestionHistory::loadFromFile(const std::string& filePath, const std::strin
     return false;
 }
 
-void QuestionHistory::saveToFile(const std::string& filePath) const {
-    std::ofstream file(filePath, std::ios::trunc);
-    if (!file.is_open()) {
-        return;
-    }
+bool QuestionHistory::saveToFile(const std::string& filePath) const {
+    std::ostringstream buffer;
     for (const std::uint64_t hash : seenExactHashes_) {
-        file << "exact " << hash << '\n';
+        buffer << "exact " << hash << '\n';
     }
     for (const std::uint64_t hash : seenSemanticHashes_) {
-        file << "semantic " << hash << '\n';
+        buffer << "semantic " << hash << '\n';
     }
+    return atomicWriteTextFile(filePath, buffer.str());
 }

@@ -55,16 +55,16 @@ std::optional<GeneratedQuestion> StringConcatPredictGenerator::generate(
 
     if (lengthShape) {
         const int length = static_cast<int>(concatenated.size());
-        result.question.prompt = "std::string " + variableName + " = \"" + wordA + "\" + \"" +
-                                  wordB + "\";\nstd::cout << " + variableName +
+        result.question.prompt = "std::string " + variableName + " = std::string(\"" + wordA +
+                                  "\") + \"" + wordB + "\";\nstd::cout << " + variableName +
                                   ".length();\nYukarıdaki kodun ekran çıktısı nedir?";
         result.question.acceptedAnswers = {std::to_string(length)};
         result.question.explanation = "\"" + wordA + "\" ve \"" + wordB +
                                        "\" birleştirilince \"" + concatenated + "\" oluşur; bu " +
                                        std::to_string(length) + " karakterdir.";
     } else {
-        result.question.prompt = "std::string " + variableName + " = \"" + wordA + "\" + \"" +
-                                  wordB + "\";\nstd::cout << " + variableName +
+        result.question.prompt = "std::string " + variableName + " = std::string(\"" + wordA +
+                                  "\") + \"" + wordB + "\";\nstd::cout << " + variableName +
                                   ";\nYukarıdaki kodun ekran çıktısı nedir?";
         result.question.acceptedAnswers = {concatenated};
         result.question.explanation = "\"" + wordA + "\" ve \"" + wordB +

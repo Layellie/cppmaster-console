@@ -23,3 +23,16 @@
     return previousTopicStatus == TopicStatus::Completed ||
            previousTopicStatus == TopicStatus::Mastered;
 }
+
+// Retaking a topic quiz and scoring below the pass threshold must not revoke
+// a previously earned Completed/Mastered status (which could even re-lock
+// the following topic).
+[[nodiscard]] inline TopicStatus nextTopicStatusAfterQuiz(TopicStatus current, bool passed) {
+    if (passed) {
+        return current == TopicStatus::Mastered ? TopicStatus::Mastered : TopicStatus::Completed;
+    }
+    if (current == TopicStatus::Completed || current == TopicStatus::Mastered) {
+        return current;
+    }
+    return TopicStatus::Learning;
+}

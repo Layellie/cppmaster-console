@@ -65,3 +65,21 @@ TEST_CASE(QuestionHistory_CorruptedFileIsBackedUpAndResets) {
     std::filesystem::remove(path);
     std::filesystem::remove(backup);
 }
+
+TEST_CASE(QuestionHistory_NegativeHashIsTreatedAsCorrupted) {
+    const std::string path = "tests/test_data/history_negative.txt";
+    const std::string backup = "tests/test_data/history_negative_backup.txt";
+    std::filesystem::remove(backup);
+    {
+        std::ofstream file(path, std::ios::trunc);
+        file << "exact -1\n";
+    }
+
+    QuestionHistory history;
+    const bool corrupted = history.loadFromFile(path, backup);
+    CHECK(corrupted);
+    CHECK(std::filesystem::exists(backup));
+
+    std::filesystem::remove(path);
+    std::filesystem::remove(backup);
+}

@@ -40,7 +40,7 @@ TEST_CASE(SettingsManager_SaveThenLoadRoundTripsAllFields) {
     settings.topicQuizQuestionCount = 22;
 
     SettingsManager manager;
-    manager.save(settings, path);
+    CHECK(manager.save(settings, path));
 
     const SettingsLoadResult result = manager.load(path, backup);
     CHECK(!result.wasCorrupted);
@@ -99,6 +99,36 @@ TEST_CASE(SettingsManager_CorruptedFileIsBackedUpAndResetsToDefaults) {
     CHECK(result.wasCorrupted);
     CHECK(result.settings.dailyReviewQuestionCap == 20);
     CHECK(std::filesystem::exists(backup));
+
+    std::filesystem::remove(path);
+    std::filesystem::remove(backup);
+}
+
+TEST_CASE(SettingsManager_SaveReturnsFalseOnUnwritablePath) {
+    const std::string path = "tests/test_data/nonexistent_subdir_for_test/settings.txt";
+    Settings settings;
+    SettingsManager manager;
+
+    CHECK(!manager.save(settings, path));
+    CHECK(!std::filesystem::exists(path));
+    CHECK(!std::filesystem::exists(path + ".tmp"));
+}
+
+TEST_CASE(SettingsManager_WhitespaceOnlyLinesAreIgnored) {
+    const std::string path = "tests/test_data/settings_whitespace.txt";
+    const std::string backup = "tests/test_data/settings_whitespace_backup.txt";
+    {
+        std::ofstream file(path, std::ios::trunc);
+        file << "topic_lock 0\n";
+        file << "   \t  \n";
+        file << "daily_cap 12\n";
+    }
+
+    SettingsManager manager;
+    const SettingsLoadResult result = manager.load(path, backup);
+    CHECK(!result.wasCorrupted);
+    CHECK(!result.settings.topicLockEnabled);
+    CHECK(result.settings.dailyReviewQuestionCap == 12);
 
     std::filesystem::remove(path);
     std::filesystem::remove(backup);

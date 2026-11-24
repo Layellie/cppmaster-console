@@ -45,3 +45,19 @@ TEST_CASE(LessonManager_SectionTitleAndLessonsInSectionAreConsistent) {
         CHECK(lesson.sectionId == 1);
     }
 }
+
+TEST_CASE(LessonManager_ZeroCopyViewsMatchCopyingAccessors) {
+    LessonManager manager;
+    const auto view = manager.lessonsViewInSection(2);
+    const auto copied = manager.lessonsInSection(2);
+    CHECK(view.size() == copied.size());
+    for (std::size_t i = 0; i < view.size(); ++i) {
+        CHECK(view[i].id == copied[i].id);
+    }
+    CHECK(manager.lessonsViewInSection(99).empty());
+
+    const Lesson* const found = manager.findPtrById(15);
+    CHECK(found != nullptr);
+    CHECK(found->id == 15);
+    CHECK(manager.findPtrById(999) == nullptr);
+}

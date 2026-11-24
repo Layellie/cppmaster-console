@@ -1,15 +1,18 @@
 #include "GeneratorScoring.h"
 
 void GeneratorScoring::recordAttempt(std::string_view generatorId, bool succeeded) {
-    Stats& stats = statsByGeneratorId_[std::string(generatorId)];
-    ++stats.attempts;
+    auto it = statsByGeneratorId_.find(generatorId);
+    if (it == statsByGeneratorId_.end()) {
+        it = statsByGeneratorId_.emplace(std::string(generatorId), Stats{}).first;
+    }
+    ++it->second.attempts;
     if (succeeded) {
-        ++stats.successes;
+        ++it->second.successes;
     }
 }
 
 double GeneratorScoring::successRate(std::string_view generatorId) const {
-    const auto it = statsByGeneratorId_.find(std::string(generatorId));
+    const auto it = statsByGeneratorId_.find(generatorId);
     if (it == statsByGeneratorId_.end() || it->second.attempts == 0) {
         return 0.5;
     }

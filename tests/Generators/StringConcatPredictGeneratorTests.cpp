@@ -70,3 +70,15 @@ TEST_CASE(StringConcatPredictGenerator_SemanticSignatureExcludesVariableNameOnly
     CHECK(candidate->exactSignature.find("var=") != std::string::npos);
     CHECK(candidate->semanticSignature.find("var=") == std::string::npos);
 }
+
+TEST_CASE(StringConcatPredictGenerator_EmitsValidCppStringConcatenation) {
+    StringConcatPredictGenerator generator;
+    std::mt19937_64 engine{17ULL};
+    for (const GenerationStage stage :
+         {GenerationStage::Normal, GenerationStage::StructuralVariation}) {
+        const auto candidate = generator.generate(engine, stage);
+        CHECK(candidate.has_value());
+        CHECK(candidate->question.prompt.find("std::string(\"") != std::string::npos);
+        CHECK(candidate->question.prompt.find("\" + \"") == std::string::npos);
+    }
+}

@@ -1,5 +1,6 @@
 #include "generators/VectorPushBackPredictGenerator.h"
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <string>
@@ -40,19 +41,17 @@ std::optional<GeneratedQuestion> VectorPushBackPredictGenerator::generate(
         stage == GenerationStage::Normal ? kCountDomain : kCountDomain.expanded();
 
     const int base = baseDomain.draw(randomEngine);
-    int count = countDomain.draw(randomEngine);
     // popShape pops one element before querying .back(), so it needs at
     // least 2 pushes to leave a non-empty vector; the non-pop shapes only
     // need 1 to keep .back() safe.
     const int minCount = popShape ? 2 : 1;
-    if (count < minCount) {
-        count = minCount;
-    }
+    const int count = std::max(minCount, countDomain.draw(randomEngine));
 
     std::uniform_int_distribution<int> queryDist(0, 1);
     const bool queryBack = queryDist(randomEngine) == 1;
 
     std::vector<int> values;
+    values.reserve(static_cast<std::size_t>(count));
     std::string pushLines;
     for (int i = 0; i < count; ++i) {
         const int element = base + i;
