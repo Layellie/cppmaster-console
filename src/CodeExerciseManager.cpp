@@ -10,6 +10,7 @@ constexpr int kIleriXp = 100;
 }  // namespace
 
 CodeExerciseManager::CodeExerciseManager() {
+    exercises_.reserve(25);
     addBeginnerExercises();
     addIntermediateExercises();
     addAdvancedExercises();

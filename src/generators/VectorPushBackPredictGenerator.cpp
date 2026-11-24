@@ -53,6 +53,7 @@ std::optional<GeneratedQuestion> VectorPushBackPredictGenerator::generate(
     const bool queryBack = queryDist(randomEngine) == 1;
 
     std::vector<int> values;
+    values.reserve(static_cast<std::size_t>(count));
     std::string pushLines;
     for (int i = 0; i < count; ++i) {
         const int element = base + i;

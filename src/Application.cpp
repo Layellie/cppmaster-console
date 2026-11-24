@@ -126,6 +126,8 @@ MenuLayout layOutMenuColumns(
 
     std::vector<std::size_t> numberWidths;
     std::vector<std::size_t> columnWidths;
+    numberWidths.reserve(columns.size());
+    columnWidths.reserve(columns.size());
     std::size_t rowCount = 0;
     for (const std::vector<MenuEntry>& column : columns) {
         std::size_t numberWidth = 1;
@@ -143,6 +145,7 @@ MenuLayout layOutMenuColumns(
     // Where each column starts, so a short column (9/10/0) leaves a clean gap
     // rather than pulling the next one left on its empty rows.
     std::vector<std::size_t> columnStarts;
+    columnStarts.reserve(columnWidths.size());
     std::size_t offset = 0;
     for (const std::size_t width : columnWidths) {
         columnStarts.push_back(offset);
@@ -150,6 +153,7 @@ MenuLayout layOutMenuColumns(
     }
 
     MenuLayout layout;
+    layout.lines.reserve(rowCount);
     for (std::size_t row = 0; row < rowCount; ++row) {
         std::string line;
         std::size_t cursor = 0;  // columns already consumed by `line`
@@ -171,7 +175,7 @@ MenuLayout layOutMenuColumns(
         }
         // No trailing padding: it would only invite the terminal to wrap.
         layout.width = std::max(layout.width, cursor);
-        layout.lines.push_back(line);
+        layout.lines.push_back(std::move(line));
     }
     return layout;
 }
@@ -216,8 +220,8 @@ Application::Application()
     }
 
     const auto topicCount = static_cast<int>(lessons_.allLessons().size());
-    const auto loadResult = progressManager_.load(kProgressFilePath, kProgressBackupPath, topicCount);
-    progress_ = loadResult.progress;
+    auto loadResult = progressManager_.load(kProgressFilePath, kProgressBackupPath, topicCount);
+    progress_ = std::move(loadResult.progress);
     if (loadResult.wasCorrupted) {
         ui_.printLine(
             "Uyarı: ilerleme dosyası bozuktu; yedeklendi (" + std::string(kProgressBackupPath) +
@@ -571,8 +575,9 @@ void Application::runTopicQuiz(int topicId) {
     while (!remaining.empty()) {
         const std::size_t nextIndex = selectNextQuestionIndex(
             remaining, correctStreak, wrongStreak, lastAsked ? &*lastAsked : nullptr);
-        const Question question = remaining[nextIndex];
-        lastAsked = question;
+        lastAsked = std::move(remaining[nextIndex]);
+        remaining.erase(remaining.begin() + static_cast<std::ptrdiff_t>(nextIndex));
+        const Question& question = *lastAsked;
 
         if (shouldShowExtraHelp(wrongStreak)) {
             if (lesson != nullptr && !lesson->explanation.empty()) {
@@ -585,8 +590,6 @@ void Application::runTopicQuiz(int topicId) {
             }
             wrongStreak = 0;
         }
-
-        remaining.erase(remaining.begin() + static_cast<std::ptrdiff_t>(nextIndex));
 
         const AnswerResult result = askOneQuestion(question);
         if (result.exitRequested) {

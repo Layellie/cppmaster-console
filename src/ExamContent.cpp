@@ -1,5 +1,7 @@
 #include "ExamContent.h"
 
+#include <cstddef>
+
 namespace {
 
 constexpr int kFirstFormulaTopic = 11;
@@ -21,7 +23,8 @@ std::vector<int> examQuestionIdsForSection(int sectionId) {
     }
 
     std::vector<int> ids;
-    const int firstTopic = (sectionId - 1) * kTopicsPerSection + 1;
+    ids.reserve(static_cast<std::size_t>(kTopicsPerSection * 2));
+    const int firstTopic = ((sectionId - 1) * kTopicsPerSection) + 1;
     for (int topic = firstTopic; topic < firstTopic + kTopicsPerSection; ++topic) {
         const int base = baseIdForTopic(topic);
         ids.push_back(base + kMediumMultipleChoiceOffset);
@@ -31,7 +34,11 @@ std::vector<int> examQuestionIdsForSection(int sectionId) {
 }
 
 std::vector<int> finalExamQuestionIds() {
-    std::vector<int> ids = {1, 7, 13, 19, 25, 31, 37, 43, 49, 55};
+    std::vector<int> ids;
+    ids.reserve(100);
+    for (const int id : {1, 7, 13, 19, 25, 31, 37, 43, 49, 55}) {
+        ids.push_back(id);
+    }
     for (int topic = kFirstFormulaTopic; topic <= 100; ++topic) {
         ids.push_back(baseIdForTopic(topic) + kMediumMultipleChoiceOffset);
     }

@@ -1,6 +1,11 @@
 #include "UserProgress.h"
 
+#include <cstddef>
+
 UserProgress::UserProgress(int topicCount) {
+    if (topicCount > 0) {
+        statusByTopicId_.reserve(static_cast<std::size_t>(topicCount));
+    }
     for (int topicId = 1; topicId <= topicCount; ++topicId) {
         statusByTopicId_[topicId] = TopicStatus::NotStarted;
     }

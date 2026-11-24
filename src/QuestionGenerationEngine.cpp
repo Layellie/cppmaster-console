@@ -49,7 +49,7 @@ std::optional<GeneratedQuestion> tryStage(
         int attempts = 0;
         for (int attempt = 0; attempt < kAttemptsPerStage; ++attempt) {
             ++attempts;
-            const auto candidate = generator->generate(randomEngine, stage);
+            auto candidate = generator->generate(randomEngine, stage);
             if (!candidate.has_value()) {
                 scoring.recordAttempt(generator->id(), false);
                 continue;
@@ -88,7 +88,7 @@ std::optional<GeneratedQuestion> QuestionGenerationEngine::generateUniqueForTopi
     for (const GenerationStage stage :
          {GenerationStage::Normal, GenerationStage::ExpandedParameters,
           GenerationStage::StructuralVariation}) {
-        if (const auto result = tryStage(
+        if (auto result = tryStage(
                 history_, scoring, validator, ownGenerators, stage, randomEngine, logFilePath_,
                 topicId);
             result.has_value()) {
@@ -97,18 +97,18 @@ std::optional<GeneratedQuestion> QuestionGenerationEngine::generateUniqueForTopi
     }
 
     std::vector<const IQuestionGenerator*> otherGenerators;
+    otherGenerators.reserve(registry.allGenerators().size());
     for (const IQuestionGenerator* generator : registry.allGenerators()) {
         if (generator->topicId() != topicId) {
             otherGenerators.push_back(generator);
         }
     }
-    std::sort(
-        otherGenerators.begin(), otherGenerators.end(),
-        [&scoring](const IQuestionGenerator* a, const IQuestionGenerator* b) {
+    std::ranges::sort(
+        otherGenerators, [&scoring](const IQuestionGenerator* a, const IQuestionGenerator* b) {
             return scoring.successRate(a->id()) > scoring.successRate(b->id());
         });
 
-    if (const auto result = tryStage(
+    if (auto result = tryStage(
             history_, scoring, validator, otherGenerators, GenerationStage::Normal, randomEngine,
             logFilePath_, topicId);
         result.has_value()) {
