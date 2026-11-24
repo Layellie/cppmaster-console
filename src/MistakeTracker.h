@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <cstddef>
 #include <optional>
 #include <string>
 #include <unordered_map>
@@ -20,6 +21,7 @@ public:
     void recordCorrectRetry(int questionId);
 
     [[nodiscard]] bool hasMistake(int questionId) const;
+    [[nodiscard]] std::size_t count() const noexcept;
     [[nodiscard]] std::optional<MistakeRecord> findMistake(int questionId) const;
     [[nodiscard]] std::vector<MistakeRecord> allMistakesOldestFirst() const;
 

@@ -992,7 +992,7 @@ void Application::showStatistics() {
         "Başlanmamış konu sayısı: " +
         ui_.colorize(std::to_string(notStarted), colorForStatus(TopicStatus::NotStarted)));
     ui_.printLine("");
-    const std::size_t mistakeCount = mistakes_.allMistakesOldestFirst().size();
+    const std::size_t mistakeCount = mistakes_.count();
     ui_.printLine(
         "Kayıtlı yanlış sayısı: " +
         ui_.colorize(

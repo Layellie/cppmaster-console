@@ -51,7 +51,11 @@ void MistakeTracker::recordCorrectRetry(int questionId) {
 }
 
 bool MistakeTracker::hasMistake(int questionId) const {
-    return recordsByQuestionId_.find(questionId) != recordsByQuestionId_.end();
+    return recordsByQuestionId_.contains(questionId);
+}
+
+std::size_t MistakeTracker::count() const noexcept {
+    return recordsByQuestionId_.size();
 }
 
 std::optional<MistakeRecord> MistakeTracker::findMistake(int questionId) const {

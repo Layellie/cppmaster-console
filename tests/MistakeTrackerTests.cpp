@@ -81,3 +81,13 @@ TEST_CASE(MistakeTracker_AllMistakesOldestFirstIsSortedByLastWrongAt) {
     CHECK(mistakes.size() == 2);
     CHECK(mistakes.front().lastWrongAt <= mistakes.back().lastWrongAt);
 }
+
+TEST_CASE(MistakeTracker_CountTracksDistinctMistakeRecords) {
+    MistakeTracker tracker;
+    CHECK(tracker.count() == 0);
+    tracker.recordWrong(10);
+    tracker.recordWrong(10);
+    CHECK(tracker.count() == 1);
+    tracker.recordWrong(20);
+    CHECK(tracker.count() == 2);
+}
