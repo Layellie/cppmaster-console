@@ -1,33 +1,16 @@
 #include "ProgressManager.h"
 
 #include <algorithm>
-#include <cstddef>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
 #include <system_error>
 #include <utility>
 #include <vector>
 
-namespace {
+#include "ParseUtil.h"
 
-bool tryParseInt(const std::string& text, int& outValue) {
-    if (text.empty()) {
-        return false;
-    }
-    try {
-        std::size_t consumedChars = 0;
-        const int value = std::stoi(text, &consumedChars);
-        if (consumedChars != text.size()) {
-            return false;
-        }
-        outValue = value;
-        return true;
-    } catch (const std::exception&) {
-        return false;
-    }
-}
+namespace {
 
 bool parseStatusName(const std::string& name, TopicStatus& outStatus) {
     if (name == "NotStarted") {

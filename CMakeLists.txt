@@ -73,6 +73,7 @@ add_library(CppMasterConsoleLib STATIC
     src/TopicLock.h
     src/AchievementTracker.h
     src/AchievementTracker.cpp
+    src/ParseUtil.h
     src/ProgressManager.h
     src/ProgressManager.cpp
     src/Settings.h

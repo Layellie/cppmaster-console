@@ -1,30 +1,13 @@
 #include "SettingsManager.h"
 
-#include <cstddef>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
 #include <system_error>
 
-namespace {
+#include "ParseUtil.h"
 
-bool tryParseInt(const std::string& text, int& outValue) {
-    if (text.empty()) {
-        return false;
-    }
-    try {
-        std::size_t consumedChars = 0;
-        const int value = std::stoi(text, &consumedChars);
-        if (consumedChars != text.size()) {
-            return false;
-        }
-        outValue = value;
-        return true;
-    } catch (const std::exception&) {
-        return false;
-    }
-}
+namespace {
 
 bool tryParseBool(const std::string& text, bool& outValue) {
     if (text == "1") {

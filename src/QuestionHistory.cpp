@@ -1,33 +1,12 @@
 #include "QuestionHistory.h"
 
-#include <cstddef>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
 #include <system_error>
 #include <utility>
 
-namespace {
-
-bool tryParseUint64(const std::string& text, std::uint64_t& outValue) {
-    if (text.empty()) {
-        return false;
-    }
-    try {
-        std::size_t consumedChars = 0;
-        const unsigned long long value = std::stoull(text, &consumedChars);
-        if (consumedChars != text.size()) {
-            return false;
-        }
-        outValue = static_cast<std::uint64_t>(value);
-        return true;
-    } catch (const std::exception&) {
-        return false;
-    }
-}
-
-}  // namespace
+#include "ParseUtil.h"
 
 bool QuestionHistory::hasSeenExact(std::uint64_t exactHash) const {
     return seenExactHashes_.find(exactHash) != seenExactHashes_.end();

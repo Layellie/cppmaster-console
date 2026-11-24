@@ -1,49 +1,25 @@
 #include "MistakeTracker.h"
 
 #include <algorithm>
-#include <cstddef>
+#include <cstdint>
 #include <ctime>
 #include <filesystem>
 #include <fstream>
 #include <sstream>
-#include <stdexcept>
 #include <system_error>
 #include <utility>
 
+#include "ParseUtil.h"
+
 namespace {
 
-bool tryParseInt(const std::string& text, int& outValue) {
-    if (text.empty()) {
-        return false;
-    }
-    try {
-        std::size_t consumedChars = 0;
-        const int value = std::stoi(text, &consumedChars);
-        if (consumedChars != text.size()) {
-            return false;
-        }
-        outValue = value;
-        return true;
-    } catch (const std::exception&) {
-        return false;
-    }
-}
-
 bool tryParseEpochSeconds(const std::string& text, std::chrono::system_clock::time_point& outTime) {
-    if (text.empty()) {
+    std::int64_t seconds = 0;
+    if (!tryParseInt64(text, seconds)) {
         return false;
     }
-    try {
-        std::size_t consumedChars = 0;
-        const long long seconds = std::stoll(text, &consumedChars);
-        if (consumedChars != text.size()) {
-            return false;
-        }
-        outTime = std::chrono::system_clock::from_time_t(static_cast<std::time_t>(seconds));
-        return true;
-    } catch (const std::exception&) {
-        return false;
-    }
+    outTime = std::chrono::system_clock::from_time_t(static_cast<std::time_t>(seconds));
+    return true;
 }
 
 }  // namespace
