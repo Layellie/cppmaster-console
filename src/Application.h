@@ -45,7 +45,7 @@ private:
     void runTopicQuiz(int topicId);
     AnswerResult askOneQuestion(
         const Question& question, bool trackMistakes = true, bool allowHints = true);
-    void checkAchievements(const Question& question, bool correct);
+    void checkAchievements(const Question& question, bool correct, bool trackMistakes);
     void awardXpAndCheckLevelUp(int amount);
     void saveProgress();
     void resetProgress();
@@ -102,7 +102,9 @@ private:
     Settings settings_;
     SettingsManager settingsManager_;
     std::mt19937_64 randomEngine_;
-    int nextGeneratedQuestionId_ = 1000;
+    // Well above static question IDs (1..2908) so generated Quick Test
+    // questions can never collide with persisted static mistake records.
+    int nextGeneratedQuestionId_ = 1'000'000;
     bool running_ = true;
     bool isFirstLaunch_ = false;
 };

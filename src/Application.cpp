@@ -598,11 +598,12 @@ void Application::runTopicQuiz(int topicId) {
 
     awardXpAndCheckLevelUp(sessionXp);
 
+    const TopicStatus updatedStatus =
+        nextTopicStatusAfterQuiz(progress_.statusOf(topicId), passed);
+    progress_.setStatus(topicId, updatedStatus);
     if (passed) {
-        progress_.setStatus(topicId, TopicStatus::Completed);
         ui_.printSuccess("Bu konu tamamlandı olarak işaretlendi.");
     } else {
-        progress_.setStatus(topicId, TopicStatus::Learning);
         ui_.printHighlight(
             "Bu konuyu öğrenmeye devam ediyorsun; tekrar denemek için tekrar açabilirsin.");
     }
@@ -752,7 +753,7 @@ AnswerResult Application::askOneQuestion(
         mistakes_.recordWrong(question.id);
     }
 
-    checkAchievements(question, result.correct);
+    checkAchievements(question, result.correct, trackMistakes);
 
     saveProgress();
     if (trackMistakes && !mistakes_.saveToFile(kMistakesFilePath)) {
@@ -807,24 +808,24 @@ void Application::resetProgress() {
     ui_.printLine("İlerlemen sıfırlandı.");
 }
 
-void Application::checkAchievements(const Question& question, bool correct) {
+void Application::checkAchievements(const Question& question, bool correct, bool trackMistakes) {
     if (!correct) {
         return;
     }
 
     std::vector<AchievementId> newlyUnlocked;
 
-    if (progress_.totalCorrectAnswers() == 1) {
+    if (progress_.totalCorrectAnswers() >= 1) {
         if (achievements_.unlock(AchievementId::FirstStep)) {
             newlyUnlocked.push_back(AchievementId::FirstStep);
         }
     }
-    if (progress_.currentStreak() == 5) {
+    if (progress_.currentStreak() >= 5) {
         if (achievements_.unlock(AchievementId::FlawlessFive)) {
             newlyUnlocked.push_back(AchievementId::FlawlessFive);
         }
     }
-    if (progress_.currentStreak() == 10) {
+    if (progress_.currentStreak() >= 10) {
         if (achievements_.unlock(AchievementId::StreakMaster)) {
             newlyUnlocked.push_back(AchievementId::StreakMaster);
         }
@@ -840,10 +841,12 @@ void Application::checkAchievements(const Question& question, bool correct) {
         }
     }
 
-    const auto mistakeRecord = mistakes_.findMistake(question.id);
-    if (mistakeRecord.has_value() && mistakeRecord->wrongCount >= 5) {
-        if (achievements_.unlock(AchievementId::NeverGiveUp)) {
-            newlyUnlocked.push_back(AchievementId::NeverGiveUp);
+    if (trackMistakes) {
+        const auto mistakeRecord = mistakes_.findMistake(question.id);
+        if (mistakeRecord.has_value() && mistakeRecord->wrongCount >= 5) {
+            if (achievements_.unlock(AchievementId::NeverGiveUp)) {
+                newlyUnlocked.push_back(AchievementId::NeverGiveUp);
+            }
         }
     }
 

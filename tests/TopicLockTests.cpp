@@ -43,3 +43,12 @@ TEST_CASE(TopicLock_TopicBeyondFrontierRequiresPreviousTopicCompleted) {
     CHECK(topicIsUnlocked(true, 21, 20, TopicStatus::Completed));
     CHECK(topicIsUnlocked(true, 21, 20, TopicStatus::Mastered));
 }
+
+TEST_CASE(TopicLock_FailedRetakeDoesNotDowngradeCompletedOrMasteredTopic) {
+    CHECK(nextTopicStatusAfterQuiz(TopicStatus::NotStarted, false) == TopicStatus::Learning);
+    CHECK(nextTopicStatusAfterQuiz(TopicStatus::Learning, false) == TopicStatus::Learning);
+    CHECK(nextTopicStatusAfterQuiz(TopicStatus::Completed, false) == TopicStatus::Completed);
+    CHECK(nextTopicStatusAfterQuiz(TopicStatus::Mastered, false) == TopicStatus::Mastered);
+    CHECK(nextTopicStatusAfterQuiz(TopicStatus::NotStarted, true) == TopicStatus::Completed);
+    CHECK(nextTopicStatusAfterQuiz(TopicStatus::Mastered, true) == TopicStatus::Mastered);
+}
