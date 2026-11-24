@@ -62,3 +62,61 @@ TEST_CASE(ConsoleUI_ReadLinePreservesTurkishUtf8Text) {
 
     CHECK(line == "ğüşiöçİĞÜŞÖÇ");
 }
+
+TEST_CASE(ConsoleUI_ReadMenuChoiceHandlesInvalidEmptyLongLinesAndEof) {
+    ConsoleUI ui;
+    const std::string longGarbage(4096, 'x');
+    std::istringstream fakeInput("\nabc\n" + longGarbage + "\n999\n3\n");
+    std::ostringstream capturedOut;
+    std::streambuf* const previousIn = std::cin.rdbuf(fakeInput.rdbuf());
+    std::streambuf* const previousOut = std::cout.rdbuf(capturedOut.rdbuf());
+    std::cin.clear();
+
+    const int validChoice = ui.readMenuChoice(1, 5);
+    CHECK(validChoice == 3);
+    CHECK(!ui.isInputClosed());
+
+    const int eofChoice = ui.readMenuChoice(1, 5);
+    CHECK(eofChoice == 1);
+    CHECK(ui.isInputClosed());
+
+    std::cin.rdbuf(previousIn);
+    std::cout.rdbuf(previousOut);
+    std::cin.clear();
+}
+
+TEST_CASE(ConsoleUI_ReadLineAndMultilineMarkInputClosedOnEof) {
+    ConsoleUI ui;
+    std::istringstream fakeInput("int x = 1;\n");
+    std::ostringstream capturedOut;
+    std::streambuf* const previousIn = std::cin.rdbuf(fakeInput.rdbuf());
+    std::streambuf* const previousOut = std::cout.rdbuf(capturedOut.rdbuf());
+    std::cin.clear();
+
+    const std::string code = ui.readMultilineCode();
+    CHECK(code == "int x = 1;");
+    CHECK(ui.isInputClosed());
+    CHECK(ui.readLine("Prompt: ").empty());
+
+    std::cin.rdbuf(previousIn);
+    std::cout.rdbuf(previousOut);
+    std::cin.clear();
+}
+
+TEST_CASE(ConsoleUI_ReadMenuChoiceExitsCleanlyOnBadbit) {
+    ConsoleUI ui;
+    std::istringstream fakeInput("2\n");
+    std::ostringstream capturedOut;
+    std::streambuf* const previousIn = std::cin.rdbuf(fakeInput.rdbuf());
+    std::streambuf* const previousOut = std::cout.rdbuf(capturedOut.rdbuf());
+    std::cin.clear();
+    std::cin.setstate(std::ios::badbit);
+
+    const int choice = ui.readMenuChoice(0, 5);
+    CHECK(choice == 0);
+    CHECK(ui.isInputClosed());
+
+    std::cin.rdbuf(previousIn);
+    std::cout.rdbuf(previousOut);
+    std::cin.clear();
+}

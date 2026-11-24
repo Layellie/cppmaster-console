@@ -275,10 +275,14 @@ void ConsoleUI::playAlertSound() const {
 }
 
 int ConsoleUI::readMenuChoice(int minValue, int maxValue) {
+    if (inputClosed_) {
+        return minValue;
+    }
     while (true) {
         std::string line;
         if (!readInputLine(line)) {
             if (std::cin.eof() || std::cin.bad()) {
+                inputClosed_ = true;
                 return minValue;
             }
             std::cin.clear();
@@ -304,17 +308,27 @@ int ConsoleUI::readMenuChoice(int minValue, int maxValue) {
 }
 
 std::string ConsoleUI::readLine(const std::string& prompt) {
+    if (inputClosed_) {
+        return "";
+    }
     std::cout << prompt << std::flush;
     std::string line;
-    readInputLine(line);
+    if (!readInputLine(line)) {
+        inputClosed_ = true;
+        return "";
+    }
     return line;
 }
 
 std::string ConsoleUI::readMultilineCode() {
+    if (inputClosed_) {
+        return "";
+    }
     std::string result;
     while (true) {
         std::string line;
         if (!readInputLine(line)) {
+            inputClosed_ = true;
             break;
         }
         if (line == "BITIR") {
@@ -326,4 +340,8 @@ std::string ConsoleUI::readMultilineCode() {
         result += line;
     }
     return result;
+}
+
+bool ConsoleUI::isInputClosed() const noexcept {
+    return inputClosed_;
 }

@@ -70,10 +70,15 @@ public:
     // answers, matching the product spec's multi-line code entry convention.
     std::string readMultilineCode();
 
+    // True once stdin has hit EOF or an unrecoverable I/O error, so callers
+    // can unwind cleanly instead of treating empty/fallback reads as answers.
+    [[nodiscard]] bool isInputClosed() const noexcept;
+
 private:
     bool colorEnabled_ = false;
     bool colorSupported_ = false;
     bool audioAlertEnabled_ = false;
+    bool inputClosed_ = false;
 #ifdef _WIN32
     std::uint32_t originalOutputCodePage_ = 0;
     std::uint32_t originalInputCodePage_ = 0;

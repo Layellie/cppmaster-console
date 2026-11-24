@@ -273,9 +273,12 @@ void Application::run() {
         runFirstLaunchSkillSelection();
     }
 
-    while (running_) {
+    while (running_ && !ui_.isInputClosed()) {
         showMainMenu();
         const int choice = ui_.readMenuChoice(kMinChoice, kMaxChoice);
+        if (ui_.isInputClosed()) {
+            break;
+        }
         handleChoice(choice);
     }
 }
@@ -290,6 +293,9 @@ void Application::runFirstLaunchSkillSelection() {
     ui_.printLine("");
     ui_.printLine("Seçimin:");
     const int choice = ui_.readMenuChoice(1, 3);
+    if (ui_.isInputClosed()) {
+        return;
+    }
 
     int startingXp = 0;
     int unlockedUpToTopicId = 1;
@@ -455,7 +461,7 @@ void Application::showTopicBrowser() {
             "Görüntülemek istediğin konu numarasını gir " +
             ui_.colorize("(0 = ana menüye dön)", TextColor::Dim) + ":");
         const int topicChoice = ui_.readMenuChoice(kMinTopicId, kMaxTopicId);
-        if (topicChoice == 0) {
+        if (ui_.isInputClosed() || topicChoice == 0) {
             return;
         }
         openTopic(topicChoice);
@@ -647,10 +653,13 @@ AnswerResult Application::askOneQuestion(
         ui_.printLine(
             "Kodunu birden fazla satır halinde girebilirsin. Bitirmek için BITIR yazıp Enter'a bas.");
         rawAnswer = ui_.readMultilineCode();
+        if (ui_.isInputClosed() && rawAnswer.empty()) {
+            exitRequested = true;
+        }
     } else {
         while (true) {
             rawAnswer = ui_.readLine("Cevabın: ");
-            if (rawAnswer == "cikis") {
+            if (ui_.isInputClosed() || rawAnswer == "cikis") {
                 exitRequested = true;
                 break;
             }
@@ -1210,7 +1219,7 @@ void Application::showExamMenu() {
     ui_.printMenuItem(finalExamChoice, ui_.colorize("Genel Final Sınavı", TextColor::Yellow));
     ui_.printMenuItem(0, "Geri dön");
     const int choice = ui_.readMenuChoice(0, finalExamChoice);
-    if (choice == 0) {
+    if (ui_.isInputClosed() || choice == 0) {
         return;
     }
     if (choice == finalExamChoice) {
@@ -1233,6 +1242,9 @@ void Application::runCodeExercises() {
         ui_.printLine("Seçimin:");
 
         const int tierChoice = ui_.readMenuChoice(0, 3);
+        if (ui_.isInputClosed()) {
+            break;
+        }
         std::string tier;
         switch (tierChoice) {
             case 1:
@@ -1282,7 +1294,7 @@ void Application::runCodeExerciseTier(const std::string& tier) {
         ui_.printLine("Alıştırma numarasını gir:");
 
         const int choice = ui_.readMenuChoice(0, 100);
-        if (choice == 0) {
+        if (ui_.isInputClosed() || choice == 0) {
             inTierMenu = false;
             continue;
         }
@@ -1311,6 +1323,9 @@ void Application::runCodeExercise(const CodeExercise& exercise) {
     ui_.printLine("Başlamadan önce ipucu görmek ister misin? (E/H)");
     while (true) {
         const std::string wantsHint = ui_.readLine("Cevabın: ");
+        if (ui_.isInputClosed()) {
+            return;
+        }
         if (wantsHint != "E" && wantsHint != "e") {
             break;
         }
@@ -1326,6 +1341,9 @@ void Application::runCodeExercise(const CodeExercise& exercise) {
     ui_.printLine(
         "Kodunu birden fazla satır halinde girebilirsin. Bitirmek için BITIR yazıp Enter'a bas.");
     const std::string submittedCode = ui_.readMultilineCode();
+    if (ui_.isInputClosed() && submittedCode.empty()) {
+        return;
+    }
 
     const Question question = toWriteCodeQuestion(exercise);
     const AnswerResult result = quizEngine_.evaluate(question, submittedCode, settings_);
@@ -1406,6 +1424,9 @@ void Application::showSettingsMenu() {
         };
 
         const int choice = ui_.readMenuChoice(0, 11);
+        if (ui_.isInputClosed()) {
+            break;
+        }
         switch (choice) {
             case 1:
                 settings_.topicLockEnabled = !settings_.topicLockEnabled;
@@ -1426,6 +1447,10 @@ void Application::showSettingsMenu() {
             case 5: {
                 ui_.printLine("Yeni günlük soru hedefini gir (1-100):");
                 const int newCap = ui_.readMenuChoice(1, 100);
+                if (ui_.isInputClosed()) {
+                    inSettingsMenu = false;
+                    break;
+                }
                 settings_.dailyReviewQuestionCap = newCap;
                 saveSettings();
                 break;
@@ -1449,6 +1474,10 @@ void Application::showSettingsMenu() {
             case 10: {
                 ui_.printLine("Yeni Hızlı Test soru sayısını gir (1-20):");
                 const int newCount = ui_.readMenuChoice(1, 20);
+                if (ui_.isInputClosed()) {
+                    inSettingsMenu = false;
+                    break;
+                }
                 settings_.quickTestQuestionCount = newCount;
                 saveSettings();
                 break;
@@ -1459,6 +1488,10 @@ void Application::showSettingsMenu() {
                 // in the first place, so the ceiling stays just below.
                 ui_.printLine("Yeni konu testi soru sayısını gir (5-30):");
                 const int newCount = ui_.readMenuChoice(5, 30);
+                if (ui_.isInputClosed()) {
+                    inSettingsMenu = false;
+                    break;
+                }
                 settings_.topicQuizQuestionCount = newCount;
                 saveSettings();
                 break;
