@@ -13,5 +13,6 @@ class ProgressManager {
 public:
     [[nodiscard]] ProgressLoadResult load(
         const std::string& filePath, const std::string& backupPath, int topicCount) const;
-    bool save(const UserProgress& progress, const std::string& filePath, int topicCount) const;
+    [[nodiscard]] bool save(
+        const UserProgress& progress, const std::string& filePath, int topicCount) const;
 };

@@ -13,5 +13,5 @@ class SettingsManager {
 public:
     [[nodiscard]] SettingsLoadResult load(
         const std::string& filePath, const std::string& backupPath) const;
-    bool save(const Settings& settings, const std::string& filePath) const;
+    [[nodiscard]] bool save(const Settings& settings, const std::string& filePath) const;
 };

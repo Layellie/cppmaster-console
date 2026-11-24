@@ -40,7 +40,7 @@ TEST_CASE(SettingsManager_SaveThenLoadRoundTripsAllFields) {
     settings.topicQuizQuestionCount = 22;
 
     SettingsManager manager;
-    manager.save(settings, path);
+    CHECK(manager.save(settings, path));
 
     const SettingsLoadResult result = manager.load(path, backup);
     CHECK(!result.wasCorrupted);

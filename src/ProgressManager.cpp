@@ -100,12 +100,17 @@ ProgressLoadResult ProgressManager::load(
             continue;
         }
 
-        const auto fieldIt = std::ranges::find_if(
-            intFields, [&](const IntFieldBinding& field) { return field.key == recordType; });
-        if (fieldIt != intFields.end()) {
+        int* matchedTarget = nullptr;
+        for (const IntFieldBinding& field : intFields) {
+            if (field.key == recordType) {
+                matchedTarget = field.target;
+                break;
+            }
+        }
+        if (matchedTarget != nullptr) {
             std::string valueText;
             lineStream >> valueText;
-            if (!tryParseInt(valueText, *fieldIt->target)) {
+            if (!tryParseInt(valueText, *matchedTarget)) {
                 corrupted = true;
                 break;
             }

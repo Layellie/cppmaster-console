@@ -39,7 +39,7 @@ TEST_CASE(ProgressManager_SaveThenLoadRoundTripsAllFields) {
     progress.markCodeExerciseCompleted(7);
 
     ProgressManager manager;
-    manager.save(progress, path, kTopicCount);
+    CHECK(manager.save(progress, path, kTopicCount));
 
     const ProgressLoadResult result = manager.load(path, backup, kTopicCount);
     CHECK(!result.wasCorrupted);

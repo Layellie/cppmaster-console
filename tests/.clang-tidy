@@ -14,9 +14,13 @@ InheritParentConfig: true
 #   TEST_CASE defines a free function and a static registrar object per test.
 # - bugprone-random-generator-seed: unit tests deliberately use fixed seeds
 #   for deterministic, reproducible generator runs.
+# - readability-identifier-naming: TEST_CASE(Suite_Scenario) expands to free
+#   functions using PascalCase_PascalCase across the test suite, which
+#   clang-tidy-21 flags through the macro; src/ keeps full naming checks.
 Checks: >
   -bugprone-unchecked-optional-access,
   -bugprone-throwing-static-initialization,
   -bugprone-random-generator-seed,
   -misc-const-correctness,
-  -misc-use-internal-linkage
+  -misc-use-internal-linkage,
+  -readability-identifier-naming

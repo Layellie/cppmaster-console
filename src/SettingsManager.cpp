@@ -80,20 +80,30 @@ SettingsLoadResult SettingsManager::load(
         std::string valueText;
         lineStream >> valueText;
 
-        const auto boolIt = std::ranges::find_if(
-            boolFields, [&](const BoolFieldBinding& field) { return field.key == recordType; });
-        if (boolIt != boolFields.end()) {
-            if (!tryParseBool(valueText, *boolIt->target)) {
+        bool* matchedBoolTarget = nullptr;
+        for (const BoolFieldBinding& field : boolFields) {
+            if (field.key == recordType) {
+                matchedBoolTarget = field.target;
+                break;
+            }
+        }
+        if (matchedBoolTarget != nullptr) {
+            if (!tryParseBool(valueText, *matchedBoolTarget)) {
                 corrupted = true;
                 break;
             }
             continue;
         }
 
-        const auto intIt = std::ranges::find_if(
-            intFields, [&](const IntFieldBinding& field) { return field.key == recordType; });
-        if (intIt != intFields.end()) {
-            if (!tryParseInt(valueText, *intIt->target)) {
+        int* matchedIntTarget = nullptr;
+        for (const IntFieldBinding& field : intFields) {
+            if (field.key == recordType) {
+                matchedIntTarget = field.target;
+                break;
+            }
+        }
+        if (matchedIntTarget != nullptr) {
+            if (!tryParseInt(valueText, *matchedIntTarget)) {
                 corrupted = true;
                 break;
             }
