@@ -4,6 +4,50 @@ Bu dosya [Keep a Changelog](https://keepachangelog.com/tr/1.1.0/)
 biçimini, sürüm numaraları ise [Semantic Versioning](https://semver.org/)
 kurallarını izler.
 
+## [1.1.0] - 2026-11-24
+
+### Eklenenler
+
+- Bölüm 1 içeriği genişletilerek toplam soru bankası 2.908 elle yazılmış soruya
+  çıkarıldı.
+- Ana menü 3 sütunlu düzene geçirildi ve terminal renk paleti tüm ekranlara
+  yayıldı.
+- Doğru/Yanlış sorularında `A`/`B` yanıtları kabul edilir hale getirildi; aynı
+  konu bilgisinin art arda sorulması engellendi.
+- `ConsoleUI` için birim testleri eklendi (toplam 259 birim testi).
+
+### Düzeltilenler
+
+- İlerleme, ayarlar, yanlışlar, başarımlar ve üretilen soru geçmişi artık geçici
+  dosyaya yazılıp atomik yeniden adlandırma (`AtomicFileWrite`) ile kaydediliyor;
+  yazma hataları sessizce yutulmak yerine kullanıcıya bildiriliyor.
+- `ConsoleUI::clearScreen` içindeki `std::system("cls"/"clear")` çağrısı
+  kaldırıldı; ANSI VT kaçış dizisi ve Windows için Win32 Console API yedeği
+  eklendi.
+- Windows tarafında MSVC `/utf-8` bayrağı eklendi, konsol UTF-8 kod sayfası
+  çıkışta eski haline döndürülüyor ve etkileşimli Türkçe girdi `ReadConsoleW`
+  ile okunuyor.
+- Menü, test ve ayar ekranlarında `stdin` EOF/`badbit` durumları temiz şekilde
+  ele alınıyor.
+- `std::sto*` çağrıları ortak `std::from_chars` yardımcılarıyla değiştirildi;
+  bozuk veya taşmış sayaç değerleri yükleme sırasında yakalanıyor.
+- `QuizEngine::correctAnswerDisplay` boş `acceptedAnswers` koruması,
+  `quizSize == 0` seçimi, `SortWithLambdaPredictGenerator` eşit uzaklık
+  belirsizliği, `StringConcatPredictGenerator` geçersiz string birleştirme,
+  üretilen soru ID çakışmaları, konu durumu düşüşleri ve günlük tekrarda kaçan
+  başarım kontrolleri düzeltildi.
+
+### İyileştirilenler
+
+- `QuestionManager` ve `LessonManager` için kopyasız `std::span` / `const*`
+  okuma yolları, `GeneratorScoring` için transparent lookup ve `MistakeTracker`
+  için `O(1)` sayım eklendi.
+- `Application.cpp` sorumluluklarına göre `MenuFormatting`, `SettingsScreen`,
+  `CodeExerciseSession`, `QuizSession`, `ExamSession` ve `AppContext`
+  dosyalarına bölündü.
+- `clang-tidy-21` uyarıları temizlendi ve İngilizce/Türkçe `README.md` mevcut
+  mimariyle eşitlendi.
+
 ## [1.0.0] — 2026-07-22
 
 İlk sürüm. Uygulamanın tamamı bu sürümde hazır durumda.
