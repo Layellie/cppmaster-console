@@ -1,5 +1,7 @@
 #include "ConsoleUI.h"
 
+#include <iostream>
+#include <sstream>
 #include <string>
 
 #include "TestRunner.h"
@@ -30,4 +32,33 @@ TEST_CASE(ConsoleUI_ColorizeNeverEmitsEscapeCodesIntoRedirectedOutput) {
     const std::string colored = ui.colorize("merhaba", TextColor::Green);
     CHECK(colored.find('\x1b') == std::string::npos);
     CHECK(colored == "merhaba");
+}
+
+TEST_CASE(ConsoleUI_ClearScreenDoesNotEmitEscapeCodesToRedirectedOutput) {
+    ConsoleUI ui;
+    ui.setColorEnabled(true);
+
+    std::ostringstream captured;
+    std::streambuf* const previousOut = std::cout.rdbuf(captured.rdbuf());
+    ui.clearScreen();
+    std::cout.rdbuf(previousOut);
+
+    CHECK(captured.str().empty());
+}
+
+TEST_CASE(ConsoleUI_ReadLinePreservesTurkishUtf8Text) {
+    ConsoleUI ui;
+    std::istringstream fakeInput("ğüşiöçİĞÜŞÖÇ\n");
+    std::ostringstream capturedOut;
+    std::streambuf* const previousIn = std::cin.rdbuf(fakeInput.rdbuf());
+    std::streambuf* const previousOut = std::cout.rdbuf(capturedOut.rdbuf());
+    std::cin.clear();
+
+    const std::string line = ui.readLine("Girdi: ");
+
+    std::cin.rdbuf(previousIn);
+    std::cout.rdbuf(previousOut);
+    std::cin.clear();
+
+    CHECK(line == "ğüşiöçİĞÜŞÖÇ");
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstddef>
+#include <cstdint>
 #include <string>
 
 // Palette shared with the project banner, so the running app and the
@@ -19,6 +20,12 @@ enum class TextColor {
 class ConsoleUI {
 public:
     ConsoleUI();
+    ~ConsoleUI();
+
+    ConsoleUI(const ConsoleUI&) = delete;
+    ConsoleUI& operator=(const ConsoleUI&) = delete;
+    ConsoleUI(ConsoleUI&&) = delete;
+    ConsoleUI& operator=(ConsoleUI&&) = delete;
 
     void clearScreen() const;
     void printLine(const std::string& text) const;
@@ -67,4 +74,9 @@ private:
     bool colorEnabled_ = false;
     bool colorSupported_ = false;
     bool audioAlertEnabled_ = false;
+#ifdef _WIN32
+    std::uint32_t originalOutputCodePage_ = 0;
+    std::uint32_t originalInputCodePage_ = 0;
+    bool restoreCodePages_ = false;
+#endif
 };

@@ -1,12 +1,14 @@
 #include "ConsoleUI.h"
 
 #include <charconv>
-#include <cstdlib>
 #include <iostream>
 #include <limits>
+#include <string>
 #include <system_error>
 
 #ifdef _WIN32
+#include <array>
+#include <sstream>
 #define NOMINMAX
 #include <windows.h>
 #else
@@ -69,11 +71,8 @@ const char* escapeCodeFor(TextColor color) {
 // handled there — POSIX needs an explicit isatty check to match.
 bool enableAnsiColorSupport() {
 #ifdef _WIN32
-    SetConsoleOutputCP(CP_UTF8);
-    SetConsoleCP(CP_UTF8);
-
-    const HANDLE outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-    if (outputHandle == INVALID_HANDLE_VALUE) {
+    HANDLE const outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (outputHandle == INVALID_HANDLE_VALUE || outputHandle == nullptr) {
         return false;
     }
     DWORD consoleMode = 0;
@@ -86,15 +85,143 @@ bool enableAnsiColorSupport() {
 #endif
 }
 
+#ifdef _WIN32
+bool readUtf8LineFromWindowsConsole(std::string& outLine, bool& outWasConsole) {
+    outWasConsole = false;
+    // Unit tests redirect std::cin to a std::istringstream even when launched
+    // from an interactive terminal; honour that redirection rather than
+    // reading directly from the underlying console handle.
+    if (dynamic_cast<std::stringbuf*>(std::cin.rdbuf()) != nullptr) {
+        return false;
+    }
+
+    HANDLE const inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+    if (inputHandle == INVALID_HANDLE_VALUE || inputHandle == nullptr) {
+        return false;
+    }
+    DWORD consoleMode = 0;
+    if (GetConsoleMode(inputHandle, &consoleMode) == 0) {
+        return false;
+    }
+
+    outWasConsole = true;
+    std::wstring wideLine;
+    std::array<wchar_t, 256> buffer{};
+    while (true) {
+        DWORD charsRead = 0;
+        if (ReadConsoleW(
+                inputHandle, buffer.data(), static_cast<DWORD>(buffer.size()), &charsRead,
+                nullptr) == 0) {
+            return false;
+        }
+        if (charsRead == 0) {
+            return !wideLine.empty();
+        }
+        bool reachedEnd = false;
+        for (DWORD i = 0; i < charsRead; ++i) {
+            const wchar_t ch = buffer[i];
+            if (ch == L'\x1a') {
+                return !wideLine.empty();
+            }
+            if (ch == L'\n') {
+                reachedEnd = true;
+                break;
+            }
+            if (ch != L'\r') {
+                wideLine.push_back(ch);
+            }
+        }
+        if (reachedEnd) {
+            break;
+        }
+    }
+
+    if (wideLine.empty()) {
+        outLine.clear();
+        return true;
+    }
+
+    const int utf8Size = WideCharToMultiByte(
+        CP_UTF8, 0, wideLine.data(), static_cast<int>(wideLine.size()), nullptr, 0, nullptr,
+        nullptr);
+    if (utf8Size <= 0) {
+        outLine.clear();
+        return false;
+    }
+    outLine.resize(static_cast<std::size_t>(utf8Size));
+    const int converted = WideCharToMultiByte(
+        CP_UTF8, 0, wideLine.data(), static_cast<int>(wideLine.size()), outLine.data(), utf8Size,
+        nullptr, nullptr);
+    if (converted <= 0) {
+        outLine.clear();
+        return false;
+    }
+    return true;
+}
+#endif
+
+bool readInputLine(std::string& outLine) {
+#ifdef _WIN32
+    bool wasConsole = false;
+    const bool consoleReadOk = readUtf8LineFromWindowsConsole(outLine, wasConsole);
+    if (wasConsole) {
+        if (!consoleReadOk) {
+            std::cin.setstate(std::ios::eofbit);
+        }
+        return consoleReadOk;
+    }
+#endif
+    return static_cast<bool>(std::getline(std::cin, outLine));
+}
+
 }  // namespace
 
-ConsoleUI::ConsoleUI() : colorSupported_(enableAnsiColorSupport()) {}
+ConsoleUI::ConsoleUI() {
+#ifdef _WIN32
+    originalOutputCodePage_ = static_cast<std::uint32_t>(GetConsoleOutputCP());
+    originalInputCodePage_ = static_cast<std::uint32_t>(GetConsoleCP());
+    restoreCodePages_ = true;
+    SetConsoleOutputCP(CP_UTF8);
+    SetConsoleCP(CP_UTF8);
+#endif
+    colorSupported_ = enableAnsiColorSupport();
+}
+
+ConsoleUI::~ConsoleUI() {
+#ifdef _WIN32
+    if (restoreCodePages_) {
+        if (originalOutputCodePage_ != 0) {
+            SetConsoleOutputCP(originalOutputCodePage_);
+        }
+        if (originalInputCodePage_ != 0) {
+            SetConsoleCP(originalInputCodePage_);
+        }
+    }
+#endif
+}
 
 void ConsoleUI::clearScreen() const {
+    if (colorSupported_) {
+        std::cout << "\x1b[2J\x1b[3J\x1b[H" << std::flush;
+        return;
+    }
 #ifdef _WIN32
-    std::system("cls");
-#else
-    std::system("clear");
+    HANDLE const outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    if (outputHandle == INVALID_HANDLE_VALUE || outputHandle == nullptr) {
+        return;
+    }
+    CONSOLE_SCREEN_BUFFER_INFO screenInfo{};
+    if (GetConsoleScreenBufferInfo(outputHandle, &screenInfo) == 0) {
+        return;
+    }
+    const DWORD cellCount =
+        static_cast<DWORD>(screenInfo.dwSize.X) * static_cast<DWORD>(screenInfo.dwSize.Y);
+    const COORD homeCoord{0, 0};
+    DWORD written = 0;
+    FillConsoleOutputCharacterA(outputHandle, ' ', cellCount, homeCoord, &written);
+    FillConsoleOutputAttribute(
+        outputHandle, screenInfo.wAttributes, cellCount, homeCoord, &written);
+    SetConsoleCursorPosition(outputHandle, homeCoord);
 #endif
 }
 
@@ -150,8 +277,8 @@ void ConsoleUI::playAlertSound() const {
 int ConsoleUI::readMenuChoice(int minValue, int maxValue) {
     while (true) {
         std::string line;
-        if (!std::getline(std::cin, line)) {
-            if (std::cin.eof()) {
+        if (!readInputLine(line)) {
+            if (std::cin.eof() || std::cin.bad()) {
                 return minValue;
             }
             std::cin.clear();
@@ -172,14 +299,14 @@ int ConsoleUI::readMenuChoice(int minValue, int maxValue) {
         }
 
         std::cout << "Geçersiz seçim. Lütfen " << minValue << " ile " << maxValue
-                   << " arasında bir sayı gir: ";
+                  << " arasında bir sayı gir: ";
     }
 }
 
 std::string ConsoleUI::readLine(const std::string& prompt) {
-    std::cout << prompt;
+    std::cout << prompt << std::flush;
     std::string line;
-    std::getline(std::cin, line);
+    readInputLine(line);
     return line;
 }
 
@@ -187,7 +314,7 @@ std::string ConsoleUI::readMultilineCode() {
     std::string result;
     while (true) {
         std::string line;
-        if (!std::getline(std::cin, line)) {
+        if (!readInputLine(line)) {
             break;
         }
         if (line == "BITIR") {
