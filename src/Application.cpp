@@ -23,7 +23,6 @@ namespace {
 constexpr int kMinChoice = 0;
 constexpr int kMaxChoice = 10;
 constexpr int kMinTopicId = 0;
-constexpr int kMaxTopicId = 100;
 constexpr double kPassThreshold = 0.7;
 constexpr const char* kProgressFilePath = "data/progress.txt";
 constexpr const char* kProgressBackupPath = "data/progress_corrupted_backup.txt";
@@ -188,6 +187,19 @@ std::uint64_t createSeed() {
            static_cast<std::uint64_t>(randomDevice());
 }
 
+std::string trimPathInput(const std::string& rawPath) {
+    const auto first = rawPath.find_first_not_of(" \t\r\n");
+    if (first == std::string::npos) {
+        return "";
+    }
+    const auto last = rawPath.find_last_not_of(" \t\r\n");
+    std::string trimmed = rawPath.substr(first, last - first + 1);
+    if (trimmed.size() >= 2 && trimmed.front() == '"' && trimmed.back() == '"') {
+        trimmed = trimmed.substr(1, trimmed.size() - 2);
+    }
+    return trimmed;
+}
+
 }  // namespace
 
 Application::Application()
@@ -195,7 +207,8 @@ Application::Application()
       generationEngine_(kGenerationLogFilePath),
       randomEngine_(createSeed()) {
     ensureDataDirectoryExists();
-    isFirstLaunch_ = !std::filesystem::exists(kProgressFilePath);
+    std::error_code existsError;
+    isFirstLaunch_ = !std::filesystem::exists(kProgressFilePath, existsError);
 
     generators_ = makeAllGenerators();
     for (const auto& generator : generators_) {
@@ -460,7 +473,8 @@ void Application::showTopicBrowser() {
         ui_.printLine(
             "Görüntülemek istediğin konu numarasını gir " +
             ui_.colorize("(0 = ana menüye dön)", TextColor::Dim) + ":");
-        const int topicChoice = ui_.readMenuChoice(kMinTopicId, kMaxTopicId);
+        const int maxTopicId = static_cast<int>(lessons_.allLessons().size());
+        const int topicChoice = ui_.readMenuChoice(kMinTopicId, maxTopicId);
         if (ui_.isInputClosed() || topicChoice == 0) {
             return;
         }
@@ -1035,8 +1049,14 @@ void Application::runQuickTest() {
     int sessionXp = 0;
     int askedCount = 0;
 
+    const auto& allGenerators = generatorRegistry_.allGenerators();
+    if (allGenerators.empty()) {
+        ui_.printLine("Bu oturumda soru üretici bulunamadı.");
+        ui_.printLine("");
+        return;
+    }
+
     for (int index = 0; index < kQuickTestQuestionCount; ++index) {
-        const auto& allGenerators = generatorRegistry_.allGenerators();
         std::uniform_int_distribution<std::size_t> topicPickDist(0, allGenerators.size() - 1);
         const int pickedTopicId = allGenerators[topicPickDist(randomEngine_)]->topicId();
 
@@ -1296,7 +1316,11 @@ void Application::runCodeExerciseTier(const std::string& tier) {
         ui_.printLine("");
         ui_.printLine("Alıştırma numarasını gir:");
 
-        const int choice = ui_.readMenuChoice(0, 100);
+        int maxExerciseId = 0;
+        for (const CodeExercise& allExercise : codeExercises_.allExercises()) {
+            maxExerciseId = std::max(maxExerciseId, allExercise.id);
+        }
+        const int choice = ui_.readMenuChoice(0, maxExerciseId);
         if (ui_.isInputClosed() || choice == 0) {
             inTierMenu = false;
             continue;
@@ -1509,7 +1533,11 @@ void Application::showSettingsMenu() {
 }
 
 void Application::exportProgress() {
-    const std::string targetDirectory = ui_.readLine("Hedef klasör yolunu gir: ");
+    const std::string targetDirectory = trimPathInput(ui_.readLine("Hedef klasör yolunu gir: "));
+    if (ui_.isInputClosed() || targetDirectory.empty()) {
+        ui_.printLine("İptal edildi.");
+        return;
+    }
     std::error_code errorCode;
     std::filesystem::create_directories(targetDirectory, errorCode);
     if (errorCode) {
@@ -1523,11 +1551,17 @@ void Application::exportProgress() {
     };
     int copiedCount = 0;
     for (const std::string& sourcePath : sourcePaths) {
-        if (!std::filesystem::exists(sourcePath)) {
+        std::error_code existsError;
+        if (!std::filesystem::exists(sourcePath, existsError) || existsError) {
             continue;
         }
         const std::filesystem::path destination =
             std::filesystem::path(targetDirectory) / std::filesystem::path(sourcePath).filename();
+        std::error_code equivalentError;
+        if (std::filesystem::equivalent(sourcePath, destination, equivalentError) &&
+            !equivalentError) {
+            continue;
+        }
         std::filesystem::copy_file(
             sourcePath, destination, std::filesystem::copy_options::overwrite_existing, errorCode);
         if (!errorCode) {
@@ -1538,7 +1572,13 @@ void Application::exportProgress() {
 }
 
 void Application::importProgress() {
-    const std::string sourceDirectory = ui_.readLine("İçe aktarılacak klasör yolunu gir: ");
+    const std::string sourceDirectory =
+        trimPathInput(ui_.readLine("İçe aktarılacak klasör yolunu gir: "));
+    if (ui_.isInputClosed() || sourceDirectory.empty()) {
+        ui_.printLine("İptal edildi.");
+        return;
+    }
+    ensureDataDirectoryExists();
     const std::string fileNames[] = {
         "progress.txt",
         "mistakes.txt",
@@ -1550,10 +1590,15 @@ void Application::importProgress() {
     std::error_code errorCode;
     for (const std::string& fileName : fileNames) {
         const std::filesystem::path source = std::filesystem::path(sourceDirectory) / fileName;
-        if (!std::filesystem::exists(source)) {
+        std::error_code existsError;
+        if (!std::filesystem::exists(source, existsError) || existsError) {
             continue;
         }
         const std::filesystem::path destination = std::filesystem::path("data") / fileName;
+        std::error_code equivalentError;
+        if (std::filesystem::equivalent(source, destination, equivalentError) && !equivalentError) {
+            continue;
+        }
         std::filesystem::copy_file(
             source, destination, std::filesystem::copy_options::overwrite_existing, errorCode);
         if (!errorCode) {
