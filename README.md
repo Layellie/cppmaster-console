@@ -1,4 +1,4 @@
-![CppMaster Console — terminal-based C++ learning app with a 100-topic curriculum and 2,908 questions](docs/banner.png)
+![CppMaster Console: terminal C++ learning app with 100 topics and 2,908 questions](docs/banner.png)
 
 # CppMaster Console
 
@@ -8,11 +8,11 @@
 
 **Language / Dil: [English](#english) · [Türkçe](#türkçe)**
 
-> **Note:** the application's own interface is **Turkish only**. This README
-> is available in both languages, but the app itself is not localised.
+> **Note:** The application's own interface is **Turkish only**. This README is
+> available in English and Turkish, while the app itself is not translated.
 >
-> **Not:** uygulamanın arayüzü **yalnızca Türkçe**'dir. Bu README iki dilde
-> yazılmıştır, ancak uygulamanın kendisi çevrilmemiştir.
+> **Not:** Uygulamanın arayüzü **yalnızca Türkçe**'dir. Bu README iki dilde
+> hazırlandı, ancak uygulamanın kendisi çevrilmedi.
 
 ---
 
@@ -20,52 +20,51 @@
 
 # English
 
-A terminal-based app for learning C++, with a **Turkish-language
-interface**. It covers a full 100-topic curriculum, 2,908 hand-written
-questions, hint / topic-lock / adaptive-difficulty systems, code-writing
-exercises, per-section exams, a general final exam, and a dynamic question
-generator built from 17 generators that never asks the same question twice.
+CppMaster Console is a terminal app for learning C++ with a **Turkish
+interface**. It includes 100 lessons, 2,908 handwritten questions, hints,
+sequential topic locking, adaptive difficulty, 25 code writing exercises,
+section exams, a general final exam, and 17 runtime question generators built
+to avoid repeating the same question.
 
 ## Quick install (Windows)
 
-You do not need a compiler or CMake — a single command downloads a
-prebuilt, standalone `.exe` and runs it:
+You do not need a compiler or CMake. One PowerShell command downloads the
+prebuilt standalone `.exe` and starts it:
 
 ```powershell
 irm https://raw.githubusercontent.com/Layellie/cppmaster-console/master/install.ps1 | iex
 ```
 
-This downloads the build produced from the latest `master` commit into
-`%LOCALAPPDATA%\CppMasterConsole` and launches it; your progress is kept in
-that same folder across runs. The executable links the MSVC runtime
-statically, so it runs even without the Visual C++ Redistributable
-installed — its only dependency is `KERNEL32.dll`.
+This downloads the latest build from `master` into
+`%LOCALAPPDATA%\CppMasterConsole` and launches it. Your progress stays in that
+same folder between runs. Because the executable links the MSVC runtime
+statically, it runs without the Visual C++ Redistributable installed; its only
+runtime dependency is `KERNEL32.dll`.
 
-If you would rather not pipe a script into your shell, read
-[`install.ps1`](install.ps1) first (it is short), or build from source with
-the instructions below. See [SECURITY.md](SECURITY.md) for the full trust
-discussion.
+If you prefer not to pipe a script into PowerShell, read
+[`install.ps1`](install.ps1) first (it is short), or build from source below.
+See [SECURITY.md](SECURITY.md) for the trust details.
 
 ## What it looks like
 
 ```
-========================================
+=======================================================================
 CPPMASTER CONSOLE
-========================================
+=======================================================================
 
 Toplam XP: 75
 Seviye: Değişken Ustası (Seviye 2)
 
-1. Konuları Öğren          6. Seviye Sınavı
-2. Hızlı Test              7. İstatistiklerim
-3. Günlük Tekrar           8. Başarımlar
-4. Hatalarımı Çöz          9. Ayarlar
-5. Kod Yazma Alıştırmaları 10. İlerlemeyi Sıfırla
-0. Çıkış
+1. Konuları Öğren   5. Kod Yazma Alıştırmaları    9. Ayarlar
+2. Hızlı Test       6. Seviye Sınavı             10. İlerlemeyi Sıfırla
+3. Günlük Tekrar    7. İstatistiklerim            0. Çıkış
+4. Hatalarımı Çöz   8. Başarımlar
+
+Seçimin:
 ```
 
-A slice of a topic quiz — correct answers print green, wrong ones red, and
-achievements yellow:
+A slice of a topic quiz, where correct answers print in green, wrong ones in
+red, and achievements in yellow:
 
 ```
 Konu testi başlıyor (8 soru).
@@ -80,84 +79,87 @@ Yeni başarım kazandın: İlk Adım
 İlk sorunu çözdün.
 ```
 
-While answering, the commands `ipucu` (hint), `konu` (lesson), `ornek`
-(example), `gec` (skip) and `cikis` (exit) are available; each hint level
-costs 25% of the XP the question would award.
+During a quiz, you can type `ipucu` (hint), `konu` (lesson), `ornek` (example),
+`gec` (skip), or `cikis` (exit). Each hint level takes 25% off the XP awarded
+for that question.
 
 ## Features
 
-- **Topics:** 100 topics across 10 sections, each with full lesson content
-  (explanation, syntax, example code, line-by-line commentary, common
-  mistakes).
-- **Questions:** 2,908 hand-written questions covering all 11 question
-  types, plus questions generated in real time in "Hızlı Test" (Quick Test)
-  mode that never repeat — 17 generators driven by a 4-stage escalation
-  algorithm (Normal → Expanded Parameters → Structural Variation → Cross
-  Topic).
-- **Topic locking:** topics are genuinely locked and unlock in order — you
-  cannot reach a topic before completing the previous one, and locked
-  topics are not listed at all. The experience level you pick on first
-  launch sets the starting range (beginner: topic 1 only; intermediate:
-  1-20; experienced: 1-40). The whole system can be switched off in
-  Settings.
-- **Exams:** a 20-question exam per section plus a 100-question general
-  final exam (70% to pass, gated on how much of the material you have
-  completed).
-- **Hint system:** the in-quiz `ipucu`/`konu`/`ornek`/`gec`/`cikis`
-  commands; each hint level reduces the XP awarded.
-- **Adaptive difficulty:** consecutive correct answers jump to harder
-  questions; consecutive wrong ones trigger automatic extra help.
-- **Code-writing exercises:** 25 hand-written exercises across three tiers
-  (Beginner / Intermediate / Advanced); completed ones are marked in the
-  list.
-- **XP / levels / achievements:** a 10-level XP system, unlockable
-  achievements, mistake-review and daily-review flows.
-- **Personalisation:** coloured output, an audible alert, and the Quick Test
-  question count and the topic-quiz question count — all configurable in
-  Settings.
-- **Persistence:** progress, mistake records, achievements, generated-question
-  history and settings are stored in a `data/` folder (not tracked by git).
+The curriculum covers 100 topics across 10 sections. Every topic ships with a
+full lesson: explanation, syntax, example code, line by line notes, and common
+mistakes. Practice draws from 2,908 handwritten questions spanning all 11
+question types. In "Hızlı Test" (Quick Test), 17 runtime generators also create
+fresh questions on the fly through a 4 stage escalation pipeline (Normal →
+Expanded Parameters → Structural Variation → Cross Topic) so the same question
+does not come back.
+
+Topics open in order. You finish one topic before moving to the next, and
+locked topics stay hidden from the list. On first launch, your chosen starting
+level sets the initial range: beginner starts at topic 1, intermediate opens
+topics 1 to 20, and experienced opens topics 1 to 40. You can turn topic
+locking off completely in Settings.
+
+Each section has a 20 question exam, followed by a 100 question general final
+exam with a 70% pass mark gated on how much of the curriculum you finished.
+During quizzes, consecutive right answers raise the question difficulty, while
+consecutive misses bring up extra help automatically. Outside quizzes, there
+are 25 handwritten code writing exercises split across Beginner, Intermediate,
+and Advanced tiers, with completed exercises marked in the list.
+
+Progress runs on a 10 level XP system with achievements you earn as you go,
+along with dedicated mistake review and daily review modes. Settings let you
+toggle coloured output and audio alerts, and change the question counts for
+Quick Test and topic quizzes. All user data (progress, mistakes, achievements,
+generated question history, and settings) is stored in a local `data/` folder
+that git ignores.
 
 ## Building from source
 
 ### Requirements
 
 - CMake ≥ 3.20
-- A C++20 compiler — MSVC 2022+, GCC 11+ or Clang 14+ (all three are
-  verified in CI, see [Platform support](#platform-support))
-- **No third-party dependencies** — everything, including the unit-test
-  framework, is written against the standard library
+- A C++20 compiler: MSVC 2022+, GCC 11+, or Clang 14+ (all three run in CI,
+  see [Platform support](#platform-support))
+- No external libraries; the app and its test runner use only the C++ standard
+  library
 
 ### Build
 
-With CMake presets (recommended):
+With CMake presets:
+
 ```bash
 cmake --preset default         # configure
 cmake --build --preset default # build
 ctest --preset default         # test
 ```
 
-Or the classic way:
+Or with plain CMake commands:
+
 ```bash
 cmake -B build
 cmake --build build
 ```
 
-For a standalone, distributable Release build:
+For a standalone Release build:
+
 ```bash
 cmake --preset release && cmake --build --preset release
 ```
-On MSVC the runtime is linked statically (`CMAKE_MSVC_RUNTIME_LIBRARY` in
-`CMakeLists.txt`), so the resulting `.exe` runs on a machine without the
-Visual C++ Redistributable.
+
+On MSVC, `CMAKE_MSVC_RUNTIME_LIBRARY` in `CMakeLists.txt` links the runtime
+statically, so the resulting `.exe` works without the Visual C++
+Redistributable.
 
 ### Running
 
-On multi-config CMake generators such as Windows/MSVC:
+With MSVC or another generator that writes per configuration subfolders:
+
 ```bash
 ./build/Debug/CppMasterConsole.exe
 ```
-On single-config generators (Makefiles, Ninja):
+
+With Makefiles or Ninja:
+
 ```bash
 ./build/CppMasterConsole
 ```
@@ -167,121 +169,126 @@ On single-config generators (Makefiles, Ninja):
 ```bash
 ctest --test-dir build --output-on-failure
 ```
-or by running the test binary directly:
+
+Or run the test binary directly:
+
 ```bash
 ./build/Debug/CppMasterConsoleTests.exe
 ```
 
-The test suite has no dependencies beyond the standard library; a small
-self-registering framework (`TEST_CASE`) lives in `tests/TestRunner.h`.
-There is also a separate `CppMasterConsoleStressTests` target that puts the
-generation system through 10,000+ iterations. It is deliberately excluded
-from `ctest` because it takes ~10-15 seconds, which would slow the everyday
-test loop; run it manually:
+Tests use a small macro based runner (`TEST_CASE`) in `tests/TestRunner.h` with
+no external dependencies. A separate target, `CppMasterConsoleStressTests`,
+runs the question generation engine through 10,000+ iterations. It stays out of
+`ctest` because Debug runs take about 10 to 15 seconds (a few seconds in
+Release), which would slow down quick local runs. Run it directly when needed:
+
 ```bash
 ./build/Debug/CppMasterConsoleStressTests.exe
 ```
 
 ### Automated builds and releases
 
-`.github/workflows/release.yml` builds in Release mode on every push to
-`master`, runs the tests and the stress suite, and uploads the standalone
-`.exe` to the repository's "latest" GitHub Release — that is the build
+`.github/workflows/release.yml` builds a Release binary on every push to
+`master`, runs both the unit tests and the stress suite, and publishes the
+standalone `.exe` to the repository's "latest" GitHub Release. That is the file
 `install.ps1` downloads.
 
 ## Project layout
 
 ```
 src/                Application source (CppMasterConsoleLib static library + main.cpp)
-src/generators/     Dynamic question generators (17, each in its own .h/.cpp)
+src/generators/     Runtime question generators (17, each in its own .h/.cpp pair)
 tests/              Unit tests (CppMasterConsoleTests target)
-tests/Generators/   A separate test file per generator
+tests/Generators/   One test file per generator
 tests/StressTests/  10,000+ iteration generation stress tests (separate target)
-data/               Per-user progress/statistics/settings files (not tracked)
-docs/superpowers/   Development process: design docs (specs/), plans (plans/), roadmap.md
-.github/workflows/  CI: build, test, static analysis and GitHub Release automation
-install.ps1         One-line install/launch script
+data/               Per user progress, statistics, and settings files (not tracked)
+docs/superpowers/   Design specs (specs/), implementation plans (plans/), roadmap.md
+.github/workflows/  CI for build, tests, static analysis, and GitHub Release uploads
+install.ps1         Single command Windows install and launch script
 ```
 
 ## Architecture notes
 
-The technically most interesting part is the **dynamic question generation
-system**, whose goal is unlimited practice without ever asking the same
-question twice:
+The core piece of the codebase is the runtime question generation system, built
+to give unlimited practice without repeating questions:
 
-- Each generator (`src/generators/`) owns a single topic and implements the
-  `IQuestionGenerator` interface.
-- Every generated question carries two signatures: **exact** (all drawn
-  parameters, including the cosmetic variable name) and **semantic**
-  (excluding cosmetic differences). Both are hashed with FNV-1a and stored
-  in `QuestionHistory`, so "the same question with a different variable
-  name" is not asked again.
-- `QuestionGenerationEngine` implements a 4-stage escalation: **Normal →
-  Expanded Parameters → Structural Variation**, and if all of those are
-  exhausted, a **Cross Topic** fallback (the other generators, ordered by
-  success rate). Each stage gets a budget of 20 attempts.
+- Each generator under `src/generators/` covers a single topic and implements
+  `IQuestionGenerator`.
+- Every generated question carries two signatures: an **exact** signature (all
+  chosen parameters, including variable names) and a **semantic** signature
+  (ignoring cosmetic differences). Both are hashed with FNV-1a and stored in
+  `QuestionHistory`, so swapping a variable name does not count as a new
+  question.
+- `QuestionGenerationEngine` escalates through 4 stages: Normal → Expanded
+  Parameters → Structural Variation, and if those run dry, a Cross Topic
+  fallback that tries other generators ordered by success rate. Each stage gets
+  20 attempts.
 - `GeneratorScoring` tracks each generator's success rate, and
-  `GeneratedQuestionValidator` independently verifies that a generated
-  question is structurally valid.
+  `GeneratedQuestionValidator` checks that every generated question is
+  structurally valid before it reaches the user.
 
-This system is verified by a 10,000-iteration stress test: zero repeats,
-zero invalid questions, 100% generation success (`tests/StressTests/`).
+The 10,000 iteration stress test in `tests/StressTests/` checks this pipeline
+for zero duplicates, zero invalid questions, and 100% generation success.
 
-Other design decisions:
+Other design choices:
 
-- Everything in `src/` is **dependency-free and pure**: the business logic
-  (`QuizEngine`, `LevelSystem`, `TopicLock`, `AdaptiveDifficulty`) is
-  separate from console I/O, which is what makes it fully unit-testable.
-- Persistent data lives in plain text files; every loader detects a
-  corrupted file, backs it up and falls back to defaults
-  (`*_corrupted_backup.txt`).
-- Lesson and question content is compiled in (`LessonContentSectionN.cpp`,
-  `QuestionsSectionN.cpp`) — a deliberate choice so the app ships as a
-  single file with no external data.
+- Business logic (`QuizEngine`, `LevelSystem`, `TopicLock`,
+  `AdaptiveDifficulty`) is kept separate from console I/O and interactive
+  screens (`Application`, `QuizSession`, `ExamSession`, `CodeExerciseSession`,
+  `SettingsScreen`), so logic classes are straightforward to test in isolation.
+- Persistent files are plain text. Saves go through a temporary file and atomic
+  rename (`src/AtomicFileWrite.cpp`) so an interrupted write does not truncate
+  existing progress. On load, corrupted files are backed up
+  (`*_corrupted_backup.txt`) and reset to defaults.
+- Lesson and question data is compiled into the binary
+  (`LessonContentSectionN.cpp`, `QuestionsSectionN.cpp`) so the Windows release
+  ships as one `.exe` with no external asset folder.
 
 ## About test coverage
 
-Every pure-logic and persistence class under `src/` is covered by unit
-tests. `Application` and `ConsoleUI` (the interactive, keyboard-driven
-parts) are deliberately outside unit-test coverage — they are verified
-end-to-end with hand-built input scenarios during development, visible in
-each phase's plan under `docs/superpowers/plans/`.
+All pure logic, persistence, and `ConsoleUI` I/O behaviour (redirected streams,
+colour formatting, screen clearing, EOF handling, and Turkish UTF-8 input) are
+covered by 259 unit tests in `CppMasterConsoleTests`. Interactive `Application`
+menus and full session flows are verified manually with scripted input
+scenarios, documented in the phase plans under `docs/superpowers/plans/`.
 
 ## Platform support
 
-Every push and pull request runs four jobs in CI:
+Every push and pull request runs four CI jobs:
 
 | Job | Compiler / tool | Status |
 |---|---|---|
-| Windows | MSVC (`/W4 /permissive-`) | ✅ build + tests + stress tests, **0 warnings** |
-| Linux | GCC (`-Wall -Wextra -Wpedantic -Wconversion -Wshadow`) | ✅ build + tests + stress tests, **0 warnings** |
-| Linux | Clang (same flags) | ✅ build + tests + stress tests, **0 warnings** |
-| Static analysis | clang-tidy | ✅ blocking (`-warnings-as-errors='*'`) |
+| Windows | MSVC (`/W4 /permissive- /utf-8`) | Pass: build, unit tests, stress tests, **0 warnings** |
+| Linux | GCC (`-Wall -Wextra -Wpedantic -Wconversion -Wshadow`) | Pass: build, unit tests, stress tests, **0 warnings** |
+| Linux | Clang (same flags) | Pass: build, unit tests, stress tests, **0 warnings** |
+| Static analysis | clang-tidy | Pass: blocking (`-warnings-as-errors='*'`) |
 
-The only platform-specific behaviour is isolated behind `#ifdef _WIN32` in
-`src/ConsoleUI.cpp`: the screen-clear command, the UTF-8 code page, and
-`ENABLE_VIRTUAL_TERMINAL_PROCESSING` for ANSI colour support. If colour
-cannot be enabled, output silently falls back to plain text rather than
-printing broken escape sequences.
+Windows specific code is isolated behind `#ifdef _WIN32` in `src/ConsoleUI.cpp`
+(plus the atomic replace call in `src/AtomicFileWrite.cpp`). `ConsoleUI` sets
+and restores the UTF-8 console code page, enables
+`ENABLE_VIRTUAL_TERMINAL_PROCESSING` for ANSI colour and screen clearing with a
+Win32 Console API fallback, and reads interactive Turkish UTF-8 input through
+`ReadConsoleW`. If colour mode cannot be enabled, output falls back to plain
+text instead of printing raw escape codes.
 
-macOS is not tested separately, but it exercises the same code paths as
-Linux/Clang and is expected to work.
+macOS is not tested in CI, though it follows the same code paths as Linux with
+Clang.
 
 ## Contributing
 
-Contributions are welcome — code, lesson content, or question corrections.
-See [CONTRIBUTING.md](CONTRIBUTING.md) for details, and
-[SECURITY.md](SECURITY.md) for security-related matters.
+Contributions are welcome for code, lesson content, or question fixes. See
+[CONTRIBUTING.md](CONTRIBUTING.md) to get started, and
+[SECURITY.md](SECURITY.md) for security reports.
 
 ## Changelog
 
-See [CHANGELOG.md](CHANGELOG.md) for changes between versions.
+See [CHANGELOG.md](CHANGELOG.md) for release notes.
 
 ## License
 
-[MIT](LICENSE) — Copyright (c) 2026 Samet Kaşmer.
+[MIT](LICENSE), Copyright (c) 2026 Samet Kaşmer.
 
-<div align="right"><a href="#cppmaster-console">⬆ Back to top</a></div>
+<div align="right"><a href="#cppmaster-console">↑ Back to top</a></div>
 
 ---
 
@@ -290,52 +297,51 @@ See [CHANGELOG.md](CHANGELOG.md) for changes between versions.
 
 # Türkçe
 
-C++ öğrenmek için terminal tabanlı, Türkçe bir alıştırma ve sınav
-uygulaması. 100 konuluk tam bir müfredat, 2.908 elle yazılmış soru,
-ipucu / konu kilidi / adaptif zorluk sistemleri, kod yazma alıştırmaları,
-bölüm sınavları, genel bir final sınavı ve 17 üreticiden oluşan, aynı
-soruyu iki kez sormayan dinamik bir soru üretim sistemi içerir.
+CppMaster Console, C++ öğrenmek için yazılmış terminal tabanlı, **Türkçe** bir
+alıştırma ve sınav uygulaması. İçinde 100 konuluk müfredat, 2.908 elle yazılmış
+soru, ipucu, sıralı konu kilidi, adaptif zorluk, 25 kod yazma alıştırması,
+bölüm sınavları, genel final sınavı ve aynı soruyu tekrar etmeden çalışma
+zamanında soru üreten 17 üretici var.
 
 ## Hızlı kurulum (Windows)
 
-Derleyici veya CMake kurmana gerek yok — tek satırlık komutla önceden
-derlenmiş, bağımsız bir `.exe` indirilip çalıştırılır:
+Derleyici veya CMake kurmana gerek yok. Tek bir PowerShell komutu önceden
+derlenmiş tek dosya `.exe`'yi indirip çalıştırır:
 
 ```powershell
 irm https://raw.githubusercontent.com/Layellie/cppmaster-console/master/install.ps1 | iex
 ```
 
-Bu, en son `master` commit'inden otomatik derlenen sürümü
-`%LOCALAPPDATA%\CppMasterConsole` altına indirir ve başlatır; ilerlemen
-sonraki çalıştırmalarda aynı klasörde saklanır. Derlenen `.exe`, MSVC
-çalışma zamanına statik olarak bağlıdır — Visual C++ Redistributable
-kurulu olmasa bile çalışır, tek bağımlılığı `KERNEL32.dll`'dir.
+Bu komut `master` dalındaki son derlemeyi `%LOCALAPPDATA%\CppMasterConsole`
+klasörüne indirip başlatır. İlerlemen sonraki çalıştırmalarda aynı klasörde
+kalır. `.exe` dosyası MSVC çalışma zamanına statik bağlandığı için Visual C++
+Redistributable kurulu olmasa da çalışır; tek bağımlılığı `KERNEL32.dll`'dir.
 
-Bir script'i doğrudan kabuğuna aktarmak istemiyorsan önce
-[`install.ps1`](install.ps1) dosyasını oku (kısadır) ya da aşağıdaki
-adımlarla kaynaktan derle. Güven konusunun tamamı için
-[SECURITY.md](SECURITY.md).
+Bir script'i doğrudan PowerShell'e aktarmak istemiyorsan önce
+[`install.ps1`](install.ps1) dosyasını okuyabilir (kısadır) ya da aşağıdan
+kaynaktan derleyebilirsin. Güven detayları için [SECURITY.md](SECURITY.md)
+dosyasına bakabilirsin.
 
 ## Nasıl görünüyor?
 
 ```
-========================================
+=======================================================================
 CPPMASTER CONSOLE
-========================================
+=======================================================================
 
 Toplam XP: 75
 Seviye: Değişken Ustası (Seviye 2)
 
-1. Konuları Öğren          6. Seviye Sınavı
-2. Hızlı Test              7. İstatistiklerim
-3. Günlük Tekrar           8. Başarımlar
-4. Hatalarımı Çöz          9. Ayarlar
-5. Kod Yazma Alıştırmaları 10. İlerlemeyi Sıfırla
-0. Çıkış
+1. Konuları Öğren   5. Kod Yazma Alıştırmaları    9. Ayarlar
+2. Hızlı Test       6. Seviye Sınavı             10. İlerlemeyi Sıfırla
+3. Günlük Tekrar    7. İstatistiklerim            0. Çıkış
+4. Hatalarımı Çöz   8. Başarımlar
+
+Seçimin:
 ```
 
-Bir konu testinden kesit — doğru cevap yeşil, yanlış kırmızı gösterilir,
-başarımlar sarı:
+Bir konu testinden kesit (doğru cevap yeşil, yanlış kırmızı, başarımlar sarı
+renkte basılır):
 
 ```
 Konu testi başlıyor (8 soru).
@@ -350,79 +356,83 @@ Yeni başarım kazandın: İlk Adım
 İlk sorunu çözdün.
 ```
 
-Soru sırasında `ipucu`, `konu`, `ornek`, `gec` ve `cikis` komutları
-kullanılabilir; her ipucu kazanılacak XP'yi %25 azaltır.
+Soru çözerken `ipucu`, `konu`, `ornek`, `gec` ve `cikis` komutları
+kullanılabilir. Her ipucu seviyesi o sorudan gelecek XP'yi %25 azaltır.
 
 ## Kapsam
 
-- **Konular:** 100 konu, 10 bölüm, hepsinde tam ders içeriği (açıklama,
-  sözdizimi, örnek kod, satır satır açıklama, yaygın hatalar).
-- **Sorular:** 2.908 elle yazılmış soru (11 soru tipinin tamamı
-  kullanılıyor), artı "Hızlı Test" modunda gerçek zamanlı üretilen ve
-  hiç tekrar etmeyen sorular (17 üretici, 4 aşamalı üretim algoritması:
-  Normal → Genişletilmiş Parametreler → Yapısal Varyasyon → Çapraz Konu).
-- **Konu kilidi:** Konular gerçekten kilitli ve sırayla açılıyor — bir
-  konuyu tamamlamadan bir sonrakine erişilemez, kilitli konular listede
-  hiç görünmez. İlk açılışta seçtiğin deneyim seviyesi başlangıç
-  aralığını belirler (yeni başlayan: yalnızca 1. konu; orta seviye:
-  1-20; deneyimli: 1-40). Kilit sistemi Ayarlar'dan tamamen
-  kapatılabilir.
-- **Sınavlar:** Her bölüm için 20 soruluk bir sınav, artı 100 soruluk genel
-  final sınavı (%70 geçme notu, konu tamamlama oranına göre kilitli).
-- **İpucu sistemi:** Test sırasında `ipucu`/`konu`/`ornek`/`gec`/`cikis`
-  komutları; her ipucu seviyesi kazanılan XP'yi azaltır.
-- **Adaptif zorluk:** Art arda doğru cevaplar daha zor sorulara atlar; art
-  arda yanlışlar otomatik ekstra yardım gösterir.
-- **Kod Yazma Alıştırmaları:** 3 seviyede (Başlangıç/Orta/İleri) 25 elle
-  yazılmış kod alıştırması; tamamladıkların listede işaretlenir.
-- **XP/Seviye/Başarımlar:** 10 seviyelik XP sistemi, açılabilir başarımlar,
-  yanlış-tekrar ve günlük tekrar akışları.
-- **Kişiselleştirme:** Renkli çıktı (doğru/yanlış/başarım geri bildirimi),
-  sesli uyarı, Hızlı Test ve konu testi soru sayıları — hepsi Ayarlar'dan
-  değiştirilebilir.
-- **Kalıcı veri:** İlerleme, yanlış kayıtları, başarımlar, üretilen soru
-  geçmişi ve ayarlar `data/` klasöründe saklanır (git'e dahil değil).
+Müfredat 10 bölüm ve 100 konudan oluşuyor. Her konuda tam ders metni var:
+açıklama, sözdizimi, örnek kod, satır satır inceleme ve yaygın hatalar. Soru
+havuzunda 11 soru tipinin tamamını kapsayan 2.908 elle yazılmış soru bulunuyor.
+"Hızlı Test" modunda buna ek olarak 17 üretici, 4 aşamalı bir üretim hattıyla
+(Normal → Genişletilmiş Parametreler → Yapısal Varyasyon → Çapraz Konu) çalışma
+zamanında tekrar etmeyen yeni sorular üretiyor.
+
+Konular kilitli gelir ve sırayla açılır. Bir konuyu bitirmeden sonrakine
+geçilemez ve kilitli konular listede görünmez. İlk açılışta seçtiğin seviye
+başlangıç aralığını belirler: yeni başlayan yalnızca 1. konuyla başlar, orta
+seviye 1 ile 20 arasını, deneyimli ise 1 ile 40 arasını açar. İsteyen kilit
+sistemini Ayarlar'dan tamamen kapatabilir.
+
+Her bölüm sonunda 20 soruluk bir sınav, müfredat ilerledikçe açılan 100 soruluk
+bir genel final sınavı var (%70 geçme notu). Test sırasında art arda doğru
+cevaplar zorluğu yükseltir, art arda yanlışlar otomatik ek yardım açar. Testler
+dışında Başlangıç, Orta ve İleri seviyelerine ayrılmış 25 elle yazılmış kod
+yazma alıştırması bulunur ve bitenler listede işaretlenir.
+
+İlerleme 10 seviyelik XP sistemi, kazanılan başarımlar, yanlış tekrarı ve
+günlük tekrar akışlarıyla takip edilir. Renkli çıktı, sesli uyarı, Hızlı Test
+ve konu testi soru sayıları Ayarlar'dan değiştirilebilir. İlerleme, yanlış
+kayıtları, başarımlar, üretilen soru geçmişi ve ayarlar git tarafından takip
+edilmeyen `data/` klasöründe tutulur.
 
 ## Geliştirici olarak derleme
 
 ### Gereksinimler
 
 - CMake ≥ 3.20
-- C++20 destekleyen bir derleyici — MSVC 2022+, GCC 11+ veya Clang 14+
-  (üçü de CI'da doğrulanıyor, bkz. [Platform desteği](#platform-desteği))
-- Üçüncü parti bağımlılık **yok**; test çatısı dahil her şey standart
-  kütüphaneyle yazıldı
+- C++20 destekleyen bir derleyici: MSVC 2022+, GCC 11+ veya Clang 14+ (üçü de
+  CI'da doğrulanıyor, bkz. [Platform desteği](#platform-desteği))
+- Harici kütüphane yok; uygulama ve test çalıştırıcı yalnızca C++ standart
+  kütüphanesini kullanır
 
 ### Derleme
 
-CMake preset'leriyle (önerilen):
+CMake preset'leriyle:
+
 ```bash
 cmake --preset default         # yapılandır
 cmake --build --preset default # derle
 ctest --preset default         # test et
 ```
 
-Ya da klasik yöntemle:
+Ya da klasik CMake komutlarıyla:
+
 ```bash
 cmake -B build
 cmake --build build
 ```
 
-Bağımsız, dağıtılabilir bir Release derlemesi için:
+Tek dosya olarak dağıtılabilir Release derlemesi için:
+
 ```bash
 cmake --preset release && cmake --build --preset release
 ```
-MSVC'de çalışma zamanı statik bağlanır (`CMakeLists.txt` içindeki
-`CMAKE_MSVC_RUNTIME_LIBRARY`), böylece çıkan `.exe` Visual C++
-Redistributable kurulu olmayan bir makinede de çalışır.
+
+MSVC'de `CMakeLists.txt` içindeki `CMAKE_MSVC_RUNTIME_LIBRARY` ayarı çalışma
+zamanını statik bağlar; çıkan `.exe` Visual C++ Redistributable kurulu olmayan
+bir makinede de çalışır.
 
 ### Çalıştırma
 
-Windows/MSVC gibi çok yapılandırmalı CMake generator'lerinde:
+Windows/MSVC gibi yapılandırmaya göre alt klasör oluşturan generator'larda:
+
 ```bash
 ./build/Debug/CppMasterConsole.exe
 ```
-Tek yapılandırmalı CMake generator'lerinde (Makefiles, Ninja):
+
+Makefiles veya Ninja ile:
+
 ```bash
 ./build/CppMasterConsole
 ```
@@ -432,84 +442,89 @@ Tek yapılandırmalı CMake generator'lerinde (Makefiles, Ninja):
 ```bash
 ctest --test-dir build --output-on-failure
 ```
-veya test binary'sini doğrudan çalıştırarak:
+
+Veya test dosyasını doğrudan çalıştır:
+
 ```bash
 ./build/Debug/CppMasterConsoleTests.exe
 ```
 
-Test paketi standart kütüphane dışında hiçbir bağımlılık kullanmaz; kendi
-kendini kaydeden (`TEST_CASE`), basit bir test çatısı `tests/TestRunner.h`
-içinde tanımlıdır. Ayrıca, dinamik soru üretim sistemini 10.000+
-iterasyonda stres testinden geçiren ayrı bir `CppMasterConsoleStressTests`
-hedefi var (bilinçli olarak `ctest`'e dahil değil, çünkü ~10-15 saniye
-sürüyor — hızlı test döngüsünü yavaşlatmaması için elle çalıştırılır):
+Testler `tests/TestRunner.h` içindeki makro tabanlı (`TEST_CASE`) küçük bir
+çalıştırıcı kullanır ve dış bağımlılığı yoktur. Ayrı bir hedef olan
+`CppMasterConsoleStressTests`, soru üretim motorunu 10.000'den fazla
+iterasyonla sınar. Debug derlemesinde yaklaşık 10 ila 15 saniye sürdüğü için
+(Release'de birkaç saniye) günlük test döngüsünü yavaşlatmaması adına `ctest`
+dışında bırakılmıştır; gerektiğinde elle çalıştırılır:
+
 ```bash
 ./build/Debug/CppMasterConsoleStressTests.exe
 ```
 
 ### Otomatik derleme ve dağıtım
 
-`.github/workflows/release.yml`, `master`'a her push'ta Release modunda
-derler, testleri ve stres testlerini çalıştırır, ardından bağımsız `.exe`'yi
-repo'nun "latest" GitHub Release'ine yükler — `install.ps1`'in indirdiği
-sürüm budur.
+`.github/workflows/release.yml`, `master`'a her push'ta Release derlemesi alır,
+birim ve stres testlerini çalıştırır, ardından tek dosya `.exe`'yi repo'nun
+"latest" GitHub Release'ine yükler. `install.ps1` doğrudan bu dosyayı indirir.
 
 ## Proje yapısı
 
 ```
 src/                Uygulama kaynak kodu (CppMasterConsoleLib statik kütüphanesi + main.cpp)
-src/generators/     Dinamik soru üreticileri (17 adet, her biri kendi .h/.cpp'sinde)
+src/generators/     Çalışma zamanı soru üreticileri (17 adet, her biri kendi .h/.cpp çiftinde)
 tests/              Birim testleri (CppMasterConsoleTests hedefi)
-tests/Generators/   Her üretici için ayrı test dosyaları
+tests/Generators/   Her üretici için ayrı test dosyası
 tests/StressTests/  10.000+ iterasyonluk üretim stres testleri (ayrı hedef)
-data/               Kullanıcının ilerleme/istatistik/ayar dosyaları (git'e dahil değil)
-docs/superpowers/   Geliştirme süreci: tasarım dokümanları (specs/), planlar (plans/), roadmap.md
-.github/workflows/  CI: derleme, test, statik analiz ve GitHub Release otomasyonu
-install.ps1         Tek satırlık kurulum/başlatma script'i
+data/               Kullanıcıya özel ilerleme, istatistik ve ayar dosyaları (git'e dahil değil)
+docs/superpowers/   Tasarım dokümanları (specs/), uygulama planları (plans/), roadmap.md
+.github/workflows/  Derleme, test, statik analiz ve GitHub Release otomasyonu
+install.ps1         Tek komutluk Windows kurulum ve başlatma script'i
 ```
 
 ## Mimari notlar
 
-Projenin teknik olarak en ilginç parçası **dinamik soru üretim sistemi**.
-Amaç, kullanıcıya aynı soruyu iki kez sormadan sınırsız pratik sağlamak:
+Kod tabanının ana mekanizması, aynı soruyu tekrarlamadan sınırsız pratik
+sağlamak için yazılmış çalışma zamanı soru üretim sistemi:
 
-- Her üretici (`src/generators/`) tek bir konudan sorumludur ve
+- `src/generators/` altındaki her üretici tek bir konudan sorumludur ve
   `IQuestionGenerator` arayüzünü uygular.
-- Üretilen her soru iki imza taşır: **exact** (tüm parametreler, kozmetik
-  değişken adı dahil) ve **semantic** (kozmetik farklar hariç). İkisi de
-  FNV-1a ile hash'lenip `QuestionHistory`'de saklanır; böylece "aynı soru,
-  farklı değişken adıyla" tekrar sorulmaz.
-- `QuestionGenerationEngine` 4 aşamalı bir tırmanma uygular: **Normal →
-  Genişletilmiş Parametreler → Yapısal Varyasyon**, hepsi tükenirse
-  **Çapraz Konu** yedeği (başarı oranına göre sıralanmış diğer üreticiler).
-  Her aşamaya 20 deneme bütçesi verilir.
-- `GeneratorScoring` her üreticinin başarı oranını takip eder;
-  `GeneratedQuestionValidator` üretilen sorunun yapısal geçerliliğini
-  bağımsız olarak doğrular.
+- Üretilen her soru iki imza taşır: **exact** (değişken adı dahil tüm seçilen
+  parametreler) ve **semantic** (kozmetik farklar hariç). İkisi de FNV-1a ile
+  hash'lenip `QuestionHistory` içinde saklanır; böylece yalnızca değişken adı
+  değişen bir soru yeni sayılmaz.
+- `QuestionGenerationEngine` 4 aşamalı bir tırmanma izler: Normal →
+  Genişletilmiş Parametreler → Yapısal Varyasyon; bunlar tükenirse diğer
+  üreticileri başarı oranına göre deneyen Çapraz Konu yedeğine geçer. Her
+  aşamanın 20 deneme hakkı vardır.
+- `GeneratorScoring` her üreticinin başarı oranını tutar;
+  `GeneratedQuestionValidator` ise üretilen sorunun yapısal geçerliliğini
+  kullanıcıya çıkmadan önce kontrol eder.
 
-Bu sistem 10.000 iterasyonluk bir stres testiyle doğrulanıyor: sıfır
-tekrar, sıfır geçersiz soru, %100 üretim başarısı
-(`tests/StressTests/`).
+`tests/StressTests/` içindeki 10.000 iterasyonluk stres testi bu hattı sıfır
+tekrar, sıfır geçersiz soru ve %100 üretim başarısı için doğrular.
 
 Diğer tasarım kararları:
 
-- `src/` içindeki her şey **bağımlılıksız ve saf**: iş mantığı
-  (`QuizEngine`, `LevelSystem`, `TopicLock`, `AdaptiveDifficulty`) konsol
-  G/Ç'sinden ayrıdır, bu yüzden tamamı birim testiyle kapsanabiliyor.
-- Kalıcı veri düz metin dosyalarında tutulur; her yükleyici bozuk dosyayı
-  algılayıp yedekler ve varsayılanlara döner (`*_corrupted_backup.txt`).
-- Ders ve soru içeriği koda gömülüdür (`LessonContentSectionN.cpp`,
-  `QuestionsSectionN.cpp`) — uygulamanın tek dosya olarak dağıtılabilmesi
-  ve harici veri dosyası gerektirmemesi için bilinçli bir tercih.
+- İş mantığı (`QuizEngine`, `LevelSystem`, `TopicLock`, `AdaptiveDifficulty`)
+  konsol G/Ç'sinden ve etkileşimli ekranlardan (`Application`, `QuizSession`,
+  `ExamSession`, `CodeExerciseSession`, `SettingsScreen`) ayrı tutulur; bu
+  sayede mantık sınıfları tek başına test edilebilir.
+- Kalıcı veriler düz metin dosyalarında saklanır. Yazma işlemleri geçici dosya
+  ve atomik yeniden adlandırma (`src/AtomicFileWrite.cpp`) üzerinden yapılır;
+  yazma yarıda kesilirse mevcut ilerleme bozulmaz. Yükleme sırasında bozuk
+  dosya tespit edilirse yedeklenir (`*_corrupted_backup.txt`) ve varsayılanlara
+  dönülür.
+- Ders ve soru içerikleri doğrudan koda gömülüdür (`LessonContentSectionN.cpp`,
+  `QuestionsSectionN.cpp`). Bu sayede Windows sürümü harici veri klasörü
+  olmadan tek `.exe` olarak dağıtılır.
 
 ## Test kapsamı hakkında
 
-`src/` altındaki saf mantık ve dosya-kalıcılık sınıflarının tamamı birim
-testleriyle kapsanır. `Application` ve `ConsoleUI` (etkileşimli, klavyeden
-girdi bekleyen kısımlar) bilinçli olarak birim testi kapsamı dışında
-bırakıldı — bunlar, geliştirme sürecinde elle hazırlanmış giriş
-senaryolarıyla uçtan uca doğrulanmaya devam ediyor
-(`docs/superpowers/plans/` içindeki her fazın planında görülebilir).
+`src/` altındaki saf iş mantığı, dosya kalıcılığı ve `ConsoleUI` G/Ç
+davranışları (yönlendirilmiş akışlar, renkli biçimlendirme, ekran temizleme,
+EOF yönetimi ve Türkçe UTF-8 girdisi) `CppMasterConsoleTests` içindeki 259
+birim testiyle kapsanır. Etkileşimli `Application` menüleri ve uçtan uca oturum
+akışları, `docs/superpowers/plans/` altındaki faz planlarında kayıtlı elle
+hazırlanmış giriş senaryolarıyla doğrulanır.
 
 ## Platform desteği
 
@@ -517,24 +532,28 @@ Her push ve pull request'te CI'da dört iş çalışır:
 
 | İş | Derleyici / araç | Durum |
 |---|---|---|
-| Windows | MSVC (`/W4 /permissive-`) | ✅ derleme + testler + stres testleri, **0 uyarı** |
-| Linux | GCC (`-Wall -Wextra -Wpedantic -Wconversion -Wshadow`) | ✅ derleme + testler + stres testleri, **0 uyarı** |
-| Linux | Clang (aynı bayraklar) | ✅ derleme + testler + stres testleri, **0 uyarı** |
-| Statik analiz | clang-tidy | ✅ bloklayıcı (`-warnings-as-errors='*'`) |
+| Windows | MSVC (`/W4 /permissive- /utf-8`) | Geçti: derleme, birim ve stres testleri, **0 uyarı** |
+| Linux | GCC (`-Wall -Wextra -Wpedantic -Wconversion -Wshadow`) | Geçti: derleme, birim ve stres testleri, **0 uyarı** |
+| Linux | Clang (aynı bayraklar) | Geçti: derleme, birim ve stres testleri, **0 uyarı** |
+| Statik analiz | clang-tidy | Geçti: bloklayıcı (`-warnings-as-errors='*'`) |
 
-Platforma özgü tek davranış `src/ConsoleUI.cpp` içinde `#ifdef _WIN32` ile
-izole edilmiştir: konsol temizleme komutu, UTF-8 kod sayfası ayarı ve ANSI
-renk desteği için `ENABLE_VIRTUAL_TERMINAL_PROCESSING`. Renk desteği
-açılamazsa çıktı sessizce renksize düşer, bozuk kaçış dizileri basılmaz.
+Windows'a özgü kodlar `src/ConsoleUI.cpp` içinde `#ifdef _WIN32` arkasına
+alınmıştır (ek olarak `src/AtomicFileWrite.cpp` içindeki atomik dosya
+değiştirme çağrısı). `ConsoleUI`, UTF-8 konsol kod sayfasını ayarlayıp çıkışta
+eski haline döndürür, ANSI renkleri ve ekran temizleme için
+`ENABLE_VIRTUAL_TERMINAL_PROCESSING` modunu açar (açılamazsa Win32 Console API
+yedeğine geçer) ve etkileşimli Türkçe UTF-8 girdisini `ReadConsoleW` ile okur.
+Renk desteği açılamazsa çıktı bozuk kaçış dizileri basmak yerine düz metne
+düşer.
 
 macOS ayrıca test edilmiyor, ancak Linux/Clang ile aynı kod yollarını
 kullandığından çalışması bekleniyor.
 
 ## Katkıda bulunma
 
-Katkılar memnuniyetle karşılanır — kod, ders içeriği veya soru
-düzeltmeleri. Ayrıntılar için [CONTRIBUTING.md](CONTRIBUTING.md)'ye bakın.
-Güvenlikle ilgili konular için [SECURITY.md](SECURITY.md).
+Kod, ders içeriği veya soru düzeltmeleri için katkılar memnuniyetle karşılanır.
+Ayrıntılar için [CONTRIBUTING.md](CONTRIBUTING.md), güvenlik bildirimleri için
+[SECURITY.md](SECURITY.md) dosyasına bakabilirsin.
 
 ## Sürüm geçmişi
 
@@ -542,6 +561,6 @@ Sürümler arası değişiklikler için [CHANGELOG.md](CHANGELOG.md).
 
 ## Lisans
 
-[MIT](LICENSE) — Copyright (c) 2026 Samet Kaşmer.
+[MIT](LICENSE), Copyright (c) 2026 Samet Kaşmer.
 
-<div align="right"><a href="#cppmaster-console">⬆ Başa dön</a></div>
+<div align="right"><a href="#cppmaster-console">↑ Başa dön</a></div>
