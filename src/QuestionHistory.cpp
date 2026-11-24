@@ -10,11 +10,11 @@
 #include "ParseUtil.h"
 
 bool QuestionHistory::hasSeenExact(std::uint64_t exactHash) const {
-    return seenExactHashes_.find(exactHash) != seenExactHashes_.end();
+    return seenExactHashes_.contains(exactHash);
 }
 
 bool QuestionHistory::hasSeenSemantic(std::uint64_t semanticHash) const {
-    return seenSemanticHashes_.find(semanticHash) != seenSemanticHashes_.end();
+    return seenSemanticHashes_.contains(semanticHash);
 }
 
 void QuestionHistory::record(const GeneratedQuestion& generated) {

@@ -122,7 +122,7 @@ bool AchievementTracker::unlock(AchievementId id) {
 }
 
 bool AchievementTracker::isUnlocked(AchievementId id) const {
-    return unlockedIds_.find(static_cast<int>(id)) != unlockedIds_.end();
+    return unlockedIds_.contains(static_cast<int>(id));
 }
 
 std::vector<AchievementId> AchievementTracker::allUnlocked() const {

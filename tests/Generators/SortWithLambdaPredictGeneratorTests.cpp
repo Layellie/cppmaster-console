@@ -65,7 +65,7 @@ TEST_CASE(SortWithLambdaPredictGenerator_NormalStageAnswerIsDescendingSort) {
         CHECK(candidate->exactSignature.find(";shape=descending;") != std::string::npos);
 
         std::vector<int> expected = parseValues(candidate->exactSignature);
-        std::sort(expected.begin(), expected.end(), [](int a, int b) { return a > b; });
+        std::ranges::sort(expected, [](int a, int b) { return a > b; });
         const std::vector<int> answer = parseAnswer(candidate->question.acceptedAnswers.front());
         CHECK(answer == expected);
     }
@@ -84,7 +84,7 @@ TEST_CASE(SortWithLambdaPredictGenerator_StructuralVariationSortsByDistanceToPiv
         const int pivot = std::stoi(candidate->exactSignature.substr(start));
 
         std::vector<int> expected = parseValues(candidate->exactSignature);
-        std::sort(expected.begin(), expected.end(), [pivot](int a, int b) {
+        std::ranges::sort(expected, [pivot](int a, int b) {
             return std::abs(a - pivot) < std::abs(b - pivot);
         });
         const std::vector<int> answer = parseAnswer(candidate->question.acceptedAnswers.front());

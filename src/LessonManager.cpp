@@ -437,7 +437,7 @@ std::span<const Lesson> LessonManager::lessonsViewInSection(int sectionId) const
     if (it == rangeBySectionId_.end()) {
         return {};
     }
-    return std::span<const Lesson>(lessons_.data() + it->second.offset, it->second.count);
+    return {lessons_.data() + it->second.offset, it->second.count};
 }
 
 std::vector<Lesson> LessonManager::lessonsInSection(int sectionId) const {

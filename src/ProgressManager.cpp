@@ -172,7 +172,7 @@ bool ProgressManager::save(
     // isn't), which keeps diffs and manual inspection sane.
     std::vector<int> completedExercises(
         progress.completedCodeExerciseIds().begin(), progress.completedCodeExerciseIds().end());
-    std::sort(completedExercises.begin(), completedExercises.end());
+    std::ranges::sort(completedExercises);
     for (const int exerciseId : completedExercises) {
         buffer << "exercise_done " << exerciseId << '\n';
     }

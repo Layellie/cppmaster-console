@@ -38,7 +38,7 @@ TEST_CASE(ExamContent_SectionsTwoToTenCoverEveryTopicTwice) {
                 ++countPerTopic[question->topicId];
             }
         }
-        const int firstTopic = (sectionId - 1) * 10 + 1;
+        const int firstTopic = ((sectionId - 1) * 10) + 1;
         for (int topic = firstTopic; topic < firstTopic + 10; ++topic) {
             CHECK(countPerTopic[topic] == 2);
         }

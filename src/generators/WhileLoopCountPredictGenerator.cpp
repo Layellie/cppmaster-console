@@ -1,5 +1,6 @@
 #include "generators/WhileLoopCountPredictGenerator.h"
 
+#include <algorithm>
 #include <array>
 #include <cstddef>
 #include <string>
@@ -50,10 +51,7 @@ std::optional<GeneratedQuestion> WhileLoopCountPredictGenerator::generate(
     if (doublingShape) {
         const ParameterDomain startDomain = kStartDomain;  // kept modest; see guard below
         const ParameterDomain limitDomain = kLimitDomain;
-        int start = startDomain.draw(randomEngine);
-        if (start < 1) {
-            start = 1;
-        }
+        const int start = std::max(1, startDomain.draw(randomEngine));
         const int limit = limitDomain.draw(randomEngine);
 
         int value = start;
@@ -83,10 +81,7 @@ std::optional<GeneratedQuestion> WhileLoopCountPredictGenerator::generate(
     } else {
         const ParameterDomain startDomain =
             stage == GenerationStage::Normal ? kStartDomain : kStartDomain.expanded();
-        int start = startDomain.draw(randomEngine);
-        if (start < 1) {
-            start = 1;
-        }
+        const int start = std::max(1, startDomain.draw(randomEngine));
         int divisor = kDivisorDomain.draw(randomEngine);
         if (divisor == 0 || divisor == 1) {
             divisor = 2;

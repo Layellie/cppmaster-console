@@ -39,6 +39,7 @@ Checks: >
   modernize-*,
   -modernize-use-trailing-return-type,
   -modernize-avoid-c-arrays,
+  -modernize-use-designated-initializers,
   performance-*,
   -performance-enum-size,
   readability-*,

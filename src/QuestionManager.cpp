@@ -667,7 +667,7 @@ std::span<const Question> QuestionManager::questionViewForTopic(int topicId) con
     if (it == rangeByTopicId_.end()) {
         return {};
     }
-    return std::span<const Question>(questions_.data() + it->second.offset, it->second.count);
+    return {questions_.data() + it->second.offset, it->second.count};
 }
 
 std::vector<Question> QuestionManager::questionsForTopic(int topicId) const {

@@ -12,7 +12,7 @@ constexpr int kMediumTrueFalseOffset = 12;
 constexpr int kTopicsPerSection = 10;
 
 int baseIdForTopic(int topicId) {
-    return kFirstFormulaTopicBaseId + (topicId - kFirstFormulaTopic) * kQuestionsPerTopic;
+    return kFirstFormulaTopicBaseId + ((topicId - kFirstFormulaTopic) * kQuestionsPerTopic);
 }
 
 }  // namespace
@@ -23,7 +23,7 @@ std::vector<int> examQuestionIdsForSection(int sectionId) {
     }
 
     std::vector<int> ids;
-    ids.reserve(static_cast<std::size_t>(kTopicsPerSection * 2));
+    ids.reserve(static_cast<std::size_t>(kTopicsPerSection) * 2U);
     const int firstTopic = ((sectionId - 1) * kTopicsPerSection) + 1;
     for (int topic = firstTopic; topic < firstTopic + kTopicsPerSection; ++topic) {
         const int base = baseIdForTopic(topic);

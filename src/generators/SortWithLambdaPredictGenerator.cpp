@@ -51,10 +51,7 @@ std::optional<GeneratedQuestion> SortWithLambdaPredictGenerator::generate(
     const ParameterDomain valueDomain =
         stage == GenerationStage::Normal ? kValueDomain : kValueDomain.expanded();
 
-    int count = countDomain.draw(randomEngine);
-    if (count < 1) {
-        count = 1;
-    }
+    const int count = std::max(1, countDomain.draw(randomEngine));
 
     const bool distanceShape = stage == GenerationStage::StructuralVariation;
     const int pivot = distanceShape ? kPivotDomain.draw(randomEngine) : 0;

@@ -71,7 +71,7 @@ const char* escapeCodeFor(TextColor color) {
 // handled there — POSIX needs an explicit isatty check to match.
 bool enableAnsiColorSupport() {
 #ifdef _WIN32
-    HANDLE const outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    HANDLE outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     if (outputHandle == INVALID_HANDLE_VALUE || outputHandle == nullptr) {
         return false;
     }
@@ -95,7 +95,7 @@ bool readUtf8LineFromWindowsConsole(std::string& outLine, bool& outWasConsole) {
         return false;
     }
 
-    HANDLE const inputHandle = GetStdHandle(STD_INPUT_HANDLE);
+    HANDLE inputHandle = GetStdHandle(STD_INPUT_HANDLE);
     if (inputHandle == INVALID_HANDLE_VALUE || inputHandle == nullptr) {
         return false;
     }
@@ -176,15 +176,19 @@ bool readInputLine(std::string& outLine) {
 
 }  // namespace
 
-ConsoleUI::ConsoleUI() {
+ConsoleUI::ConsoleUI()
+    : colorSupported_(enableAnsiColorSupport())
 #ifdef _WIN32
-    originalOutputCodePage_ = static_cast<std::uint32_t>(GetConsoleOutputCP());
-    originalInputCodePage_ = static_cast<std::uint32_t>(GetConsoleCP());
-    restoreCodePages_ = true;
+      ,
+      originalOutputCodePage_(static_cast<std::uint32_t>(GetConsoleOutputCP())),
+      originalInputCodePage_(static_cast<std::uint32_t>(GetConsoleCP())),
+      restoreCodePages_(true)
+#endif
+{
+#ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
     SetConsoleCP(CP_UTF8);
 #endif
-    colorSupported_ = enableAnsiColorSupport();
 }
 
 ConsoleUI::~ConsoleUI() {
@@ -206,7 +210,7 @@ void ConsoleUI::clearScreen() const {
         return;
     }
 #ifdef _WIN32
-    HANDLE const outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+    HANDLE outputHandle = GetStdHandle(STD_OUTPUT_HANDLE);
     if (outputHandle == INVALID_HANDLE_VALUE || outputHandle == nullptr) {
         return;
     }

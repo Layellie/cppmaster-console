@@ -1,5 +1,6 @@
 #include "UserProgress.h"
 
+#include <algorithm>
 #include <cstddef>
 
 UserProgress::UserProgress(int topicCount) {
@@ -62,9 +63,7 @@ int UserProgress::longestStreak() const {
 void UserProgress::recordStreak(bool correct) {
     if (correct) {
         ++currentStreak_;
-        if (currentStreak_ > longestStreak_) {
-            longestStreak_ = currentStreak_;
-        }
+        longestStreak_ = std::max(longestStreak_, currentStreak_);
     } else {
         currentStreak_ = 0;
     }
@@ -101,9 +100,7 @@ int UserProgress::highestSectionExamPassed() const {
 }
 
 void UserProgress::recordSectionExamPassed(int sectionId) {
-    if (sectionId > highestSectionExamPassed_) {
-        highestSectionExamPassed_ = sectionId;
-    }
+    highestSectionExamPassed_ = std::max(highestSectionExamPassed_, sectionId);
 }
 
 void UserProgress::setHighestSectionExamPassed(int value) {
@@ -119,7 +116,7 @@ void UserProgress::setUnlockedUpToTopicId(int topicId) {
 }
 
 bool UserProgress::isCodeExerciseCompleted(int exerciseId) const {
-    return completedCodeExerciseIds_.find(exerciseId) != completedCodeExerciseIds_.end();
+    return completedCodeExerciseIds_.contains(exerciseId);
 }
 
 void UserProgress::markCodeExerciseCompleted(int exerciseId) {
