@@ -13,7 +13,7 @@
 #include <vector>
 
 #include "CodeExerciseSession.h"
-#include "ExamContent.h"
+#include "ExamSession.h"
 #include "LevelSystem.h"
 #include "MenuFormatting.h"
 #include "QuizSession.h"
@@ -25,8 +25,6 @@ namespace {
 constexpr int kMinChoice = 0;
 constexpr int kMaxChoice = 10;
 constexpr int kMinTopicId = 0;
-constexpr double kExamPassThreshold = 0.7;
-constexpr double kSectionCompletionGateThreshold = 0.7;
 
 std::uint64_t createSeed() {
     const auto now = std::chrono::high_resolution_clock::now().time_since_epoch().count();
@@ -433,155 +431,9 @@ void Application::runQuickTest() {
     runQuickTestSession(context);
 }
 
-void Application::runExam(const ExamPlan& plan) {
-    const int topicCount = static_cast<int>(plan.gatingTopicIds.size());
-    if (topicCount == 0 || plan.questionIds.empty()) {
-        // Defensive: every caller passes a non-empty plan today, but an
-        // empty one would otherwise divide by zero when scoring.
-        ui_.printLine("");
-        ui_.printLine("Bu sınav şu anda kullanılamıyor.");
-        return;
-    }
-
-    int completedCount = 0;
-    for (const int topicId : plan.gatingTopicIds) {
-        const TopicStatus status = progress_.statusOf(topicId);
-        if (status == TopicStatus::Completed || status == TopicStatus::Mastered) {
-            ++completedCount;
-        }
-    }
-
-    const double completionRatio =
-        static_cast<double>(completedCount) / static_cast<double>(topicCount);
-
-    if (!sectionExamIsUnlocked(
-            settings_.topicLockEnabled, completionRatio, kSectionCompletionGateThreshold)) {
-        ui_.printLine("");
-        ui_.printLine(plan.lockedMessage);
-        ui_.printLine(
-            "Şu an " + std::to_string(completedCount) + "/" + std::to_string(topicCount) +
-            " konu tamamlanmış.");
-        return;
-    }
-
-    const int examQuestionCount = static_cast<int>(plan.questionIds.size());
-
-    ui_.printLine("");
-    ui_.printHeader(plan.heading);
-    ui_.printLine(
-        std::to_string(examQuestionCount) + " soruluk sınav başlıyor. Geçme notu: %70.");
-    ui_.printLine("");
-
-    int correctCount = 0;
-    int examXp = 0;
-
-    AppContext context = makeContext();
-    for (const int questionId : plan.questionIds) {
-        const Question* const question = questions_.findPtrById(questionId);
-        if (question == nullptr) {
-            continue;
-        }
-        const AnswerResult result =
-            askOneQuestion(context, *question, /*trackMistakes=*/true, /*allowHints=*/false);
-        if (result.exitRequested) {
-            awardXpAndCheckLevelUp(context, examXp);
-            saveProgress();
-            return;
-        }
-        if (result.correct) {
-            ++correctCount;
-            examXp += result.xpAwarded;
-        }
-    }
-
-    const double scoreRatio =
-        static_cast<double>(correctCount) / static_cast<double>(examQuestionCount);
-    const int scorePercent = static_cast<int>(scoreRatio * 100.0);
-
-    ui_.printLine(
-        "Doğru: " + std::to_string(correctCount) + "/" + std::to_string(examQuestionCount));
-    ui_.printLine("Başarı: %" + std::to_string(scorePercent));
-    ui_.printLine("Kazanılan XP: " + ui_.colorize(std::to_string(examXp), TextColor::Yellow));
-    const bool passed = scoreRatio >= kExamPassThreshold;
-    if (passed) {
-        ui_.printSuccess("Sonuç: GEÇTİN");
-    } else {
-        ui_.printError("Sonuç: KALDIN");
-    }
-
-    if (passed && plan.sectionIdToRecordOnPass > 0) {
-        progress_.recordSectionExamPassed(plan.sectionIdToRecordOnPass);
-    }
-
-    if (correctCount == examQuestionCount && achievements_.unlock(AchievementId::PerfectExam)) {
-        ui_.printLine("");
-        ui_.printHighlight(
-            "Yeni başarım kazandın: " + achievementDisplayName(AchievementId::PerfectExam));
-        ui_.printLine(achievementDescription(AchievementId::PerfectExam));
-        if (!achievements_.saveToFile(kAchievementsFilePath)) {
-            ui_.printError("Uyarı: başarımlar dosyası kaydedilemedi.");
-        }
-    }
-
-    awardXpAndCheckLevelUp(context, examXp);
-    saveProgress();
-
-    ui_.printLine("");
-}
-
-void Application::runSectionExam(int sectionId) {
-    ExamPlan plan;
-    plan.heading = "BÖLÜM " + std::to_string(sectionId) + " SINAVI";
-    plan.lockedMessage =
-        "Bu bölümün sınavına girebilmek için konuların en az %70'ini tamamlamalısın.";
-    const auto sectionLessons = lessons_.lessonsViewInSection(sectionId);
-    plan.gatingTopicIds.reserve(sectionLessons.size());
-    for (const Lesson& lesson : sectionLessons) {
-        plan.gatingTopicIds.push_back(lesson.id);
-    }
-    plan.questionIds = examQuestionIdsForSection(sectionId);
-    plan.sectionIdToRecordOnPass = sectionId;
-    runExam(plan);
-}
-
-void Application::runFinalExam() {
-    ExamPlan plan;
-    plan.heading = "GENEL FİNAL SINAVI";
-    plan.lockedMessage =
-        "Genel final sınavına girebilmek için tüm konuların en az %70'ini tamamlamalısın.";
-    // allLessons() returns a reference, so this reads ids without copying
-    // the lessons themselves.
-    plan.gatingTopicIds.reserve(lessons_.allLessons().size());
-    for (const Lesson& lesson : lessons_.allLessons()) {
-        plan.gatingTopicIds.push_back(lesson.id);
-    }
-    plan.questionIds = finalExamQuestionIds();
-    // Deliberately 0: there is no "section 11" milestone to record for the
-    // general final exam.
-    plan.sectionIdToRecordOnPass = 0;
-    runExam(plan);
-}
-
 void Application::showExamMenu() {
-    ui_.printLine("");
-    ui_.printLine("Hangi sınava girmek istiyorsun?");
-    for (int sectionId = 1; sectionId <= lessons_.sectionCount(); ++sectionId) {
-        ui_.printMenuItem(
-            sectionId, "Bölüm " + std::to_string(sectionId) + " Sınavı: " +
-                           ui_.colorize(lessons_.sectionTitle(sectionId), TextColor::Cyan));
-    }
-    const int finalExamChoice = lessons_.sectionCount() + 1;
-    ui_.printMenuItem(finalExamChoice, ui_.colorize("Genel Final Sınavı", TextColor::Yellow));
-    ui_.printMenuItem(0, "Geri dön");
-    const int choice = ui_.readMenuChoice(0, finalExamChoice);
-    if (ui_.isInputClosed() || choice == 0) {
-        return;
-    }
-    if (choice == finalExamChoice) {
-        runFinalExam();
-        return;
-    }
-    runSectionExam(choice);
+    AppContext context = makeContext();
+    showExamMenuSession(context);
 }
 
 void Application::runCodeExercises() {

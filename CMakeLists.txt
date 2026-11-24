@@ -104,6 +104,8 @@ add_library(CppMasterConsoleLib STATIC
     src/CodeExerciseSession.cpp
     src/QuizSession.h
     src/QuizSession.cpp
+    src/ExamSession.h
+    src/ExamSession.cpp
     src/Application.h
     src/Application.cpp
     src/HintProvider.h

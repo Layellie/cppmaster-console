@@ -48,25 +48,6 @@ private:
     void runDailyReview();
     void runQuickTest();
     void showAchievements();
-    // Section exams and the general final exam differ only in which topics
-    // gate them, which questions they ask, their heading, and whether
-    // passing records a section milestone — everything else (the gate
-    // check, the ask loop, scoring, the perfect-score achievement) is
-    // identical, so both funnel through runExam.
-    struct ExamPlan {
-        std::string heading;
-        std::string lockedMessage;
-        // Ids only, not Lesson copies: the gate just counts completed
-        // topics, and the final exam would otherwise deep-copy all 100
-        // lessons (each carrying its explanation, example code and
-        // explanation/mistake vectors) to read one status per topic.
-        std::vector<int> gatingTopicIds;
-        std::vector<int> questionIds;
-        int sectionIdToRecordOnPass = 0;  // 0 = don't record (final exam)
-    };
-    void runExam(const ExamPlan& plan);
-    void runSectionExam(int sectionId);
-    void runFinalExam();
     void showExamMenu();
     void runCodeExercises();
     void showSettingsMenu();
