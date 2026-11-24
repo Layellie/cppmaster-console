@@ -12,11 +12,11 @@
 #include <system_error>
 #include <vector>
 
-#include "AdaptiveDifficulty.h"
 #include "CodeExerciseSession.h"
 #include "ExamContent.h"
 #include "LevelSystem.h"
 #include "MenuFormatting.h"
+#include "QuizSession.h"
 #include "SettingsScreen.h"
 #include "TopicLock.h"
 
@@ -25,13 +25,8 @@ namespace {
 constexpr int kMinChoice = 0;
 constexpr int kMaxChoice = 10;
 constexpr int kMinTopicId = 0;
-constexpr double kPassThreshold = 0.7;
 constexpr double kExamPassThreshold = 0.7;
 constexpr double kSectionCompletionGateThreshold = 0.7;
-
-char optionLetter(std::size_t index) {
-    return static_cast<char>('A' + index);
-}
 
 std::uint64_t createSeed() {
     const auto now = std::chrono::high_resolution_clock::now().time_since_epoch().count();
@@ -380,271 +375,14 @@ void Application::showLessonContent(const Lesson& lesson) {
     }
 }
 
-std::vector<Question> Application::selectQuizQuestions(int topicId) {
-    const auto view = questions_.questionViewForTopic(topicId);
-    std::vector<std::size_t> shuffledIndices(view.size());
-    for (std::size_t i = 0; i < view.size(); ++i) {
-        shuffledIndices[i] = i;
-    }
-    // Shuffled here because Application owns the random engine; the policy
-    // for *which* of them to keep lives in selectQuizQuestionsFrom, which is
-    // pure and unit-tested.
-    std::shuffle(shuffledIndices.begin(), shuffledIndices.end(), randomEngine_);
-    std::vector<Question> pool;
-    pool.reserve(view.size());
-    for (const std::size_t index : shuffledIndices) {
-        pool.push_back(view[index]);
-    }
-    return selectQuizQuestionsFrom(
-        pool, static_cast<std::size_t>(settings_.topicQuizQuestionCount),
-        [this](const Question& question) { return mistakes_.hasMistake(question.id); });
-}
-
 void Application::runTopicQuiz(int topicId) {
-    auto remaining = selectQuizQuestions(topicId);
-    std::stable_sort(remaining.begin(), remaining.end(), [](const Question& a, const Question& b) {
-        return a.difficulty < b.difficulty;
-    });
-    const auto totalQuestions = static_cast<int>(remaining.size());
-
-    ui_.printLine("Konu testi başlıyor (" + std::to_string(totalQuestions) + " soru).");
-    ui_.printLine("");
-
-    const Lesson* const lesson = lessons_.findPtrById(topicId);
-
-    int correctCount = 0;
-    int sessionXp = 0;
-    int correctStreak = 0;
-    int wrongStreak = 0;
-    // Fed back into the selector so two questions about the same fact don't
-    // land back to back; empty until the first question has been asked.
-    std::optional<Question> lastAsked;
-
-    while (!remaining.empty()) {
-        const std::size_t nextIndex = selectNextQuestionIndex(
-            remaining, correctStreak, wrongStreak, lastAsked ? &*lastAsked : nullptr);
-        lastAsked = std::move(remaining[nextIndex]);
-        remaining.erase(remaining.begin() + static_cast<std::ptrdiff_t>(nextIndex));
-        const Question& question = *lastAsked;
-
-        if (shouldShowExtraHelp(wrongStreak)) {
-            if (lesson != nullptr && !lesson->explanation.empty()) {
-                ui_.printLine("");
-                ui_.printLine("Bu konuyu tekrar hatırlayalım:");
-                ui_.printLine(lesson->explanation);
-            }
-            if (question.type != QuestionType::WriteCode) {
-                ui_.printLine(generateHint(question, 1));
-            }
-            wrongStreak = 0;
-        }
-
-        const AnswerResult result = askOneQuestion(question);
-        if (result.exitRequested) {
-            awardXpAndCheckLevelUp(sessionXp);
-            saveProgress();
-            return;
-        }
-        if (result.correct) {
-            ++correctCount;
-            sessionXp += result.xpAwarded;
-            ++correctStreak;
-            wrongStreak = 0;
-        } else {
-            ++wrongStreak;
-            correctStreak = 0;
-        }
-    }
-
-    const double successRatio =
-        totalQuestions == 0 ? 0.0
-                            : static_cast<double>(correctCount) / static_cast<double>(totalQuestions);
-    const int successPercent = static_cast<int>(successRatio * 100.0);
-
-    const bool passed = successRatio >= kPassThreshold;
-    ui_.printLine(
-        "Sonuç: " +
-        ui_.colorize(
-            std::to_string(correctCount) + "/" + std::to_string(totalQuestions) + " doğru (%" +
-                std::to_string(successPercent) + ")",
-            passed ? TextColor::Green : TextColor::Yellow) +
-        ", kazanılan XP: " + ui_.colorize(std::to_string(sessionXp), TextColor::Yellow));
-
-    awardXpAndCheckLevelUp(sessionXp);
-
-    const TopicStatus updatedStatus =
-        nextTopicStatusAfterQuiz(progress_.statusOf(topicId), passed);
-    progress_.setStatus(topicId, updatedStatus);
-    if (passed) {
-        ui_.printSuccess("Bu konu tamamlandı olarak işaretlendi.");
-    } else {
-        ui_.printHighlight(
-            "Bu konuyu öğrenmeye devam ediyorsun; tekrar denemek için tekrar açabilirsin.");
-    }
-    ui_.printLine("");
-
-    saveProgress();
-}
-
-AnswerResult Application::askOneQuestion(
-    const Question& question, bool trackMistakes, bool allowHints) {
-    ui_.printLine(question.prompt);
-
-    // Whatever the learner is expected to type — a letter or a number — is
-    // green, the same signal the menus use.
-    if (question.type == QuestionType::MultipleChoice ||
-        question.type == QuestionType::Scenario) {
-        for (std::size_t index = 0; index < question.options.size(); ++index) {
-            std::string marker;
-            marker.push_back(optionLetter(index));
-            marker += ")";
-            ui_.printLine(
-                ui_.colorize(marker, TextColor::Green) + " " + question.options[index]);
-        }
-    } else if (question.type == QuestionType::Matching) {
-        // Options hold the numbered left column; the prompt itself lists
-        // the lettered right column, so the learner replies with pairs.
-        for (std::size_t index = 0; index < question.options.size(); ++index) {
-            ui_.printMenuItem(static_cast<int>(index) + 1, question.options[index]);
-        }
-        ui_.printLine("");
-        ui_.printLine(
-            ui_.colorize("Eşleştirmeleri \"1-c, 2-a, 3-b\" biçiminde yaz.", TextColor::Dim));
-    } else if (question.type == QuestionType::TrueFalse) {
-        ui_.printMenuItem(1, "Doğru");
-        ui_.printMenuItem(2, "Yanlış");
-    } else if (question.type == QuestionType::OrderCode) {
-        for (std::size_t index = 0; index < question.options.size(); ++index) {
-            ui_.printMenuItem(static_cast<int>(index) + 1, question.options[index]);
-        }
-    }
-
-    int hintLevelUsed = 0;
-    std::string rawAnswer;
-    bool skipped = false;
-    bool exitRequested = false;
-
-    if (question.type == QuestionType::WriteCode) {
-        ui_.printLine(
-            "Kodunu birden fazla satır halinde girebilirsin. Bitirmek için BITIR yazıp Enter'a bas.");
-        rawAnswer = ui_.readMultilineCode();
-        if (ui_.isInputClosed() && rawAnswer.empty()) {
-            exitRequested = true;
-        }
-    } else {
-        while (true) {
-            rawAnswer = ui_.readLine("Cevabın: ");
-            if (ui_.isInputClosed() || rawAnswer == "cikis") {
-                exitRequested = true;
-                break;
-            }
-            if (rawAnswer == "gec") {
-                skipped = true;
-                break;
-            }
-            if (rawAnswer == "ipucu") {
-                if (!allowHints) {
-                    ui_.printLine("Sınav sırasında ipucu kullanılamaz.");
-                    continue;
-                }
-                if (hintLevelUsed < 3) {
-                    ++hintLevelUsed;
-                }
-                ui_.printLine(generateHint(question, hintLevelUsed));
-                continue;
-            }
-            if (rawAnswer == "konu") {
-                if (!allowHints) {
-                    ui_.printLine("Sınav sırasında bu komut kullanılamaz.");
-                    continue;
-                }
-                const Lesson* const lesson = lessons_.findPtrById(question.topicId);
-                if (lesson != nullptr && !lesson->explanation.empty()) {
-                    ui_.printLine(lesson->explanation);
-                } else {
-                    ui_.printLine("Bu konu için ders içeriği bu sürümde henüz eklenmedi.");
-                }
-                continue;
-            }
-            if (rawAnswer == "ornek") {
-                if (!allowHints) {
-                    ui_.printLine("Sınav sırasında bu komut kullanılamaz.");
-                    continue;
-                }
-                const Lesson* const lesson = lessons_.findPtrById(question.topicId);
-                if (lesson != nullptr && !lesson->exampleCode.empty()) {
-                    ui_.printLine(lesson->exampleCode);
-                } else {
-                    ui_.printLine("Bu konu için örnek bu sürümde henüz eklenmedi.");
-                }
-                continue;
-            }
-            break;
-        }
-    }
-
-    if (exitRequested) {
-        return AnswerResult{false, 0, "", true};
-    }
-
-    AnswerResult result;
-    if (skipped) {
-        result = AnswerResult{false, 0, quizEngine_.correctAnswerDisplay(question), false};
-    } else {
-        result = quizEngine_.evaluate(question, rawAnswer, settings_);
-        if (result.correct && hintLevelUsed > 0) {
-            const double multiplier = 1.0 - (0.25 * hintLevelUsed);
-            result.xpAwarded = static_cast<int>(static_cast<double>(result.xpAwarded) * multiplier);
-        }
-    }
-
-    if (result.correct) {
-        ui_.printSuccess("Doğru! (+" + std::to_string(result.xpAwarded) + " XP)");
-    } else {
-        ui_.playAlertSound();
-        ui_.printLine("");
-        ui_.printError("Yanlış cevap.");
-        ui_.printLine("");
-        ui_.printLine("Senin cevabın:");
-        ui_.printLine(skipped ? "(soru geçildi)" : rawAnswer);
-        ui_.printLine("");
-        ui_.printLine("Doğru cevap:");
-        ui_.printLine(result.correctAnswerDisplay);
-        ui_.printLine("");
-        ui_.printLine("Açıklama:");
-        ui_.printLine(question.explanation);
-    }
-    ui_.printLine("");
-
-    progress_.recordAnswer(result.correct);
-    progress_.recordStreak(result.correct);
-    if (result.correct) {
-        progress_.recordTypedCorrectAnswer(question.type);
-        if (trackMistakes && mistakes_.hasMistake(question.id)) {
-            mistakes_.recordCorrectRetry(question.id);
-        }
-    } else if (trackMistakes) {
-        mistakes_.recordWrong(question.id);
-    }
-
-    checkAchievements(question, result.correct, trackMistakes);
-
-    saveProgress();
-    if (trackMistakes && !mistakes_.saveToFile(kMistakesFilePath)) {
-        ui_.printError("Uyarı: yanlış kayıtları dosyası kaydedilemedi.");
-    }
-
-    return result;
+    AppContext context = makeContext();
+    runTopicQuizSession(context, topicId);
 }
 
 void Application::saveProgress() {
     AppContext context = makeContext();
     ::saveProgress(context);
-}
-
-void Application::awardXpAndCheckLevelUp(int amount) {
-    AppContext context = makeContext();
-    ::awardXpAndCheckLevelUp(context, amount);
 }
 
 void Application::resetProgress() {
@@ -672,105 +410,9 @@ void Application::resetProgress() {
     ui_.printLine("İlerlemen sıfırlandı.");
 }
 
-void Application::checkAchievements(const Question& question, bool correct, bool trackMistakes) {
-    if (!correct) {
-        return;
-    }
-
-    std::vector<AchievementId> newlyUnlocked;
-
-    if (progress_.totalCorrectAnswers() >= 1) {
-        if (achievements_.unlock(AchievementId::FirstStep)) {
-            newlyUnlocked.push_back(AchievementId::FirstStep);
-        }
-    }
-    if (progress_.currentStreak() >= 5) {
-        if (achievements_.unlock(AchievementId::FlawlessFive)) {
-            newlyUnlocked.push_back(AchievementId::FlawlessFive);
-        }
-    }
-    if (progress_.currentStreak() >= 10) {
-        if (achievements_.unlock(AchievementId::StreakMaster)) {
-            newlyUnlocked.push_back(AchievementId::StreakMaster);
-        }
-    }
-    if (progress_.writeCodeCorrectCount() >= 10) {
-        if (achievements_.unlock(AchievementId::CodeWriter)) {
-            newlyUnlocked.push_back(AchievementId::CodeWriter);
-        }
-    }
-    if (progress_.errorFixCorrectCount() >= 25) {
-        if (achievements_.unlock(AchievementId::BugHunter)) {
-            newlyUnlocked.push_back(AchievementId::BugHunter);
-        }
-    }
-
-    if (trackMistakes) {
-        const auto mistakeRecord = mistakes_.findMistake(question.id);
-        if (mistakeRecord.has_value() && mistakeRecord->wrongCount >= 5) {
-            if (achievements_.unlock(AchievementId::NeverGiveUp)) {
-                newlyUnlocked.push_back(AchievementId::NeverGiveUp);
-            }
-        }
-    }
-
-    if (newlyUnlocked.empty()) {
-        return;
-    }
-
-    for (const AchievementId id : newlyUnlocked) {
-        ui_.printLine("");
-        ui_.printHighlight("Yeni başarım kazandın: " + achievementDisplayName(id));
-        ui_.printLine(achievementDescription(id));
-    }
-    ui_.printLine("");
-    if (!achievements_.saveToFile(kAchievementsFilePath)) {
-        ui_.printError("Uyarı: başarımlar dosyası kaydedilemedi.");
-    }
-}
-
 void Application::showMistakeReview() {
-    const auto mistakes = mistakes_.allMistakesOldestFirst();
-    if (mistakes.empty()) {
-        ui_.printLine("");
-        ui_.printLine("Henüz kaydedilmiş bir yanlışın yok!");
-        return;
-    }
-
-    ui_.printLine("");
-    ui_.printLine("Kayıtlı yanlışların (" + std::to_string(mistakes.size()) + " soru):");
-    ui_.printLine("");
-    runMistakeQuestions(mistakes);
-}
-
-void Application::runMistakeQuestions(const std::vector<MistakeRecord>& mistakesToAsk) {
-    int correctCount = 0;
-    int sessionXp = 0;
-
-    for (const MistakeRecord& mistake : mistakesToAsk) {
-        const Question* const question = questions_.findPtrById(mistake.questionId);
-        if (question == nullptr) {
-            continue;
-        }
-        const AnswerResult result = askOneQuestion(*question);
-        if (result.exitRequested) {
-            awardXpAndCheckLevelUp(sessionXp);
-            saveProgress();
-            return;
-        }
-        if (result.correct) {
-            ++correctCount;
-            sessionXp += result.xpAwarded;
-        }
-    }
-
-    awardXpAndCheckLevelUp(sessionXp);
-    saveProgress();
-
-    ui_.printLine(
-        "Tamamlandı: " + std::to_string(correctCount) + "/" + std::to_string(mistakesToAsk.size()) +
-        " doğru, kazanılan XP: " + std::to_string(sessionXp));
-    ui_.printLine("");
+    AppContext context = makeContext();
+    runMistakeReviewSession(context);
 }
 
 void Application::showStatistics() {
@@ -782,93 +424,13 @@ void Application::showAchievements() {
 }
 
 void Application::runDailyReview() {
-    auto mistakes = mistakes_.allMistakesOldestFirst();
-    if (mistakes.empty()) {
-        ui_.printLine("");
-        ui_.printLine("Henüz tekrar edilecek bir yanlışın yok! Önce birkaç konu testi çözmelisin.");
-        return;
-    }
-
-    const auto dailyReviewCap = static_cast<std::size_t>(settings_.dailyReviewQuestionCap);
-    if (mistakes.size() > dailyReviewCap) {
-        mistakes.resize(dailyReviewCap);
-    }
-
-    ui_.printLine("");
-    ui_.printLine("Günlük tekrar başlıyor (" + std::to_string(mistakes.size()) + " soru):");
-    ui_.printLine("");
-    runMistakeQuestions(mistakes);
+    AppContext context = makeContext();
+    runDailyReviewSession(context);
 }
 
 void Application::runQuickTest() {
-    ui_.printLine("");
-    ui_.printHeader("HIZLI TEST");
-
-    const int kQuickTestQuestionCount = settings_.quickTestQuestionCount;
-    // Read from settings, not hardcoded: the count became configurable
-    // (1-20) but this line still promised "5" regardless.
-    ui_.printLine(
-        "Senin için " + std::to_string(kQuickTestQuestionCount) +
-        " taze soru üretmeye çalışacağım.");
-    ui_.printLine("");
-
-    int correctCount = 0;
-    int sessionXp = 0;
-    int askedCount = 0;
-
-    const auto& allGenerators = generatorRegistry_.allGenerators();
-    if (allGenerators.empty()) {
-        ui_.printLine("Bu oturumda soru üretici bulunamadı.");
-        ui_.printLine("");
-        return;
-    }
-
-    for (int index = 0; index < kQuickTestQuestionCount; ++index) {
-        std::uniform_int_distribution<std::size_t> topicPickDist(0, allGenerators.size() - 1);
-        const int pickedTopicId = allGenerators[topicPickDist(randomEngine_)]->topicId();
-
-        std::optional<GeneratedQuestion> generated = generationEngine_.generateUniqueForTopic(
-            pickedTopicId, generatorRegistry_, generatorScoring_, generatedQuestionValidator_,
-            randomEngine_);
-
-        if (!generated.has_value()) {
-            ui_.printLine("Bu oturumda başka taze soru üretemedim; testi burada bitiriyorum.");
-            break;
-        }
-
-        generated->question.id = nextGeneratedQuestionId_++;
-        const AnswerResult result = askOneQuestion(generated->question, /*trackMistakes=*/false);
-        if (result.exitRequested) {
-            if (!generationEngine_.saveHistory(kGeneratedHistoryFilePath)) {
-                ui_.printError("Uyarı: üretilen soru geçmişi kaydedilemedi.");
-            }
-            awardXpAndCheckLevelUp(sessionXp);
-            saveProgress();
-            return;
-        }
-        ++askedCount;
-        if (result.correct) {
-            ++correctCount;
-            sessionXp += result.xpAwarded;
-        }
-
-        if (!generationEngine_.saveHistory(kGeneratedHistoryFilePath)) {
-            ui_.printError("Uyarı: üretilen soru geçmişi kaydedilemedi.");
-        }
-    }
-
-    if (askedCount > 0) {
-        const int successPercent = static_cast<int>(
-            (static_cast<double>(correctCount) / static_cast<double>(askedCount)) * 100.0);
-        ui_.printLine(
-            "Hızlı test bitti: " + std::to_string(correctCount) + "/" + std::to_string(askedCount) +
-            " doğru (%" + std::to_string(successPercent) +
-            "), kazanılan XP: " + std::to_string(sessionXp));
-    }
-    ui_.printLine("");
-
-    awardXpAndCheckLevelUp(sessionXp);
-    saveProgress();
+    AppContext context = makeContext();
+    runQuickTestSession(context);
 }
 
 void Application::runExam(const ExamPlan& plan) {
@@ -913,15 +475,16 @@ void Application::runExam(const ExamPlan& plan) {
     int correctCount = 0;
     int examXp = 0;
 
+    AppContext context = makeContext();
     for (const int questionId : plan.questionIds) {
         const Question* const question = questions_.findPtrById(questionId);
         if (question == nullptr) {
             continue;
         }
         const AnswerResult result =
-            askOneQuestion(*question, /*trackMistakes=*/true, /*allowHints=*/false);
+            askOneQuestion(context, *question, /*trackMistakes=*/true, /*allowHints=*/false);
         if (result.exitRequested) {
-            awardXpAndCheckLevelUp(examXp);
+            awardXpAndCheckLevelUp(context, examXp);
             saveProgress();
             return;
         }
@@ -960,7 +523,7 @@ void Application::runExam(const ExamPlan& plan) {
         }
     }
 
-    awardXpAndCheckLevelUp(examXp);
+    awardXpAndCheckLevelUp(context, examXp);
     saveProgress();
 
     ui_.printLine("");

@@ -102,6 +102,8 @@ add_library(CppMasterConsoleLib STATIC
     src/SettingsScreen.cpp
     src/CodeExerciseSession.h
     src/CodeExerciseSession.cpp
+    src/QuizSession.h
+    src/QuizSession.cpp
     src/Application.h
     src/Application.cpp
     src/HintProvider.h
