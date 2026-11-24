@@ -13,7 +13,7 @@ public:
     void record(const GeneratedQuestion& generated);
 
     [[nodiscard]] bool loadFromFile(const std::string& filePath, const std::string& backupPath);
-    void saveToFile(const std::string& filePath) const;
+    bool saveToFile(const std::string& filePath) const;
 
 private:
     std::unordered_set<std::uint64_t> seenExactHashes_;

@@ -6,6 +6,7 @@
 #include <system_error>
 #include <utility>
 
+#include "AtomicFileWrite.h"
 #include "ParseUtil.h"
 
 bool QuestionHistory::hasSeenExact(std::uint64_t exactHash) const {
@@ -76,15 +77,13 @@ bool QuestionHistory::loadFromFile(const std::string& filePath, const std::strin
     return false;
 }
 
-void QuestionHistory::saveToFile(const std::string& filePath) const {
-    std::ofstream file(filePath, std::ios::trunc);
-    if (!file.is_open()) {
-        return;
-    }
+bool QuestionHistory::saveToFile(const std::string& filePath) const {
+    std::ostringstream buffer;
     for (const std::uint64_t hash : seenExactHashes_) {
-        file << "exact " << hash << '\n';
+        buffer << "exact " << hash << '\n';
     }
     for (const std::uint64_t hash : seenSemanticHashes_) {
-        file << "semantic " << hash << '\n';
+        buffer << "semantic " << hash << '\n';
     }
+    return atomicWriteTextFile(filePath, buffer.str());
 }

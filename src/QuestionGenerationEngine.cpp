@@ -123,6 +123,6 @@ bool QuestionGenerationEngine::loadHistory(const std::string& filePath, const st
     return history_.loadFromFile(filePath, backupPath);
 }
 
-void QuestionGenerationEngine::saveHistory(const std::string& filePath) const {
-    history_.saveToFile(filePath);
+bool QuestionGenerationEngine::saveHistory(const std::string& filePath) const {
+    return history_.saveToFile(filePath);
 }

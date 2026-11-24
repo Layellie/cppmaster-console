@@ -5,6 +5,7 @@
 #include <sstream>
 #include <system_error>
 
+#include "AtomicFileWrite.h"
 #include "ParseUtil.h"
 
 namespace {
@@ -124,18 +125,16 @@ SettingsLoadResult SettingsManager::load(
     return SettingsLoadResult{settings, false};
 }
 
-void SettingsManager::save(const Settings& settings, const std::string& filePath) const {
-    std::ofstream file(filePath, std::ios::trunc);
-    if (!file.is_open()) {
-        return;
-    }
-    file << "topic_lock " << (settings.topicLockEnabled ? 1 : 0) << '\n';
-    file << "strict_case " << (settings.strictCaseSensitivity ? 1 : 0) << '\n';
-    file << "lenient_writecode " << (settings.lenientWriteCodeTolerance ? 1 : 0) << '\n';
-    file << "full_explanation " << (settings.fullExplanationDetail ? 1 : 0) << '\n';
-    file << "daily_cap " << settings.dailyReviewQuestionCap << '\n';
-    file << "color_enabled " << (settings.colorEnabled ? 1 : 0) << '\n';
-    file << "audio_alert " << (settings.audioAlertEnabled ? 1 : 0) << '\n';
-    file << "quick_test_count " << settings.quickTestQuestionCount << '\n';
-    file << "topic_quiz_count " << settings.topicQuizQuestionCount << '\n';
+bool SettingsManager::save(const Settings& settings, const std::string& filePath) const {
+    std::ostringstream buffer;
+    buffer << "topic_lock " << (settings.topicLockEnabled ? 1 : 0) << '\n';
+    buffer << "strict_case " << (settings.strictCaseSensitivity ? 1 : 0) << '\n';
+    buffer << "lenient_writecode " << (settings.lenientWriteCodeTolerance ? 1 : 0) << '\n';
+    buffer << "full_explanation " << (settings.fullExplanationDetail ? 1 : 0) << '\n';
+    buffer << "daily_cap " << settings.dailyReviewQuestionCap << '\n';
+    buffer << "color_enabled " << (settings.colorEnabled ? 1 : 0) << '\n';
+    buffer << "audio_alert " << (settings.audioAlertEnabled ? 1 : 0) << '\n';
+    buffer << "quick_test_count " << settings.quickTestQuestionCount << '\n';
+    buffer << "topic_quiz_count " << settings.topicQuizQuestionCount << '\n';
+    return atomicWriteTextFile(filePath, buffer.str());
 }

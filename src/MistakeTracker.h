@@ -24,7 +24,7 @@ public:
     [[nodiscard]] std::vector<MistakeRecord> allMistakesOldestFirst() const;
 
     [[nodiscard]] bool loadFromFile(const std::string& filePath, const std::string& backupPath);
-    void saveToFile(const std::string& filePath) const;
+    bool saveToFile(const std::string& filePath) const;
 
 private:
     std::unordered_map<int, MistakeRecord> recordsByQuestionId_;

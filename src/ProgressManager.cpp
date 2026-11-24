@@ -8,6 +8,7 @@
 #include <utility>
 #include <vector>
 
+#include "AtomicFileWrite.h"
 #include "ParseUtil.h"
 
 namespace {
@@ -186,30 +187,28 @@ ProgressLoadResult ProgressManager::load(
     return ProgressLoadResult{std::move(progress), false};
 }
 
-void ProgressManager::save(
+bool ProgressManager::save(
     const UserProgress& progress, const std::string& filePath, int topicCount) const {
-    std::ofstream file(filePath, std::ios::trunc);
-    if (!file.is_open()) {
-        return;
-    }
-    file << "xp " << progress.totalXp() << '\n';
-    file << "answered " << progress.totalQuestionsAnswered() << '\n';
-    file << "correct " << progress.totalCorrectAnswers() << '\n';
-    file << "streak_current " << progress.currentStreak() << '\n';
-    file << "streak_longest " << progress.longestStreak() << '\n';
-    file << "writecode_correct " << progress.writeCodeCorrectCount() << '\n';
-    file << "errorfix_correct " << progress.errorFixCorrectCount() << '\n';
-    file << "highest_section_exam_passed " << progress.highestSectionExamPassed() << '\n';
-    file << "unlocked_up_to " << progress.unlockedUpToTopicId() << '\n';
+    std::ostringstream buffer;
+    buffer << "xp " << progress.totalXp() << '\n';
+    buffer << "answered " << progress.totalQuestionsAnswered() << '\n';
+    buffer << "correct " << progress.totalCorrectAnswers() << '\n';
+    buffer << "streak_current " << progress.currentStreak() << '\n';
+    buffer << "streak_longest " << progress.longestStreak() << '\n';
+    buffer << "writecode_correct " << progress.writeCodeCorrectCount() << '\n';
+    buffer << "errorfix_correct " << progress.errorFixCorrectCount() << '\n';
+    buffer << "highest_section_exam_passed " << progress.highestSectionExamPassed() << '\n';
+    buffer << "unlocked_up_to " << progress.unlockedUpToTopicId() << '\n';
     // Sorted so the file is stable across runs (the set's iteration order
     // isn't), which keeps diffs and manual inspection sane.
     std::vector<int> completedExercises(
         progress.completedCodeExerciseIds().begin(), progress.completedCodeExerciseIds().end());
     std::sort(completedExercises.begin(), completedExercises.end());
     for (const int exerciseId : completedExercises) {
-        file << "exercise_done " << exerciseId << '\n';
+        buffer << "exercise_done " << exerciseId << '\n';
     }
     for (int topicId = 1; topicId <= topicCount; ++topicId) {
-        file << "topic " << topicId << ' ' << statusName(progress.statusOf(topicId)) << '\n';
+        buffer << "topic " << topicId << ' ' << statusName(progress.statusOf(topicId)) << '\n';
     }
+    return atomicWriteTextFile(filePath, buffer.str());
 }

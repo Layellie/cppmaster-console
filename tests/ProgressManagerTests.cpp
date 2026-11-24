@@ -107,3 +107,37 @@ TEST_CASE(ProgressManager_CorruptedFileIsBackedUpAndResets) {
     std::filesystem::remove(path);
     std::filesystem::remove(backup);
 }
+
+TEST_CASE(ProgressManager_SaveReturnsFalseOnUnwritablePath) {
+    const std::string path = "tests/test_data/nonexistent_subdir_for_test/progress.txt";
+    UserProgress progress(kTopicCount);
+    ProgressManager manager;
+
+    CHECK(!manager.save(progress, path, kTopicCount));
+    CHECK(!std::filesystem::exists(path));
+    CHECK(!std::filesystem::exists(path + ".tmp"));
+}
+
+TEST_CASE(ProgressManager_SaveOverwritesAtomicallyWithoutLeavingTempFile) {
+    const std::string path = "tests/test_data/progress_atomic_overwrite.txt";
+    const std::string backup = "tests/test_data/progress_atomic_overwrite_backup.txt";
+    std::filesystem::remove(path);
+    std::filesystem::remove(path + ".tmp");
+
+    ProgressManager manager;
+    UserProgress first(kTopicCount);
+    first.addXp(50);
+    CHECK(manager.save(first, path, kTopicCount));
+    CHECK(!std::filesystem::exists(path + ".tmp"));
+
+    UserProgress second(kTopicCount);
+    second.addXp(250);
+    CHECK(manager.save(second, path, kTopicCount));
+    CHECK(!std::filesystem::exists(path + ".tmp"));
+
+    const ProgressLoadResult loaded = manager.load(path, backup, kTopicCount);
+    CHECK(!loaded.wasCorrupted);
+    CHECK(loaded.progress.totalXp() == 250);
+
+    std::filesystem::remove(path);
+}

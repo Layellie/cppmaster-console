@@ -9,6 +9,7 @@
 #include <system_error>
 #include <utility>
 
+#include "AtomicFileWrite.h"
 #include "ParseUtil.h"
 
 namespace {
@@ -128,16 +129,14 @@ bool MistakeTracker::loadFromFile(const std::string& filePath, const std::string
     return false;
 }
 
-void MistakeTracker::saveToFile(const std::string& filePath) const {
-    std::ofstream file(filePath, std::ios::trunc);
-    if (!file.is_open()) {
-        return;
-    }
+bool MistakeTracker::saveToFile(const std::string& filePath) const {
+    std::ostringstream buffer;
     for (const auto& entry : recordsByQuestionId_) {
         const MistakeRecord& record = entry.second;
-        file << "mistake " << record.questionId << ' '
-             << std::chrono::system_clock::to_time_t(record.firstWrongAt) << ' '
-             << std::chrono::system_clock::to_time_t(record.lastWrongAt) << ' '
-             << record.wrongCount << ' ' << record.correctAfterWrongCount << '\n';
+        buffer << "mistake " << record.questionId << ' '
+               << std::chrono::system_clock::to_time_t(record.firstWrongAt) << ' '
+               << std::chrono::system_clock::to_time_t(record.lastWrongAt) << ' '
+               << record.wrongCount << ' ' << record.correctAfterWrongCount << '\n';
     }
+    return atomicWriteTextFile(filePath, buffer.str());
 }

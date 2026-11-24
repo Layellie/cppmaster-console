@@ -25,7 +25,7 @@ public:
     [[nodiscard]] std::vector<AchievementId> allUnlocked() const;
 
     [[nodiscard]] bool loadFromFile(const std::string& filePath, const std::string& backupPath);
-    void saveToFile(const std::string& filePath) const;
+    bool saveToFile(const std::string& filePath) const;
 
 private:
     std::unordered_set<int> unlockedIds_;

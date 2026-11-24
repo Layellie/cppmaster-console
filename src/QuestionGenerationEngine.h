@@ -19,7 +19,7 @@ public:
         const GeneratedQuestionValidator& validator, std::mt19937_64& randomEngine);
 
     [[nodiscard]] bool loadHistory(const std::string& filePath, const std::string& backupPath);
-    void saveHistory(const std::string& filePath) const;
+    bool saveHistory(const std::string& filePath) const;
 
 private:
     QuestionHistory history_;

@@ -745,18 +745,19 @@ AnswerResult Application::askOneQuestion(
 
     checkAchievements(question, result.correct);
 
-    const auto topicCount = static_cast<int>(lessons_.allLessons().size());
-    progressManager_.save(progress_, kProgressFilePath, topicCount);
-    if (trackMistakes) {
-        mistakes_.saveToFile(kMistakesFilePath);
+    saveProgress();
+    if (trackMistakes && !mistakes_.saveToFile(kMistakesFilePath)) {
+        ui_.printError("Uyarı: yanlış kayıtları dosyası kaydedilemedi.");
     }
 
     return result;
 }
 
 void Application::saveProgress() {
-    progressManager_.save(
-        progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()));
+    if (!progressManager_.save(
+            progress_, kProgressFilePath, static_cast<int>(lessons_.allLessons().size()))) {
+        ui_.printError("Uyarı: ilerleme dosyası kaydedilemedi.");
+    }
 }
 
 void Application::awardXpAndCheckLevelUp(int amount) {
@@ -786,9 +787,13 @@ void Application::resetProgress() {
     mistakes_ = MistakeTracker();
     achievements_ = AchievementTracker();
 
-    progressManager_.save(progress_, kProgressFilePath, topicCount);
-    mistakes_.saveToFile(kMistakesFilePath);
-    achievements_.saveToFile(kAchievementsFilePath);
+    saveProgress();
+    if (!mistakes_.saveToFile(kMistakesFilePath)) {
+        ui_.printError("Uyarı: yanlış kayıtları dosyası kaydedilemedi.");
+    }
+    if (!achievements_.saveToFile(kAchievementsFilePath)) {
+        ui_.printError("Uyarı: başarımlar dosyası kaydedilemedi.");
+    }
 
     ui_.printLine("İlerlemen sıfırlandı.");
 }
@@ -843,7 +848,9 @@ void Application::checkAchievements(const Question& question, bool correct) {
         ui_.printLine(achievementDescription(id));
     }
     ui_.printLine("");
-    achievements_.saveToFile(kAchievementsFilePath);
+    if (!achievements_.saveToFile(kAchievementsFilePath)) {
+        ui_.printError("Uyarı: başarımlar dosyası kaydedilemedi.");
+    }
 }
 
 void Application::showMistakeReview() {
@@ -1033,7 +1040,9 @@ void Application::runQuickTest() {
         generated->question.id = nextGeneratedQuestionId_++;
         const AnswerResult result = askOneQuestion(generated->question, /*trackMistakes=*/false);
         if (result.exitRequested) {
-            generationEngine_.saveHistory(kGeneratedHistoryFilePath);
+            if (!generationEngine_.saveHistory(kGeneratedHistoryFilePath)) {
+                ui_.printError("Uyarı: üretilen soru geçmişi kaydedilemedi.");
+            }
             awardXpAndCheckLevelUp(sessionXp);
             saveProgress();
             return;
@@ -1044,7 +1053,9 @@ void Application::runQuickTest() {
             sessionXp += result.xpAwarded;
         }
 
-        generationEngine_.saveHistory(kGeneratedHistoryFilePath);
+        if (!generationEngine_.saveHistory(kGeneratedHistoryFilePath)) {
+            ui_.printError("Uyarı: üretilen soru geçmişi kaydedilemedi.");
+        }
     }
 
     if (askedCount > 0) {
@@ -1145,7 +1156,9 @@ void Application::runExam(const ExamPlan& plan) {
         ui_.printHighlight(
             "Yeni başarım kazandın: " + achievementDisplayName(AchievementId::PerfectExam));
         ui_.printLine(achievementDescription(AchievementId::PerfectExam));
-        achievements_.saveToFile(kAchievementsFilePath);
+        if (!achievements_.saveToFile(kAchievementsFilePath)) {
+            ui_.printError("Uyarı: başarımlar dosyası kaydedilemedi.");
+        }
     }
 
     awardXpAndCheckLevelUp(examXp);
@@ -1386,29 +1399,35 @@ void Application::showSettingsMenu() {
         ui_.printLine("");
         ui_.printLine(ui_.colorize("Seçimin:", TextColor::Green));
 
+        auto saveSettings = [&]() {
+            if (!settingsManager_.save(settings_, kSettingsFilePath)) {
+                ui_.printError("Uyarı: ayarlar dosyası kaydedilemedi.");
+            }
+        };
+
         const int choice = ui_.readMenuChoice(0, 11);
         switch (choice) {
             case 1:
                 settings_.topicLockEnabled = !settings_.topicLockEnabled;
-                settingsManager_.save(settings_, kSettingsFilePath);
+                saveSettings();
                 break;
             case 2:
                 settings_.strictCaseSensitivity = !settings_.strictCaseSensitivity;
-                settingsManager_.save(settings_, kSettingsFilePath);
+                saveSettings();
                 break;
             case 3:
                 settings_.lenientWriteCodeTolerance = !settings_.lenientWriteCodeTolerance;
-                settingsManager_.save(settings_, kSettingsFilePath);
+                saveSettings();
                 break;
             case 4:
                 settings_.fullExplanationDetail = !settings_.fullExplanationDetail;
-                settingsManager_.save(settings_, kSettingsFilePath);
+                saveSettings();
                 break;
             case 5: {
                 ui_.printLine("Yeni günlük soru hedefini gir (1-100):");
                 const int newCap = ui_.readMenuChoice(1, 100);
                 settings_.dailyReviewQuestionCap = newCap;
-                settingsManager_.save(settings_, kSettingsFilePath);
+                saveSettings();
                 break;
             }
             case 6:
@@ -1420,18 +1439,18 @@ void Application::showSettingsMenu() {
             case 8:
                 settings_.colorEnabled = !settings_.colorEnabled;
                 ui_.setColorEnabled(settings_.colorEnabled);
-                settingsManager_.save(settings_, kSettingsFilePath);
+                saveSettings();
                 break;
             case 9:
                 settings_.audioAlertEnabled = !settings_.audioAlertEnabled;
                 ui_.setAudioAlertEnabled(settings_.audioAlertEnabled);
-                settingsManager_.save(settings_, kSettingsFilePath);
+                saveSettings();
                 break;
             case 10: {
                 ui_.printLine("Yeni Hızlı Test soru sayısını gir (1-20):");
                 const int newCount = ui_.readMenuChoice(1, 20);
                 settings_.quickTestQuestionCount = newCount;
-                settingsManager_.save(settings_, kSettingsFilePath);
+                saveSettings();
                 break;
             }
             case 11: {
@@ -1441,7 +1460,7 @@ void Application::showSettingsMenu() {
                 ui_.printLine("Yeni konu testi soru sayısını gir (5-30):");
                 const int newCount = ui_.readMenuChoice(5, 30);
                 settings_.topicQuizQuestionCount = newCount;
-                settingsManager_.save(settings_, kSettingsFilePath);
+                saveSettings();
                 break;
             }
             case 0:

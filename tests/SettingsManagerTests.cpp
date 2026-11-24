@@ -103,3 +103,13 @@ TEST_CASE(SettingsManager_CorruptedFileIsBackedUpAndResetsToDefaults) {
     std::filesystem::remove(path);
     std::filesystem::remove(backup);
 }
+
+TEST_CASE(SettingsManager_SaveReturnsFalseOnUnwritablePath) {
+    const std::string path = "tests/test_data/nonexistent_subdir_for_test/settings.txt";
+    Settings settings;
+    SettingsManager manager;
+
+    CHECK(!manager.save(settings, path));
+    CHECK(!std::filesystem::exists(path));
+    CHECK(!std::filesystem::exists(path + ".tmp"));
+}
