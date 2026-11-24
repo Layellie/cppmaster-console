@@ -113,17 +113,35 @@ bool isBalanced(const std::string& code) {
 }
 
 std::string multipleChoiceDisplay(const Question& question) {
+    if (question.acceptedAnswers.empty()) {
+        return "";
+    }
     const std::string& letter = question.acceptedAnswers.front();
-    const auto index = static_cast<std::size_t>(letter.front() - 'a');
+    if (letter.empty()) {
+        return "";
+    }
+    const char lowerLetter =
+        static_cast<char>(std::tolower(static_cast<unsigned char>(letter.front())));
+    if (lowerLetter < 'a' || lowerLetter > 'z') {
+        return letter;
+    }
+    const auto index = static_cast<std::size_t>(lowerLetter - 'a');
     if (index >= question.options.size()) {
         return letter;
     }
     const char upperLetter =
-        static_cast<char>(std::toupper(static_cast<unsigned char>(letter.front())));
-    return std::string(1, upperLetter) + ") " + question.options[index];
+        static_cast<char>(std::toupper(static_cast<unsigned char>(lowerLetter)));
+    std::string display;
+    display.push_back(upperLetter);
+    display += ") ";
+    display += question.options[index];
+    return display;
 }
 
 std::string trueFalseDisplay(const Question& question) {
+    if (question.acceptedAnswers.empty()) {
+        return "";
+    }
     const std::string& digit = question.acceptedAnswers.front();
     return digit + (digit == "1" ? " (Doğru)" : " (Yanlış)");
 }

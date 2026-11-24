@@ -278,3 +278,22 @@ TEST_CASE(QuizEngine_TrueFalse_AcceptsLetterAsWellAsDigit) {
     // Only A and B map; there is no third option to reach with C.
     CHECK(!engine.evaluate(dogru, "c").correct);
 }
+
+TEST_CASE(QuizEngine_CorrectAnswerDisplayHandlesEmptyAndUppercaseAcceptedAnswers) {
+    QuizEngine engine;
+
+    Question emptyMc = makeQuestion(QuestionType::MultipleChoice, {});
+    emptyMc.options = {"cin", "cout"};
+    CHECK(engine.correctAnswerDisplay(emptyMc).empty());
+
+    Question emptyLetterMc = makeQuestion(QuestionType::MultipleChoice, {""});
+    emptyLetterMc.options = {"cin", "cout"};
+    CHECK(engine.correctAnswerDisplay(emptyLetterMc).empty());
+
+    Question emptyTf = makeQuestion(QuestionType::TrueFalse, {});
+    CHECK(engine.correctAnswerDisplay(emptyTf).empty());
+
+    Question uppercaseMc = makeQuestion(QuestionType::MultipleChoice, {"B"});
+    uppercaseMc.options = {"cin", "cout"};
+    CHECK(engine.correctAnswerDisplay(uppercaseMc) == "B) cout");
+}
